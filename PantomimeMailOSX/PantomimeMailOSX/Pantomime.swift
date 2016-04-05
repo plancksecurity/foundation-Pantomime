@@ -15,7 +15,15 @@ class Pantomime {
     }
 
     func startPop3() {
-        let store = CWPOP3Store.init()
+        let serverName = "pop.gmail.com"
+        let serverPort: UInt32 = 995
+        let store = CWPOP3Store.init(name: serverName, port: serverPort)
+        store.setDelegate(self)
+        store.connectInBackgroundAndNotify()
+    }
+
+    func authenticationCompleted(notification: NSNotification) {
+
     }
 
 }
