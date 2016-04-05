@@ -1,0 +1,229 @@
+2014-07-25 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/NSString+Extensions.m
+	Fix warning on FreeBSD too
+
+2014-06-15 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/io.c
+	Fix cast to signed ssize_t or error cannot be checked.
+
+	* Framework/Pantomime/CWIMAPStore.m
+	* Framework/Pantomime/CWLocalFolder+mbox.m
+	* Framework/Pantomime/CWMIMEUtility.m
+	Cast safely and properly chars to int.
+
+2014-06-12 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/CWPOP3Folder.m
+        Rewrite not to misues NSDate as NSCalendarDate, but to use only NSDate only.
+
+2014-06-12 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/io.c
+	Better check for fread() results and print some info.
+
+	* Framework/Pantomime/CWIMAPCacheManager.m
+	Fix recently introduced stuid bug of double ftruncate()
+
+	* Framework/Pantomime/CWLocalFolder+mbox.m
+	Add minor debug logs.
+
+2014-06-12 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/NSString+Extensions.m
+	Fix iconv cast.
+
+	* Framework/Pantomime/CWLocalFolder+mbox.m
+	Check for file function return values.
+
+2014-06-11 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/NSString+Extensions.m
+	in case of realloc() failure, return
+
+2014-06-09 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/GNUmakefile
+Use LIBRARIES_DEPEND_UPON instead of ADDITIONAL_LDFLAGS. Extended version of Yavor Doganov's patch.
+
+2014-06-09 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/CWIMAPCacheManager.m
+	* Framework/Pantomime/CWLocalCacheManager.m
+	Check for write() writing the requested number of bytes.
+
+2014-06-09 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/CWIMAPCacheManager.m
+	* Framework/Pantomime/CWLocalCacheManager.m
+	* Framework/Pantomime/CWPOP3CacheManager.m
+	check for ftruncate() return values. Extended rewrite of Yavor Doganov's patch.
+
+2014-01-12: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/io.c
+        * remove a commented out line and comment out printf debug string
+
+2014-01-10 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/NSData+Extensions.m
+	Inizialize char and throw an Exception if non-hex data is supplied.
+
+2014-01-05 German Arias <germanandre@gmx.es>
+
+	* Framework/Pantomime/NSData+Extensions.m (-unwrapWithLimit:): Revert
+	last change.
+
+2014-01-04 German Arias <germanandre@gmx.es>
+
+	* Framework/Pantomime/CWParser.m (+_parameterValueUsingLine:range:
+	decode:charset:): Ensure the length isn't a negative value.
+
+2014-01-02 German Arias <germanandre@gmx.es>
+
+	* Framework/Pantomime/NSData+Extensions.m (-unwrapWithLimit:): Use
+	-setLength:, not -replaceBytesInRange:withBytes:length: which don't
+	allows read the message.
+
+2013-12-30 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/NSData+Extensions.m
+	Revert patch that broke extended char decoding.
+
+2013-11-01 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/NSData+Extensions.m
+	* fix memory leak
+
+2013-11-01 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/CWIMAPCacheManager.m
+	* fix mem leak introduced with one of the last commits 
+	* Framework/Pantomime/CWSendmail.m
+	* Framework/Pantomime/CWSMTP.m
+	* introduce a _fail method to CWSMTP private category, and
+	  make the code similar to CWSendmail for better comparison, and
+	  fix potential initialization of dictionary with nil object
+	* fix mem leak introduced in last commit to both files
+	* Framework/Pantomime/CWIMAPStore.m
+	* prevent initializing dictionary with nil object
+
+2013-10-31 Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/CWIMAPCacheManager.m
+	* do not malloc( 0 or negative amount of memory)
+	* do not memcpy( 0 or negative amount of bytes)
+        * do not read( 0 or negative amount of bytes)
+	* little reformatting
+	* fixes a lot of crashers in GNUMail for me
+	* Framework/Pantomime/CWIMAPFolder.m
+	* initialize super correctly in init methods
+	* Framework/Pantomime/CWLocalStore.m
+	* remove unnecessary assignment
+	* Framework/Pantomime/CWPOP3CacheManager.m
+	* initialize super correctly in init methods
+	* Framework/Pantomime/CWSendmail.m
+	* do not autorelease too often, and line break fixes
+	* Framework/Pantomime/CWPart.m
+	* restructure init method a bit
+	* Framework/Pantomime/CWIMAPStore.m
+	* fix a couple of memory leaks
+	* do not try to access uninitialized pointers
+	* some line breaks
+
+2013-10-24 German Arias <germanandre@gmx.es>
+
+	* Framework/Pantomime/CWParser.m (_parameterValueUsingLine:...):
+	Fix error when parse RFC2231 and don't assume that always are a
+	language specified.
+
+2013-10-21: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/CWDNSManager.m
+	* Framework/Pantomime/CWIMAPStore.m
+	* Framework/Pantomime/CWLocalFolder+mbox.m
+	* Framework/Pantomime/CWLocalStore.m
+	* Framework/Pantomime/CWMIMEUtility.m
+	* Framework/Pantomime/CWMessage.m
+	* Framework/Pantomime/CWParser.m
+	* Framework/Pantomime/CWPart.m
+	* Framework/Pantomime/NSData+Extensions.m
+	* Framework/Pantomime/NSString+Extensions.m
+	fix some problems reported by clang static analyzer
+
+2013-10-20: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/CWIMAPFolder.m
+	* Framework/Pantomime/CWLocalFolder.m
+	* Framework/Pantomime/CWLocalStore.m
+	* Framework/Pantomime/NSString+Extensions.m
+	fix format strings and other few warnings emitted by clang
+	* GNUmakefile
+	add version variables to allow make dist to create a
+	sane tarball
+	* Framework/Pantomime/CWIMAPCacheManager.h
+	* Framework/Pantomime/CWLocalCacheManager.h
+	add - (void) initInRange: (NSRange) theRange; to the header,
+	GNUMail is using it and otherwise whining about it
+	* Framework/Pantomime/CWLocalCacheManager.m
+	* Framework/Pantomime/CWIMAPCacheManager.m
+	* Framework/Pantomime/CWLocalFolder.m
+	get rid of some useless assignments spotty by clang static
+	analyzer
+
+2013-05-26: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/CWService.m
+	  fix tautological compare, and fix comment
+	* Framework/Pantomime/CWMD5.m
+	  use memset correctly
+
+2013-04-27 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/CWDNSManager.h
+	Fix count to NSUInteger.
+
+	* Framework/Pantomime/CWFolder.[h,m]
+	Fix count to NSUInteger.
+
+2013-03-04: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/NSString+Extensions.m
+	  make comparison work on 64 bit
+	* Framework/Pantomime/CWCacheManager.h
+	* Framework/Pantomime/CWDNSManager.h
+	* Framework/Pantomime/CWFolder.h
+	* Framework/Pantomime/CWIMAPCacheManager.[h|m]
+	* Framework/Pantomime/CWIMAPMessage.h
+	* Framework/Pantomime/CWMIMEMultipart.[h|m]
+	  some int -> NS(U)Integer transitions
+	* Framework/Pantomime/CWIMAPMessage.h
+	* Framework/Pantomime/CWIMAPMessage.m
+	* Framework/Pantomime/CWLocalCacheManager.m
+	  some transitions missed	
+
+2013-02-24: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+	* Framework/Pantomime/CWIMAPCacheManager.m
+	* Framework/Pantomime/CWLocalCacheManager.m
+	* Framework/Pantomime/CWMessage.m
+	* Framework/Pantomime/CWPOP3Folder.m
+	* Framework/Pantomime/CWPart.m
+	* Framework/Pantomime/CWService.m
+	* Fix warnings found with clang
+
+2012-08-15: Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>
+
+	* Framework/Pantomime/io.c 
+	include missing header
+
+2012-05-21 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/CWDNSManager.m
+	Fix warning.
+
+2012-04-13 Riccardo Mottola <rm@gnu.org>
+
+	* Framework/Pantomime/CWDNSManager.m
+	Use res_ninit() on NetBSD to fix long-standing incompatibility
+
+2011-06-04 German Arias <german@xelalug.org>
+
+	* Framework/Pantomime/NSString+Extensions.m: Removed GNUstepBase/
+	GSCategories.h and added GNUstepBase/Additions.h.
+
+2011-06-01 German Arias <german@xelalug.org>
+
+	* GNA: Initial repository at gna.org.
