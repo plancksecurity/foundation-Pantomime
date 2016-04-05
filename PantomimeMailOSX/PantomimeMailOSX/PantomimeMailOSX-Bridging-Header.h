@@ -10,5 +10,6 @@
 #define PantomimeMailOSX_Bridging_Header_h
 
 #import "Pantomime/CWPOP3Store.h"
+#import "Pantomime/CWIMAPStore.h"
 
 #endif /* PantomimeMailOSX_Bridging_Header_h */
