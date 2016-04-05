@@ -41,6 +41,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <stdio.h>
 
 static unsigned short version = 1;
 
@@ -112,7 +113,7 @@ static unsigned short version = 1;
     
       for (i = 0; i < _count; i++)
 	{
-	  aDate = [NSCalendarDate dateWithTimeIntervalSince1970: read_unsigned_int(_fd)];
+	  aDate = [NSDate dateWithTimeIntervalSince1970: read_unsigned_int(_fd)];
 	  read_string(_fd, s, &len);	  
 
 	  aUID = AUTORELEASE([[NSString alloc] initWithData: [NSData dataWithBytes: s  length: len]
@@ -145,7 +146,7 @@ static unsigned short version = 1;
 //
 //
 //
-- (NSCalendarDate *) dateForUID: (NSString *) theUID
+- (NSDate *) dateForUID: (NSString *) theUID
 {
   return NSMapGet(_table, theUID);
 }

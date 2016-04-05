@@ -38,6 +38,7 @@
 #ifdef MACOSX
 #include <CoreFoundation/CFString.h>
 #include <CoreFoundation/CFStringEncodingExt.h>
+#include <objc/runtime.h>
 #else
 #include <GNUstepBase/Additions.h>
 #endif
@@ -841,6 +842,7 @@
 - (NSData *) dataUsingEncodingFromPart: (CWPart *) thePart
                   allowLossyConversion: (BOOL) lossy
 {
+    /*
 #ifdef MACOSX
   // Use the CF decoding to get the data, bypassing Foundation...
   CFStringEncoding enc;
@@ -851,10 +853,11 @@
 							enc, (lossy) ? '?' : 0);
   return [data autorelease];
 #else
+     */
   return [self dataUsingEncoding: [object_getClass(self)
 					encodingForPart: thePart]
 	    allowLossyConversion: lossy];
-#endif
+//#endif
 }
 
 
@@ -873,6 +876,7 @@
 - (NSData *) dataUsingEncodingWithCharset: (NSString *) theCharset
                      allowLossyConversion: (BOOL)lossy
 {
+    /*
 #ifdef MACOSX
   // Use the CF decoding to get the data, bypassing Foundation...
   CFStringEncoding enc;
@@ -884,12 +888,13 @@
 							enc, (lossy) ? '?' : 0);
   return [data autorelease];
 #else
+     */
   return [self dataUsingEncoding: 
 		[object_getClass(self) 
 		    encodingForCharset: 
 			[theCharset dataUsingEncoding: NSASCIIStringEncoding]]
 	allowLossyConversion: lossy];
-#endif
+//#endif
 }
 
 

@@ -46,6 +46,7 @@
 #include <netinet/in.h>
 #include <errno.h>
 #include <unistd.h>
+#include <stdio.h>
 
 static unsigned short version = 1;
 

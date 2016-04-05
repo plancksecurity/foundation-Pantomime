@@ -31,6 +31,11 @@
 //
 #define PANTOMIME_VERSION @"1.2.0"
 
+#if __APPLE__
+#include "TargetConditionals.h"
+#define MACOSX
+#endif
+
 //
 // Useful macros that we must define ourself on OS X.
 //

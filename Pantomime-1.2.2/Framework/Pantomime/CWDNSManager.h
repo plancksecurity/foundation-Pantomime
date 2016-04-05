@@ -25,6 +25,7 @@
 #define _Pantomime_H_CWDNSManager
 
 #include <Pantomime/CWConnection.h>
+#include <Pantomime/CWConstants.h>
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>
