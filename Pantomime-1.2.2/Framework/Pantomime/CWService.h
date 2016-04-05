@@ -251,6 +251,13 @@ extern NSString* PantomimeProtocolException;
 - (void) serviceReconnected: (NSNotification *) theNotification;
 @end
 
+@interface ConnectionState : NSObject
+
+@property (nonatomic, strong) NSMutableArray *previous_queue;
+@property (nonatomic) BOOL reconnecting;
+@property (nonatomic) BOOL opening_mailbox;
+
+@end
 
 #ifdef MACOSX
 typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
@@ -298,12 +305,9 @@ typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
     id<CWConnection> _connection;
     NSTimer * _timer;
     int _counter;
-    
-    struct {
-      NSMutableArray *previous_queue;
-      BOOL reconnecting;
-      BOOL opening_mailbox;
-    } _connection_state;
+
+    ConnectionState *_connection_state;
+
 }
 
 /*!

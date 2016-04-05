@@ -255,7 +255,7 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
   TEST_RELEASE((id<NSObject>)_connection);
   RELEASE(_runLoopModes);
 
-  RELEASE(_connection_state.previous_queue);
+  RELEASE(_connection_state);
 
   [super dealloc];
 }
