@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		43CC692C1CB502F300A8A865 /* TCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CC692B1CB502F300A8A865 /* TCPConnection.swift */; };
 		43E76A561CB3F9AF0013C375 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A551CB3F9AF0013C375 /* AppDelegate.swift */; };
 		43E76A581CB3F9AF0013C375 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A571CB3F9AF0013C375 /* ViewController.swift */; };
 		43E76A5A1CB3F9AF0013C375 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43E76A591CB3F9AF0013C375 /* Assets.xcassets */; };
@@ -105,6 +106,7 @@
 
 /* Begin PBXFileReference section */
 		401E9039937C14E73A26F633 /* Pods-PantomimeMailOSXUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PantomimeMailOSXUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PantomimeMailOSXUITests/Pods-PantomimeMailOSXUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		43CC692B1CB502F300A8A865 /* TCPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPConnection.swift; sourceTree = "<group>"; };
 		43E76A521CB3F9AF0013C375 /* PantomimeMailOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PantomimeMailOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E76A551CB3F9AF0013C375 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		43E76A571CB3F9AF0013C375 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -293,6 +295,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		43CC692A1CB502D400A8A865 /* Pantomime-Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				43CC692B1CB502F300A8A865 /* TCPConnection.swift */,
+			);
+			path = "Pantomime-Extensions";
+			sourceTree = "<group>";
+		};
 		43E76A491CB3F9AF0013C375 = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +328,7 @@
 		43E76A541CB3F9AF0013C375 /* PantomimeMailOSX */ = {
 			isa = PBXGroup;
 			children = (
+				43CC692A1CB502D400A8A865 /* Pantomime-Extensions */,
 				43E76A801CB3F9C50013C375 /* Pantomime */,
 				43E76A551CB3F9AF0013C375 /* AppDelegate.swift */,
 				43E76A571CB3F9AF0013C375 /* ViewController.swift */,
@@ -814,6 +825,7 @@
 				43E76B151CB3F9C60013C375 /* CWInternetAddress.m in Sources */,
 				43E76B471CB3F9C60013C375 /* io.c in Sources */,
 				43E76B0E1CB3F9C60013C375 /* CWFlags.m in Sources */,
+				43CC692C1CB502F300A8A865 /* TCPConnection.swift in Sources */,
 				43E76B481CB3F9C60013C375 /* NSData+Extensions.m in Sources */,
 				43E76B1F1CB3F9C60013C375 /* CWISO8859_5.m in Sources */,
 				43E76B0A1CB3F9C60013C375 /* CWCharset.m in Sources */,

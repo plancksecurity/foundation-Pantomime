@@ -136,7 +136,10 @@ extern NSString* PantomimeProtocolException;
 	      -connectionLost: or -connectionTerminated (or the respective
 	      notification handlers). You may NOT do it elsewhere.
 */
-@interface NSObject (CWServiceClient)
+
+@protocol CWServiceClient
+
+@optional
 
 /*!
   @method authenticationCompleted:
@@ -270,7 +273,7 @@ typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
 	      need to instantiate the CWSMTP, CWPOP3Store or CWIMAPStore classes,
 	      which fully implement the abstract methods found in this class.
 */
-@interface CWService : NSObject
+@interface CWService : NSObject <ConnectionDelegate>
 #else
 @interface CWService : NSObject <RunLoopEvents>
 #endif
@@ -375,7 +378,7 @@ typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
               object for the service (usually a CWTCPConnection instance).
   @result The associated connectio object.
 */
-- (id<CWConnection>) connection;
+//- (id<CWConnection>) connection;
 
 /*!
   @method username

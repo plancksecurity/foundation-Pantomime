@@ -10,13 +10,12 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-
+    var p: Pantomime? = nil
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
-        let p = Pantomime.init()
-        p.startPantomime()
+        p = Pantomime.init()
+        p?.startPantomime()
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {

@@ -26,6 +26,16 @@
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
+@protocol CWConnection;
+
+@protocol ConnectionDelegate
+
+- (void)connectionFailed:(id<CWConnection>)connection;
+- (void)connectionOpened:(id<CWConnection>)connection;
+- (void)connectionClosed:(id<CWConnection>)connection;
+
+@end
+
 /*!
   @protocol CWConnection
   @discussion This protocol defines a basic set of methods that classes
@@ -49,9 +59,11 @@
   @result An instance implementing the CWConnection protocol, nil
 	  if an error occurred, like DNS resolution.
 */
+/*
 - (id) initWithName: (NSString *) theName
                port: (unsigned int) thePort
          background: (BOOL) theBOOL;
+ */
 
 /*!
   @method initWithName: port: connectionTimeout: readTimeout: writeTimeout: background:
@@ -74,7 +86,8 @@
   connectionTimeout: (unsigned int) theConnectionTimeout
 	readTimeout: (unsigned int) theReadTimeout
        writeTimeout: (unsigned int) theWriteTimeout
-         background: (BOOL) theBOOL;
+         background: (BOOL) theBOOL
+           delegate: (id<ConnectionDelegate>)theDelegate;
 
 /*!
   @method fd
