@@ -94,11 +94,11 @@ extension TCPConnection: CWConnection {
         // todo: call delegate?
     }
 
-    public func read(buf: UnsafeMutablePointer<Int8>, length len: Int32) -> Int32 {
+    public func read(buf: UnsafeMutablePointer<Int8>, length len: Int) -> Int {
         return 0
     }
 
-    public func write(buf: UnsafeMutablePointer<Int8>, length len: Int32) -> Int32 {
+    public func write(buf: UnsafeMutablePointer<Int8>, length len: Int) -> Int {
         return 0
     }
 

@@ -63,7 +63,6 @@
 		43E76B381CB3F9C60013C375 /* CWRegEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AE11CB3F9C50013C375 /* CWRegEx.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B391CB3F9C60013C375 /* CWSendmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AE31CB3F9C50013C375 /* CWSendmail.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B3A1CB3F9C60013C375 /* CWService.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AE51CB3F9C50013C375 /* CWService.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E76B3B1CB3F9C60013C375 /* CWService.m.orig in Resources */ = {isa = PBXBuildFile; fileRef = 43E76AE61CB3F9C50013C375 /* CWService.m.orig */; };
 		43E76B3C1CB3F9C60013C375 /* CWSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AE81CB3F9C50013C375 /* CWSMTP.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B3E1CB3F9C60013C375 /* CWURLName.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AEE1CB3F9C50013C375 /* CWURLName.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B3F1CB3F9C60013C375 /* CWUUFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AF01CB3F9C50013C375 /* CWUUFile.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -216,7 +215,6 @@
 		43E76AE31CB3F9C50013C375 /* CWSendmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWSendmail.m; sourceTree = "<group>"; };
 		43E76AE41CB3F9C50013C375 /* CWService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWService.h; sourceTree = "<group>"; };
 		43E76AE51CB3F9C50013C375 /* CWService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWService.m; sourceTree = "<group>"; };
-		43E76AE61CB3F9C50013C375 /* CWService.m.orig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CWService.m.orig; sourceTree = "<group>"; };
 		43E76AE71CB3F9C50013C375 /* CWSMTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWSMTP.h; sourceTree = "<group>"; };
 		43E76AE81CB3F9C50013C375 /* CWSMTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWSMTP.m; sourceTree = "<group>"; };
 		43E76AE91CB3F9C50013C375 /* CWStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWStore.h; sourceTree = "<group>"; };
@@ -455,7 +453,6 @@
 				43E76AE31CB3F9C50013C375 /* CWSendmail.m */,
 				43E76AE41CB3F9C50013C375 /* CWService.h */,
 				43E76AE51CB3F9C50013C375 /* CWService.m */,
-				43E76AE61CB3F9C50013C375 /* CWService.m.orig */,
 				43E76AE71CB3F9C50013C375 /* CWSMTP.h */,
 				43E76AE81CB3F9C50013C375 /* CWSMTP.m */,
 				43E76AE91CB3F9C50013C375 /* CWStore.h */,
@@ -629,7 +626,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				43E76A5A1CB3F9AF0013C375 /* Assets.xcassets in Resources */,
-				43E76B3B1CB3F9C60013C375 /* CWService.m.orig in Resources */,
 				43E76A5D1CB3F9AF0013C375 /* Main.storyboard in Resources */,
 				43E76B461CB3F9C60013C375 /* GNUmakefile in Resources */,
 			);

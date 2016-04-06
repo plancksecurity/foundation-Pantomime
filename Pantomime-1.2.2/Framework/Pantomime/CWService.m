@@ -469,7 +469,7 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 - (void) updateRead
 {
   char buf[NET_BUF_SIZE];
-  int count;
+  NSInteger count;
   
   while ((count = [_connection read: buf  length: NET_BUF_SIZE]) > 0)
     {
@@ -523,7 +523,7 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
   if ([_wbuf length] > 0)
     {
       char *bytes;
-      int count, len, i;
+      NSInteger count, len, i;
 
       bytes = (char *)[_wbuf mutableBytes];
       len = [_wbuf length];
@@ -543,7 +543,7 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 	{
 	  [_delegate performSelector: @selector(service:sentData:)
 		     withObject: self
-		     withObject: [_wbuf subdataToIndex: count]];
+		     withObject: [_wbuf subdataToIndex: (int) count]];
 	}
       
       //NSLog(@"count = %d, len = %d", count, len);
