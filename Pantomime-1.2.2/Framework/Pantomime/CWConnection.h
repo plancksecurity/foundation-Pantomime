@@ -26,7 +26,17 @@
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
+#import "Pantomime/CWConstants.h"
+
 @protocol CWConnectionDelegate
+
+- (void)connectionEstablished;
+
+- (void) receivedEvent: (void * _Nullable) theData
+                  type: (RunLoopEventType) theType
+                 extra: (void * _Nullable) theExtra
+               forMode: (NSString * _Nullable) theMode;
+
 @end
 
 /*!
@@ -83,14 +93,6 @@
          background: (BOOL) theBOOL;
 
 /*!
-  @method fd
-  @discussion This method is used to obtain the file descriptor
-              which is associated to our connection.
-  @result The file descriptor, -1 if the socket isn't yet connected.
-*/
-- (int) fd;
-
-/*!
   @method isConnected
   @discussion This method is used to verify if the socket is
               in a connected state.
@@ -127,6 +129,8 @@
        length: (NSInteger) len;
 
 - (void)connect;
+
+- (BOOL)canWrite;
 
 @end
 

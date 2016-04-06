@@ -56,136 +56,9 @@
 #define DEFAULT_TIMEOUT 60
 
 //
-// Service's private interface.
-//
-@interface CWService (Private)
-
-- (int) _addWatchers;
-- (void) _removeWatchers;
-- (void) _connectionTick: (id) sender;
-- (void) _queueTick: (id) sender;
-
-@end
-
-
-//
-// OS X's implementation of the GNUstep RunLoop Extensions
-//
-#ifdef MACOSX
-static NSMapTable *fd_to_cfsocket;
-
-void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void* data, void* info)
-{
-  if (type&kCFSocketWriteCallBack)
-    {
-      [(CWService *)info receivedEvent: (void*)CFSocketGetNative(s)
-	  	  type: ET_WDESC
-		  extra: 0
-		  forMode: nil];
-    }
-  if (type&kCFSocketReadCallBack)
-    {
-      [(CWService *)info receivedEvent: (void*)CFSocketGetNative(s)
-		  type: ET_RDESC
-		  extra: 0
-		  forMode: nil];
-    }
-}
-
-@interface NSRunLoop (PantomimeRunLoopExtensions)
-- (void) addEvent: (void *) data
-             type: (RunLoopEventType) type
-          watcher: (id) watcher
-          forMode: (NSString *) mode;
-- (void) removeEvent: (void *) data
-                type: (RunLoopEventType) type
-	     forMode: (NSString *) mode
-		 all: (BOOL) removeAll; 
-@end
-
-@implementation NSRunLoop (PantomimeRunLoopExtensions)
-
-- (void) addEvent: (void *) data
-             type: (RunLoopEventType) type
-          watcher: (id) watcher
-          forMode: (NSString *) mode
-{
-  CFSocketRef socket;
-  int fd;
-  
-  fd = (int)data;
-  socket = (CFSocketRef)NSMapGet(fd_to_cfsocket, (void*)fd);
-  
-  // We prevent dealing with callbacks when the socket is NOT
-  // in a connected state. This can happen, under OS X, if
-  // we call -addEvent: type: watcher: forMode: but the
-  // connection hasn't yet been established. If it hasn't been
-  // established, -_addWatchers: was not called so the fd is
-  // NOT in our map table.
-  if (!socket)
-    {
-      return;
-    }
-
-  switch (type)
-    {
-    case ET_RDESC:
-      CFSocketEnableCallBacks(socket, kCFSocketReadCallBack);
-      break;
-    case ET_WDESC:
-      CFSocketEnableCallBacks(socket, kCFSocketWriteCallBack);
-      break;
-    default:
-      break;
-    }
-}
-
-- (void) removeEvent: (void *) data
-                type: (RunLoopEventType) type
-	     forMode: (NSString *) mode
-		 all: (BOOL) removeAll
-{
-  CFSocketRef socket;
-  int fd;
-  
-  fd = (int)data;
-  socket = (CFSocketRef)NSMapGet(fd_to_cfsocket, (void*)fd);
-  
-  // See the description in -addEvent: type: watcher: forMode:.
-  if (!socket)
-    {
-      return;
-    }
-
-  switch (type)
-    {
-    case ET_RDESC:
-      CFSocketDisableCallBacks(socket, kCFSocketReadCallBack);
-      break;
-    case ET_WDESC:
-      CFSocketDisableCallBacks(socket, kCFSocketWriteCallBack);
-      break;
-    default:
-      break;
-    }
-}
-
-@end
-#endif // MACOSX
-
-
-//
 //
 //
 @implementation CWService
-
-#ifdef MACOSX
-+ (void) initialize
-{
-  fd_to_cfsocket = NSCreateMapTable(NSIntMapKeyCallBacks, NSIntMapValueCallBacks, 16);  
-}
-#endif
-
 
 //
 //
@@ -366,7 +239,6 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
   [_timer invalidate];
   DESTROY(_timer);
 
-  [self _removeWatchers];
   [_connection close];
   DESTROY(_connection);
   [_queue removeAllObjects];
@@ -388,14 +260,12 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
   //
   if (_connection_state.reconnecting)
     {
-      [self _removeWatchers];
       [_connection close];
       DESTROY(_connection);
     }
 
   if (_connected)
     {
-      [self _removeWatchers];
       [_connection close];
 
       POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
@@ -409,14 +279,18 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 //
 - (int) connect
 {
-  _connection = [[TCPConnection alloc] initWithName: _name
-					 port: _port
-					 background: NO];
-  if (!_connection)
+    _connection = [[TCPConnection alloc] initWithName: _name
+                                                 port: _port
+                                           background: NO];
+    if (!_connection)
     {
-      return -1;
+        return -1;
     }
-  return [self _addWatchers];
+
+    _connection.delegate = self;
+    [_connection connect];
+
+    return 0;
 }
 
 
@@ -425,34 +299,28 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 //
 - (void) connectInBackgroundAndNotify
 {
-  int i;
+    _connection = [[TCPConnection alloc] initWithName: _name
+                                                 port: _port
+                                           background: YES];
 
-  _connection = [[TCPConnection alloc] initWithName: _name
-					 port: _port
-					 background: YES];
-
-  if (!_connection)
+    if (!_connection)
     {
-      POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
-      PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
-      return;
+        POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
+        return;
     }
 
-  _timer = [NSTimer timerWithTimeInterval: 0.1
-		    target: self
-		    selector: @selector(_connectionTick:)
-		    userInfo: nil
-		    repeats: YES];
-  RETAIN(_timer);
-
-  for (i = 0; i < [_runLoopModes count]; i++)
-    {
-      [[NSRunLoop currentRunLoop] addTimer: _timer  forMode: [_runLoopModes objectAtIndex: i]];
-    }
-
-  [_timer fire];
+    _connection.delegate = self;
+    [_connection connect];
 }
 
+- (void)connectionEstablished
+{
+    _connected = YES;
+    POST_NOTIFICATION(PantomimeConnectionEstablished, self, nil);
+    PERFORM_SELECTOR_1(_delegate, @selector(connectionEstablished:),
+                       PantomimeConnectionEstablished);
+}
 
 //
 //
@@ -498,7 +366,6 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
       //
       if (!((TCPConnection *)_connection).ssl_handshaking && _connected)
 	{
-	  [self _removeWatchers];
 	  [_connection close];
 	  POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
 	  PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
@@ -523,7 +390,7 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
   if ([_wbuf length] > 0)
     {
       char *bytes;
-      NSInteger count, len, i;
+      NSInteger count, len;
 
       bytes = (char *)[_wbuf mutableBytes];
       len = [_wbuf length];
@@ -552,33 +419,11 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
       if (count == len)
 	{
 	  [_wbuf setLength: 0];
-#ifndef __MINGW32__
-	  // If we are done writing, let's remove the watcher on our fd.
-	  for (i = 0; i < [_runLoopModes count]; i++)
-	    {
-	      [[NSRunLoop currentRunLoop] removeEvent: (void *)[_connection fd]
-					  type: ET_WDESC
-					  forMode: [_runLoopModes objectAtIndex: i]
-					  all: YES];
-	    }
-#endif
 	}
       else
 	{
 	  memmove(bytes, bytes+count, len-count);
 	  [_wbuf setLength: len-count];
-      
-	  // We enable the write callback under OS X.
-	  // See the rationale in -writeData:
-#ifdef MACOSX
-	  for (i = 0; i < [_runLoopModes count]; i++)
-	    {
-	      [[NSRunLoop currentRunLoop] addEvent: (void *)[_connection fd]
-					  type: ET_WDESC
-					  watcher: self
-					  forMode: [_runLoopModes objectAtIndex: i]];
-	    }
-#endif
 	}
     }
 }
@@ -589,43 +434,24 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 //
 - (void) writeData: (NSData *) theData
 {
-  if (theData && [theData length])
+    if (theData && [theData length])
     {
-      int i;
+        [_wbuf appendData: theData];
 
-      [_wbuf appendData: theData];
+        //
+        // Let's not try to enable the write callback if we are not connected
+        // There's no reason to try to enable the write callback if we
+        // are not connected.
+        //
+        if (!_connected)
+        {
+            return;
+        }
 
-      //
-      // Let's not try to enable the write callback if we are not connected
-      // There's no reason to try to enable the write callback if we
-      // are not connected.
-      //
-      if (!_connected)
-	{
-	  return;
-	}
-      
-      //
-      // We re-enable the write callback.
-      //
-      // Rationale from OS X's CoreFoundation:
-      //
-      // By default kCFSocketReadCallBack, kCFSocketAcceptCallBack, and kCFSocketDataCallBack callbacks are
-      // automatically reenabled, whereas kCFSocketWriteCallBack callbacks are not; kCFSocketConnectCallBack
-      // callbacks can only occur once, so they cannot be reenabled. Be careful about automatically reenabling
-      // read and write callbacks, because this implies that the callbacks will be sent repeatedly if the socket
-      // remains readable or writable respectively. Be sure to set these flags only for callback types that your
-      // CFSocket actually possesses; the result of setting them for other callback types is undefined.
-      //
-#ifndef __MINGW32__
-      for (i = 0; i < [_runLoopModes count]; i++)
-	{
-	  [[NSRunLoop currentRunLoop] addEvent: (void *)[_connection fd]
-				      type: ET_WDESC
-				      watcher: self
-				      forMode: [_runLoopModes objectAtIndex: i]];
-	}
-#endif
+        // If possible, we write immediately
+        if ([_connection canWrite]) {
+            [self updateWrite];
+        }
     }
 }
 
@@ -749,216 +575,6 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 - (NSArray *) capabilities
 {
   return _capabilities;
-}
-
-@end
-
-//
-//
-//
-@implementation CWService (Private)
-
-
-//
-// This methods adds watchers on a file descriptor.
-// It returns 0 if it has completed successfully.
-//
-- (int) _addWatchers
-{
-  int i;
-
-  //
-  // Under Mac OS X, we must also create a CFSocket and a runloop source in order
-  // to enabled callbacks write read/write availability.
-  //
-#ifdef MACOSX 
-  _context = (CFSocketContext *)malloc(sizeof(CFSocketContext));
-  memset(_context, 0, sizeof(CFSocketContext));
-  _context->info = self;
-  
-  _socket = CFSocketCreateWithNative(NULL, [_connection fd], kCFSocketReadCallBack|kCFSocketWriteCallBack, socket_callback, _context);
-  CFSocketDisableCallBacks(_socket, kCFSocketReadCallBack|kCFSocketWriteCallBack);
-  
-  if (!_socket)
-    {
-      //NSLog(@"Failed to create CFSocket from native.");
-      return -1;
-    }
-  
-  _runLoopSource = CFSocketCreateRunLoopSource(NULL, _socket, 1);
-  
-  if (!_runLoopSource)
-    {
-      //NSLog(@"Failed to create the runloop source.");
-      return -1;
-    }
-  
-  CFRunLoopAddSource(CFRunLoopGetCurrent(), _runLoopSource, kCFRunLoopCommonModes);
-  NSMapInsert(fd_to_cfsocket, (void *)[_connection fd], (void *)_socket);
-#endif
-
-  // We get ready to monitor for read/write timeouts
-  _timer = [NSTimer timerWithTimeInterval: 1
-		    target: self
-		    selector: @selector(_queueTick:)
-		    userInfo: nil
-		    repeats: YES];
-  RETAIN(_timer);
-  _counter = 0;
-
-  //NSLog(@"Adding watchers on %d", [_connection fd]);
-
-  for (i = 0; i < [_runLoopModes count]; i++)
-    {
-      [[NSRunLoop currentRunLoop] addEvent: (void *)[_connection fd]
-#ifdef __MINGW32__
-				  type: ET_HANDLE
-#else
-                                  type: ET_RDESC
-#endif
-				  watcher: self
-				  forMode: [_runLoopModes objectAtIndex: i]];
-      
-      [[NSRunLoop currentRunLoop] addEvent: (void *)[_connection fd]
-#ifdef __MINGW32__
-				  type: ET_TRIGGER
-#else
-                                  type: ET_EDESC
-#endif
-				  watcher: self
-				  forMode: [_runLoopModes objectAtIndex: i]];
-
-      [[NSRunLoop currentRunLoop] addTimer: _timer  forMode: [_runLoopModes objectAtIndex: i]];
-    }
-  
-  _connected = YES;
-  POST_NOTIFICATION(PantomimeConnectionEstablished, self, nil);
-  PERFORM_SELECTOR_1(_delegate, @selector(connectionEstablished:),  PantomimeConnectionEstablished);
-
-  [_timer fire];
-  return 0;
-}
-
-
-//
-//
-//
-- (void) _removeWatchers
-{
-  int i;
-  
-  //
-  // If we are not connected, no need to remove the watchers on our file descriptor.
-  // This could also generate a crash under OS X as the _runLoopSource, _socket etc.
-  // ivars aren't initialized.
-  //
-  if (!_connected)
-    {
-      return;
-    }
-
-  [_timer invalidate];
-  DESTROY(_timer);
-  _connected = NO;
-
-  //NSLog(@"Removing all watchers on %d...", [_connection fd]);
-  
-  for (i = 0; i < [_runLoopModes count]; i++)
-    {
-#ifdef __MINGW32__
-      [[NSRunLoop currentRunLoop] removeEvent: (void *)[_connection fd]
-                                  type: ET_HANDLE
-                                  forMode: [_runLoopModes objectAtIndex: i]
-                                  all: YES];
-    
-      [[NSRunLoop currentRunLoop] removeEvent: (void *)[_connection fd]
-                                  type: ET_TRIGGER
-                                  forMode: [_runLoopModes objectAtIndex: i]
-                                  all: YES];
-#else
-      [[NSRunLoop currentRunLoop] removeEvent: (void *)[_connection fd]
-				  type: ET_RDESC
-				  forMode: [_runLoopModes objectAtIndex: i]
-				  all: YES];
-      
-      [[NSRunLoop currentRunLoop] removeEvent: (void *)[_connection fd]
-				  type: ET_WDESC
-				  forMode: [_runLoopModes objectAtIndex: i]
-				  all: YES];
-      
-      [[NSRunLoop currentRunLoop] removeEvent: (void *)[_connection fd]
-				  type: ET_EDESC
-				  forMode: [_runLoopModes objectAtIndex: i]
-				  all: YES];
-#endif
-    }
-    
-#ifdef MACOSX
-  if (CFRunLoopSourceIsValid(_runLoopSource))
-    {
-      CFRunLoopSourceInvalidate(_runLoopSource);
-      CFRelease(_runLoopSource);
-    }
-
-  if (CFSocketIsValid(_socket))
-    {
-      CFSocketInvalidate(_socket);
-    }
-
-  NSMapRemove(fd_to_cfsocket, (void *)[_connection fd]);
-  CFRelease(_socket);
-  free(_context);
-#endif
-}
-
-//
-//
-//
-- (void) _connectionTick: (id) sender
-{
-  if ((_counter/10) == _connectionTimeout)
-    {
-      [_timer invalidate];
-      DESTROY(_timer);
-
-      POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
-      PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:), PantomimeConnectionTimedOut);
-      return;
-    }
-
-  if ([_connection isConnected])
-    {
-      [_timer invalidate];
-      DESTROY(_timer);
-      [self _addWatchers];
-      return;
-    }
-
-   _counter++;
-}
-
-//
-//
-//
-- (void) _queueTick: (id) sender
-{
-  if ([_queue count])
-    {
-      if (_counter == _readTimeout)
-	{
-	  NSLog(@"Waited %d secs, read/write timeout", _readTimeout);
-	  [_timer invalidate];
-	  DESTROY(_timer);
-	  POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
-	  PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:), PantomimeConnectionTimedOut);
-	}
-
-      _counter++;
-    }
-  else
-    {
-      _counter = 0;
-    }
 }
 
 @end

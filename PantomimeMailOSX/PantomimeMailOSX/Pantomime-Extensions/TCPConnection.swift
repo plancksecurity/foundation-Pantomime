@@ -16,9 +16,14 @@ import Foundation
     var readStream: NSInputStream? = nil
     var writeStream: NSOutputStream? = nil
     var openConnections = Set<NSStream>()
+
+    /** Required from CWConnection */
     public var delegate: CWConnectionDelegate?
+
+    /** Required from CWConnection */
     public var ssl_handshaking: Bool = false
 
+    /** Required from CWConnection */
     public required init(name theName: String,
                       port thePort: UInt32, background theBOOL: Bool) {
         assert(theBOOL == true, "Only asynchronous connections in background are supported")
@@ -27,6 +32,7 @@ import Foundation
         super.init()
     }
 
+    /** Required from CWConnection */
     public required init(name theName: String, port thePort: UInt32,
                                connectionTimeout: UInt32, readTimeout: UInt32, writeTimeout: UInt32,
                                background theBOOL: Bool) {
@@ -36,18 +42,16 @@ import Foundation
         super.init()
     }
     
-    func connect(name theName: String!, port thePort: UInt32,
-                      connectionTimeout theConnectionTimeout: UInt32,
-                                        readTimeout theReadTimeout: UInt32,
-                                                    writeTimeout theWriteTimeout: UInt32,
-                                                                 background theBOOL: Bool) {
+    func connect(name theName: String, port thePort: UInt32) {
         var readStream:  Unmanaged<CFReadStream>? = nil
         var writeStream: Unmanaged<CFWriteStream>? = nil
         CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, theName, thePort, &readStream,
                                            &writeStream)
-        if readStream == nil || writeStream == nil {
-            // todo: call delegate?
-        } else {
+
+        assert(readStream != nil, "Could not create reading stream")
+        assert(writeStream != nil, "Could not create writing stream")
+
+        if readStream != nil || writeStream != nil {
             self.readStream = readStream?.takeRetainedValue()
             self.writeStream = writeStream?.takeRetainedValue()
             self.setupStream(self.readStream)
@@ -79,10 +83,6 @@ import Foundation
 }
 
 extension TCPConnection: CWConnection {
-    public func fd() -> Int32 {
-        return -1
-    }
-
     public func isConnected() -> Bool {
         return connected
     }
@@ -103,6 +103,11 @@ extension TCPConnection: CWConnection {
     }
 
     public func connect() {
+        connect(name: name, port: port)
+    }
+
+    public func canWrite() -> Bool {
+        return (writeStream?.hasSpaceAvailable)!
     }
 
 }
@@ -118,20 +123,23 @@ extension TCPConnection: NSStreamDelegate {
             print("\(aStream) OpenCompleted")
             if openConnections.count == 2 {
                 connected = true
-                // todo: call delegate?
+                delegate?.connectionEstablished()
             }
         case NSStreamEvent.HasBytesAvailable:
             print("\(aStream) HasBytesAvailable")
+            delegate?.receivedEvent(nil, type: ET_RDESC, extra: nil, forMode: nil)
         case NSStreamEvent.HasSpaceAvailable:
             print("\(aStream) HasSpaceAvailable")
+            delegate?.receivedEvent(nil, type: ET_WDESC, extra: nil, forMode: nil)
         case NSStreamEvent.ErrorOccurred:
             print("\(aStream) ErrorOccurred")
-            close()
+            delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         case NSStreamEvent.EndEncountered:
             print("\(aStream) EndEncountered")
-            close()
+            delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         default:
             print("\(aStream) eventCode \(eventCode)")
+            delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         }
     }
 

@@ -272,7 +272,7 @@ extern NSString* PantomimeProtocolException;
 	      need to instantiate the CWSMTP, CWPOP3Store or CWIMAPStore classes,
 	      which fully implement the abstract methods found in this class.
 */
-@interface CWService : NSObject
+@interface CWService : NSObject <CWConnectionDelegate>
 #else
 @interface CWService : NSObject <RunLoopEvents>
 #endif
