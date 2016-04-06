@@ -1,5 +1,5 @@
 \.DS_Store
-.*project.xcworkspace/.*
-.*xcuserdata/.*
-.*Pods/.*
-.*\.orig$
+project.xcworkspace/.*
+xcuserdata/.*
+Pods/.*
+\.orig$
