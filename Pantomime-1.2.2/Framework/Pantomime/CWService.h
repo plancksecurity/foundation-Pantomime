@@ -23,8 +23,9 @@
 #ifndef _Pantomime_H_CWService
 #define _Pantomime_H_CWService
 
-#include <Pantomime/CWConnection.h>
-#include <Pantomime/CWConstants.h>
+#import <Pantomime/CWConnection.h>
+
+#import <Pantomime/CWConstants.h>
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSObject.h>
@@ -51,7 +52,7 @@
 static inline NSData *split_lines(NSMutableData *theMutableData)
 {
   char *bytes, *end;
-  int i, count;
+  NSUInteger i, count;
 
   end = bytes = (char *)[theMutableData mutableBytes];
   count = [theMutableData length];
@@ -136,7 +137,6 @@ extern NSString* PantomimeProtocolException;
 	      -connectionLost: or -connectionTerminated (or the respective
 	      notification handlers). You may NOT do it elsewhere.
 */
-
 @protocol CWServiceClient
 
 @optional
@@ -254,7 +254,7 @@ extern NSString* PantomimeProtocolException;
 - (void) serviceReconnected: (NSNotification *) theNotification;
 @end
 
-@interface ConnectionState : NSObject
+@interface CWConnectionState : NSObject
 
 @property (nonatomic, strong) NSMutableArray *previous_queue;
 @property (nonatomic) BOOL reconnecting;
@@ -263,7 +263,6 @@ extern NSString* PantomimeProtocolException;
 @end
 
 #ifdef MACOSX
-typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
 
 /*!
   @class CWService
@@ -273,7 +272,7 @@ typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
 	      need to instantiate the CWSMTP, CWPOP3Store or CWIMAPStore classes,
 	      which fully implement the abstract methods found in this class.
 */
-@interface CWService : NSObject <ConnectionDelegate>
+@interface CWService : NSObject
 #else
 @interface CWService : NSObject <RunLoopEvents>
 #endif
@@ -308,9 +307,7 @@ typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
     id<CWConnection> _connection;
     NSTimer * _timer;
     int _counter;
-
-    ConnectionState *_connection_state;
-
+    CWConnectionState *_connection_state;
 }
 
 /*!
@@ -378,7 +375,7 @@ typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
               object for the service (usually a CWTCPConnection instance).
   @result The associated connectio object.
 */
-//- (id<CWConnection>) connection;
+- (id<CWConnection>) connection;
 
 /*!
   @method username

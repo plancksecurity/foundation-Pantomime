@@ -26,14 +26,7 @@
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
-@protocol CWConnection;
-
-@protocol ConnectionDelegate
-
-- (void)connectionFailed:(id<CWConnection>)connection;
-- (void)connectionOpened:(id<CWConnection>)connection;
-- (void)connectionClosed:(id<CWConnection>)connection;
-
+@protocol CWConnectionDelegate
 @end
 
 /*!
@@ -43,7 +36,10 @@
 	      to offer TCP connections support. An UDP implementation
 	      will likely be added in a near future (for DNS requests).
 */
-@protocol CWConnection 
+@protocol CWConnection
+
+@property (nonatomic, weak, nullable) id<CWConnectionDelegate> delegate;
+@property (nonatomic) BOOL ssl_handshaking;
 
 /*!
   @method initWithName: port: background:
@@ -59,11 +55,9 @@
   @result An instance implementing the CWConnection protocol, nil
 	  if an error occurred, like DNS resolution.
 */
-/*
-- (id) initWithName: (NSString *) theName
+- (id _Nonnull) initWithName: (NSString * _Nonnull) theName
                port: (unsigned int) thePort
          background: (BOOL) theBOOL;
- */
 
 /*!
   @method initWithName: port: connectionTimeout: readTimeout: writeTimeout: background:
@@ -81,13 +75,12 @@
   @result An instance implementing the CWConnection protocol, nil
 	  if an error occurred, like DNS resolution.
 */
-- (id) initWithName: (NSString *) theName
+- (id _Nonnull) initWithName: (NSString * _Nonnull) theName
 	       port: (unsigned int) thePort
   connectionTimeout: (unsigned int) theConnectionTimeout
 	readTimeout: (unsigned int) theReadTimeout
        writeTimeout: (unsigned int) theWriteTimeout
-         background: (BOOL) theBOOL
-           delegate: (id<ConnectionDelegate>)theDelegate;
+         background: (BOOL) theBOOL;
 
 /*!
   @method fd
@@ -119,7 +112,7 @@
   @param len The number of bytes we want to try to read.
   @result The number of bytes successfully read.
 */
-- (int) read: (char *) buf
+- (int) read: (char * _Nonnull) buf
       length: (int) len;
 
 /*!
@@ -130,8 +123,11 @@
   @param len The number of bytes we want to try to write.
   @result The number of bytes successfully written.
 */
-- (int) write: (char *) buf
+- (int) write: (char * _Nonnull) buf
        length: (int) len;
+
+- (void)connect;
+
 @end
 
 #endif // _Pantomime_H_CWConnection

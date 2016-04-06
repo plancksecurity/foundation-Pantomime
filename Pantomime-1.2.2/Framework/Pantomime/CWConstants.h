@@ -36,6 +36,10 @@
 #define MACOSX
 #endif
 
+#ifdef MACOSX
+typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
+#endif
+
 //
 // Useful macros that we must define ourself on OS X.
 //

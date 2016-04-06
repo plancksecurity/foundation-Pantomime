@@ -10,27 +10,32 @@ import Foundation
 
 @objc public class TCPConnection: NSObject {
 
-    public var connected = false
+    var connected = false
+    let name: String
+    let port: UInt32
     var readStream: NSInputStream? = nil
     var writeStream: NSOutputStream? = nil
-    var delegate: ConnectionDelegate? = nil
     var openConnections = Set<NSStream>()
-    var outBuffer = NSMutableData.init()
+    public var delegate: CWConnectionDelegate?
+    public var ssl_handshaking: Bool = false
 
-    public required init!(name theName: String!,
-                      port thePort: UInt32, connectionTimeout theConnectionTimeout: UInt32,
-                           readTimeout theReadTimeout: UInt32,
-                                       writeTimeout theWriteTimeout: UInt32,
-                                                    background theBOOL: Bool,
-                                                               delegate: ConnectionDelegate) {
+    public required init(name theName: String,
+                      port thePort: UInt32, background theBOOL: Bool) {
         assert(theBOOL == true, "Only asynchronous connections in background are supported")
-
-        self.delegate = delegate
+        name = theName
+        port = thePort
         super.init()
-        connect(name: theName, port: thePort, connectionTimeout: 0, readTimeout: 0,
-                writeTimeout: 0, background: true)
     }
 
+    public required init(name theName: String, port thePort: UInt32,
+                               connectionTimeout: UInt32, readTimeout: UInt32, writeTimeout: UInt32,
+                               background theBOOL: Bool) {
+        assert(theBOOL == true, "Only asynchronous connections in background are supported")
+        name = theName
+        port = thePort
+        super.init()
+    }
+    
     func connect(name theName: String!, port thePort: UInt32,
                       connectionTimeout theConnectionTimeout: UInt32,
                                         readTimeout theReadTimeout: UInt32,
@@ -41,7 +46,7 @@ import Foundation
         CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, theName, thePort, &readStream,
                                            &writeStream)
         if readStream == nil || writeStream == nil {
-            delegate?.connectionFailed(self)
+            // todo: call delegate?
         } else {
             self.readStream = readStream?.takeRetainedValue()
             self.writeStream = writeStream?.takeRetainedValue()
@@ -86,7 +91,7 @@ extension TCPConnection: CWConnection {
         closeAndRemoveStream(readStream)
         closeAndRemoveStream(writeStream)
         connected = false
-        delegate?.connectionClosed(self)
+        // todo: call delegate?
     }
 
     public func read(buf: UnsafeMutablePointer<Int8>, length len: Int32) -> Int32 {
@@ -94,9 +99,12 @@ extension TCPConnection: CWConnection {
     }
 
     public func write(buf: UnsafeMutablePointer<Int8>, length len: Int32) -> Int32 {
-        outBuffer.appendBytes(buf, length: Int(len))
-        return len
+        return 0
     }
+
+    public func connect() {
+    }
+
 }
 
 extension TCPConnection: NSStreamDelegate {
@@ -110,7 +118,7 @@ extension TCPConnection: NSStreamDelegate {
             print("\(aStream) OpenCompleted")
             if openConnections.count == 2 {
                 connected = true
-                delegate?.connectionOpened(self)
+                // todo: call delegate?
             }
         case NSStreamEvent.HasBytesAvailable:
             print("\(aStream) HasBytesAvailable")

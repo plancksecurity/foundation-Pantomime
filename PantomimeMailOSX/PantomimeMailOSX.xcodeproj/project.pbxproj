@@ -18,7 +18,6 @@
 		43E76B0A1CB3F9C60013C375 /* CWCharset.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A841CB3F9C50013C375 /* CWCharset.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B0B1CB3F9C60013C375 /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A871CB3F9C50013C375 /* CWConstants.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B0C1CB3F9C60013C375 /* CWContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A891CB3F9C50013C375 /* CWContainer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E76B0D1CB3F9C60013C375 /* CWDNSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A8B1CB3F9C50013C375 /* CWDNSManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B0E1CB3F9C60013C375 /* CWFlags.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A8D1CB3F9C50013C375 /* CWFlags.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B0F1CB3F9C60013C375 /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A8F1CB3F9C50013C375 /* CWFolder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B101CB3F9C60013C375 /* CWFolderInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A911CB3F9C50013C375 /* CWFolderInformation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -66,7 +65,6 @@
 		43E76B3A1CB3F9C60013C375 /* CWService.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AE51CB3F9C50013C375 /* CWService.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B3B1CB3F9C60013C375 /* CWService.m.orig in Resources */ = {isa = PBXBuildFile; fileRef = 43E76AE61CB3F9C50013C375 /* CWService.m.orig */; };
 		43E76B3C1CB3F9C60013C375 /* CWSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AE81CB3F9C50013C375 /* CWSMTP.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E76B3D1CB3F9C60013C375 /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AEB1CB3F9C50013C375 /* CWTCPConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B3E1CB3F9C60013C375 /* CWURLName.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AEE1CB3F9C50013C375 /* CWURLName.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B3F1CB3F9C60013C375 /* CWUUFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AF01CB3F9C50013C375 /* CWUUFile.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B401CB3F9C60013C375 /* CWVirtualFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76AF21CB3F9C50013C375 /* CWVirtualFolder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -128,8 +126,6 @@
 		43E76A871CB3F9C50013C375 /* CWConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWConstants.m; sourceTree = "<group>"; };
 		43E76A881CB3F9C50013C375 /* CWContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWContainer.h; sourceTree = "<group>"; };
 		43E76A891CB3F9C50013C375 /* CWContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWContainer.m; sourceTree = "<group>"; };
-		43E76A8A1CB3F9C50013C375 /* CWDNSManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWDNSManager.h; sourceTree = "<group>"; };
-		43E76A8B1CB3F9C50013C375 /* CWDNSManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWDNSManager.m; sourceTree = "<group>"; };
 		43E76A8C1CB3F9C50013C375 /* CWFlags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWFlags.h; sourceTree = "<group>"; };
 		43E76A8D1CB3F9C50013C375 /* CWFlags.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWFlags.m; sourceTree = "<group>"; };
 		43E76A8E1CB3F9C50013C375 /* CWFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWFolder.h; sourceTree = "<group>"; };
@@ -224,8 +220,6 @@
 		43E76AE71CB3F9C50013C375 /* CWSMTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWSMTP.h; sourceTree = "<group>"; };
 		43E76AE81CB3F9C50013C375 /* CWSMTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWSMTP.m; sourceTree = "<group>"; };
 		43E76AE91CB3F9C50013C375 /* CWStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWStore.h; sourceTree = "<group>"; };
-		43E76AEA1CB3F9C50013C375 /* CWTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTCPConnection.h; sourceTree = "<group>"; };
-		43E76AEB1CB3F9C50013C375 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
 		43E76AEC1CB3F9C50013C375 /* CWTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTransport.h; sourceTree = "<group>"; };
 		43E76AED1CB3F9C50013C375 /* CWURLName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWURLName.h; sourceTree = "<group>"; };
 		43E76AEE1CB3F9C50013C375 /* CWURLName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWURLName.m; sourceTree = "<group>"; };
@@ -371,8 +365,6 @@
 				43E76A871CB3F9C50013C375 /* CWConstants.m */,
 				43E76A881CB3F9C50013C375 /* CWContainer.h */,
 				43E76A891CB3F9C50013C375 /* CWContainer.m */,
-				43E76A8A1CB3F9C50013C375 /* CWDNSManager.h */,
-				43E76A8B1CB3F9C50013C375 /* CWDNSManager.m */,
 				43E76A8C1CB3F9C50013C375 /* CWFlags.h */,
 				43E76A8D1CB3F9C50013C375 /* CWFlags.m */,
 				43E76A8E1CB3F9C50013C375 /* CWFolder.h */,
@@ -467,8 +459,6 @@
 				43E76AE71CB3F9C50013C375 /* CWSMTP.h */,
 				43E76AE81CB3F9C50013C375 /* CWSMTP.m */,
 				43E76AE91CB3F9C50013C375 /* CWStore.h */,
-				43E76AEA1CB3F9C50013C375 /* CWTCPConnection.h */,
-				43E76AEB1CB3F9C50013C375 /* CWTCPConnection.m */,
 				43E76AEC1CB3F9C50013C375 /* CWTransport.h */,
 				43E76AED1CB3F9C50013C375 /* CWURLName.h */,
 				43E76AEE1CB3F9C50013C375 /* CWURLName.m */,
@@ -794,7 +784,6 @@
 				43E76B131CB3F9C60013C375 /* CWIMAPMessage.m in Sources */,
 				43E76A581CB3F9AF0013C375 /* ViewController.swift in Sources */,
 				43E76B2F1CB3F9C60013C375 /* CWMIMEMultipart.m in Sources */,
-				43E76B3D1CB3F9C60013C375 /* CWTCPConnection.m in Sources */,
 				43E76B2B1CB3F9C60013C375 /* CWLocalStore.m in Sources */,
 				43E76B401CB3F9C60013C375 /* CWVirtualFolder.m in Sources */,
 				43E76B261CB3F9C60013C375 /* CWLocalCacheManager.m in Sources */,
@@ -819,7 +808,6 @@
 				43E76B3C1CB3F9C60013C375 /* CWSMTP.m in Sources */,
 				43E76B3A1CB3F9C60013C375 /* CWService.m in Sources */,
 				43E76B271CB3F9C60013C375 /* CWLocalFolder+maildir.m in Sources */,
-				43E76B0D1CB3F9C60013C375 /* CWDNSManager.m in Sources */,
 				43E76B141CB3F9C60013C375 /* CWIMAPStore.m in Sources */,
 				43E76B231CB3F9C60013C375 /* CWISO8859_9.m in Sources */,
 				43E76B151CB3F9C60013C375 /* CWInternetAddress.m in Sources */,

@@ -449,7 +449,6 @@ void dns_socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef add
 //
 - (void) _parseResolvFile
 {
-    /*
   int i;
 #ifdef HAS_RES_NINIT
   struct __res_state cw_res;
@@ -478,7 +477,6 @@ void dns_socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef add
 #ifdef HAS_RES_NINIT
   res_ndestroy(&cw_res);
 #endif
-     */
 }
 
 

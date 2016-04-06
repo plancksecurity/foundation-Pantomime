@@ -23,7 +23,6 @@
 #include <Pantomime/CWService.h>
 
 #include <Pantomime/CWConstants.h>
-#include <Pantomime/CWTCPConnection.h>
 #include <Pantomime/NSData+Extensions.h>
 
 #include <Foundation/NSBundle.h>
@@ -31,10 +30,10 @@
 #include <Foundation/NSNotification.h>
 #include <Foundation/NSPathUtilities.h>
 
-#import "PantomimeMailOSX-swift.h"
-
 #include <stdlib.h>
 #include <string.h>
+
+#import "PantomimeMailOSX-swift.h"
 
 //
 // It's important that the read buffer be bigger than the PMTU. Since almost all networks
@@ -257,7 +256,7 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
   TEST_RELEASE((id<NSObject>)_connection);
   RELEASE(_runLoopModes);
 
-  RELEASE(_connection_state);
+  RELEASE(_connection_state.previous_queue);
 
   [super dealloc];
 }
@@ -410,14 +409,14 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 //
 - (int) connect
 {
-    _connection = [[TCPConnection alloc] initWithName:_name port:_port connectionTimeout:0
-                                          readTimeout:0 writeTimeout:0 background:NO
-                                             delegate:self];
-    if (!_connection)
+  _connection = [[TCPConnection alloc] initWithName: _name
+					 port: _port
+					 background: NO];
+  if (!_connection)
     {
-        return -1;
+      return -1;
     }
-    return [self _addWatchers];
+  return [self _addWatchers];
 }
 
 
@@ -426,16 +425,32 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 //
 - (void) connectInBackgroundAndNotify
 {
-    _connection = [[TCPConnection alloc] initWithName:_name port:_port connectionTimeout:0
-                                          readTimeout:0 writeTimeout:0 background:YES
-                                             delegate:self];
+  int i;
 
-    if (!_connection)
+  _connection = [[TCPConnection alloc] initWithName: _name
+					 port: _port
+					 background: YES];
+
+  if (!_connection)
     {
-        POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
-        PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
-        return;
+      POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
+      PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
+      return;
     }
+
+  _timer = [NSTimer timerWithTimeInterval: 0.1
+		    target: self
+		    selector: @selector(_connectionTick:)
+		    userInfo: nil
+		    repeats: YES];
+  RETAIN(_timer);
+
+  for (i = 0; i < [_runLoopModes count]; i++)
+    {
+      [[NSRunLoop currentRunLoop] addTimer: _timer  forMode: [_runLoopModes objectAtIndex: i]];
+    }
+
+  [_timer fire];
 }
 
 
@@ -481,7 +496,7 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
       // The data that causes select to return is the EOF because the other side
       // has closed the connection. This causes read to return zero. 
       //
-      if (!((CWTCPConnection *)_connection)->ssl_handshaking && _connected)
+      if (!((TCPConnection *)_connection).ssl_handshaking && _connected)
 	{
 	  [self _removeWatchers];
 	  [_connection close];
@@ -574,20 +589,43 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 //
 - (void) writeData: (NSData *) theData
 {
-    if (theData && [theData length])
+  if (theData && [theData length])
     {
-        [_wbuf appendData: theData];
+      int i;
 
-        //
-        // Let's not try to enable the write callback if we are not connected
-        // There's no reason to try to enable the write callback if we
-        // are not connected.
-        //
-        if (!_connected)
-        {
-            return;
-        }
-        [self updateWrite];
+      [_wbuf appendData: theData];
+
+      //
+      // Let's not try to enable the write callback if we are not connected
+      // There's no reason to try to enable the write callback if we
+      // are not connected.
+      //
+      if (!_connected)
+	{
+	  return;
+	}
+      
+      //
+      // We re-enable the write callback.
+      //
+      // Rationale from OS X's CoreFoundation:
+      //
+      // By default kCFSocketReadCallBack, kCFSocketAcceptCallBack, and kCFSocketDataCallBack callbacks are
+      // automatically reenabled, whereas kCFSocketWriteCallBack callbacks are not; kCFSocketConnectCallBack
+      // callbacks can only occur once, so they cannot be reenabled. Be careful about automatically reenabling
+      // read and write callbacks, because this implies that the callbacks will be sent repeatedly if the socket
+      // remains readable or writable respectively. Be sure to set these flags only for callback types that your
+      // CFSocket actually possesses; the result of setting them for other callback types is undefined.
+      //
+#ifndef __MINGW32__
+      for (i = 0; i < [_runLoopModes count]; i++)
+	{
+	  [[NSRunLoop currentRunLoop] addEvent: (void *)[_connection fd]
+				      type: ET_WDESC
+				      watcher: self
+				      forMode: [_runLoopModes objectAtIndex: i]];
+	}
+#endif
     }
 }
 
@@ -711,27 +749,6 @@ void socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address
 - (NSArray *) capabilities
 {
   return _capabilities;
-}
-
-#pragma mark -- ConnectionDelegate
-
-- (void)connectionFailed:(id<CWConnection>)connection
-{
-
-}
-
-- (void)connectionOpened:(id<CWConnection>)connection
-{
-    if ([_connection isConnected]) {
-        _connected = YES;
-        POST_NOTIFICATION(PantomimeConnectionEstablished, self, nil);
-        PERFORM_SELECTOR_1(_delegate, @selector(connectionEstablished:),  PantomimeConnectionEstablished);
-    }
-}
-
-- (void)connectionClosed:(id<CWConnection>)connection
-{
-    _connected = NO;
 }
 
 @end
