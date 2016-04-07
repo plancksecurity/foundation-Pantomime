@@ -41,11 +41,9 @@ extension Pantomime: CWServiceClient {
     }
 
     @objc public func connectionEstablished(notification: NSNotification) {
-        imapStore?.startTLS()
     }
 
     @objc public func connectionLost(notification: NSNotification) {
-        imapStore?.startTLS()
     }
 
     @objc public func connectionTerminated(notification: NSNotification) {

@@ -336,7 +336,7 @@
 //
 - (void) updateRead
 {
-  char buf[NET_BUF_SIZE];
+  unsigned char buf[NET_BUF_SIZE];
   NSInteger count;
   
   while ((count = [_connection read: buf  length: NET_BUF_SIZE]) > 0)
@@ -389,10 +389,10 @@
 {
   if ([_wbuf length] > 0)
     {
-      char *bytes;
+      unsigned char *bytes;
       NSInteger count, len;
 
-      bytes = (char *)[_wbuf mutableBytes];
+      bytes = [_wbuf mutableBytes];
       len = [_wbuf length];
 
 #ifdef MACOSX

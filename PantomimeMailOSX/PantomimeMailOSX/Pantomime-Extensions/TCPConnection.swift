@@ -61,6 +61,8 @@ import Foundation
 
     func setupStream(stream: NSStream?) {
         stream?.delegate = self
+        stream?.setProperty(NSStreamSocketSecurityLevelNegotiatedSSL,
+                            forKey: NSStreamSocketSecurityLevelKey)
         stream?.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
         stream?.open()
     }
@@ -91,15 +93,25 @@ extension TCPConnection: CWConnection {
         closeAndRemoveStream(readStream)
         closeAndRemoveStream(writeStream)
         connected = false
-        // todo: call delegate?
+        delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
     }
 
-    public func read(buf: UnsafeMutablePointer<Int8>, length len: Int) -> Int {
-        return 0
+    public func read(buf: UnsafeMutablePointer<UInt8>, length: Int) -> Int {
+        if readStream?.hasBytesAvailable == false {
+            return -1
+        }
+        let count = readStream!.read(buf, maxLength: length)
+        print("read \(count)")
+        return count
     }
 
-    public func write(buf: UnsafeMutablePointer<Int8>, length len: Int) -> Int {
-        return 0
+    public func write(buf: UnsafeMutablePointer<UInt8>, length: Int) -> Int {
+        if writeStream?.hasSpaceAvailable == false {
+            return -1
+        }
+        let count = writeStream!.write(buf, maxLength: length)
+        print("wrote \(count)")
+        return count
     }
 
     public func connect() {
@@ -107,7 +119,7 @@ extension TCPConnection: CWConnection {
     }
 
     public func canWrite() -> Bool {
-        return (writeStream?.hasSpaceAvailable)!
+        return writeStream!.hasSpaceAvailable
     }
 
 }
@@ -123,6 +135,7 @@ extension TCPConnection: NSStreamDelegate {
             print("\(aStream) OpenCompleted")
             if openConnections.count == 2 {
                 connected = true
+                print("connectionEstablished")
                 delegate?.connectionEstablished()
             }
         case NSStreamEvent.HasBytesAvailable:

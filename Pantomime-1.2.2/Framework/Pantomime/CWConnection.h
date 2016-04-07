@@ -114,7 +114,7 @@
   @param len The number of bytes we want to try to read.
   @result The number of bytes successfully read.
 */
-- (NSInteger) read: (char * _Nonnull) buf
+- (NSInteger) read: (unsigned char * _Nonnull) buf
       length: (NSInteger) len;
 
 /*!
@@ -125,7 +125,7 @@
   @param len The number of bytes we want to try to write.
   @result The number of bytes successfully written.
 */
-- (NSInteger) write: (char * _Nonnull) buf
+- (NSInteger) write: (unsigned char * _Nonnull) buf
        length: (NSInteger) len;
 
 - (void)connect;
