@@ -33,7 +33,6 @@
 #import <Pantomime/NSData+Extensions.h>
 #import <Pantomime/NSScanner+Extensions.h>
 #import <Pantomime/NSString+Extensions.h>
-#import <Pantomime/CWTCPConnection.h>
 #import <Pantomime/CWURLName.h>
 
 #import <Foundation/NSAutoreleasePool.h>

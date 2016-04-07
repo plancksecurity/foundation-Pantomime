@@ -29,6 +29,7 @@ public class Pantomime {
 
 extension Pantomime: CWServiceClient {
     @objc public func authenticationCompleted(notification: NSNotification) {
+        print("authenticationCompleted")
     }
 
     @objc public func authenticationFailed(notification: NSNotification) {

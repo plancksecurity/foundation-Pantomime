@@ -31,7 +31,6 @@
 #include <Pantomime/CWPOP3CacheObject.h>
 #include <Pantomime/CWPOP3Message.h>
 #include <Pantomime/CWPOP3Store.h>
-#include <Pantomime/CWTCPConnection.h>
 #include <Pantomime/NSData+Extensions.h>
 #include <Pantomime/NSString+Extensions.h>
 

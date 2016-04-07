@@ -29,7 +29,6 @@
 #include <Pantomime/CWPOP3Folder.h>
 #include <Pantomime/CWPOP3Message.h>
 #include <Pantomime/CWStore.h>
-#include <Pantomime/CWTCPConnection.h>
 #include <Pantomime/CWURLName.h>
 
 #include <Foundation/NSArray.h>
@@ -39,6 +38,8 @@
 #include <Foundation/NSPathUtilities.h>
 
 #include <stdio.h>
+
+#import "PantomimeMailOSX-swift.h"
 
 //
 // Some static variables used to enhance the performance.
@@ -826,7 +827,7 @@ static NSData *CRLF;
 
   if ([aData hasCPrefix: "+OK"])
     {
-      [(CWTCPConnection *)_connection startSSL];
+      [(TCPConnection *)_connection startSSL];
 
       POST_NOTIFICATION(PantomimeServiceInitialized, self, nil);
       PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:), PantomimeServiceInitialized);

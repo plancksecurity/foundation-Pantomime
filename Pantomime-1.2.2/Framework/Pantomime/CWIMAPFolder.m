@@ -28,7 +28,6 @@
 #include <Pantomime/CWIMAPCacheManager.h>
 #include <Pantomime/CWIMAPStore.h>
 #include <Pantomime/CWIMAPMessage.h>
-#include <Pantomime/CWTCPConnection.h>
 #include <Pantomime/NSData+Extensions.h>
 #include <Pantomime/NSString+Extensions.h>
 

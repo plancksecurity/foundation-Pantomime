@@ -27,11 +27,12 @@
 #include <Pantomime/CWInternetAddress.h>
 #include <Pantomime/CWMD5.h>
 #include <Pantomime/CWMessage.h>
-#include <Pantomime/CWTCPConnection.h>
 #include <Pantomime/NSData+Extensions.h>
 
 #include <Foundation/NSEnumerator.h>
 #include <Foundation/NSNotification.h>
+
+#import "PantomimeMailOSX-swift.h"
 
 //
 // Some static variables used to enhance the performance.
@@ -1025,7 +1026,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   if ([aData hasCPrefix: "220"])
     {          
       // We first activate SSL.
-      [(CWTCPConnection *)_connection startSSL];
+      [(TCPConnection *)_connection startSSL];
 
       // We now forget about the initial negotiated state; see RFC2487 for more details,
       [_supportedMechanisms removeAllObjects];
