@@ -436,7 +436,7 @@ static unsigned short version = 1;
 //
 //
 //
-- (void) writeRecord: (cache_record *) theRecord
+- (void) writeRecord: (CacheRecord *) theRecord
 {
   unsigned int len;
 
@@ -450,17 +450,17 @@ static unsigned short version = 1;
   // first five fields, which is 20 bytes long and is added
   // at the very end)
   len = 0;
-  len += [theRecord->from length]+2;
-  len += [theRecord->in_reply_to length]+2;
-  len += [theRecord->message_id length]+2;
-  len += [theRecord->references length]+2;
-  len += [theRecord->subject length]+2;
-  len += [theRecord->to length]+2;
-  len += [theRecord->cc length]+2;
+  len += [theRecord.from length]+2;
+  len += [theRecord.in_reply_to length]+2;
+  len += [theRecord.message_id length]+2;
+  len += [theRecord.references length]+2;
+  len += [theRecord.subject length]+2;
+  len += [theRecord.to length]+2;
+  len += [theRecord.cc length]+2;
 
   if ([(CWLocalFolder *)_folder type] == PantomimeFormatMaildir)
     {
-      len += strlen(theRecord->filename)+2;
+      len += strlen(theRecord.filename)+2;
       len += 16;
     }
   else
@@ -472,28 +472,28 @@ static unsigned short version = 1;
   write_unsigned_int(_fd, len);
 
   // We write the flags, date, position and the size of the message.
-  write_unsigned_int(_fd, theRecord->flags);
-  write_unsigned_int(_fd, theRecord->date);
+  write_unsigned_int(_fd, theRecord.flags);
+  write_unsigned_int(_fd, theRecord.date);
 
   if ([(CWLocalFolder *)_folder type] == PantomimeFormatMbox)
     {
-      write_unsigned_int(_fd, theRecord->position);
+      write_unsigned_int(_fd, theRecord.position);
     }
   else
     {
-      write_string(_fd, (unsigned char *)theRecord->filename, strlen(theRecord->filename));
+      write_string(_fd, (unsigned char *)theRecord.filename, strlen(theRecord.filename));
     }
   
-  write_unsigned_int(_fd, theRecord->size);
+  write_unsigned_int(_fd, theRecord.size);
   
   // We write the read of our cached headers (From, In-Reply-To, Message-ID, References, Subject and To)
-  write_string(_fd, (unsigned char *)[theRecord->from bytes], [theRecord->from length]);
-  write_string(_fd, (unsigned char *)[theRecord->in_reply_to bytes], [theRecord->in_reply_to length]);
-  write_string(_fd, (unsigned char *)[theRecord->message_id bytes], [theRecord->message_id length]);
-  write_string(_fd, (unsigned char *)[theRecord->references bytes], [theRecord->references length]);
-  write_string(_fd, (unsigned char *)[theRecord->subject bytes], [theRecord->subject length]);
-  write_string(_fd, (unsigned char *)[theRecord->to bytes], [theRecord->to length]);
-  write_string(_fd, (unsigned char *)[theRecord->cc bytes], [theRecord->cc length]);
+  write_string(_fd, (unsigned char *)[theRecord.from bytes], [theRecord.from length]);
+  write_string(_fd, (unsigned char *)[theRecord.in_reply_to bytes], [theRecord.in_reply_to length]);
+  write_string(_fd, (unsigned char *)[theRecord.message_id bytes], [theRecord.message_id length]);
+  write_string(_fd, (unsigned char *)[theRecord.references bytes], [theRecord.references length]);
+  write_string(_fd, (unsigned char *)[theRecord.subject bytes], [theRecord.subject length]);
+  write_string(_fd, (unsigned char *)[theRecord.to bytes], [theRecord.to length]);
+  write_string(_fd, (unsigned char *)[theRecord.cc bytes], [theRecord.cc length]);
 
   _count++;
 }

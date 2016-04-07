@@ -310,7 +310,7 @@ static unsigned short version = 1;
 //
 //
 //
-- (void) writeRecord: (cache_record *) theRecord  message: (id) theMessage
+- (void) writeRecord: (CacheRecord *) theRecord  message: (id) theMessage
 {
   unsigned int len;
 
@@ -324,32 +324,32 @@ static unsigned short version = 1;
   // first five fields, which is 20 bytes long and is added
   // at the very end)
   len = 0;
-  len += [theRecord->from length]+2;
-  len += [theRecord->in_reply_to length]+2;
-  len += [theRecord->message_id length]+2;
-  len += [theRecord->references length]+2;
-  len += [theRecord->subject length]+2;
-  len += [theRecord->to length]+2;
-  len += [theRecord->cc length]+22;
+  len += [theRecord.from length]+2;
+  len += [theRecord.in_reply_to length]+2;
+  len += [theRecord.message_id length]+2;
+  len += [theRecord.references length]+2;
+  len += [theRecord.subject length]+2;
+  len += [theRecord.to length]+2;
+  len += [theRecord.cc length]+22;
   write_unsigned_int(_fd, len);
   
   // We write the flags, date, position and the size of the message.
-  write_unsigned_int(_fd, theRecord->flags); 
-  write_unsigned_int(_fd, theRecord->date);
-  write_unsigned_int(_fd, theRecord->imap_uid);
-  write_unsigned_int(_fd, theRecord->size);
+  write_unsigned_int(_fd, theRecord.flags);
+  write_unsigned_int(_fd, theRecord.date);
+  write_unsigned_int(_fd, theRecord.imap_uid);
+  write_unsigned_int(_fd, theRecord.size);
 
   // We write the read of our cached headers (From, In-Reply-To, Message-ID, References, 
   // Subject, To and Cc)
-  write_string(_fd, (unsigned char *)[theRecord->from bytes], [theRecord->from length]);
-  write_string(_fd, (unsigned char *)[theRecord->in_reply_to bytes], [theRecord->in_reply_to length]);
-  write_string(_fd, (unsigned char *)[theRecord->message_id bytes], [theRecord->message_id length]);
-  write_string(_fd, (unsigned char *)[theRecord->references bytes], [theRecord->references length]);
-  write_string(_fd, (unsigned char *)[theRecord->subject bytes], [theRecord->subject length]);
-  write_string(_fd, (unsigned char *)[theRecord->to bytes], [theRecord->to length]);
-  write_string(_fd, (unsigned char *)[theRecord->cc bytes], [theRecord->cc length]);
+  write_string(_fd, (unsigned char *)[theRecord.from bytes], [theRecord.from length]);
+  write_string(_fd, (unsigned char *)[theRecord.in_reply_to bytes], [theRecord.in_reply_to length]);
+  write_string(_fd, (unsigned char *)[theRecord.message_id bytes], [theRecord.message_id length]);
+  write_string(_fd, (unsigned char *)[theRecord.references bytes], [theRecord.references length]);
+  write_string(_fd, (unsigned char *)[theRecord.subject bytes], [theRecord.subject length]);
+  write_string(_fd, (unsigned char *)[theRecord.to bytes], [theRecord.to length]);
+  write_string(_fd, (unsigned char *)[theRecord.cc bytes], [theRecord.cc length]);
   
-  NSMapInsert(_table, (void *)theRecord->imap_uid, theMessage);
+  NSMapInsert(_table, (void *)theRecord.imap_uid, theMessage);
   _count++;
 }
 

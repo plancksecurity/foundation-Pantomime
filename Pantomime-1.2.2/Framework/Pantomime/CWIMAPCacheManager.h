@@ -88,7 +88,7 @@
   @param theRecord The record to write.
   @param theMessage The message associated to the record <i>theRecord</i>.
 */
-- (void) writeRecord: (cache_record *) theRecord  message: (id) theMessage;
+- (void) writeRecord: (CacheRecord *) theRecord  message: (id) theMessage;
 @end
 
 #endif // _Pantomime_H_CWIMAPCacheManager

@@ -767,11 +767,12 @@ static NSData *CRLF;
       // Do that in parse top also?
       if ([_folder cacheManager])
 	{
-	  cache_record r;
+	  CacheRecord *r = [[CacheRecord alloc] init];
 
 	  r.date = [[NSCalendarDate calendarDate] timeIntervalSince1970];
 	  r.pop3_uid = [aMessage UID];
-	  [[_folder cacheManager] writeRecord: &r];
+	  [[_folder cacheManager] writeRecord: r];
+        RELEASE(r);
 	}
 
       POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);

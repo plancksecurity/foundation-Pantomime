@@ -553,7 +553,7 @@ extern NSString* PantomimeMessageExpunged;
   @param The additional headers, in their raw representation.
   @param theRecord The cache_record to update.
 */
-- (void) addHeadersFromData: (NSData *) theHeaders  record: (cache_record *) theRecord;
+- (void) addHeadersFromData: (NSData *) theHeaders  record: (CacheRecord *) theRecord;
 
 /*!
   @method setHeadersFromData:record:
@@ -564,7 +564,7 @@ extern NSString* PantomimeMessageExpunged;
 	      the decoded information.
   @param theHeaders The bytes to use.
 */
-- (void) setHeadersFromData: (NSData *) theHeaders record: (cache_record *) theRecord;
+- (void) setHeadersFromData: (NSData *) theHeaders record: (CacheRecord *) theRecord;
 @end
 
 

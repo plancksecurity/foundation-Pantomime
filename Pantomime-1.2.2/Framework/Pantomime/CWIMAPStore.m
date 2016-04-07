@@ -158,7 +158,7 @@ static inline int has_literal(char *buf, int c)
 - (NSString *) _folderNameFromString: (NSString *) theString;
 - (void) _parseFlags: (NSString *) aString
              message: (CWIMAPMessage *) theMessage
-	      record: (cache_record *) theRecord;
+	      record: (CacheRecord *) theRecord;
 - (void) _renameFolder;
 - (NSArray *) _uniqueIdentifiersFromData: (NSData *) theData;
 - (void) _parseAUTHENTICATE_CRAM_MD5;
@@ -1353,7 +1353,7 @@ static inline int has_literal(char *buf, int c)
 //
 - (void) _parseFlags: (NSString *) theString
 	     message: (CWIMAPMessage *) theMessage
-	      record: (cache_record *) theRecord
+	      record: (CacheRecord *) theRecord
 {
   CWFlags *theFlags;
   NSRange aRange;
@@ -1415,7 +1415,7 @@ static inline int has_literal(char *buf, int c)
     }
 
   [[theMessage flags] replaceWithFlags: theFlags];
-  theRecord->flags = theFlags->flags;
+  theRecord.flags = theFlags->flags;
   RELEASE(theFlags);
   
   //
@@ -1879,7 +1879,7 @@ static inline int has_literal(char *buf, int c)
 
   BOOL done, seen_fetch, must_flush_record;
   int i, j, count, len;
-  cache_record r;
+  CacheRecord *r = [[CacheRecord alloc] init];
   
   //
   // The folder might have been closed so we must not try to
@@ -1989,7 +1989,7 @@ static inline int has_literal(char *buf, int c)
 		{
 		  if (must_flush_record)
 		    {
-		      [[_selectedFolder cacheManager] writeRecord: &r  message: aMessage];
+		      [[_selectedFolder cacheManager] writeRecord: r  message: aMessage];
 		    }
 		  
 		  CLEAR_CACHE_RECORD(r);
@@ -2042,7 +2042,7 @@ static inline int has_literal(char *buf, int c)
 	  //NSLog(@"Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
 	  [self _parseFlags: [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]
 		message: aMessage
-		record: &r];
+		record: r];
 
 	  j = aRange.location + 1;
 	  [aScanner setScanLocation: j];
@@ -2087,7 +2087,7 @@ static inline int has_literal(char *buf, int c)
       else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS"] == NSOrderedSame)
 	{
 	  [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
-	  [aMessage setHeadersFromData: [_currentQueueObject->info objectForKey: @"NSData"]  record: &r];
+	  [aMessage setHeadersFromData: [_currentQueueObject->info objectForKey: @"NSData"]  record: r];
 	}
       //
       //
@@ -2136,7 +2136,7 @@ static inline int has_literal(char *buf, int c)
 
       if (done && must_flush_record)
 	{
-	  [[_selectedFolder cacheManager] writeRecord: &r  message: aMessage];
+	  [[_selectedFolder cacheManager] writeRecord: r  message: aMessage];
 	}
     }
  
@@ -2152,6 +2152,7 @@ static inline int has_literal(char *buf, int c)
   //
   [_responsesFromServer removeObjectsInArray: aMutableArray];
   RELEASE(aMutableArray);
+    RELEASE(r);
 }
 
 

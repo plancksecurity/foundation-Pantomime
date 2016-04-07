@@ -392,7 +392,7 @@
 {
   CWLocalMessage *aMessage;
   long begin, end, size;
-  cache_record record;
+  CacheRecord *record = [[CacheRecord alloc] init];
   char aLine[1024];
   
   // We initialize our variables
@@ -572,7 +572,7 @@
 	  record.flags = (theFlags ? theFlags->flags : [aMessage flags]->flags);
 	  record.position = begin;
 	  record.size = size;
-	  [_cacheManager writeRecord: &record];
+	  [_cacheManager writeRecord: record];
 	  CLEAR_CACHE_RECORD(record);
 	  //
 	  
@@ -631,6 +631,7 @@
     }
 
   RELEASE(aMessage);
+    RELEASE(record);
 }
 
 

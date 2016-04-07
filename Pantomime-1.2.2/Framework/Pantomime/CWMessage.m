@@ -1344,7 +1344,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) addHeadersFromData: (NSData *) theHeaders  record: (cache_record *) theRecord
+- (void) addHeadersFromData: (NSData *) theHeaders  record: (CacheRecord *) theRecord
 {
   NSArray *allLines;
   NSData *aData;
@@ -1383,28 +1383,28 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 			    forType: PantomimeCcRecipient
 			    inMessage: self
 			    quick: NO];
-	  if (theRecord) theRecord->cc = aData;
+	  if (theRecord) theRecord.cc = aData;
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "Date"])
 	{
 	  [CWParser parseDate: aLine  inMessage: self];
-	  if (theRecord && [self receivedDate]) theRecord->date = [[self receivedDate] timeIntervalSince1970]; 
+	  if (theRecord && [self receivedDate]) theRecord.date = [[self receivedDate] timeIntervalSince1970]; 
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "From"] &&
 	       ![aLine hasCaseInsensitiveCPrefix: "From "])
 	{
 	  aData = [CWParser parseFrom: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord->from = aData;
+	  if (theRecord) theRecord.from = aData;
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "In-Reply-To"])
 	{
 	  aData = [CWParser parseInReplyTo: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord->in_reply_to = aData;
+	  if (theRecord) theRecord.in_reply_to = aData;
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "Message-ID"])
 	{
 	  aData = [CWParser parseMessageID: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord->message_id = aData;
+	  if (theRecord) theRecord.message_id = aData;
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "MIME-Version"])
 	{
@@ -1417,7 +1417,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
       else if ([aLine hasCaseInsensitiveCPrefix: "References"])
 	{
 	  aData = [CWParser parseReferences: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord->references = aData;
+	  if (theRecord) theRecord.references = aData;
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "Reply-To"])
 	{
@@ -1458,7 +1458,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 			    forType: PantomimeToRecipient
 			    inMessage: self
 			    quick: NO];
-	  if (theRecord) theRecord->to = aData;
+	  if (theRecord) theRecord.to = aData;
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "X-Status"])
 	{
@@ -1467,7 +1467,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
       else if ([aLine hasCaseInsensitiveCPrefix: "Subject"])
 	{
 	  aData = [CWParser parseSubject: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord->subject = aData;
+	  if (theRecord) theRecord.subject = aData;
 	}
       else
 	{
@@ -1497,7 +1497,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) setHeadersFromData: (NSData *) theHeaders  record: (cache_record *) theRecord
+- (void) setHeadersFromData: (NSData *) theHeaders  record: (CacheRecord *) theRecord
 {  
   if (!theHeaders || [theHeaders length] == 0)
     {

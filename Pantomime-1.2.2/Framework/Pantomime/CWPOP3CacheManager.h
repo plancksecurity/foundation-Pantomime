@@ -61,7 +61,7 @@
   @discussion This method is used to write a cache record to disk.
   @param theRecord The record to write.
 */
-- (void) writeRecord: (cache_record *) theRecord;
+- (void) writeRecord: (CacheRecord *) theRecord;
 @end
 
 #endif // _Pantomime_H_CWPOP3CacheManager

@@ -27,6 +27,9 @@
 #include <Foundation/NSArchiver.h>
 #include <Foundation/NSException.h>
 
+@implementation CacheRecord
+@end
+
 @implementation CWCacheManager
 
 - (id) initWithPath: (NSString *) thePath

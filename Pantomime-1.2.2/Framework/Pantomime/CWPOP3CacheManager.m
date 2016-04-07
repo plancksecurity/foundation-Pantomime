@@ -173,7 +173,7 @@ static unsigned short version = 1;
 //
 //
 //
-- (void) writeRecord: (cache_record *) theRecord
+- (void) writeRecord: (CacheRecord *) theRecord
 {
   NSData *aData;
 
@@ -181,7 +181,7 @@ static unsigned short version = 1;
   // Some POP3 servers, like popa3d, might return the same UID
   // for messages at different index but with the same content.
   // If that happens, we just don't write that value in our cache.
-  if (NSMapGet(_table, theRecord->pop3_uid))
+  if (NSMapGet(_table, theRecord.pop3_uid))
     {
      return;
    }
@@ -192,13 +192,13 @@ static unsigned short version = 1;
       abort();
     }
 
-  write_unsigned_int(_fd, theRecord->date);
+  write_unsigned_int(_fd, theRecord.date);
 
-  aData = [theRecord->pop3_uid dataUsingEncoding: NSASCIIStringEncoding];
+  aData = [theRecord.pop3_uid dataUsingEncoding: NSASCIIStringEncoding];
   write_string(_fd, (unsigned char *)[aData bytes], [aData length]);
   
   
-  NSMapInsert(_table, theRecord->pop3_uid, [NSCalendarDate dateWithTimeIntervalSince1970: theRecord->date]);
+  NSMapInsert(_table, theRecord.pop3_uid, [NSCalendarDate dateWithTimeIntervalSince1970: theRecord.date]);
   _count++;
 }
 
