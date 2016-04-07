@@ -13,6 +13,7 @@
 #import "Pantomime/CWIMAPStore.h"
 #import "Pantomime/CWService.h"
 #import "Pantomime/CWFolder.h"
+#import "Pantomime/CWIMAPFolder.h"
 #import "Pantomime/CWMessage.h"
 
 #endif /* PantomimeMailOSX_Bridging_Header_h */

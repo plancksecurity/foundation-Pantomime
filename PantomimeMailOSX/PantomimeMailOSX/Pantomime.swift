@@ -29,7 +29,7 @@ public class Pantomime {
                                     print("folder subscribed: \(notification)")
                                     if let strongSelf = self {
                                         if let folderName = notification.userInfo?["Name"] {
-                                            strongSelf.listMessages(folderName as! String)
+                                            strongSelf.prefetchFolder(folderName as! String)
                                         }
                                     }
             })
@@ -46,6 +46,12 @@ public class Pantomime {
     func startIMAP() {
         imapStore.setDelegate(self)
         imapStore.connectInBackgroundAndNotify()
+    }
+
+    func prefetchFolder(folderName: String) {
+        if let folder = (imapStore.folderForName(folderName) as! CWIMAPFolder?) {
+            folder.prefetch()
+        }
     }
 
     func listMessages(folderName: String) {
@@ -132,5 +138,8 @@ extension Pantomime: CWServiceClient {
     }
 
     @objc public func service(theService: CWService!, receivedData theData: NSData!) {
+    }
+
+    @objc public func messageChanged(notification: NSNotification) {
     }
 }

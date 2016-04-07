@@ -1879,7 +1879,7 @@ static inline int has_literal(char *buf, int c)
 
   BOOL done, seen_fetch, must_flush_record;
   int i, j, count, len;
-  CacheRecord *r = [[CacheRecord alloc] init];
+  CacheRecord *cacheRecord = [[CacheRecord alloc] init];
   
   //
   // The folder might have been closed so we must not try to
@@ -1989,10 +1989,10 @@ static inline int has_literal(char *buf, int c)
 		{
 		  if (must_flush_record)
 		    {
-		      [[_selectedFolder cacheManager] writeRecord: r  message: aMessage];
+		      [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
 		    }
 		  
-		  CLEAR_CACHE_RECORD(r);
+		  CLEAR_CACHE_RECORD(cacheRecord);
 		  must_flush_record = YES;
 
 		  //[[_selectedFolder cacheManager] addObject: aMessage];
@@ -2027,7 +2027,7 @@ static inline int has_literal(char *buf, int c)
 	  if ([aMessage UID] == 0)
 	    {
 	      [aMessage setUID: uid];
-	      r.imap_uid = uid;
+	      cacheRecord.imap_uid = uid;
 	    }
 
 	  j = [aScanner scanLocation];
@@ -2042,7 +2042,7 @@ static inline int has_literal(char *buf, int c)
 	  //NSLog(@"Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
 	  [self _parseFlags: [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]
 		message: aMessage
-		record: r];
+		record: cacheRecord];
 
 	  j = aRange.location + 1;
 	  [aScanner setScanLocation: j];
@@ -2057,7 +2057,7 @@ static inline int has_literal(char *buf, int c)
 	  [aScanner scanInt: &size];
 	  //NSLog(@"size = %d", size);
 	  [aMessage setSize: size];
-	  r.size = size;
+	  cacheRecord.size = size;
 
 	  j = [aScanner scanLocation];
 	}
@@ -2087,7 +2087,7 @@ static inline int has_literal(char *buf, int c)
       else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS"] == NSOrderedSame)
 	{
 	  [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
-	  [aMessage setHeadersFromData: [_currentQueueObject->info objectForKey: @"NSData"]  record: r];
+	  [aMessage setHeadersFromData: [_currentQueueObject->info objectForKey: @"NSData"]  record: cacheRecord];
 	}
       //
       //
@@ -2136,7 +2136,7 @@ static inline int has_literal(char *buf, int c)
 
       if (done && must_flush_record)
 	{
-	  [[_selectedFolder cacheManager] writeRecord: r  message: aMessage];
+	  [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
 	}
     }
  
@@ -2152,7 +2152,7 @@ static inline int has_literal(char *buf, int c)
   //
   [_responsesFromServer removeObjectsInArray: aMutableArray];
   RELEASE(aMutableArray);
-    RELEASE(r);
+    RELEASE(cacheRecord);
 }
 
 
