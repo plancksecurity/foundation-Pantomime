@@ -16,14 +16,6 @@ public class Pantomime {
         startIMAP()
     }
 
-    func startPop3() {
-        let serverName = "pop.gmail.com"
-        let serverPort: UInt32 = 995
-        let store = CWPOP3Store.init(name: serverName, port: serverPort)
-        store.setDelegate(self)
-        store.connectInBackgroundAndNotify()
-    }
-
     func startIMAP() {
         let serverName = "mail.syhosting.ch"
         let serverPort: UInt32 = 993
