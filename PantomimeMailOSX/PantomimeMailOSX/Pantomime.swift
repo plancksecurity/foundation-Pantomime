@@ -8,13 +8,35 @@
 
 import Foundation
 
+struct ImapState {
+    var authenticationCompleted: Bool = false
+    var folders: [String]?
+}
+
 public class Pantomime {
 
     let testData: TestData = TestData()
     var imapStore: CWIMAPStore
+    var imapState = ImapState()
+    var subscriptionObserver: NSObjectProtocol!
 
     init() {
         imapStore = CWIMAPStore.init(name: testData.imapServer, port: testData.imapPort)
+        subscriptionObserver = NSNotificationCenter.defaultCenter()
+            .addObserverForName(PantomimeFolderSubscribeCompleted,
+                                object: imapStore, queue: nil,
+                                usingBlock: { [weak self] notification in
+                                    print("folder subscribed: \(notification)")
+                                    if let strongSelf = self {
+                                        if let folderName = notification.userInfo?["Name"] {
+                                            strongSelf.listMessages(folderName as! String)
+                                        }
+                                    }
+            })
+    }
+
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(subscriptionObserver)
     }
 
     func startPantomime() {
@@ -25,11 +47,47 @@ public class Pantomime {
         imapStore.setDelegate(self)
         imapStore.connectInBackgroundAndNotify()
     }
+
+    func listMessages(folderName: String) {
+        let folder = imapStore.folderForName(folderName) as! CWFolder
+        let messages = folder.allMessages() as! [CWMessage]
+
+    }
+
+    @objc func listAndSubscribeFolders(timer: NSTimer) {
+        if let folderEnum = imapStore.folderEnumerator() {
+            timer.invalidate()
+            imapState.folders = []
+            for folder in folderEnum {
+                imapState.folders?.append(folder as! String)
+            }
+            print("IMAP folders: \(imapState.folders)")
+            subscribeFolderNames(imapState.folders!)
+        }
+    }
+
+    func subscribeFolderNames(folders: [String]) {
+        for folderName in folders {
+            imapStore.subscribeToFolderWithName(folderName)
+        }
+    }
+
+    func waitForFolders() {
+        let timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self,
+                                                           selector: #selector(listAndSubscribeFolders),
+                                                           userInfo: nil, repeats: true)
+        timer.fire()
+    }
 }
 
 extension Pantomime: CWServiceClient {
     @objc public func authenticationCompleted(notification: NSNotification) {
+        imapState.authenticationCompleted = true
         print("authenticationCompleted")
+        if let capabilities = imapStore.capabilities() {
+            print("capabilities: \(capabilities)")
+        }
+        waitForFolders()
     }
 
     @objc public func authenticationFailed(notification: NSNotification) {
@@ -56,5 +114,14 @@ extension Pantomime: CWServiceClient {
     @objc public func serviceInitialized(notification: NSNotification) {
         imapStore.authenticate(testData.imapUser, password: testData.imapPassword,
                                mechanism: testData.imapAuthMethod)
+    }
+
+    @objc public func serviceReconnected(theNotification: NSNotification!) {
+    }
+
+    @objc public func service(theService: CWService!, sentData theData: NSData!) {
+    }
+
+    @objc public func service(theService: CWService!, receivedData theData: NSData!) {
     }
 }
