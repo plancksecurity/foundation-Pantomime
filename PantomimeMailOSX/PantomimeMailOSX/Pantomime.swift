@@ -11,15 +11,14 @@ import Foundation
 public class Pantomime {
 
     var imapStore: CWIMAPStore? = nil
+    let testData: TestData = TestData()
 
     func startPantomime() {
         startIMAP()
     }
 
     func startIMAP() {
-        let serverName = "mail.syhosting.ch"
-        let serverPort: UInt32 = 993
-        imapStore = CWIMAPStore.init(name: serverName, port: serverPort)
+        imapStore = CWIMAPStore.init(name: testData.imapServer, port: testData.imapPort)
         imapStore?.setDelegate(self)
         imapStore?.connectInBackgroundAndNotify()
     }
@@ -51,5 +50,7 @@ extension Pantomime: CWServiceClient {
     }
 
     @objc public func serviceInitialized(notification: NSNotification) {
+        imapStore?.authenticate(testData.imapUser, password: testData.imapPassword,
+                                mechanism: testData.imapAuthMethod)
     }
 }

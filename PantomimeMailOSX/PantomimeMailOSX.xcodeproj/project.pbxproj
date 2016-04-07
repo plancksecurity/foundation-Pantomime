@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		43A2E4381CB651CC001B533C /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A2E4371CB651CC001B533C /* TestData.swift */; };
 		43CC692C1CB502F300A8A865 /* TCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CC692B1CB502F300A8A865 /* TCPConnection.swift */; };
 		43E76A561CB3F9AF0013C375 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A551CB3F9AF0013C375 /* AppDelegate.swift */; };
 		43E76A581CB3F9AF0013C375 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A571CB3F9AF0013C375 /* ViewController.swift */; };
@@ -103,6 +104,7 @@
 
 /* Begin PBXFileReference section */
 		401E9039937C14E73A26F633 /* Pods-PantomimeMailOSXUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PantomimeMailOSXUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PantomimeMailOSXUITests/Pods-PantomimeMailOSXUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		43A2E4371CB651CC001B533C /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		43CC692B1CB502F300A8A865 /* TCPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPConnection.swift; sourceTree = "<group>"; };
 		43E76A521CB3F9AF0013C375 /* PantomimeMailOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PantomimeMailOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E76A551CB3F9AF0013C375 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 				43E76A5B1CB3F9AF0013C375 /* Main.storyboard */,
 				43E76A5E1CB3F9AF0013C375 /* Info.plist */,
 				43E76B511CB405370013C375 /* PantomimeMailOSX-Bridging-Header.h */,
+				43A2E4371CB651CC001B533C /* TestData.swift */,
 			);
 			path = PantomimeMailOSX;
 			sourceTree = "<group>";
@@ -818,6 +821,7 @@
 				43E76B2D1CB3F9C60013C375 /* CWMD5.m in Sources */,
 				43E76B171CB3F9C60013C375 /* CWISO8859_10.m in Sources */,
 				43E76B221CB3F9C60013C375 /* CWISO8859_8.m in Sources */,
+				43A2E4381CB651CC001B533C /* TestData.swift in Sources */,
 				43E76B301CB3F9C60013C375 /* CWMIMEUtility.m in Sources */,
 				43E76B251CB3F9C60013C375 /* CWKOI8_U.m in Sources */,
 				43E76B0C1CB3F9C60013C375 /* CWContainer.m in Sources */,
