@@ -49,8 +49,12 @@ public class Pantomime {
     }
 
     func listMessages(folderName: String) {
+        print("lisMessages: \(folderName)")
         let folder = imapStore.folderForName(folderName) as! CWFolder
         let messages = folder.allMessages() as! [CWMessage]
+        for msg in messages {
+            print("\(folderName): \(msg)")
+        }
 
     }
 
@@ -106,6 +110,11 @@ extension Pantomime: CWServiceClient {
     }
 
     @objc public func folderPrefetchCompleted(notification: NSNotification) {
+        if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
+            print("prefetched folder: \(folder.name())")
+        } else {
+            print("folderPrefetchCompleted: \(notification)")
+        }
     }
 
     @objc public func messagePrefetchCompleted(notification: NSNotification) {
