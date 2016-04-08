@@ -308,8 +308,8 @@
 		43E76A541CB3F9AF0013C375 /* PantomimeMailOSX */ = {
 			isa = PBXGroup;
 			children = (
-				43CC692A1CB502D400A8A865 /* Pantomime-Extensions */,
 				43E76A801CB3F9C50013C375 /* Pantomime */,
+				43CC692A1CB502D400A8A865 /* Pantomime-Extensions */,
 				43E76A551CB3F9AF0013C375 /* AppDelegate.swift */,
 				43E76A571CB3F9AF0013C375 /* ViewController.swift */,
 				43E76B4C1CB403DE0013C375 /* Pantomime.swift */,

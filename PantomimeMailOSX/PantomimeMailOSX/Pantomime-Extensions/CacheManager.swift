@@ -35,10 +35,9 @@ import Foundation
         return nil
     }
 
-    public func writeRecord(theRecord: CacheRecord!, message theMessage: CWIMAPMessage!) {
-        let folder = theMessage.folder()
-        print("write message: folder: \(folder.name()), subject: \(theMessage.subject()), ",
-            "date: \(theMessage.receivedDate()), from: \(theMessage.from().address())")
+    public func writeRecord(theRecord: CacheRecord!, message: CWIMAPMessage!) {
+        let folder = message.folder()
+        print("write \(message.UID()) folder: \(folder.name())")
     }
 
 }

@@ -139,19 +139,19 @@ extension TCPConnection: NSStreamDelegate {
                 delegate?.connectionEstablished()
             }
         case NSStreamEvent.HasBytesAvailable:
-            print("\(aStream) HasBytesAvailable")
+            print("HasBytesAvailable")
             delegate?.receivedEvent(nil, type: ET_RDESC, extra: nil, forMode: nil)
         case NSStreamEvent.HasSpaceAvailable:
-            print("\(aStream) HasSpaceAvailable")
+            print("HasSpaceAvailable")
             delegate?.receivedEvent(nil, type: ET_WDESC, extra: nil, forMode: nil)
         case NSStreamEvent.ErrorOccurred:
-            print("\(aStream) ErrorOccurred")
+            print("ErrorOccurred")
             delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         case NSStreamEvent.EndEncountered:
-            print("\(aStream) EndEncountered")
+            print("EndEncountered")
             delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         default:
-            print("\(aStream) eventCode \(eventCode)")
+            print("eventCode \(eventCode)")
             delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         }
     }
