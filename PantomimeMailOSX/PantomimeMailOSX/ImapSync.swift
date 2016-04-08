@@ -1,5 +1,5 @@
 //
-//  Pantomime.swift
+//  ImapSync
 //  PantomimeMailOSX
 //
 //  Created by Dirk Zimmermann on 05/04/16.
@@ -18,7 +18,8 @@ struct ImapState {
     }
 }
 
-public class Pantomime {
+public class ImapSync {
+    let comp = "ImapSync"
 
     let testData: TestData = TestData()
     var imapStore: CWIMAPStore
@@ -32,11 +33,7 @@ public class Pantomime {
     deinit {
     }
 
-    func startPantomime() {
-        startIMAP()
-    }
-
-    func startIMAP() {
+    func start() {
         imapStore.setDelegate(self)
         imapStore.connectInBackgroundAndNotify()
     }
@@ -44,18 +41,18 @@ public class Pantomime {
     func prefetchFolderByName(folderName: String) {
         if let folder = (imapStore.folderForName(folderName, mode: PantomimeReadWriteMode,
             prefetch: false)) {
-            print("prefetchFolderByName \(folder.name())")
+            Log.info(comp, content: "prefetchFolderByName \(folder.name())")
             folder.setCacheManager(cache)
             folder.prefetch()
         }
     }
 
     func listMessages(folderName: String) {
-        print("lisMessages: \(folderName)")
+        Log.info(comp, content: "listMessages: \(folderName)")
         let folder = imapStore.folderForName(folderName) as! CWFolder
         let messages = folder.allMessages() as! [CWMessage]
         for msg in messages {
-            print("\(folderName): \(msg)")
+            Log.info(comp, content: "\(folderName): \(msg)")
         }
 
     }
@@ -87,8 +84,7 @@ public class Pantomime {
                 let folderName = folder as! String
                 imapState.folderNames.append(folderName)
             }
-            print("IMAP folders: \(imapState.folderNames)")
-            //prefetchFolderByName("INBOX")
+            Log.info(comp, content: "IMAP folders: \(imapState.folderNames)")
             prefetchNextFolder()
         }
     }
@@ -105,10 +101,10 @@ public class Pantomime {
     }
 }
 
-extension Pantomime: CWServiceClient {
+extension ImapSync: CWServiceClient {
     @objc public func authenticationCompleted(notification: NSNotification) {
         imapState.authenticationCompleted = true
-        print("authenticationCompleted")
+        Log.info(comp, content: "authenticationCompleted")
         waitForFolders()
     }
 
@@ -129,12 +125,12 @@ extension Pantomime: CWServiceClient {
 
     @objc public func folderPrefetchCompleted(notification: NSNotification) {
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
-            print("prefetched folder: \(folder.name())")
+            Log.info(comp, content: "prefetched folder: \(folder.name())")
             dispatch_async(dispatch_get_main_queue(), {
                 self.checkPrefetchNextFolderAndMarkAsFetched(folder)
             })
         } else {
-            print("folderPrefetchCompleted: \(notification)")
+            Log.info(comp, content: "folderPrefetchCompleted: \(notification)")
         }
     }
 
@@ -159,20 +155,20 @@ extension Pantomime: CWServiceClient {
     }
 }
 
-extension Pantomime: PantomimeFolderDelegate {
+extension ImapSync: PantomimeFolderDelegate {
     @objc public func folderOpenCompleted(notification: NSNotification!) {
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
-            print("folderOpenCompleted: \(folder.name())")
+            Log.info(comp, content: "folderOpenCompleted: \(folder.name())")
         } else {
-            print("folderOpenCompleted: \(notification)")
+            Log.info(comp, content: "folderOpenCompleted: \(notification)")
         }
     }
 
     @objc public func folderOpenFailed(notification: NSNotification!) {
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
-            print("folderOpenFailed: \(folder.name())")
+            Log.info(comp, content: "folderOpenFailed: \(folder.name())")
         } else {
-            print("folderOpenFailed: \(notification)")
+            Log.info(comp, content: "folderOpenFailed: \(notification)")
         }
     }
 }

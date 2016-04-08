@@ -364,7 +364,7 @@
       // The data that causes select to return is the EOF because the other side
       // has closed the connection. This causes read to return zero. 
       //
-      if (!((TCPConnection *)_connection).ssl_handshaking && _connected)
+      if (_connected)
 	{
 	  [_connection close];
 	  POST_NOTIFICATION(PantomimeConnectionLost, self, nil);

@@ -80,7 +80,7 @@
 		43E76B491CB3F9C60013C375 /* NSFileManager+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B031CB3F9C60013C375 /* NSFileManager+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B4A1CB3F9C60013C375 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B051CB3F9C60013C375 /* NSScanner+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B4B1CB3F9C60013C375 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B071CB3F9C60013C375 /* NSString+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E76B4D1CB403DE0013C375 /* Pantomime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B4C1CB403DE0013C375 /* Pantomime.swift */; };
+		43E76B4D1CB403DE0013C375 /* ImapSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B4C1CB403DE0013C375 /* ImapSync.swift */; };
 		43E853DA1CB7C673006867C0 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E853D91CB7C673006867C0 /* Log.swift */; };
 /* End PBXBuildFile section */
 
@@ -248,7 +248,7 @@
 		43E76B061CB3F9C60013C375 /* NSString+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extensions.h"; sourceTree = "<group>"; };
 		43E76B071CB3F9C60013C375 /* NSString+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extensions.m"; sourceTree = "<group>"; };
 		43E76B081CB3F9C60013C375 /* Pantomime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pantomime.h; sourceTree = "<group>"; };
-		43E76B4C1CB403DE0013C375 /* Pantomime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pantomime.swift; sourceTree = "<group>"; };
+		43E76B4C1CB403DE0013C375 /* ImapSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImapSync.swift; sourceTree = "<group>"; };
 		43E76B511CB405370013C375 /* PantomimeMailOSX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PantomimeMailOSX-Bridging-Header.h"; sourceTree = "<group>"; };
 		43E853D91CB7C673006867C0 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -314,7 +314,7 @@
 				43CC692A1CB502D400A8A865 /* Pantomime-Extensions */,
 				43E76A551CB3F9AF0013C375 /* AppDelegate.swift */,
 				43E76A571CB3F9AF0013C375 /* ViewController.swift */,
-				43E76B4C1CB403DE0013C375 /* Pantomime.swift */,
+				43E76B4C1CB403DE0013C375 /* ImapSync.swift */,
 				43E76A591CB3F9AF0013C375 /* Assets.xcassets */,
 				43E76A5B1CB3F9AF0013C375 /* Main.storyboard */,
 				43E76A5E1CB3F9AF0013C375 /* Info.plist */,
@@ -667,7 +667,7 @@
 				43E76B241CB3F9C60013C375 /* CWKOI8_R.m in Sources */,
 				43E76B441CB3F9C60013C375 /* CWWINDOWS_1253.m in Sources */,
 				43A2E4411CB68256001B533C /* CacheManager.swift in Sources */,
-				43E76B4D1CB403DE0013C375 /* Pantomime.swift in Sources */,
+				43E76B4D1CB403DE0013C375 /* ImapSync.swift in Sources */,
 				43E76B161CB3F9C60013C375 /* CWISO8859_1.m in Sources */,
 				43E76B4A1CB3F9C60013C375 /* NSScanner+Extensions.m in Sources */,
 				43E76B411CB3F9C60013C375 /* CWWINDOWS_1250.m in Sources */,

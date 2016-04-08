@@ -10,12 +10,12 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var p: Pantomime? = nil
+    var p: ImapSync!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
-        p = Pantomime.init()
-        p?.startPantomime()
+        p = ImapSync.init()
+        p.start()
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {

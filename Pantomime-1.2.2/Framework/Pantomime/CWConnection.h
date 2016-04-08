@@ -49,7 +49,6 @@
 @protocol CWConnection
 
 @property (nonatomic, weak, nullable) id<CWConnectionDelegate> delegate;
-@property (nonatomic) BOOL ssl_handshaking;
 
 /*!
   @method initWithName: port: background:
@@ -67,29 +66,6 @@
 */
 - (id _Nonnull) initWithName: (NSString * _Nonnull) theName
                port: (unsigned int) thePort
-         background: (BOOL) theBOOL;
-
-/*!
-  @method initWithName: port: connectionTimeout: readTimeout: writeTimeout: background:
-  @discussion Same as -initWithName: port: background but it allows
-              you to specifed the proper connection / read / write
-	      timeout values to use.
-  @param theName The host name to connect to.
-  @param thePort The port to connect to.
-  @param theConnectionTimeout The timeout to use when connecting to the host.
-  @param theReadTimeout The timeout to use when reading on the socket.
-  @param theWriteTimeout The timeout to use when writing on the socket.
-  @param theBOOL YES if we want to connect in background (non-blocking
-                 way), NO if we want this call to be blocking until
-		 we successfully connected to the host.
-  @result An instance implementing the CWConnection protocol, nil
-	  if an error occurred, like DNS resolution.
-*/
-- (id _Nonnull) initWithName: (NSString * _Nonnull) theName
-	       port: (unsigned int) thePort
-  connectionTimeout: (unsigned int) theConnectionTimeout
-	readTimeout: (unsigned int) theReadTimeout
-       writeTimeout: (unsigned int) theWriteTimeout
          background: (BOOL) theBOOL;
 
 /*!

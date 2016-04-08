@@ -9,7 +9,7 @@
 import Foundation
 
 @objc public class TCPConnection: NSObject {
-    let comp = "tcp"
+    let comp = "TCPConnection"
 
     var connected = false
     let name: String
@@ -22,42 +22,12 @@ import Foundation
     public var delegate: CWConnectionDelegate?
 
     /** Required from CWConnection */
-    public var ssl_handshaking: Bool = false
-
-    /** Required from CWConnection */
     public required init(name theName: String,
                       port thePort: UInt32, background theBOOL: Bool) {
         assert(theBOOL == true, "Only asynchronous connections in background are supported")
         name = theName
         port = thePort
         super.init()
-    }
-
-    /** Required from CWConnection */
-    public required init(name theName: String, port thePort: UInt32,
-                               connectionTimeout: UInt32, readTimeout: UInt32, writeTimeout: UInt32,
-                               background theBOOL: Bool) {
-        assert(theBOOL == true, "Only asynchronous connections in background are supported")
-        name = theName
-        port = thePort
-        super.init()
-    }
-    
-    func connect(name theName: String, port thePort: UInt32) {
-        var readStream:  Unmanaged<CFReadStream>? = nil
-        var writeStream: Unmanaged<CFWriteStream>? = nil
-        CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, theName, thePort, &readStream,
-                                           &writeStream)
-
-        assert(readStream != nil, "Could not create reading stream")
-        assert(writeStream != nil, "Could not create writing stream")
-
-        if readStream != nil || writeStream != nil {
-            self.readStream = readStream?.takeRetainedValue()
-            self.writeStream = writeStream?.takeRetainedValue()
-            self.setupStream(self.readStream)
-            self.setupStream(self.writeStream)
-        }
     }
 
     func setupStream(stream: NSStream?) {
@@ -122,7 +92,20 @@ extension TCPConnection: CWConnection {
     }
 
     public func connect() {
-        connect(name: name, port: port)
+        var readStream:  Unmanaged<CFReadStream>? = nil
+        var writeStream: Unmanaged<CFWriteStream>? = nil
+        CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, name, port, &readStream,
+                                           &writeStream)
+
+        assert(readStream != nil, "Could not create reading stream")
+        assert(writeStream != nil, "Could not create writing stream")
+
+        if readStream != nil || writeStream != nil {
+            self.readStream = readStream?.takeRetainedValue()
+            self.writeStream = writeStream?.takeRetainedValue()
+            self.setupStream(self.readStream)
+            self.setupStream(self.writeStream)
+        }
     }
 
     public func canWrite() -> Bool {
