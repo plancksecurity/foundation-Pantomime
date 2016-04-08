@@ -9,6 +9,7 @@
 import Foundation
 
 @objc public class TCPConnection: NSObject {
+    let comp = "tcp"
 
     var connected = false
     let name: String
@@ -107,7 +108,7 @@ extension TCPConnection: CWConnection {
             return -1
         }
         let count = readStream!.read(buf, maxLength: length)
-        print("read \(count): \"\(uint8BytesToString(buf, length: count))\"")
+        Log.info(comp, content: "read \(count): \"\(uint8BytesToString(buf, length: count))\"")
         return count
     }
 
@@ -116,7 +117,7 @@ extension TCPConnection: CWConnection {
             return -1
         }
         let count = writeStream!.write(buf, maxLength: length)
-        print("wrote \"\(count): \(uint8BytesToString(buf, length: count))\"")
+        Log.info(comp, content: "wrote \"\(count): \(uint8BytesToString(buf, length: count))\"")
         return count
     }
 
@@ -135,29 +136,29 @@ extension TCPConnection: NSStreamDelegate {
                        handleEvent eventCode: NSStreamEvent) {
         switch eventCode {
         case NSStreamEvent.None:
-            print("\(aStream) None")
+            Log.info(comp, content: "\(aStream) None")
         case NSStreamEvent.OpenCompleted:
             openConnections.insert(aStream)
-            print("\(aStream) OpenCompleted")
+            Log.info(comp, content: "\(aStream) OpenCompleted")
             if openConnections.count == 2 {
                 connected = true
-                print("connectionEstablished")
+                Log.info(comp, content: "connectionEstablished")
                 delegate?.connectionEstablished()
             }
         case NSStreamEvent.HasBytesAvailable:
-            print("HasBytesAvailable")
+            Log.info(comp, content: "HasBytesAvailable")
             delegate?.receivedEvent(nil, type: ET_RDESC, extra: nil, forMode: nil)
         case NSStreamEvent.HasSpaceAvailable:
-            print("HasSpaceAvailable")
+            Log.info(comp, content: "HasSpaceAvailable")
             delegate?.receivedEvent(nil, type: ET_WDESC, extra: nil, forMode: nil)
         case NSStreamEvent.ErrorOccurred:
-            print("ErrorOccurred")
+            Log.info(comp, content: "ErrorOccurred")
             delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         case NSStreamEvent.EndEncountered:
-            print("EndEncountered")
+            Log.info(comp, content: "EndEncountered")
             delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         default:
-            print("eventCode \(eventCode)")
+            Log.info(comp, content: "eventCode \(eventCode)")
             delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
         }
     }

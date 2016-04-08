@@ -81,6 +81,7 @@
 		43E76B4A1CB3F9C60013C375 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B051CB3F9C60013C375 /* NSScanner+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B4B1CB3F9C60013C375 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B071CB3F9C60013C375 /* NSString+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E76B4D1CB403DE0013C375 /* Pantomime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76B4C1CB403DE0013C375 /* Pantomime.swift */; };
+		43E853DA1CB7C673006867C0 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E853D91CB7C673006867C0 /* Log.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -249,6 +250,7 @@
 		43E76B081CB3F9C60013C375 /* Pantomime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pantomime.h; sourceTree = "<group>"; };
 		43E76B4C1CB403DE0013C375 /* Pantomime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pantomime.swift; sourceTree = "<group>"; };
 		43E76B511CB405370013C375 /* PantomimeMailOSX-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PantomimeMailOSX-Bridging-Header.h"; sourceTree = "<group>"; };
+		43E853D91CB7C673006867C0 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -318,6 +320,7 @@
 				43E76A5E1CB3F9AF0013C375 /* Info.plist */,
 				43E76B511CB405370013C375 /* PantomimeMailOSX-Bridging-Header.h */,
 				43A2E4371CB651CC001B533C /* TestData.swift */,
+				43E853D91CB7C673006867C0 /* Log.swift */,
 			);
 			path = PantomimeMailOSX;
 			sourceTree = "<group>";
@@ -635,6 +638,7 @@
 				43E76B281CB3F9C60013C375 /* CWLocalFolder+mbox.m in Sources */,
 				43E76B181CB3F9C60013C375 /* CWISO8859_11.m in Sources */,
 				43E76B2A1CB3F9C60013C375 /* CWLocalMessage.m in Sources */,
+				43E853DA1CB7C673006867C0 /* Log.swift in Sources */,
 				43E76B381CB3F9C60013C375 /* CWRegEx.m in Sources */,
 				43E76B3C1CB3F9C60013C375 /* CWSMTP.m in Sources */,
 				43E76B3A1CB3F9C60013C375 /* CWService.m in Sources */,
