@@ -27,7 +27,6 @@
 
 #define id openssl_id
 #define MD5 MDFIVE
-#include <openssl/ssl.h>
 #undef MD5
 #undef id
 

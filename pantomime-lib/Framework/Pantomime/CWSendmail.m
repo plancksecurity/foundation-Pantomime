@@ -22,17 +22,12 @@
 
 #include <Pantomime/CWSendmail.h>
 
+#import <Foundation/Foundation.h>
+
 #include <Pantomime/CWConstants.h>
 #include <Pantomime/CWMessage.h>
 #include <Pantomime/NSFileManager+Extensions.h>
 #include <Pantomime/NSString+Extensions.h>
-
-#include <Foundation/NSFileHandle.h>
-#include <Foundation/NSFileManager.h>
-#include <Foundation/NSNotification.h>
-#include <Foundation/NSPathUtilities.h>
-#include <Foundation/NSProcessInfo.h>
-#include <Foundation/NSTask.h>
 
 #include <stdio.h>
 

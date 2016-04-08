@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#import "PantomimeMailOSX-swift.h"
+#import "Pantomime-swift.h"
 
 //
 // It's important that the read buffer be bigger than the PMTU. Since almost all networks

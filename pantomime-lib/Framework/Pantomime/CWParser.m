@@ -19,7 +19,10 @@
 **  License along with this library; if not, write to the Free Software
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
+
 #include <Pantomime/CWParser.h>
+
+#import <Foundation/Foundation.h>
 
 #include <Pantomime/CWConstants.h>
 #include <Pantomime/CWFlags.h>
@@ -504,14 +507,18 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
 	    }
 	  tz = s*tz;
 	}
-      
-      [theMessage setReceivedDate: [NSCalendarDate dateWithYear: year
-						   month: month
-						   day: day
-						   hour: hours
-						   minute: mins
-						   second: secs
-						   timeZone: [NSTimeZone timeZoneForSecondsFromGMT: tz]]];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [[NSDateComponents alloc] init];
+        [components setDay:day];
+        [components setMonth:month];
+        [components setYear:year];
+        [components setHour:hours];
+        [components setMinute:mins];
+        [components setSecond:secs];
+        [components setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: tz]];
+        NSDate *date = [calendar dateFromComponents:components];
+
+      [theMessage setReceivedDate:date];
       free(word);
     }
 }

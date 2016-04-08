@@ -22,6 +22,8 @@
 
 #include <Pantomime/CWMessage.h>
 
+#import <Foundation/Foundation.h>
+
 #include <Pantomime/CWFlags.h>
 #include <Pantomime/CWFolder.h>
 #include <Pantomime/CWInternetAddress.h>
@@ -372,7 +374,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (NSCalendarDate *) receivedDate
+- (NSDate *) receivedDate
 {
   return [_headers objectForKey: @"Date"];
 }
@@ -381,7 +383,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) setReceivedDate: (NSCalendarDate*) theDate
+- (void) setReceivedDate: (NSDate*) theDate
 {
   if (theDate)
     {
@@ -1061,7 +1063,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   NSEnumerator *allHeaderKeyEnumerator;
   NSString *aKey;
 
-  NSCalendarDate *aCalendarDate;
+  NSDate *aCalendarDate;
   NSData *aData;
 
 
@@ -1096,8 +1098,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 							     [NSString stringWithCString: tzname[1]]]];
     }
 #else
-  aCalendarDate = [[NSDate date] dateWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"
-				 timeZone: [NSTimeZone systemTimeZone]];
+  aCalendarDate = [NSDate date];
 #endif
   [aMutableData appendCFormat: @"Date: %@%s", [aCalendarDate descriptionWithLocale: aLocale], LF];
   
@@ -1272,7 +1273,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (NSCalendarDate *) resentDate
+- (NSDate *) resentDate
 {
   return [_headers objectForKey: @"Resent-Date"];
 }
@@ -1281,7 +1282,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) setResentDate: (NSCalendarDate *) theResentDate
+- (void) setResentDate: (NSDate *) theResentDate
 {
   [_headers setObject: theResentDate  forKey: @"Resent-Date"];
 }

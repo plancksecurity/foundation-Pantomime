@@ -39,7 +39,7 @@
 
 #include <stdio.h>
 
-#import "PantomimeMailOSX-swift.h"
+#import "Pantomime-swift.h"
 
 //
 // Some static variables used to enhance the performance.

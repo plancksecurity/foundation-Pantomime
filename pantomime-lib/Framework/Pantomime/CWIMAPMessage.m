@@ -28,7 +28,6 @@
 #import <Pantomime/CWIMAPFolder.h>
 #import <Pantomime/CWIMAPStore.h>
 
-#import <Foundation/NSDebug.h>
 #import <Foundation/NSException.h>
 #import <Foundation/NSValue.h>
 

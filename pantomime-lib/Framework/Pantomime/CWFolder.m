@@ -23,14 +23,17 @@
 
 #include <Pantomime/CWFolder.h>
 
+#import <Foundation/Foundation.h>
+
 #include <Pantomime/CWConstants.h>
 #include <Pantomime/CWContainer.h>
 #include <Pantomime/CWFlags.h>
 #include <Pantomime/CWMessage.h>
 #include <Pantomime/NSString+Extensions.h>
 
-#include <Foundation/NSAutoreleasePool.h>
-#include <Foundation/NSMapTable.h>
+#if __APPLE__
+#include "TargetConditionals.h"
+#endif
 
 //
 //
@@ -464,13 +467,41 @@
   DESTROY(_allVisibleMessages);
 }
 
+#if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
+
+id NSMapGet(NSMutableDictionary *dict, id key)
+{
+    return [dict objectForKey:key];
+}
+
+void NSMapInsert(NSMutableDictionary *dict, id key, id object)
+{
+    [dict setObject:object forKey:key];
+}
+
+NSArray *NSAllMapTableValues(NSMutableDictionary *dict)
+{
+    return [dict allValues];
+}
+
+void NSFreeMapTable(NSMutableDictionary *dict)
+{
+    RELEASE(dict);
+}
+
+void NSMapRemove(NSMutableDictionary *dict, id key)
+{
+    [dict removeObjectForKey:key];
+}
+
+#endif
 
 //
 //
 //
 - (void) thread
 {
-  NSMapTable *id_table, *subject_table;
+  NSMutableDictionary *id_table, *subject_table;
   NSAutoreleasePool *pool;
   int i, count;
 
@@ -481,7 +512,7 @@
   pool = [[NSAutoreleasePool alloc] init];
 
   // Build id_table and our containers mutable array
-  id_table = NSCreateMapTable(NSObjectMapKeyCallBacks, NSObjectMapValueCallBacks, 16);
+    id_table = [NSMutableDictionary dictionaryWithCapacity:16];
   _allContainers = [[NSMutableArray alloc] init];
 
   //
@@ -705,7 +736,7 @@
   //
   // A. Construct a new hash table, subject_table, which associates subject 
   //    strings with Container objects.
-  subject_table = NSCreateMapTable(NSObjectMapKeyCallBacks, NSObjectMapValueCallBacks, 16);
+  subject_table = [NSMutableDictionary dictionaryWithCapacity:16];
 
   //
   // B. For each Container in the root set:

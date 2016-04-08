@@ -27,8 +27,9 @@
 #include <Pantomime/CWCacheManager.h>
 #include <Pantomime/CWPart.h>
 
+#import <Pantomime/Extensions/CacheRecord.h>
+
 #import <Foundation/NSArray.h>
-#import <Foundation/NSCalendarDate.h>
 #import <Foundation/NSCoder.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSDictionary.h>

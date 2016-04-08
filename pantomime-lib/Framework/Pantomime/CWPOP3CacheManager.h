@@ -27,6 +27,8 @@
 
 #include <Pantomime/CWCacheManager.h>
 
+#import <Pantomime/Extensions/CacheRecord.h>
+
 @class CWPOP3CacheObject;
 @class NSCalendarDate;
 

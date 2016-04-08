@@ -28,7 +28,6 @@
 #import <Foundation/NSArray.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
-#import <Foundation/NSCalendarDate.h>
 
 #include <Pantomime/CWConstants.h>
 

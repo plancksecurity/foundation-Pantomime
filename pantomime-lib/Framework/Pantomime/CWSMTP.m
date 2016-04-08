@@ -32,7 +32,7 @@
 #include <Foundation/NSEnumerator.h>
 #include <Foundation/NSNotification.h>
 
-#import "PantomimeMailOSX-swift.h"
+#import "Pantomime-swift.h"
 
 //
 // Some static variables used to enhance the performance.

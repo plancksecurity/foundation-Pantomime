@@ -28,7 +28,6 @@
 #include <Pantomime/CWConstants.h>
 #include <Pantomime/CWPOP3CacheObject.h>
 
-#include <Foundation/NSArchiver.h>
 #include <Foundation/NSAutoreleasePool.h>
 #include <Foundation/NSData.h>
 #include <Foundation/NSException.h>

@@ -31,7 +31,6 @@
 #include <Pantomime/CWParser.h>
 #include <Pantomime/NSData+Extensions.h>
 
-#include <Foundation/NSArchiver.h>
 #include <Foundation/NSException.h>
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSNull.h>
@@ -254,7 +253,7 @@ static unsigned short version = 1;
       if (read(_fd, r, len-4) < 0) { NSLog(@"read failed"); abort(); }
 
       theFlags = AUTORELEASE([[CWFlags alloc] initWithFlags: read_unsigned_int_memory(r)]);
-      [aMessage setReceivedDate: [NSCalendarDate dateWithTimeIntervalSince1970: read_unsigned_int_memory(r+4)]];
+      [aMessage setReceivedDate: [NSDate dateWithTimeIntervalSince1970: read_unsigned_int_memory(r+4)]];
 
       if ([(CWLocalFolder *)_folder type] == PantomimeFormatMbox)
 	{

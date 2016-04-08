@@ -20,6 +20,8 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
+#import <Foundation/Foundation.h>
+
 #include <Pantomime/CWPOP3CacheObject.h>
 
 #include <Pantomime/CWConstants.h>
@@ -46,7 +48,7 @@ static int currentPOP3CacheObjectVersion = 1;
 //
 //
 - (id) initWithUID: (NSString *) theUID
-	      date: (NSCalendarDate *) theDate
+	      date: (NSDate *) theDate
 {
   self = [self init];
  
@@ -95,7 +97,7 @@ static int currentPOP3CacheObjectVersion = 1;
   if (version == 0)
     {
       [self setUID: [theCoder decodeObject]];
-      [self setDate: [NSCalendarDate calendarDate]];
+      [self setDate: [NSDate calendarDate]];
     }
   else
     {
@@ -110,12 +112,12 @@ static int currentPOP3CacheObjectVersion = 1;
 //
 //
 //
-- (NSCalendarDate *) date
+- (NSDate *) date
 {
   return _date;
 }
 
-- (void) setDate: (NSCalendarDate *) theDate
+- (void) setDate: (NSDate *) theDate
 {
   ASSIGN(_date, theDate);
 }
