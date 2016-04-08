@@ -10,7 +10,12 @@ import Foundation
 
 struct ImapState {
     var authenticationCompleted: Bool = false
-    var folders: [String]?
+    var folderNames: [String] = []
+    var folderNamesPrefetched: Set<String> = []
+
+    func haveFoldersToPrefetch() -> Bool {
+        return folderNamesPrefetched.count < folderNames.count
+    }
 }
 
 public class Pantomime {
@@ -18,25 +23,13 @@ public class Pantomime {
     let testData: TestData = TestData()
     var imapStore: CWIMAPStore
     var imapState = ImapState()
-    var subscriptionObserver: NSObjectProtocol!
+    var cache = CacheManager()
 
     init() {
         imapStore = CWIMAPStore.init(name: testData.imapServer, port: testData.imapPort)
-        subscriptionObserver = NSNotificationCenter.defaultCenter()
-            .addObserverForName(PantomimeFolderSubscribeCompleted,
-                                object: imapStore, queue: nil,
-                                usingBlock: { [weak self] notification in
-                                    print("folder subscribed: \(notification)")
-                                    if let strongSelf = self {
-                                        if let folderName = notification.userInfo?["Name"] {
-                                            strongSelf.prefetchFolder(folderName as! String)
-                                        }
-                                    }
-            })
     }
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(subscriptionObserver)
     }
 
     func startPantomime() {
@@ -48,8 +41,11 @@ public class Pantomime {
         imapStore.connectInBackgroundAndNotify()
     }
 
-    func prefetchFolder(folderName: String) {
-        if let folder = (imapStore.folderForName(folderName) as! CWIMAPFolder?) {
+    func prefetchFolderByName(folderName: String) {
+        if let folder = (imapStore.folderForName(folderName, mode: PantomimeReadWriteMode,
+            prefetch: false)) {
+            print("prefetchFolderByName \(folder.name())")
+            folder.setCacheManager(cache)
             folder.prefetch()
         }
     }
@@ -64,27 +60,36 @@ public class Pantomime {
 
     }
 
-    @objc func listAndSubscribeFolders(timer: NSTimer) {
+    func prefetchNextFolder() {
+        for folderName in imapState.folderNames {
+            if !imapState.folderNamesPrefetched.contains(folderName) {
+                prefetchFolderByName(folderName)
+                break
+            }
+        }
+    }
+
+    @objc func handleFolders(timer: NSTimer) {
         if let folderEnum = imapStore.folderEnumerator() {
             timer.invalidate()
-            imapState.folders = []
+            imapState.folderNames = []
+            imapState.folderNamesPrefetched = []
             for folder in folderEnum {
-                imapState.folders?.append(folder as! String)
+                let folderName = folder as! String
+                imapState.folderNames.append(folderName)
             }
-            print("IMAP folders: \(imapState.folders)")
-            subscribeFolderNames(imapState.folders!)
+            print("IMAP folders: \(imapState.folderNames)")
+            prefetchNextFolder()
         }
     }
 
-    func subscribeFolderNames(folders: [String]) {
-        for folderName in folders {
-            imapStore.subscribeToFolderWithName(folderName)
-        }
-    }
-
+    /**
+     Triggered by a time after authentication completes, have to wait
+     for folders to appear.
+     */
     func waitForFolders() {
         let timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self,
-                                                           selector: #selector(listAndSubscribeFolders),
+                                                           selector: #selector(handleFolders),
                                                            userInfo: nil, repeats: true)
         timer.fire()
     }
@@ -118,6 +123,10 @@ extension Pantomime: CWServiceClient {
     @objc public func folderPrefetchCompleted(notification: NSNotification) {
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
             print("prefetched folder: \(folder.name())")
+            if imapState.haveFoldersToPrefetch() {
+                imapState.folderNamesPrefetched.insert(folder.name())
+                prefetchNextFolder()
+            }
         } else {
             print("folderPrefetchCompleted: \(notification)")
         }
@@ -141,5 +150,19 @@ extension Pantomime: CWServiceClient {
     }
 
     @objc public func messageChanged(notification: NSNotification) {
+    }
+}
+
+extension Pantomime: PantomimeFolderDelegate {
+    @objc public func folderOpenCompleted(notification: NSNotification!) {
+        if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
+            print("folderOpenCompleted: \(folder.name())")
+            if imapState.haveFoldersToPrefetch() {
+                imapState.folderNamesPrefetched.insert(folder.name())
+                prefetchNextFolder()
+            }
+        } else {
+            print("folderOpenCompleted: \(notification)")
+        }
     }
 }

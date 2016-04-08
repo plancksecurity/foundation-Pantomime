@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		43A2E4381CB651CC001B533C /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A2E4371CB651CC001B533C /* TestData.swift */; };
+		43A2E4411CB68256001B533C /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A2E4401CB68256001B533C /* CacheManager.swift */; };
 		43CC692C1CB502F300A8A865 /* TCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CC692B1CB502F300A8A865 /* TCPConnection.swift */; };
 		43E76A561CB3F9AF0013C375 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A551CB3F9AF0013C375 /* AppDelegate.swift */; };
 		43E76A581CB3F9AF0013C375 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E76A571CB3F9AF0013C375 /* ViewController.swift */; };
@@ -101,6 +102,7 @@
 
 /* Begin PBXFileReference section */
 		43A2E4371CB651CC001B533C /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
+		43A2E4401CB68256001B533C /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		43CC692B1CB502F300A8A865 /* TCPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPConnection.swift; sourceTree = "<group>"; };
 		43E76A521CB3F9AF0013C375 /* PantomimeMailOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PantomimeMailOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E76A551CB3F9AF0013C375 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				43CC692B1CB502F300A8A865 /* TCPConnection.swift */,
+				43A2E4401CB68256001B533C /* CacheManager.swift */,
 			);
 			path = "Pantomime-Extensions";
 			sourceTree = "<group>";
@@ -659,6 +662,7 @@
 				43E76B191CB3F9C60013C375 /* CWISO8859_13.m in Sources */,
 				43E76B241CB3F9C60013C375 /* CWKOI8_R.m in Sources */,
 				43E76B441CB3F9C60013C375 /* CWWINDOWS_1253.m in Sources */,
+				43A2E4411CB68256001B533C /* CacheManager.swift in Sources */,
 				43E76B4D1CB403DE0013C375 /* Pantomime.swift in Sources */,
 				43E76B161CB3F9C60013C375 /* CWISO8859_1.m in Sources */,
 				43E76B4A1CB3F9C60013C375 /* NSScanner+Extensions.m in Sources */,

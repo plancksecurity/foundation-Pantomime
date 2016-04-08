@@ -29,13 +29,63 @@
 
 @class CWFolder;
 @class CWIMAPMessage;
+@class CacheRecord;
+
+@protocol CWIMAPCache <NSObject, CWCache>
+
+/*!
+ @method messageWithUID:
+ @discussion This method is used to obtain the CWIMAPMessage instance
+ from the receiver's cache.
+ @param theUID The UID of the message to obtain from the cache.
+ @result The instance, nil if not present in the receiver's cache.
+ */
+- (CWIMAPMessage *) messageWithUID: (NSUInteger) theUID;
+
+
+/*!
+ @method removeMessageWithUID:
+ @discussion This method is used to remove the associated
+ message from the cache based on the supplied UID.
+ @param theUID The UID of the message to remove from the cache.
+ */
+- (void) removeMessageWithUID: (NSUInteger) theUID;
+
+/*!
+ @method UIDValidity
+ @discussion This method is used to obtain the UID validity
+ value of the receiver's cache. If it doesn't
+ match the UID validity of its associated
+ CWIMAPFolder instance, you should invalidate the cache.
+ @result The UID validity.
+ */
+- (NSUInteger) UIDValidity;
+
+/*!
+ @method setUIDValidity:
+ @discussion This method is used to set the UID validity value
+ of the receiver's cache.
+ @param theUIDValidity The value to set.
+ */
+- (void) setUIDValidity: (NSUInteger) theUIDValidity;
+
+/*!
+ @method writeRecord:message:
+ @discussion This method is used to write a cache record to disk.
+ @param theRecord The record to write.
+ @param theMessage The message associated to the record <i>theRecord</i>.
+ */
+- (void) writeRecord: (CacheRecord *) theRecord  message: (CWIMAPMessage *) theMessage;
+
+
+@end
 
 /*!
   @class CWIMAPCacheManager
   @discussion This class provides trivial extensions to the
               CWCacheManager superclass for CWIMAPFolder instances.
 */
-@interface CWIMAPCacheManager: CWCacheManager
+@interface CWIMAPCacheManager: CWCacheManager <CWIMAPCache>
 {
   @private
     NSMapTable *_table;
@@ -72,7 +122,7 @@
 	      CWIMAPFolder instance, you should invalidate the cache.
   @result The UID validity.
 */
-- (unsigned int) UIDValidity;
+- (NSUInteger) UIDValidity;
 
 /*!
   @method setUIDValidity:
@@ -80,7 +130,7 @@
               of the receiver's cache.
   @param theUIDValidity The value to set.
 */
-- (void) setUIDValidity: (unsigned int) theUIDValidity;
+- (void) setUIDValidity: (NSUInteger) theUIDValidity;
 
 /*!
   @method writeRecord:message:

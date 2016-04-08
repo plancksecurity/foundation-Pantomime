@@ -75,6 +75,33 @@
  r.to = nil; \
  r.cc = nil;
 
+@protocol CWCache <NSObject>
+
+/*!
+ @method invalidate
+ @discussion This method is used to invalide all cache entries.
+ */
+- (void) invalidate;
+
+/*!
+ @method synchronize
+ @discussion This method is used to save the cache on disk.
+ If the cache is empty, this method does not
+ write it on disk and returns YES.
+ @result YES on success, NO otherwise.
+ */
+- (BOOL) synchronize;
+
+/*!
+ @method count
+ @discussion This method returns the number of cache_record
+ entries present in the cache.
+ @result The count;
+ */
+- (NSUInteger) count;
+
+@end
+
 /*!
   @class CWCacheManager
   @discussion This class is used to provide a generic superclass for
@@ -82,7 +109,7 @@
 	      CWIMAPFolder, CWLocalFolder and CWPOP3Folder can make use of a
 	      cache in order to speedup lots of operations.
 */
-@interface CWCacheManager : NSObject
+@interface CWCacheManager : NSObject <CWCache>
 {
   @protected
     NSMutableArray *_cache;

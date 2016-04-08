@@ -123,7 +123,9 @@ extern NSString* PantomimeFolderSearchFailed;
               CWFolder's delegate to control the behavior of the class 
 	      or to obtain status information.
 */
-@interface NSObject (PantomimeFolderDelegate)
+@protocol PantomimeFolderDelegate
+
+@optional
 
 /*!
   @method folderAppendCompleted:

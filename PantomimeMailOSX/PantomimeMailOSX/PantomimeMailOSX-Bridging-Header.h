@@ -9,11 +9,18 @@
 #ifndef PantomimeMailOSX_Bridging_Header_h
 #define PantomimeMailOSX_Bridging_Header_h
 
+#import "Pantomime/CWService.h"
 #import "Pantomime/CWPOP3Store.h"
 #import "Pantomime/CWIMAPStore.h"
-#import "Pantomime/CWService.h"
+
 #import "Pantomime/CWFolder.h"
 #import "Pantomime/CWIMAPFolder.h"
+
+#import "Pantomime/CWCacheManager.h"
+#import "Pantomime/CWIMAPCacheManager.h"
+
 #import "Pantomime/CWMessage.h"
+#import "Pantomime/CWIMAPMessage.h"
+#import "Pantomime/CWInternetAddress.h"
 
 #endif /* PantomimeMailOSX_Bridging_Header_h */
