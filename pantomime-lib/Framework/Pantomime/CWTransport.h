@@ -46,7 +46,11 @@ extern NSString* PantomimeMessageNotSent;
               CWTransport's delegate (CWSMTP or CWSendmail instances) to control 
 	      the behavior of the class or to obtain status information.
 */
-@interface NSObject (TransportClient)
+
+@protocol TransportClient
+
+@optional
+
 /*!
   @method messageSent:
   @discussion This method is automatically invoked on the delegate

@@ -74,6 +74,7 @@
 		43E855C31CB7FD0E006867C0 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855BF1CB7FD0E006867C0 /* CacheManager.swift */; };
 		43E855C41CB7FD0E006867C0 /* CacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855C11CB7FD0E006867C0 /* CacheRecord.m */; };
 		43E855C51CB7FD0E006867C0 /* TCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855C21CB7FD0E006867C0 /* TCPConnection.swift */; };
+		43E855C71CB80E25006867C0 /* SmtpSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855C61CB80E25006867C0 /* SmtpSend.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +221,7 @@
 		43E855C01CB7FD0E006867C0 /* CacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheRecord.h; sourceTree = "<group>"; };
 		43E855C11CB7FD0E006867C0 /* CacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheRecord.m; sourceTree = "<group>"; };
 		43E855C21CB7FD0E006867C0 /* TCPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPConnection.swift; sourceTree = "<group>"; };
+		43E855C61CB80E25006867C0 /* SmtpSend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmtpSend.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -289,6 +291,7 @@
 			children = (
 				43E854DF1CB7EBB8006867C0 /* ConnectInfo.swift */,
 				43E854E01CB7EBB8006867C0 /* ImapSync.swift */,
+				43E855C61CB80E25006867C0 /* SmtpSend.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -566,6 +569,7 @@
 				43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */,
 				43E855B01CB7EBDD006867C0 /* io.c in Sources */,
 				43E855B11CB7EBDD006867C0 /* NSData+Extensions.m in Sources */,
+				43E855C71CB80E25006867C0 /* SmtpSend.swift in Sources */,
 				43E854E21CB7EBB8006867C0 /* ImapSync.swift in Sources */,
 				43E855811CB7EBDD006867C0 /* CWISO8859_10.m in Sources */,
 				43E854E61CB7EBC2006867C0 /* Log.swift in Sources */,

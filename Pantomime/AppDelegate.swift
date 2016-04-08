@@ -12,11 +12,16 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var p: ImapSync!
+    var imap: ImapSync!
+    var smtp: SmtpSend!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        p = ImapSync.init(connectInfo: TestData())
-        p.start()
+        imap = ImapSync.init(connectInfo: TestData())
+        //imap.start()
+
+        smtp = SmtpSend.init(connectInfo: TestData())
+        smtp.start()
+
         return true
     }
 

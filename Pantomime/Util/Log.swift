@@ -11,7 +11,8 @@ import Foundation
 /** Very primitive Logging class. */
 class Log {
 
-    static let allow: [String:Bool] = ["TCPConnection": true, "ImapSync": true]
+    static let allow: [String:Bool] = ["TCPConnection": true, "ImapSync": true,
+                                       "SmtpSend": true]
 
     /** Somewhat verbose */
     static func info(component: String, content: String) {

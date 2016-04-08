@@ -70,7 +70,9 @@ extern NSString* PantomimeTransactionResetFailed;
               SMTP's delegate to control the behavior of the class 
 	      or to obtain status information.
 */
-@interface NSObject (SMTPClient)
+@protocol SMTPClient
+
+@optional
 
 /*!
   @method transactionInitiationCompleted:

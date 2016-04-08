@@ -21,4 +21,7 @@
 #import "Pantomime/CWIMAPStore.h"
 #import "Pantomime/CWIMAPMessage.h"
 
+#import "Pantomime/CWSMTP.h"
+#import "Pantomime/CWInternetAddress.h"
+
 #endif /* Pantomime_Bridging_Header_h */
