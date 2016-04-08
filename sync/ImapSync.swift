@@ -21,13 +21,14 @@ struct ImapState {
 public class ImapSync {
     let comp = "ImapSync"
 
-    let testData: TestData = TestData()
+    let connectInfo: ConnectInfo
     var imapStore: CWIMAPStore
     var imapState = ImapState()
     var cache = CacheManager()
 
-    init() {
-        imapStore = CWIMAPStore.init(name: testData.imapServer, port: testData.imapPort)
+    init(connectInfo: ConnectInfo) {
+        self.connectInfo = connectInfo
+        imapStore = CWIMAPStore.init(name: connectInfo.serverName, port: connectInfo.serverPort)
     }
 
     deinit {
@@ -138,8 +139,8 @@ extension ImapSync: CWServiceClient {
     }
 
     @objc public func serviceInitialized(notification: NSNotification) {
-        imapStore.authenticate(testData.imapUser, password: testData.imapPassword,
-                               mechanism: testData.imapAuthMethod)
+        imapStore.authenticate(connectInfo.username, password: connectInfo.password,
+                               mechanism: connectInfo.authMethod)
     }
 
     @objc public func serviceReconnected(theNotification: NSNotification!) {
