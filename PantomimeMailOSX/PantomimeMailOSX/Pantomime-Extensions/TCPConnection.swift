@@ -96,12 +96,18 @@ extension TCPConnection: CWConnection {
         delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
     }
 
+    func uint8BytesToString(bytes: UnsafeMutablePointer<UInt8>, length: Int) -> String {
+        let data = NSData(bytes: bytes, length: Int(length))
+        let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+        return string as! String
+    }
+
     public func read(buf: UnsafeMutablePointer<UInt8>, length: Int) -> Int {
         if readStream?.hasBytesAvailable == false {
             return -1
         }
         let count = readStream!.read(buf, maxLength: length)
-        print("read \(count)")
+        print("read \(count): \"\(uint8BytesToString(buf, length: count))\"")
         return count
     }
 
@@ -110,7 +116,7 @@ extension TCPConnection: CWConnection {
             return -1
         }
         let count = writeStream!.write(buf, maxLength: length)
-        print("wrote \(count)")
+        print("wrote \"\(count): \(uint8BytesToString(buf, length: count))\"")
         return count
     }
 

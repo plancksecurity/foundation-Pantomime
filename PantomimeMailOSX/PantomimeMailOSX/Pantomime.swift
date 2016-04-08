@@ -60,6 +60,15 @@ public class Pantomime {
 
     }
 
+    func checkPrefetchNextFolderAndMarkAsFetched(folder: CWFolder?) {
+        if let name = folder?.name() {
+            imapState.folderNamesPrefetched.insert(name)
+        }
+        if imapState.haveFoldersToPrefetch() {
+            prefetchNextFolder()
+        }
+    }
+
     func prefetchNextFolder() {
         for folderName in imapState.folderNames {
             if !imapState.folderNamesPrefetched.contains(folderName) {
@@ -79,6 +88,7 @@ public class Pantomime {
                 imapState.folderNames.append(folderName)
             }
             print("IMAP folders: \(imapState.folderNames)")
+            //prefetchFolderByName("INBOX")
             prefetchNextFolder()
         }
     }
@@ -99,9 +109,6 @@ extension Pantomime: CWServiceClient {
     @objc public func authenticationCompleted(notification: NSNotification) {
         imapState.authenticationCompleted = true
         print("authenticationCompleted")
-        if let capabilities = imapStore.capabilities() {
-            print("capabilities: \(capabilities)")
-        }
         waitForFolders()
     }
 
@@ -123,10 +130,9 @@ extension Pantomime: CWServiceClient {
     @objc public func folderPrefetchCompleted(notification: NSNotification) {
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
             print("prefetched folder: \(folder.name())")
-            if imapState.haveFoldersToPrefetch() {
-                imapState.folderNamesPrefetched.insert(folder.name())
-                prefetchNextFolder()
-            }
+            dispatch_async(dispatch_get_main_queue(), {
+                self.checkPrefetchNextFolderAndMarkAsFetched(folder)
+            })
         } else {
             print("folderPrefetchCompleted: \(notification)")
         }
@@ -157,12 +163,16 @@ extension Pantomime: PantomimeFolderDelegate {
     @objc public func folderOpenCompleted(notification: NSNotification!) {
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
             print("folderOpenCompleted: \(folder.name())")
-            if imapState.haveFoldersToPrefetch() {
-                imapState.folderNamesPrefetched.insert(folder.name())
-                prefetchNextFolder()
-            }
         } else {
             print("folderOpenCompleted: \(notification)")
+        }
+    }
+
+    @objc public func folderOpenFailed(notification: NSNotification!) {
+        if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
+            print("folderOpenFailed: \(folder.name())")
+        } else {
+            print("folderOpenFailed: \(notification)")
         }
     }
 }
