@@ -3,4 +3,4 @@ project.xcworkspace/.*
 xcuserdata/.*
 Pods/.*
 \.orig$
-#TestData\.swift
+TestData\.swift
