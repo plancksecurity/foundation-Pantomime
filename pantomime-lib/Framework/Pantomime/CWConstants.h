@@ -24,6 +24,8 @@
 #ifndef _Pantomime_H_CWConstants
 #define _Pantomime_H_CWConstants
 
+#import <Foundation/Foundation.h>
+
 @class NSString;
 
 //
@@ -39,6 +41,12 @@
 #ifdef MACOSX
 typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
 #endif
+
+typedef NS_ENUM(NSInteger, ConnectionTransport) {
+    ConnectionTransportPlain,
+    ConnectionTransportTLS,
+    ConnectionTransportStartTLS,
+};
 
 //
 // Useful macros that we must define ourself on OS X.

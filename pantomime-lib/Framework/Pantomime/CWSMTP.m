@@ -147,22 +147,23 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 // initializers
 //
 - (id) initWithName: (NSString *) theName
-	       port: (unsigned int) thePort
+               port: (unsigned int) thePort
+          transport: (ConnectionTransport)transport
 {
-  self = [super initWithName: theName  port: thePort];
+    self = [super initWithName: theName  port: thePort transport: transport];
 
-  _sent_recipients = nil;
-  _recipients = nil;
-  _message = nil;
-  _data = nil;
-  _max_size = 0;
+    _sent_recipients = nil;
+    _recipients = nil;
+    _message = nil;
+    _data = nil;
+    _max_size = 0;
 
-  _lastCommand = SMTP_AUTHORIZATION;
+    _lastCommand = SMTP_AUTHORIZATION;
   
-  // We queue our first "command".
-  [_queue addObject: AUTORELEASE([[CWSMTPQueueObject alloc] initWithCommand: _lastCommand  arguments: @""])];
+    // We queue our first "command".
+    [_queue addObject: AUTORELEASE([[CWSMTPQueueObject alloc] initWithCommand: _lastCommand  arguments: @""])];
 
-  return self;
+    return self;
 }
 
 
@@ -1026,7 +1027,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   if ([aData hasCPrefix: "220"])
     {          
       // We first activate SSL.
-      [(TCPConnection *)_connection startSSL];
+      [(CWConnection *)_connection startTLS];
 
       // We now forget about the initial negotiated state; see RFC2487 for more details,
       [_supportedMechanisms removeAllObjects];

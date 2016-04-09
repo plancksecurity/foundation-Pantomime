@@ -14,6 +14,7 @@ import Foundation
     var connected = false
     let name: String
     let port: UInt32
+    let transport: ConnectionTransport
     var readStream: NSInputStream? = nil
     var writeStream: NSOutputStream? = nil
     var openConnections = Set<NSStream>()
@@ -22,18 +23,38 @@ import Foundation
     public var delegate: CWConnectionDelegate?
 
     /** Required from CWConnection */
-    public required init(name theName: String,
-                      port thePort: UInt32, background theBOOL: Bool) {
+    public required init(name: String, port: UInt32,
+                         transport: ConnectionTransport,
+                         background theBOOL: Bool) {
         assert(theBOOL == true, "Only asynchronous connections in background are supported")
-        name = theName
-        port = thePort
+        self.name = name
+        self.port = port
+        self.transport = transport
         super.init()
+    }
+
+    public func startTLS() {
+        readStream!.setProperty(NSStreamSocketSecurityLevelNone,
+                                forKey: NSStreamSocketSecurityLevelKey)
+        writeStream!.setProperty(NSStreamSocketSecurityLevelNone,
+                                 forKey: NSStreamSocketSecurityLevelKey)
+        readStream?.open()
+        writeStream?.open()
     }
 
     func setupStream(stream: NSStream?) {
         stream?.delegate = self
-        stream?.setProperty(NSStreamSocketSecurityLevelNegotiatedSSL,
-                            forKey: NSStreamSocketSecurityLevelKey)
+        switch transport {
+        case .Plain:
+            stream?.setProperty(NSStreamSocketSecurityLevelNone,
+                                forKey: NSStreamSocketSecurityLevelKey)
+        case .StartTLS:
+            stream?.setProperty(NSStreamSocketSecurityLevelNone,
+                                forKey: NSStreamSocketSecurityLevelKey)
+        case .TLS:
+            stream?.setProperty(NSStreamSocketSecurityLevelNegotiatedSSL,
+                                forKey: NSStreamSocketSecurityLevelKey)
+        }
         stream?.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
         stream?.open()
     }
@@ -68,9 +89,13 @@ extension TCPConnection: CWConnection {
     }
 
     func uint8BytesToString(bytes: UnsafeMutablePointer<UInt8>, length: Int) -> String {
-        let data = NSData(bytes: bytes, length: Int(length))
-        let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-        return string as! String
+        if length >= 0 {
+            let data = NSData(bytes: bytes, length: Int(length))
+            let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+            return string as! String
+        } else {
+            return ""
+        }
     }
 
     public func read(buf: UnsafeMutablePointer<UInt8>, length: Int) -> Int {
@@ -136,10 +161,10 @@ extension TCPConnection: NSStreamDelegate {
             delegate?.receivedEvent(nil, type: ET_WDESC, extra: nil, forMode: nil)
         case NSStreamEvent.ErrorOccurred:
             Log.info(comp, content: "ErrorOccurred")
-            delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
+            delegate?.receivedEvent(nil, type: ET_RDESC, extra: nil, forMode: nil)
         case NSStreamEvent.EndEncountered:
             Log.info(comp, content: "EndEncountered")
-            delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)
+            delegate?.receivedEvent(nil, type: ET_RDESC, extra: nil, forMode: nil)
         default:
             Log.info(comp, content: "eventCode \(eventCode)")
             delegate?.receivedEvent(nil, type: ET_EDESC, extra: nil, forMode: nil)

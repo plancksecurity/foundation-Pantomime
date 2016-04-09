@@ -20,13 +20,15 @@ class ConnectInfo {
     let imapServerPort: UInt32
     let smtpServerName: String
     let smtpServerPort: UInt32
+    let imapTransport: ConnectionTransport
+    let smtpTransport: ConnectionTransport
 
     init(email: String,
          imapUsername: String?, smtpUsername: String?,
          imapPassword: String, smtpPassword: String?,
          imapAuthMethod: String, smtpAuthMethod: String,
-         imapServerName: String, imapServerPort: UInt32,
-         smtpServerName: String, smtpServerPort: UInt32) {
+         imapServerName: String, imapServerPort: UInt32, imapTransport: ConnectionTransport,
+         smtpServerName: String, smtpServerPort: UInt32, smtpTransport: ConnectionTransport) {
         self.email = email
         self.imapUsername = imapUsername
         self.smtpUsername = smtpUsername
@@ -36,20 +38,26 @@ class ConnectInfo {
         self.smtpAuthMethod = smtpAuthMethod
         self.imapServerName = imapServerName
         self.imapServerPort = imapServerPort
+        self.imapTransport = imapTransport
         self.smtpServerName = smtpServerName
         self.smtpServerPort = smtpServerPort
+        self.smtpTransport = smtpTransport
     }
 
     convenience init(email: String,
                      imapPassword: String,
                      imapAuthMethod: String, smtpAuthMethod: String,
                      imapServerName: String, imapServerPort: UInt32,
-                     smtpServerName: String, smtpServerPort: UInt32) {
+                     imapTransport: ConnectionTransport,
+                     smtpServerName: String, smtpServerPort: UInt32,
+                     smtpTransport: ConnectionTransport) {
         self.init(email: email, imapUsername: nil, smtpUsername: nil,
                   imapPassword: imapPassword, smtpPassword: nil,
                   imapAuthMethod: imapAuthMethod, smtpAuthMethod: smtpAuthMethod,
                   imapServerName: imapServerName, imapServerPort: imapServerPort,
-                  smtpServerName: smtpServerName, smtpServerPort: smtpServerPort)
+                  imapTransport: imapTransport,
+                  smtpServerName: smtpServerName, smtpServerPort: smtpServerPort,
+                  smtpTransport: smtpTransport)
     }
 
     func getSmtpUsername() -> String {

@@ -58,6 +58,7 @@
 	      (60 seconds) when connecting.
   @param theName The host name to connect to.
   @param thePort The port to connect to.
+  @param transport The connection transport to use.
   @param theBOOL YES if we want to connect in background (non-blocking
                  way), NO if we want this call to be blocking until
 		 we successfully connected to the host.
@@ -65,8 +66,11 @@
 	  if an error occurred, like DNS resolution.
 */
 - (id _Nonnull) initWithName: (NSString * _Nonnull) theName
-               port: (unsigned int) thePort
-         background: (BOOL) theBOOL;
+                        port: (unsigned int) thePort
+                   transport:(ConnectionTransport)transport
+                  background: (BOOL) theBOOL;
+
+- (void)startTLS;
 
 /*!
   @method isConnected

@@ -317,10 +317,12 @@ extern NSString* PantomimeProtocolException;
 	      by <i>theName</i> using the specified port (<i>thePort</i>).
   @param theName The FQDN of the server.
   @param thePort The server port to which we will connect.
+  @param transport How to connect to the server (e.g., use TLS)
   @result An instance of a Service class, nil on error.
 */
 - (id) initWithName: (NSString *) theName
-               port: (unsigned int) thePort;
+               port: (unsigned int) thePort
+          transport: (ConnectionTransport) transport;
 
 /*!
   @method setDelegate:

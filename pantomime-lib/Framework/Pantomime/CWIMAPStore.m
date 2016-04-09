@@ -201,24 +201,25 @@ static inline int has_literal(char *buf, int c)
 //
 - (id) initWithName: (NSString *) theName
 	       port: (unsigned int) thePort
+          transport: (ConnectionTransport)transport
 {
-  if (thePort == 0) thePort = 143;
+    if (thePort == 0) thePort = 143;
 
-  self = [super initWithName: theName  port: thePort];
+    self = [super initWithName: theName  port: thePort transport: transport];
 
-  _folderSeparator = 0;
-  _selectedFolder = nil;
-  _tag = 1;
+    _folderSeparator = 0;
+    _selectedFolder = nil;
+    _tag = 1;
 
-  _folders = [[NSMutableDictionary alloc] init];
-  _openFolders = [[NSMutableDictionary alloc] init];
-  _subscribedFolders = [[NSMutableArray alloc] init];
-  _folderStatus = [[NSMutableDictionary alloc] init];
+    _folders = [[NSMutableDictionary alloc] init];
+    _openFolders = [[NSMutableDictionary alloc] init];
+    _subscribedFolders = [[NSMutableArray alloc] init];
+    _folderStatus = [[NSMutableDictionary alloc] init];
 
-  _lastCommand = IMAP_AUTHORIZATION;
-  _currentQueueObject = nil;
+    _lastCommand = IMAP_AUTHORIZATION;
+    _currentQueueObject = nil;
   
-  return self;
+    return self;
 }
 
 
@@ -2894,7 +2895,7 @@ static inline int has_literal(char *buf, int c)
 //
 - (void) _parseSTARTTLS
 {
-  [(CWTCPConnection *)_connection startSSL];
+  [(CWConnection *)_connection startTLS];
   POST_NOTIFICATION(PantomimeServiceInitialized, self, nil);
   PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:),  PantomimeServiceInitialized);
 }

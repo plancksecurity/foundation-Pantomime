@@ -12,6 +12,7 @@
 #import "Pantomime/CWConstants.h"
 #import "Pantomime/CWFolder.h"
 #import "Pantomime/CWService.h"
+#import "Pantomime/CWConnection.h"
 #import "Pantomime/CWIMAPFolder.h"
 #import "Pantomime/Extensions/CacheRecord.h"
 

@@ -16,7 +16,8 @@ class SmtpSend {
 
     init(connectInfo: ConnectInfo) {
         self.connectInfo = connectInfo
-        smtp = CWSMTP.init(name: connectInfo.smtpServerName, port: connectInfo.smtpServerPort)
+        smtp = CWSMTP.init(name: connectInfo.smtpServerName, port: connectInfo.smtpServerPort,
+                           transport: connectInfo.smtpTransport)
         smtp.setDelegate(self)
     }
 
@@ -91,14 +92,6 @@ extension SmtpSend: CWServiceClient {
 
     @objc func connectionEstablished(theNotification: NSNotification!) {
         dumpMethodName("connectionEstablished", notification: theNotification)
-        dispatch_async(dispatch_get_main_queue(), {
-            /*
-            self.smtp.authenticate(self.connectInfo.getSmtpUsername(),
-                password: self.connectInfo.getSmtpPassword(),
-                mechanism: self.connectInfo.smtpAuthMethod)
- */
-            self.smtp.startTLS()
-        })
     }
 
     @objc func connectionLost(theNotification: NSNotification!) {
@@ -119,6 +112,14 @@ extension SmtpSend: CWServiceClient {
 
     @objc func serviceInitialized(theNotification: NSNotification!) {
         dumpMethodName("serviceInitialized", notification: theNotification)
+        dispatch_async(dispatch_get_main_queue(), {
+            /*
+            self.smtp.authenticate(self.connectInfo.getSmtpUsername(),
+                password: self.connectInfo.getSmtpPassword(),
+                mechanism: self.connectInfo.smtpAuthMethod)
+             */
+            //self.smtp.startTLS()
+        })
     }
 
     @objc func serviceReconnected(theNotification: NSNotification!) {

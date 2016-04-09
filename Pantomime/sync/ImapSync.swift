@@ -29,7 +29,8 @@ public class ImapSync {
     init(connectInfo: ConnectInfo) {
         self.connectInfo = connectInfo
         imapStore = CWIMAPStore.init(name: connectInfo.imapServerName,
-                                     port: connectInfo.imapServerPort)
+                                     port: connectInfo.imapServerPort,
+                                     transport: connectInfo.imapTransport)
     }
 
     deinit {

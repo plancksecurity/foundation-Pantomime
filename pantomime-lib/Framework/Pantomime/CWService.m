@@ -55,6 +55,12 @@
 //
 #define DEFAULT_TIMEOUT 60
 
+@interface CWService ()
+
+@property (nonatomic) ConnectionTransport connectionTransport;
+
+@end
+
 //
 //
 //
@@ -94,13 +100,15 @@
 //
 - (id) initWithName: (NSString *) theName
                port: (unsigned int) thePort
+          transport: (ConnectionTransport) transport
 {
-  self = [self init];
+    self = [self init];
 
-  [self setName: theName];
-  [self setPort: thePort];
+    [self setName: theName];
+    [self setPort: thePort];
+    self.connectionTransport = transport;
 
-  return self;
+    return self;
 }
 
 
@@ -281,6 +289,7 @@
 {
     _connection = [[TCPConnection alloc] initWithName: _name
                                                  port: _port
+                                            transport: self.connectionTransport
                                            background: NO];
     if (!_connection)
     {
@@ -301,6 +310,7 @@
 {
     _connection = [[TCPConnection alloc] initWithName: _name
                                                  port: _port
+                                            transport: self.connectionTransport
                                            background: YES];
 
     if (!_connection)
