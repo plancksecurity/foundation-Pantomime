@@ -34,12 +34,10 @@ import Foundation
     }
 
     public func startTLS() {
-        readStream!.setProperty(NSStreamSocketSecurityLevelNone,
+        readStream!.setProperty(NSStreamSocketSecurityLevelNegotiatedSSL,
                                 forKey: NSStreamSocketSecurityLevelKey)
-        writeStream!.setProperty(NSStreamSocketSecurityLevelNone,
+        writeStream!.setProperty(NSStreamSocketSecurityLevelNegotiatedSSL,
                                  forKey: NSStreamSocketSecurityLevelKey)
-        readStream?.open()
-        writeStream?.open()
     }
 
     func setupStream(stream: NSStream?) {

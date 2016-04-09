@@ -8,11 +8,16 @@
 
 import Foundation
 
+struct SmtpStatus {
+    var haveStartedTLS = false
+}
+
 class SmtpSend {
     let comp = "SmtpSend"
 
     let connectInfo: ConnectInfo!
     let smtp: CWSMTP
+    var smtpStatus: SmtpStatus = SmtpStatus.init()
 
     init(connectInfo: ConnectInfo) {
         self.connectInfo = connectInfo
@@ -113,12 +118,15 @@ extension SmtpSend: CWServiceClient {
     @objc func serviceInitialized(theNotification: NSNotification!) {
         dumpMethodName("serviceInitialized", notification: theNotification)
         dispatch_async(dispatch_get_main_queue(), {
-            /*
-            self.smtp.authenticate(self.connectInfo.getSmtpUsername(),
-                password: self.connectInfo.getSmtpPassword(),
-                mechanism: self.connectInfo.smtpAuthMethod)
-             */
-            //self.smtp.startTLS()
+            if self.connectInfo.smtpTransport == ConnectionTransport.StartTLS &&
+                !self.smtpStatus.haveStartedTLS {
+                self.smtpStatus.haveStartedTLS = true
+                self.smtp.startTLS()
+            } else {
+                self.smtp.authenticate(self.connectInfo.getSmtpUsername(),
+                    password: self.connectInfo.getSmtpPassword(),
+                    mechanism: self.connectInfo.smtpAuthMethod)
+            }
         })
     }
 
