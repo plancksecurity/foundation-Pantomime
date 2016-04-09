@@ -28,7 +28,8 @@ public class ImapSync {
 
     init(connectInfo: ConnectInfo) {
         self.connectInfo = connectInfo
-        imapStore = CWIMAPStore.init(name: connectInfo.serverName, port: connectInfo.serverPort)
+        imapStore = CWIMAPStore.init(name: connectInfo.imapServerName,
+                                     port: connectInfo.imapServerPort)
     }
 
     deinit {
@@ -139,8 +140,8 @@ extension ImapSync: CWServiceClient {
     }
 
     @objc public func serviceInitialized(notification: NSNotification) {
-        imapStore.authenticate(connectInfo.username, password: connectInfo.password,
-                               mechanism: connectInfo.authMethod)
+        imapStore.authenticate(connectInfo.imapUsername, password: connectInfo.imapPassword,
+                               mechanism: connectInfo.imapAuthMethod)
     }
 
     @objc public func serviceReconnected(theNotification: NSNotification!) {
