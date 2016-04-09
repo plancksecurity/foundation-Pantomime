@@ -17,10 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         imap = ImapSync.init(connectInfo: TestData())
-        //imap.start()
+        imap.start()
 
-        smtp = SmtpSend.init(connectInfo: TestData())
-        smtp.start()
+        //smtp = SmtpSend.init(connectInfo: TestData())
+        //smtp.start()
 
         return true
     }

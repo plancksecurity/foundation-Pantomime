@@ -78,9 +78,9 @@ public class ImapSync {
         }
     }
 
-    @objc func handleFolders(timer: NSTimer) {
+    @objc func handleFolders(timer: NSTimer?) {
         if let folderEnum = imapStore.folderEnumerator() {
-            timer.invalidate()
+            timer?.invalidate()
             imapState.folderNames = []
             imapState.folderNamesPrefetched = []
             for folder in folderEnum {
@@ -102,31 +102,41 @@ public class ImapSync {
                                                            userInfo: nil, repeats: true)
         timer.fire()
     }
+
+    func dumpMethodName(methodName: String, notification: NSNotification) {
+        Log.info(comp, content: "\(methodName): \(notification)")
+    }
 }
 
 extension ImapSync: CWServiceClient {
     @objc public func authenticationCompleted(notification: NSNotification) {
+        dumpMethodName("authenticationCompleted", notification: notification)
         imapState.authenticationCompleted = true
-        Log.info(comp, content: "authenticationCompleted")
         waitForFolders()
     }
 
     @objc public func authenticationFailed(notification: NSNotification) {
+        dumpMethodName("authenticationFailed", notification: notification)
     }
 
     @objc public func connectionEstablished(notification: NSNotification) {
+        dumpMethodName("connectionEstablished", notification: notification)
     }
 
     @objc public func connectionLost(notification: NSNotification) {
+        dumpMethodName("connectionLost", notification: notification)
     }
 
     @objc public func connectionTerminated(notification: NSNotification) {
+        dumpMethodName("connectionTerminated", notification: notification)
     }
 
     @objc public func connectionTimedOut(notification: NSNotification) {
+        dumpMethodName("connectionTimedOut", notification: notification)
     }
 
     @objc public func folderPrefetchCompleted(notification: NSNotification) {
+        dumpMethodName("folderPrefetchCompleted", notification: notification)
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
             Log.info(comp, content: "prefetched folder: \(folder.name())")
             dispatch_async(dispatch_get_main_queue(), {
@@ -138,14 +148,18 @@ extension ImapSync: CWServiceClient {
     }
 
     @objc public func messagePrefetchCompleted(notification: NSNotification) {
+        dumpMethodName("messagePrefetchCompleted", notification: notification)
     }
 
     @objc public func serviceInitialized(notification: NSNotification) {
-        imapStore.authenticate(connectInfo.imapUsername, password: connectInfo.imapPassword,
+        dumpMethodName("serviceInitialized", notification: notification)
+        imapStore.authenticate(connectInfo.getImapUsername(),
+                               password: connectInfo.imapPassword,
                                mechanism: connectInfo.imapAuthMethod)
     }
 
     @objc public func serviceReconnected(theNotification: NSNotification!) {
+        dumpMethodName("serviceReconnected", notification: theNotification)
     }
 
     @objc public func service(theService: CWService!, sentData theData: NSData!) {
@@ -155,6 +169,7 @@ extension ImapSync: CWServiceClient {
     }
 
     @objc public func messageChanged(notification: NSNotification) {
+        dumpMethodName("messageChanged", notification: notification)
     }
 }
 
