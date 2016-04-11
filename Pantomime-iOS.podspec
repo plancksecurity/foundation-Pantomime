@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "Pantomime-iOS"
-  s.version          = ""
+  s.version          = "0.0.1"
   s.summary          = "Port of Pantomime framework for iOS"
 
 # This description is used to generate tags and improve search results.
@@ -26,13 +26,19 @@ Pod::Spec.new do |s|
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'LGPL 2.1'
   s.author           = { "Dirk Zimmermann" => "dirk@pep-project.org" }
-  s.source           = { :hg => "https://cacert.pep.foundation/dev/repos/pantomime-iOS/", :tag => s.version.to_s }
+  s.source           = { :hg => "https://cacert.pep.foundation/dev/repos/pantomime-iOS/",
+                        :revision => 'tip' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'pantomime-lib/Framework/Pantomime/**/*'
+  s.source_files = 'pantomime-lib/Framework/Pantomime/**/*.{h,m,swift}',
+                    'Pantomime/Pantomime-Bridging-Header.h'
+  s.exclude_files = '**/CWLocal*', '**/CWTCP*', '**/CWDNS*', '**/CWsendMail.**',
+                    '**/CWPOP3*', '**/Pantomime.h'
+  s.header_mappings_dir = 'pantomime-lib/Framework/'
+
   s.resource_bundles = {
     'Pantomime-iOS' => ['Pod/Assets/*.png']
   }
