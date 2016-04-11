@@ -11,15 +11,11 @@ import Foundation
 struct ImapState {
     var authenticationCompleted: Bool = false
     var folderNames: [String] = []
-    var folderNamesPrefetched: Set<String> = []
-
-    func haveFoldersToPrefetch() -> Bool {
-        return folderNamesPrefetched.count < folderNames.count
-    }
 }
 
 public class ImapSync {
     let comp = "ImapSync"
+    let defaultInboxName = "INBOX"
 
     let connectInfo: ConnectInfo
     var imapStore: CWIMAPStore
@@ -41,40 +37,13 @@ public class ImapSync {
         imapStore.connectInBackgroundAndNotify()
     }
 
-    func prefetchFolderByName(folderName: String) {
-        if let folder = (imapStore.folderForName(folderName, mode: PantomimeReadWriteMode,
-            prefetch: false)) {
-            Log.info(comp, content: "prefetchFolderByName \(folder.name())")
+    func openMailBox(name: String) {
+        // Note: If you open a folder, all messages will be prefetched by default,
+        // independent of the prefetch parameter.
+        if let folder = imapStore.folderForName(defaultInboxName, mode: PantomimeReadOnlyMode,
+                                                prefetch: false) {
             folder.setCacheManager(cache)
-            folder.prefetch()
-        }
-    }
-
-    func listMessages(folderName: String) {
-        Log.info(comp, content: "listMessages: \(folderName)")
-        let folder = imapStore.folderForName(folderName) as! CWFolder
-        let messages = folder.allMessages() as! [CWMessage]
-        for msg in messages {
-            Log.info(comp, content: "\(folderName): \(msg)")
-        }
-
-    }
-
-    func checkPrefetchNextFolderAndMarkAsFetched(folder: CWFolder?) {
-        if let name = folder?.name() {
-            imapState.folderNamesPrefetched.insert(name)
-        }
-        if imapState.haveFoldersToPrefetch() {
-            prefetchNextFolder()
-        }
-    }
-
-    func prefetchNextFolder() {
-        for folderName in imapState.folderNames {
-            if !imapState.folderNamesPrefetched.contains(folderName) {
-                prefetchFolderByName(folderName)
-                break
-            }
+            Log.info(comp, content: "openMailBox \(folder.name())")
         }
     }
 
@@ -82,13 +51,12 @@ public class ImapSync {
         if let folderEnum = imapStore.folderEnumerator() {
             timer?.invalidate()
             imapState.folderNames = []
-            imapState.folderNamesPrefetched = []
             for folder in folderEnum {
                 let folderName = folder as! String
                 imapState.folderNames.append(folderName)
             }
             Log.info(comp, content: "IMAP folders: \(imapState.folderNames)")
-            prefetchNextFolder()
+            openMailBox(defaultInboxName)
         }
     }
 
@@ -139,9 +107,6 @@ extension ImapSync: CWServiceClient {
         dumpMethodName("folderPrefetchCompleted", notification: notification)
         if let folder: CWFolder = (notification.userInfo?["Folder"] as! CWFolder) {
             Log.info(comp, content: "prefetched folder: \(folder.name())")
-            dispatch_async(dispatch_get_main_queue(), {
-                self.checkPrefetchNextFolderAndMarkAsFetched(folder)
-            })
         } else {
             Log.info(comp, content: "folderPrefetchCompleted: \(notification)")
         }

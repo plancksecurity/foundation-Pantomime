@@ -35,9 +35,16 @@ import Foundation
         return nil
     }
 
+    func dumpMessage(msg: CWMessage) {
+        print("CWMessage: contentType(\(msg.contentType()))",
+              " isInitialized(\(msg.isInitialized()))\n",
+              " content(\(msg.content()))")
+    }
+
     public func writeRecord(theRecord: CacheRecord!, message: CWIMAPMessage!) {
         let folder = message.folder()
-        print("write \(message.UID()) folder: \(folder.name())")
+        print("write UID(\(message.UID())) folder(\(folder.name()))")
+        dumpMessage(message)
     }
 
 }

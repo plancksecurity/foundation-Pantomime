@@ -16,5 +16,5 @@ extension NSDate {
         formatter.locale = NSLocale.init(localeIdentifier:"en_US_POSIX")
         return formatter.stringFromDate(self)
     }
-    
+
 }
