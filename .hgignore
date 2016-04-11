@@ -4,3 +4,5 @@ xcuserdata/.*
 Pods/.*
 \.orig$
 TestData\.swift
+\.git/
+\.gitkeep
