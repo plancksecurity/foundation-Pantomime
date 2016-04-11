@@ -18,6 +18,8 @@ class SmtpSend {
     let connectInfo: ConnectInfo!
     let smtp: CWSMTP
     var smtpStatus: SmtpStatus = SmtpStatus.init()
+    var messagesSent = 0
+    var maxMessageToSend = 3
 
     init(connectInfo: ConnectInfo) {
         self.connectInfo = connectInfo
@@ -27,8 +29,16 @@ class SmtpSend {
     }
 
     func start() {
-        let msg = CWMessage()
-        msg.setSubject("Subject")
+        smtp.connectInBackgroundAndNotify()
+    }
+
+    func dumpMethodName(methodName: String, notification: NSNotification) {
+        Log.info(comp, content: "\(methodName): \(notification)")
+    }
+
+    func createMessage() -> CWMessage {
+        let msg = CWMessage.init()
+        msg.setSubject("Subject Message \(messagesSent + 1)")
         msg.setFrom(CWInternetAddress.init(personal: "Test 001", address: "test001@peptest.ch"))
 
         let to = CWInternetAddress.init(personal: "Test 002", address: "test002@peptest.ch")
@@ -39,13 +49,14 @@ class SmtpSend {
         msg.setContentTransferEncoding(PantomimeEncodingNone)
         msg.setCharset("utf-8")
         msg.setContent("This was sent by pantomime".dataUsingEncoding(NSUTF8StringEncoding))
-
-        smtp.setMessage(msg)
-        smtp.connectInBackgroundAndNotify()
+        return msg
     }
 
-    func dumpMethodName(methodName: String, notification: NSNotification) {
-        Log.info(comp, content: "\(methodName): \(notification)")
+    func sendMessage() {
+        smtp.setRecipients(nil)
+        smtp.setMessageData(nil)
+        smtp.setMessage(createMessage())
+        smtp.sendMessage()
     }
 }
 
@@ -53,6 +64,12 @@ extension SmtpSend: TransportClient {
 
     @objc func messageSent(theNotification: NSNotification!) {
         dumpMethodName("messageSent", notification: theNotification)
+        messagesSent += 1
+        if messagesSent < maxMessageToSend {
+            smtp.reset()
+        } else {
+            smtp.close()
+        }
     }
 
     @objc func messageNotSent(theNotification: NSNotification!) {
@@ -79,6 +96,7 @@ extension SmtpSend: SMTPClient {
 
     @objc func transactionResetCompleted(theNotification: NSNotification!) {
         dumpMethodName("transactionResetCompleted", notification: theNotification)
+        sendMessage()
     }
 
     @objc func transactionResetFailed(theNotification: NSNotification!) {
@@ -89,6 +107,7 @@ extension SmtpSend: SMTPClient {
 extension SmtpSend: CWServiceClient {
     @objc func authenticationCompleted(theNotification: NSNotification!) {
         dumpMethodName("authenticationCompleted", notification: theNotification)
+        smtp.reset()
     }
 
     @objc func authenticationFailed(theNotification: NSNotification!) {
