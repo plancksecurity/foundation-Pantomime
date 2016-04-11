@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		435FF43D1CBB97B3009E9515 /* NSDate+RFC2822.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435FF43C1CBB97B3009E9515 /* NSDate+RFC2822.swift */; };
 		43E854BF1CB7EA9A006867C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */; };
 		43E854C11CB7EA9A006867C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854C01CB7EA9A006867C0 /* ViewController.swift */; };
 		43E854C41CB7EA9A006867C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43E854C21CB7EA9A006867C0 /* Main.storyboard */; };
@@ -50,10 +51,6 @@
 		43E8559A1CB7EBDD006867C0 /* CWMIMEUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855391CB7EBDD006867C0 /* CWMIMEUtility.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E8559B1CB7EBDD006867C0 /* CWParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8553B1CB7EBDD006867C0 /* CWParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E8559C1CB7EBDD006867C0 /* CWPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8553D1CB7EBDD006867C0 /* CWPart.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E8559E1CB7EBDD006867C0 /* CWPOP3CacheObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855411CB7EBDD006867C0 /* CWPOP3CacheObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E8559F1CB7EBDD006867C0 /* CWPOP3Folder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855431CB7EBDD006867C0 /* CWPOP3Folder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E855A01CB7EBDD006867C0 /* CWPOP3Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855451CB7EBDD006867C0 /* CWPOP3Message.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E855A11CB7EBDD006867C0 /* CWPOP3Store.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855471CB7EBDD006867C0 /* CWPOP3Store.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855A21CB7EBDD006867C0 /* CWRegEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855491CB7EBDD006867C0 /* CWRegEx.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855A41CB7EBDD006867C0 /* CWService.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8554D1CB7EBDD006867C0 /* CWService.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855A51CB7EBDD006867C0 /* CWSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8554F1CB7EBDD006867C0 /* CWSMTP.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -68,7 +65,6 @@
 		43E855AF1CB7EBDD006867C0 /* GNUmakefile in Resources */ = {isa = PBXBuildFile; fileRef = 43E855641CB7EBDD006867C0 /* GNUmakefile */; };
 		43E855B01CB7EBDD006867C0 /* io.c in Sources */ = {isa = PBXBuildFile; fileRef = 43E855651CB7EBDD006867C0 /* io.c */; };
 		43E855B11CB7EBDD006867C0 /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855681CB7EBDD006867C0 /* NSData+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		43E855B21CB7EBDD006867C0 /* NSFileManager+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556A1CB7EBDD006867C0 /* NSFileManager+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855B31CB7EBDD006867C0 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855C31CB7FD0E006867C0 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855BF1CB7FD0E006867C0 /* CacheManager.swift */; };
@@ -88,6 +84,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		435FF43C1CBB97B3009E9515 /* NSDate+RFC2822.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+RFC2822.swift"; sourceTree = "<group>"; };
 		43E854BB1CB7EA9A006867C0 /* Pantomime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pantomime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		43E854C01CB7EA9A006867C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -171,15 +168,6 @@
 		43E8553B1CB7EBDD006867C0 /* CWParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWParser.m; sourceTree = "<group>"; };
 		43E8553C1CB7EBDD006867C0 /* CWPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPart.h; sourceTree = "<group>"; };
 		43E8553D1CB7EBDD006867C0 /* CWPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPart.m; sourceTree = "<group>"; };
-		43E8553E1CB7EBDD006867C0 /* CWPOP3CacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPOP3CacheManager.h; sourceTree = "<group>"; };
-		43E855401CB7EBDD006867C0 /* CWPOP3CacheObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPOP3CacheObject.h; sourceTree = "<group>"; };
-		43E855411CB7EBDD006867C0 /* CWPOP3CacheObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPOP3CacheObject.m; sourceTree = "<group>"; };
-		43E855421CB7EBDD006867C0 /* CWPOP3Folder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPOP3Folder.h; sourceTree = "<group>"; };
-		43E855431CB7EBDD006867C0 /* CWPOP3Folder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPOP3Folder.m; sourceTree = "<group>"; };
-		43E855441CB7EBDD006867C0 /* CWPOP3Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPOP3Message.h; sourceTree = "<group>"; };
-		43E855451CB7EBDD006867C0 /* CWPOP3Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPOP3Message.m; sourceTree = "<group>"; };
-		43E855461CB7EBDD006867C0 /* CWPOP3Store.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPOP3Store.h; sourceTree = "<group>"; };
-		43E855471CB7EBDD006867C0 /* CWPOP3Store.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWPOP3Store.m; sourceTree = "<group>"; };
 		43E855481CB7EBDD006867C0 /* CWRegEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWRegEx.h; sourceTree = "<group>"; };
 		43E855491CB7EBDD006867C0 /* CWRegEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWRegEx.m; sourceTree = "<group>"; };
 		43E8554C1CB7EBDD006867C0 /* CWService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWService.h; sourceTree = "<group>"; };
@@ -209,8 +197,6 @@
 		43E855661CB7EBDD006867C0 /* io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		43E855671CB7EBDD006867C0 /* NSData+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Extensions.h"; sourceTree = "<group>"; };
 		43E855681CB7EBDD006867C0 /* NSData+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Extensions.m"; sourceTree = "<group>"; };
-		43E855691CB7EBDD006867C0 /* NSFileManager+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Extensions.h"; sourceTree = "<group>"; };
-		43E8556A1CB7EBDD006867C0 /* NSFileManager+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Extensions.m"; sourceTree = "<group>"; };
 		43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+Extensions.h"; sourceTree = "<group>"; };
 		43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+Extensions.m"; sourceTree = "<group>"; };
 		43E8556D1CB7EBDD006867C0 /* NSString+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extensions.h"; sourceTree = "<group>"; };
@@ -378,15 +364,6 @@
 				43E8553B1CB7EBDD006867C0 /* CWParser.m */,
 				43E8553C1CB7EBDD006867C0 /* CWPart.h */,
 				43E8553D1CB7EBDD006867C0 /* CWPart.m */,
-				43E8553E1CB7EBDD006867C0 /* CWPOP3CacheManager.h */,
-				43E855401CB7EBDD006867C0 /* CWPOP3CacheObject.h */,
-				43E855411CB7EBDD006867C0 /* CWPOP3CacheObject.m */,
-				43E855421CB7EBDD006867C0 /* CWPOP3Folder.h */,
-				43E855431CB7EBDD006867C0 /* CWPOP3Folder.m */,
-				43E855441CB7EBDD006867C0 /* CWPOP3Message.h */,
-				43E855451CB7EBDD006867C0 /* CWPOP3Message.m */,
-				43E855461CB7EBDD006867C0 /* CWPOP3Store.h */,
-				43E855471CB7EBDD006867C0 /* CWPOP3Store.m */,
 				43E855481CB7EBDD006867C0 /* CWRegEx.h */,
 				43E855491CB7EBDD006867C0 /* CWRegEx.m */,
 				43E8554C1CB7EBDD006867C0 /* CWService.h */,
@@ -416,8 +393,6 @@
 				43E855661CB7EBDD006867C0 /* io.h */,
 				43E855671CB7EBDD006867C0 /* NSData+Extensions.h */,
 				43E855681CB7EBDD006867C0 /* NSData+Extensions.m */,
-				43E855691CB7EBDD006867C0 /* NSFileManager+Extensions.h */,
-				43E8556A1CB7EBDD006867C0 /* NSFileManager+Extensions.m */,
 				43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */,
 				43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */,
 				43E8556D1CB7EBDD006867C0 /* NSString+Extensions.h */,
@@ -435,6 +410,7 @@
 				43E855C01CB7FD0E006867C0 /* CacheRecord.h */,
 				43E855C11CB7FD0E006867C0 /* CacheRecord.m */,
 				43E855C21CB7FD0E006867C0 /* TCPConnection.swift */,
+				435FF43C1CBB97B3009E9515 /* NSDate+RFC2822.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -554,17 +530,15 @@
 				43E8559A1CB7EBDD006867C0 /* CWMIMEUtility.m in Sources */,
 				43E855871CB7EBDD006867C0 /* CWISO8859_3.m in Sources */,
 				43E855741CB7EBDD006867C0 /* CWCharset.m in Sources */,
-				43E8559E1CB7EBDD006867C0 /* CWPOP3CacheObject.m in Sources */,
-				43E855A11CB7EBDD006867C0 /* CWPOP3Store.m in Sources */,
 				43E855AB1CB7EBDD006867C0 /* CWWINDOWS_1251.m in Sources */,
 				43E855A71CB7EBDD006867C0 /* CWURLName.m in Sources */,
+				435FF43D1CBB97B3009E9515 /* NSDate+RFC2822.swift in Sources */,
 				43E855C31CB7FD0E006867C0 /* CacheManager.swift in Sources */,
 				43E855A41CB7EBDD006867C0 /* CWService.m in Sources */,
 				43E8557C1CB7EBDD006867C0 /* CWIMAPFolder.m in Sources */,
 				43E855891CB7EBDD006867C0 /* CWISO8859_5.m in Sources */,
 				43E855841CB7EBDD006867C0 /* CWISO8859_14.m in Sources */,
 				43E855AC1CB7EBDD006867C0 /* CWWINDOWS_1252.m in Sources */,
-				43E855B21CB7EBDD006867C0 /* NSFileManager+Extensions.m in Sources */,
 				43E8558D1CB7EBDD006867C0 /* CWISO8859_9.m in Sources */,
 				43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */,
 				43E855B01CB7EBDD006867C0 /* io.c in Sources */,
@@ -586,13 +560,11 @@
 				43E8557F1CB7EBDD006867C0 /* CWInternetAddress.m in Sources */,
 				43E8557E1CB7EBDD006867C0 /* CWIMAPStore.m in Sources */,
 				43E855AA1CB7EBDD006867C0 /* CWWINDOWS_1250.m in Sources */,
-				43E855A01CB7EBDD006867C0 /* CWPOP3Message.m in Sources */,
 				43E855751CB7EBDD006867C0 /* CWConstants.m in Sources */,
 				43E855791CB7EBDD006867C0 /* CWFolder.m in Sources */,
 				43E8559C1CB7EBDD006867C0 /* CWPart.m in Sources */,
 				43E855A21CB7EBDD006867C0 /* CWRegEx.m in Sources */,
 				43E854E11CB7EBB8006867C0 /* ConnectInfo.swift in Sources */,
-				43E8559F1CB7EBDD006867C0 /* CWPOP3Folder.m in Sources */,
 				43E855961CB7EBDD006867C0 /* CWMacOSXGlue.m in Sources */,
 				43E855831CB7EBDD006867C0 /* CWISO8859_13.m in Sources */,
 				43E855C41CB7FD0E006867C0 /* CacheRecord.m in Sources */,
@@ -739,6 +711,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Pantomime/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.Pantomime";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -751,6 +724,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Pantomime/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.Pantomime";
 				PRODUCT_NAME = "$(TARGET_NAME)";

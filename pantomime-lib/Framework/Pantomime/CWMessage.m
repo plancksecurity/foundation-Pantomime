@@ -42,6 +42,8 @@
 
 #include <Pantomime/CWIMAPCacheManager.h>
 
+#import "Pantomime-swift.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -1100,11 +1102,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 #else
   aCalendarDate = [NSDate date];
 #endif
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss Z"; //RFC2822-Format
-    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier: @"en_US_POSIX"];
-    NSString *dateString = [dateFormatter stringFromDate:aCalendarDate];
-    [aMutableData appendCFormat: @"Date: %@%s", dateString, LF];
+    [aMutableData appendCFormat: @"Date: %@%s", aCalendarDate.rfc2822String, LF];
   
   // We set the subject, if we have one!
   if ([[[self subject] stringByTrimmingWhiteSpaces] length] > 0)

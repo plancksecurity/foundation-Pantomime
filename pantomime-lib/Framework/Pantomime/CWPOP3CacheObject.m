@@ -97,7 +97,7 @@ static int currentPOP3CacheObjectVersion = 1;
   if (version == 0)
     {
       [self setUID: [theCoder decodeObject]];
-      [self setDate: [NSDate calendarDate]];
+      [self setDate: [NSDate date]];
     }
   else
     {

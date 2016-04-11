@@ -124,7 +124,8 @@ static int seed_count = 1;
 	  
 	  if (!aString)
 	    {
-	      aString = [[NSString alloc] initWithCString: bytes+start  length: i-start];
+            aString = [[NSString alloc] initWithBytes: bytes+start  length: i-start
+                                             encoding:NSUTF8StringEncoding];
 	    }
 
 	  [aMutableString appendString: aString];
@@ -233,7 +234,8 @@ static int seed_count = 1;
       
       if (!aString)
 	{
-	  aString = [[NSString alloc] initWithCString: bytes+start  length: i-start];
+	  aString = [[NSString alloc] initWithBytes: bytes+start  length: i-start
+                                       encoding: NSUTF8StringEncoding];
       	}
       
       [aMutableString appendString: aString];
@@ -315,51 +317,6 @@ static int seed_count = 1;
     {
       return aData; 
     }
-}
-
-
-//
-// The format returned is for example:
-//
-// =?ISO-8859-1?B?....?=
-// 
-// This format is known as an encoded-word defined in RFC2047.
-// If the word doesn't need to be encoded, it's just returned as is.
-//
-// FIXME: We should verify that the length doesn't exceed 75 chars.
-//
-#warning remove/combine or leave and document
-+ (NSData *) encodeWordUsingBase64: (NSString *) theWord
-		      prefixLength: (int) thePrefixLength
-{
-  // Initial verification
-  if (!theWord || [theWord length] == 0)
-    {
-      return [NSData data];
-    }
-  else if ([theWord is7bitSafe])
-    {
-      return [theWord dataUsingEncoding: NSASCIIStringEncoding];
-    }
-  else
-    {
-      NSMutableData *aMutableData;
-      NSString *aCharset;
-
-      aMutableData = [[NSMutableData alloc] init];
-      aCharset = [theWord charset];
-
-      [aMutableData appendCFormat: @"=?%@?b?", aCharset];
-      [aMutableData appendData: [CWMIMEUtility encodeHeader: theWord
-					       charset: aCharset
-					       encoding: PantomimeEncodingBase64]];
-      [aMutableData appendCString: "?="];
-
-      return AUTORELEASE(aMutableData);
-    }
-
-  // Never reached.
-  return nil;
 }
 
 

@@ -406,7 +406,7 @@
 
   for (i = 0; i < c; i++)
     {
-      if ([[[allMessages objectAtIndex: i] flags] contain: PantomimeDeleted])
+      if ([[(CWMessage *) [allMessages objectAtIndex: i] flags] contain: PantomimeDeleted])
 	{
 	  count++;
 	}
@@ -428,7 +428,7 @@
   
   for (i = 0; i < c; i++)
     {
-      if (![[[allMessages objectAtIndex: i] flags] contain: PantomimeSeen])
+      if (![[(CWMessage *) [allMessages objectAtIndex: i] flags] contain: PantomimeSeen])
 	{
 	  count++;
 	}
@@ -906,7 +906,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
   
   while (count--)
     {
-      [[allMessages objectAtIndex: count] setProperty: nil  forKey: @"Container"];
+      [(CWMessage *) [allMessages objectAtIndex: count] setProperty: nil  forKey: @"Container"];
     }
 
   DESTROY(_allContainers);
@@ -966,7 +966,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
   c = [theMessages count];
   for (i = 0; i < c; i++)
     {
-      [[theMessages objectAtIndex: i] setFlags: theFlags];
+      [(CWMessage *) [theMessages objectAtIndex: i] setFlags: theFlags];
     }
 }
 

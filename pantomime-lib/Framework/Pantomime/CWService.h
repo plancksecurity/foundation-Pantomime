@@ -252,6 +252,51 @@ extern NSString* PantomimeProtocolException;
   @param theNotification The notification holding the information.
 */
 - (void) serviceReconnected: (NSNotification *) theNotification;
+
+- (void) commandSent: (NSNotification *) theNotification;
+
+- (void) folderRenameFailed: (NSNotification *) theNotification;
+
+- (void) messageChanged: (NSNotification *) theNotification;
+
+- (void) messageExpunged: (NSNotification *) theNotification;
+
+- (void) messagePrefetchCompleted: (NSNotification *) theNotification;
+
+- (void) messageFetchCompleted: (NSNotification *) theNotification;
+
+- (void) folderCreateFailed: (NSNotification *) theNotification;
+
+- (void) folderDeleteFailed: (NSNotification *) theNotification;
+
+- (void) folderSubscribeFailed: (NSNotification *) theNotification;
+
+- (void) messagesCopyFailed: (NSNotification *) theNotification;
+
+- (void) folderStatusFailed: (NSNotification *) theNotification;
+
+- (void) messageStoreFailed: (NSNotification *) theNotification;
+
+- (void) folderUnsubscribeFailed: (NSNotification *) theNotification;
+
+- (void) commandCompleted: (NSNotification *) theNotification;
+
+- (void) folderCreateCompleted: (NSNotification *) theNotification;
+
+- (void) folderDeleteCompleted: (NSNotification *) theNotification;
+
+- (void) folderRenameCompleted: (NSNotification *) theNotification;
+
+- (void) folderSubscribeCompleted: (NSNotification *) theNotification;
+
+- (void) messagesCopyCompleted: (NSNotification *) theNotification;
+
+- (void) messageStoreCompleted: (NSNotification *) theNotification;
+
+- (void) folderUnsubscribeCompleted: (NSNotification *) theNotification;
+
+- (void) folderStatusCompleted: (NSNotification *) theNotification;
+
 @end
 
 @interface CWConnectionState : NSObject

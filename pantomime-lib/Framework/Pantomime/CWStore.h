@@ -72,15 +72,6 @@ extern NSString* PantomimeFolderRenameFailed;
 @protocol CWStore
 
 /*!
-  @method initWithURL:
-  @discussion This method is used to initialize a Store instance using
-              the specified URL. <i>theURL</i>.
-  @param theURL The URL, as a CWURLName instance.
-  @result A CWStore subclass instance, nil on error.
-*/
-- (id) initWithURL: (CWURLName *) theURL;
-
-/*!
   @method defaultFolder
   @discussion This method is used to obtain the default folder
               of the receiver. For example, CWPOP3Store will always

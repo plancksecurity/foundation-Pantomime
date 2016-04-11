@@ -167,7 +167,8 @@ void uudecodeline(char *line, NSMutableData *data)
   count = [allLines count]-1;
   for (i = 1; i < count; i++)
     {
-      uudecodeline((char *)[[allLines objectAtIndex: i] cString], aMutableData);
+      uudecodeline((char *)[[allLines objectAtIndex: i] cStringUsingEncoding:NSUTF8StringEncoding],
+                   aMutableData);
     }
 
   // We finally initialize our file wrapper will all our informations

@@ -239,7 +239,9 @@
   NSString *name;
   int i;
 
-  name = [[NSString stringWithCString: [theCharset bytes] length: [theCharset length]] lowercaseString];
+    name = [[[NSString alloc ] initWithBytes: [theCharset bytes] length: [theCharset length]
+                                    encoding: NSUTF8StringEncoding] lowercaseString];
+    AUTORELEASE(name);
   
   for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++)
     {

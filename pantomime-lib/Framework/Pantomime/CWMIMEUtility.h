@@ -75,9 +75,6 @@
                   charset: (NSString *) theCharset
                  encoding: (PantomimeEncoding) theEncoding;
 
-+ (NSData *) encodeWordUsingBase64: (NSString *) theWord
-                      prefixLength: (int) thePrefixLength;
-
 + (NSData *) encodeWordUsingQuotedPrintable: (NSString *) theWord
                                prefixLength: (int) thePrefixLength;
 

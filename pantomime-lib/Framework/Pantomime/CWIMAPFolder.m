@@ -31,6 +31,8 @@
 #include <Pantomime/NSData+Extensions.h>
 #include <Pantomime/NSString+Extensions.h>
 
+#import "Pantomime-swift.h"
+
 //
 // Private methods
 //
@@ -120,7 +122,7 @@
 	      arguments: @"APPEND \"%@\" (%@) \"%@\" {%d}",                    // IMAP command
 	      [_name modifiedUTF7String],                                      // folder name
 	      flagsAsString,                                                   // flags
-	      [theDate descriptionWithCalendarFormat:@"%d-%b-%Y %H:%M:%S %z"], // internal date
+	      [theDate rfc2822String], // internal date
 	      [aData length]];                                                 // length of the data to write
     }
   else

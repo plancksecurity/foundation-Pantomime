@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         imap = ImapSync.init(connectInfo: TestData())
         imap.start()
 
-        //smtp = SmtpSend.init(connectInfo: TestData())
-        //smtp.start()
+        smtp = SmtpSend.init(connectInfo: TestData())
+        smtp.start()
 
         return true
     }

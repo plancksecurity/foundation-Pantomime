@@ -62,7 +62,7 @@
   
   if ((self = [super init]))
     {
-      status = regcomp(&_re, [thePattern cString], theFlags);
+      status = regcomp(&_re, [thePattern cStringUsingEncoding:NSUTF8StringEncoding], theFlags);
       if (status != 0)
         {
 	  error = malloc(255*sizeof(char));
@@ -114,11 +114,11 @@
 {
   NSMutableArray *aMutableArray;
     
-  int offset, status;
+  NSUInteger offset, status;
   char *s, *error;
   regmatch_t rm[1];
   
-  s = (char*)[theString lossyCString];
+  s = (char*)[theString cStringUsingEncoding:NSUTF8StringEncoding];
   aMutableArray = [[NSMutableArray alloc] init];
   
   status = regexec(&_re, s, 1, rm, 0);
@@ -128,7 +128,8 @@
     {
       NSValue *aValue;
       
-      aValue = [NSValue valueWithRange: NSMakeRange(offset + rm[0].rm_so,  rm[0].rm_eo - rm[0].rm_so)];
+      aValue = [NSValue valueWithRange: NSMakeRange(offset + (NSUInteger) rm[0].rm_so,
+                                                    (NSUInteger) (rm[0].rm_eo - rm[0].rm_so))];
       
       [aMutableArray addObject: aValue];
       

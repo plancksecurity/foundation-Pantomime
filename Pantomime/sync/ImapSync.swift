@@ -31,13 +31,13 @@ public class ImapSync {
         imapStore = CWIMAPStore.init(name: connectInfo.imapServerName,
                                      port: connectInfo.imapServerPort,
                                      transport: connectInfo.imapTransport)
+        imapStore.setDelegate(self)
     }
 
     deinit {
     }
 
     func start() {
-        imapStore.setDelegate(self)
         imapStore.connectInBackgroundAndNotify()
     }
 

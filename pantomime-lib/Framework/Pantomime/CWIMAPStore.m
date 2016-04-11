@@ -226,15 +226,6 @@ static inline int has_literal(char *buf, int c)
 //
 //
 //
-- (id) initWithURL: (CWURLName *) theURL
-{
-  return [self initWithName: [theURL host]  port: 143];
-}
-
-
-//
-//
-//
 - (void) dealloc
 {
   //NSLog(@"IMAPStore: -dealloc"); 
@@ -2631,7 +2622,7 @@ static inline int has_literal(char *buf, int c)
 
 	for (i = 0; i < count; i++)
 	  {
-	    [[[theMessages objectAtIndex: i] flags] replaceWithFlags: theFlags];
+	    [[(CWMessage *) [theMessages objectAtIndex: i] flags] replaceWithFlags: theFlags];
 	  }
 
 	POST_NOTIFICATION(PantomimeMessageStoreCompleted, self, _currentQueueObject->info);
