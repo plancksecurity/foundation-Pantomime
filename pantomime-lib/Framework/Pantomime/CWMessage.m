@@ -1100,7 +1100,11 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 #else
   aCalendarDate = [NSDate date];
 #endif
-  [aMutableData appendCFormat: @"Date: %@%s", [aCalendarDate descriptionWithLocale: aLocale], LF];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss Z"; //RFC2822-Format
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier: @"en_US_POSIX"];
+    NSString *dateString = [dateFormatter stringFromDate:aCalendarDate];
+    [aMutableData appendCFormat: @"Date: %@%s", dateString, LF];
   
   // We set the subject, if we have one!
   if ([[[self subject] stringByTrimmingWhiteSpaces] length] > 0)
