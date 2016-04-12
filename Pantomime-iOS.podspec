@@ -33,11 +33,11 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'pantomime-lib/Framework/Pantomime/**/*.{h,m,swift}',
-                    'Pantomime/Pantomime-Bridging-Header.h'
-  s.exclude_files = '**/CWLocal*', '**/CWTCP*', '**/CWDNS*', '**/CWsendMail.**',
-                    '**/CWPOP3*', '**/Pantomime.h'
+  s.source_files = 'pantomime-lib/Framework/Pantomime/**/*.{h,m,swift}'
+  s.exclude_files = '**/CWLocal*', '**/CWTCP*', '**/CWDNS*', '**/CWsendMail*',
+                    '**/CWPOP3*', '**/Pantomime.h', '**/io.*'
   s.header_mappings_dir = 'pantomime-lib/Framework/'
+  s.header_dir = 'Pantomime'
 
   s.resource_bundles = {
     'Pantomime-iOS' => ['Pod/Assets/*.png']
