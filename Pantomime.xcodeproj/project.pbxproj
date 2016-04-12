@@ -63,7 +63,6 @@
 		43E855AD1CB7EBDD006867C0 /* CWWINDOWS_1253.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855AE1CB7EBDD006867C0 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855AF1CB7EBDD006867C0 /* GNUmakefile in Resources */ = {isa = PBXBuildFile; fileRef = 43E855641CB7EBDD006867C0 /* GNUmakefile */; };
-		43E855B01CB7EBDD006867C0 /* io.c in Sources */ = {isa = PBXBuildFile; fileRef = 43E855651CB7EBDD006867C0 /* io.c */; };
 		43E855B11CB7EBDD006867C0 /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855681CB7EBDD006867C0 /* NSData+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855B31CB7EBDD006867C0 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -193,8 +192,6 @@
 		43E855621CB7EBDD006867C0 /* CWWINDOWS_1254.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWWINDOWS_1254.h; sourceTree = "<group>"; };
 		43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWWINDOWS_1254.m; sourceTree = "<group>"; };
 		43E855641CB7EBDD006867C0 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
-		43E855651CB7EBDD006867C0 /* io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = io.c; sourceTree = "<group>"; };
-		43E855661CB7EBDD006867C0 /* io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		43E855671CB7EBDD006867C0 /* NSData+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Extensions.h"; sourceTree = "<group>"; };
 		43E855681CB7EBDD006867C0 /* NSData+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Extensions.m"; sourceTree = "<group>"; };
 		43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+Extensions.h"; sourceTree = "<group>"; };
@@ -389,8 +386,6 @@
 				43E855621CB7EBDD006867C0 /* CWWINDOWS_1254.h */,
 				43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */,
 				43E855641CB7EBDD006867C0 /* GNUmakefile */,
-				43E855651CB7EBDD006867C0 /* io.c */,
-				43E855661CB7EBDD006867C0 /* io.h */,
 				43E855671CB7EBDD006867C0 /* NSData+Extensions.h */,
 				43E855681CB7EBDD006867C0 /* NSData+Extensions.m */,
 				43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */,
@@ -541,7 +536,6 @@
 				43E855AC1CB7EBDD006867C0 /* CWWINDOWS_1252.m in Sources */,
 				43E8558D1CB7EBDD006867C0 /* CWISO8859_9.m in Sources */,
 				43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */,
-				43E855B01CB7EBDD006867C0 /* io.c in Sources */,
 				43E855B11CB7EBDD006867C0 /* NSData+Extensions.m in Sources */,
 				43E855C71CB80E25006867C0 /* SmtpSend.swift in Sources */,
 				43E854E21CB7EBB8006867C0 /* ImapSync.swift in Sources */,
