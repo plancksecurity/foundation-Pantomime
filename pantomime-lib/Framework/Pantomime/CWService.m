@@ -24,6 +24,7 @@
 
 #import "Pantomime/CWConstants.h"
 #import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/CWLogging.h"
 
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSDictionary.h>
@@ -33,7 +34,7 @@
 #import <stdlib.h>
 #import <string.h>
 
-#import "TCPConnection.h"
+#import "CWTCPConnection.h"
 
 //
 // It's important that the read buffer be bigger than the PMTU. Since almost all networks
@@ -58,6 +59,7 @@
 @interface CWService ()
 
 @property (nonatomic) ConnectionTransport connectionTransport;
+@property (nonatomic, nullable, strong) id<CWLogging> logger;
 
 @end
 
@@ -111,7 +113,6 @@
     return self;
 }
 
-
 //
 //
 //
@@ -141,7 +142,6 @@
 
   //[super dealloc];
 }
-
 
 //
 // access / mutation methods
@@ -287,10 +287,13 @@
 //
 - (int) connect
 {
-    _connection = [[TCPConnection alloc] initWithName: _name
+    _connection = [[CWTCPConnection alloc] initWithName: _name
                                                  port: _port
                                             transport: self.connectionTransport
                                            background: NO];
+
+    _connection.logger = self.logger;
+
     if (!_connection)
     {
         return -1;
@@ -308,10 +311,12 @@
 //
 - (void) connectInBackgroundAndNotify
 {
-    _connection = [[TCPConnection alloc] initWithName: _name
+    _connection = [[CWTCPConnection alloc] initWithName: _name
                                                  port: _port
                                             transport: self.connectionTransport
                                            background: YES];
+
+    _connection.logger = self.logger;
 
     if (!_connection)
     {

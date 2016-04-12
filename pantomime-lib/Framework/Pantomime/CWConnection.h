@@ -27,6 +27,7 @@
 #import <Foundation/NSString.h>
 
 #import "CWConstants.h"
+#import "Pantomime/CWLogging.h"
 
 @protocol CWConnectionDelegate
 
@@ -49,6 +50,7 @@
 @protocol CWConnection
 
 @property (nonatomic, nullable, weak, readwrite) id<CWConnectionDelegate> delegate;
+@property (nonatomic, nullable, weak) id<CWLogging> logger;
 
 /*!
   @method initWithName: port: background:

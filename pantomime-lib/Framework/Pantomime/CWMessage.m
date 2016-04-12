@@ -1347,7 +1347,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) addHeadersFromData: (NSData *) theHeaders  record: (CacheRecord *) theRecord
+- (void) addHeadersFromData: (NSData *) theHeaders  record: (CWCacheRecord *) theRecord
 {
   NSArray *allLines;
   NSData *aData;
@@ -1500,7 +1500,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) setHeadersFromData: (NSData *) theHeaders  record: (CacheRecord *) theRecord
+- (void) setHeadersFromData: (NSData *) theHeaders  record: (CWCacheRecord *) theRecord
 {  
   if (!theHeaders || [theHeaders length] == 0)
     {

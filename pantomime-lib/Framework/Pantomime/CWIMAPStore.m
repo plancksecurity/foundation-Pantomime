@@ -161,7 +161,7 @@ static inline int has_literal(char *buf, int c)
 - (NSString *) _folderNameFromString: (NSString *) theString;
 - (void) _parseFlags: (NSString *) aString
              message: (CWIMAPMessage *) theMessage
-	      record: (CacheRecord *) theRecord;
+	      record: (CWCacheRecord *) theRecord;
 - (void) _renameFolder;
 - (NSArray *) _uniqueIdentifiersFromData: (NSData *) theData;
 - (void) _parseAUTHENTICATE_CRAM_MD5;
@@ -1348,7 +1348,7 @@ static inline int has_literal(char *buf, int c)
 //
 - (void) _parseFlags: (NSString *) theString
 	     message: (CWIMAPMessage *) theMessage
-	      record: (CacheRecord *) theRecord
+	      record: (CWCacheRecord *) theRecord
 {
   CWFlags *theFlags;
   NSRange aRange;
@@ -1874,7 +1874,7 @@ static inline int has_literal(char *buf, int c)
 
   BOOL done, seen_fetch, must_flush_record;
   int i, j, count, len;
-  CacheRecord *cacheRecord = [[CacheRecord alloc] init];
+  CWCacheRecord *cacheRecord = [[CWCacheRecord alloc] init];
   
   //
   // The folder might have been closed so we must not try to

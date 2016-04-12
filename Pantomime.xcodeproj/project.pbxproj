@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		433149331CBCEA1100AFC030 /* CacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CacheRecord.m */; };
+		433149331CBCEA1100AFC030 /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
 		433149361CBCECE200AFC030 /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149351CBCECE200AFC030 /* NSDate+RFC2822.m */; };
-		435FF43D1CBB97B3009E9515 /* NSDate+RFC2822.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435FF43C1CBB97B3009E9515 /* NSDate+RFC2822.swift */; };
-		438A29EC1CBCF037000E48F7 /* TCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* TCPConnection.m */; };
-		43980E651CBD1B5D00A7FC3C /* TCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* TCPConnection.m */; };
-		43980E671CBD1B5D00A7FC3C /* CacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CacheRecord.m */; };
+		438A29EC1CBCF037000E48F7 /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
+		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
+		43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
 		43980E691CBD1B5D00A7FC3C /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149351CBCECE200AFC030 /* NSDate+RFC2822.m */; };
 		43980E6C1CBD1B5D00A7FC3C /* CWCharset.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EC1CB7EBDD006867C0 /* CWCharset.m */; };
 		43980E6F1CBD1B5D00A7FC3C /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EF1CB7EBDD006867C0 /* CWConstants.m */; };
@@ -116,12 +115,9 @@
 		43E855AC1CB7EBDD006867C0 /* CWWINDOWS_1252.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555F1CB7EBDD006867C0 /* CWWINDOWS_1252.m */; };
 		43E855AD1CB7EBDD006867C0 /* CWWINDOWS_1253.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */; };
 		43E855AE1CB7EBDD006867C0 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; };
-		43E855AF1CB7EBDD006867C0 /* GNUmakefile in Resources */ = {isa = PBXBuildFile; fileRef = 43E855641CB7EBDD006867C0 /* GNUmakefile */; };
 		43E855B11CB7EBDD006867C0 /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855681CB7EBDD006867C0 /* NSData+Extensions.m */; };
 		43E855B31CB7EBDD006867C0 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; };
 		43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */; };
-		43E855C31CB7FD0E006867C0 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855BF1CB7FD0E006867C0 /* CacheManager.swift */; };
-		43E855C51CB7FD0E006867C0 /* TCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855C21CB7FD0E006867C0 /* TCPConnection.swift */; };
 		43E855C71CB80E25006867C0 /* SmtpSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855C61CB80E25006867C0 /* SmtpSend.swift */; };
 /* End PBXBuildFile section */
 
@@ -155,14 +151,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		433149311CBCEA1100AFC030 /* CacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheRecord.h; sourceTree = "<group>"; };
-		433149321CBCEA1100AFC030 /* CacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheRecord.m; sourceTree = "<group>"; };
+		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
+		433149321CBCEA1100AFC030 /* CWCacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCacheRecord.m; sourceTree = "<group>"; };
 		433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
 		433149351CBCECE200AFC030 /* NSDate+RFC2822.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RFC2822.m"; sourceTree = "<group>"; };
-		435FF43C1CBB97B3009E9515 /* NSDate+RFC2822.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+RFC2822.swift"; sourceTree = "<group>"; };
-		438A29EA1CBCF037000E48F7 /* TCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPConnection.h; sourceTree = "<group>"; };
-		438A29EB1CBCF037000E48F7 /* TCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCPConnection.m; sourceTree = "<group>"; };
+		438A29EA1CBCF037000E48F7 /* CWTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTCPConnection.h; sourceTree = "<group>"; };
+		438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
 		43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPantomimeStatic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		43980EF41CBD2D4900A7FC3C /* CWLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CWLogging.h; sourceTree = "<group>"; };
 		43E854BB1CB7EA9A006867C0 /* Pantomime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pantomime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		43E854C01CB7EA9A006867C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -269,7 +265,6 @@
 		43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWWINDOWS_1253.m; sourceTree = "<group>"; };
 		43E855621CB7EBDD006867C0 /* CWWINDOWS_1254.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWWINDOWS_1254.h; sourceTree = "<group>"; };
 		43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWWINDOWS_1254.m; sourceTree = "<group>"; };
-		43E855641CB7EBDD006867C0 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
 		43E855671CB7EBDD006867C0 /* NSData+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Extensions.h"; sourceTree = "<group>"; };
 		43E855681CB7EBDD006867C0 /* NSData+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Extensions.m"; sourceTree = "<group>"; };
 		43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+Extensions.h"; sourceTree = "<group>"; };
@@ -278,8 +273,6 @@
 		43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extensions.m"; sourceTree = "<group>"; };
 		43E8556F1CB7EBDD006867C0 /* Pantomime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pantomime.h; sourceTree = "<group>"; };
 		43E855B71CB7EC84006867C0 /* Pantomime-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pantomime-Bridging-Header.h"; sourceTree = "<group>"; };
-		43E855BF1CB7FD0E006867C0 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
-		43E855C21CB7FD0E006867C0 /* TCPConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPConnection.swift; sourceTree = "<group>"; };
 		43E855C61CB80E25006867C0 /* SmtpSend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmtpSend.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -384,13 +377,13 @@
 		43E854E81CB7EBDD006867C0 /* Pantomime */ = {
 			isa = PBXGroup;
 			children = (
-				43E855BE1CB7FD0E006867C0 /* Extensions */,
-				438A29EA1CBCF037000E48F7 /* TCPConnection.h */,
-				438A29EB1CBCF037000E48F7 /* TCPConnection.m */,
-				433149311CBCEA1100AFC030 /* CacheRecord.h */,
-				433149321CBCEA1100AFC030 /* CacheRecord.m */,
+				438A29EA1CBCF037000E48F7 /* CWTCPConnection.h */,
+				438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */,
+				433149311CBCEA1100AFC030 /* CWCacheRecord.h */,
+				433149321CBCEA1100AFC030 /* CWCacheRecord.m */,
 				433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */,
 				433149351CBCECE200AFC030 /* NSDate+RFC2822.m */,
+				43980EF41CBD2D4900A7FC3C /* CWLogging.h */,
 				43E854E91CB7EBDD006867C0 /* CWCacheManager.h */,
 				43E854EB1CB7EBDD006867C0 /* CWCharset.h */,
 				43E854EC1CB7EBDD006867C0 /* CWCharset.m */,
@@ -483,7 +476,6 @@
 				43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */,
 				43E855621CB7EBDD006867C0 /* CWWINDOWS_1254.h */,
 				43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */,
-				43E855641CB7EBDD006867C0 /* GNUmakefile */,
 				43E855671CB7EBDD006867C0 /* NSData+Extensions.h */,
 				43E855681CB7EBDD006867C0 /* NSData+Extensions.m */,
 				43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */,
@@ -495,16 +487,6 @@
 			name = Pantomime;
 			path = "pantomime-lib/Framework/Pantomime";
 			sourceTree = SOURCE_ROOT;
-		};
-		43E855BE1CB7FD0E006867C0 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				43E855BF1CB7FD0E006867C0 /* CacheManager.swift */,
-				43E855C21CB7FD0E006867C0 /* TCPConnection.swift */,
-				435FF43C1CBB97B3009E9515 /* NSDate+RFC2822.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -612,7 +594,6 @@
 				43E854C91CB7EA9A006867C0 /* LaunchScreen.storyboard in Resources */,
 				43E854C61CB7EA9A006867C0 /* Assets.xcassets in Resources */,
 				43E854C41CB7EA9A006867C0 /* Main.storyboard in Resources */,
-				43E855AF1CB7EBDD006867C0 /* GNUmakefile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,8 +611,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43980E651CBD1B5D00A7FC3C /* TCPConnection.m in Sources */,
-				43980E671CBD1B5D00A7FC3C /* CacheRecord.m in Sources */,
+				43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */,
+				43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */,
 				43980E691CBD1B5D00A7FC3C /* NSDate+RFC2822.m in Sources */,
 				43980E6C1CBD1B5D00A7FC3C /* CWCharset.m in Sources */,
 				43980E6F1CBD1B5D00A7FC3C /* CWConstants.m in Sources */,
@@ -694,7 +675,6 @@
 				43E8557A1CB7EBDD006867C0 /* CWFolderInformation.m in Sources */,
 				43E855861CB7EBDD006867C0 /* CWISO8859_2.m in Sources */,
 				43E854C11CB7EA9A006867C0 /* ViewController.swift in Sources */,
-				43E855C51CB7FD0E006867C0 /* TCPConnection.swift in Sources */,
 				43E8557D1CB7EBDD006867C0 /* CWIMAPMessage.m in Sources */,
 				43E855A51CB7EBDD006867C0 /* CWSMTP.m in Sources */,
 				43E8559A1CB7EBDD006867C0 /* CWMIMEUtility.m in Sources */,
@@ -702,13 +682,11 @@
 				43E855741CB7EBDD006867C0 /* CWCharset.m in Sources */,
 				43E855AB1CB7EBDD006867C0 /* CWWINDOWS_1251.m in Sources */,
 				43E855A71CB7EBDD006867C0 /* CWURLName.m in Sources */,
-				435FF43D1CBB97B3009E9515 /* NSDate+RFC2822.swift in Sources */,
-				43E855C31CB7FD0E006867C0 /* CacheManager.swift in Sources */,
 				43E855A41CB7EBDD006867C0 /* CWService.m in Sources */,
 				43E8557C1CB7EBDD006867C0 /* CWIMAPFolder.m in Sources */,
 				43E855891CB7EBDD006867C0 /* CWISO8859_5.m in Sources */,
 				43E855841CB7EBDD006867C0 /* CWISO8859_14.m in Sources */,
-				438A29EC1CBCF037000E48F7 /* TCPConnection.m in Sources */,
+				438A29EC1CBCF037000E48F7 /* CWTCPConnection.m in Sources */,
 				43E855AC1CB7EBDD006867C0 /* CWWINDOWS_1252.m in Sources */,
 				43E8558D1CB7EBDD006867C0 /* CWISO8859_9.m in Sources */,
 				43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */,
@@ -731,7 +709,7 @@
 				43E8557E1CB7EBDD006867C0 /* CWIMAPStore.m in Sources */,
 				43E855AA1CB7EBDD006867C0 /* CWWINDOWS_1250.m in Sources */,
 				43E855751CB7EBDD006867C0 /* CWConstants.m in Sources */,
-				433149331CBCEA1100AFC030 /* CacheRecord.m in Sources */,
+				433149331CBCEA1100AFC030 /* CWCacheRecord.m in Sources */,
 				43E855791CB7EBDD006867C0 /* CWFolder.m in Sources */,
 				43E8559C1CB7EBDD006867C0 /* CWPart.m in Sources */,
 				43E855A21CB7EBDD006867C0 /* CWRegEx.m in Sources */,

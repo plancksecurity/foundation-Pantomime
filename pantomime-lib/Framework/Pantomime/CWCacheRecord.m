@@ -6,8 +6,8 @@
 //  Copyright © 2016 pEp Security S.A. All rights reserved.
 //
 
-#import "CacheRecord.h"
+#import "CWCacheRecord.h"
 
-@implementation CacheRecord
+@implementation CWCacheRecord
 
 @end

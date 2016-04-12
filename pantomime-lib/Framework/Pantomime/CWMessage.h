@@ -27,7 +27,7 @@
 #import "Pantomime/CWCacheManager.h"
 #import "Pantomime/CWPart.h"
 
-#import "Pantomime/CacheRecord.h"
+#import "Pantomime/CWCacheRecord.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSCoder.h>
@@ -554,7 +554,7 @@ extern NSString* PantomimeMessageExpunged;
   @param The additional headers, in their raw representation.
   @param theRecord The cache_record to update.
 */
-- (void) addHeadersFromData: (NSData *) theHeaders  record: (CacheRecord *) theRecord;
+- (void) addHeadersFromData: (NSData *) theHeaders  record: (CWCacheRecord *) theRecord;
 
 /*!
   @method setHeadersFromData:record:
@@ -565,7 +565,7 @@ extern NSString* PantomimeMessageExpunged;
 	      the decoded information.
   @param theHeaders The bytes to use.
 */
-- (void) setHeadersFromData: (NSData *) theHeaders record: (CacheRecord *) theRecord;
+- (void) setHeadersFromData: (NSData *) theHeaders record: (CWCacheRecord *) theRecord;
 @end
 
 

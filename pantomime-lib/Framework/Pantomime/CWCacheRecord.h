@@ -1,5 +1,5 @@
 //
-//  CacheRecord.h
+//  CWCacheRecord.h
 //  Pantomime
 //
 //  Created by Dirk Zimmermann on 08/04/16.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CacheRecord : NSObject
+@interface CWCacheRecord : NSObject
 
 @property (nonatomic) NSUInteger date;
 @property (nonatomic) NSUInteger flags;
