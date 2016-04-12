@@ -20,19 +20,19 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWSMTP.h>
+#import "Pantomime/CWSMTP.h"
 
-#include <Pantomime/CWConnection.h>
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWInternetAddress.h>
-#include <Pantomime/CWMD5.h>
-#include <Pantomime/CWMessage.h>
-#include <Pantomime/NSData+Extensions.h>
+#import "Pantomime/CWConnection.h"
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWInternetAddress.h"
+#import "Pantomime/CWMD5.h"
+#import "Pantomime/CWMessage.h"
+#import "Pantomime/NSData+Extensions.h"
 
-#include <Foundation/NSEnumerator.h>
-#include <Foundation/NSNotification.h>
+#import <Foundation/NSEnumerator.h>
+#import <Foundation/NSNotification.h>
 
-#import "Pantomime-swift.h"
+#import "CWConnection.h"
 
 //
 // Some static variables used to enhance the performance.
@@ -102,7 +102,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 - (void) dealloc
 {
   RELEASE(arguments);
-  [super dealloc];
+  //[super dealloc];
 }
 @end
 
@@ -178,7 +178,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   RELEASE(_recipients);
   RELEASE(_sent_recipients);
 
-  [super dealloc];
+  //[super dealloc];
 }
 
 
@@ -1027,7 +1027,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   if ([aData hasCPrefix: "220"])
     {          
       // We first activate SSL.
-      [(CWConnection *)_connection startTLS];
+      [(id<CWConnection>) _connection startTLS];
 
       // We now forget about the initial negotiated state; see RFC2487 for more details,
       [_supportedMechanisms removeAllObjects];

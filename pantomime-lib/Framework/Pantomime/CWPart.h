@@ -29,7 +29,7 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSString.h>
 
-#include <Pantomime/CWConstants.h>
+#import "Pantomime/CWConstants.h"
 
 /*!
   @class CWPart

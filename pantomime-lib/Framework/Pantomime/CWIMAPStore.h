@@ -23,10 +23,10 @@
 #ifndef _Pantomime_H_CWIMAPStore
 #define _Pantomime_H_CWIMAPStore
 
-#include <Pantomime/CWConnection.h>
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWService.h>
-#include <Pantomime/CWStore.h>
+#import "Pantomime/CWConnection.h"
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWService.h"
+#import "Pantomime/CWStore.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>

@@ -23,13 +23,13 @@
 #ifndef _Pantomime_H_CWIMAPFolder
 #define _Pantomime_H_CWIMAPFolder
 
-#include <Pantomime/CWFolder.h>
+#import "Pantomime/CWFolder.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
-#include <Pantomime/CWConstants.h>
+#import "Pantomime/CWConstants.h"
 
 /*!
   @const PantomimeMessagesCopyCompleted

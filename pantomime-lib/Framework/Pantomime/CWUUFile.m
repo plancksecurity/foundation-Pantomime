@@ -20,13 +20,13 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWUUFile.h>
+#import "Pantomime/CWUUFile.h"
 
-#include <Pantomime/CWConstants.h>
+#import "Pantomime/CWConstants.h"
 
-#include <Foundation/NSArray.h>
-#include <Foundation/NSFileManager.h>
-#include <Foundation/NSValue.h>
+#import <Foundation/NSArray.h>
+#import <Foundation/NSFileManager.h>
+#import <Foundation/NSValue.h>
 
 #define UUDECODE(c)  (((c) - ' ') & 077)
 
@@ -95,7 +95,7 @@ void uudecodeline(char *line, NSMutableData *data)
   RELEASE(_name);
   RELEASE(_data);
   RELEASE(_attributes);
-  [super dealloc];
+  //[super dealloc];
 }
 
 

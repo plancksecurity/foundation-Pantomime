@@ -20,28 +20,28 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWParser.h>
+#import "Pantomime/CWParser.h"
 
 #import <Foundation/Foundation.h>
 
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWFlags.h>
-#include <Pantomime/CWInternetAddress.h>
-#include <Pantomime/CWMessage.h>
-#include <Pantomime/CWMIMEUtility.h>
-#include <Pantomime/NSData+Extensions.h>
-#include <Pantomime/NSString+Extensions.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWFlags.h"
+#import "Pantomime/CWInternetAddress.h"
+#import "Pantomime/CWMessage.h"
+#import "Pantomime/CWMIMEUtility.h"
+#import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/NSString+Extensions.h"
 
-#include <stdlib.h>
-#include <string.h>  // For NULL on OS X
-#include <ctype.h>
-#include <stdio.h>
-//#include <Pantomime/elm_defs.h>
+#import <stdlib.h>
+#import <string.h>  // For NULL on OS X
+#import <ctype.h>
+#import <stdio.h>
+//#import "Pantomime/elm_defs.h>
 
-#include <Foundation/NSBundle.h>
-#include <Foundation/NSTimeZone.h>
-#include <Foundation/NSString.h>
-#include <Foundation/NSURL.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSTimeZone.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSURL.h>
 
 //
 //

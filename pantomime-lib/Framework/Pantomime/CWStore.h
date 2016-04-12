@@ -26,7 +26,7 @@
 #import <Foundation/NSEnumerator.h>
 #import <Foundation/NSString.h>
 
-#include <Pantomime/CWConstants.h>
+#import "Pantomime/CWConstants.h"
 
 /*!
   @const PantomimeFolderCreateCompleted

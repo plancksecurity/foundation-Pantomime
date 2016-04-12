@@ -14,7 +14,7 @@
 #import "Pantomime/CWService.h"
 #import "Pantomime/CWConnection.h"
 #import "Pantomime/CWIMAPFolder.h"
-#import "Pantomime/Extensions/CacheRecord.h"
+#import "Pantomime/CacheRecord.h"
 
 #import "Pantomime/CWCacheManager.h"
 #import "Pantomime/CWIMAPCacheManager.h"

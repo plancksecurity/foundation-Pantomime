@@ -24,14 +24,14 @@
 
 #include "Pantomime/NSData+Extensions.h"
 
-#include <Foundation/NSArray.h>
-#include <Foundation/NSException.h>
-#include <Foundation/NSString.h>
+#import <Foundation/NSArray.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSString.h>
 
 #include "Pantomime/CWConstants.h"
 
-#include <stdlib.h>
-#include <string.h>
+#import <stdlib.h>
+#import <string.h>
 
 //
 // C functions and constants
@@ -836,7 +836,7 @@ static const char *hexDigit = "0123456789ABCDEF";
   NSMutableData *aMutableData;
   
   aMutableData = [[NSMutableData alloc] init];
-  AUTORELEASE(aMutableData);
+  AUTORELEASE_VOID(aMutableData);
    
   [aMutableData appendData: self];
   [aMutableData appendBytes: "\0"  length: 1];
@@ -1370,8 +1370,8 @@ static const char *hexDigit = "0123456789ABCDEF";
   else
     {
       NSMutableData *data;
-
-      data = [NSMutableData dataWithBytes: [self subdataWithRange: NSMakeRange(0, theIndex)]  length: theIndex];
+        NSData *subData = [self subdataWithRange: NSMakeRange(0, theIndex)];
+      data = [NSMutableData dataWithBytes:subData.bytes  length: theIndex];
       [data appendCString: theCString];
       [data appendData: [self subdataWithRange: NSMakeRange(theIndex, length - theIndex)]];
       [self setData: data];

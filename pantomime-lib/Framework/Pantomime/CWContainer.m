@@ -20,11 +20,11 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWContainer.h>
+#import "Pantomime/CWContainer.h"
 
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWInternetAddress.h>
-#include <Pantomime/CWMessage.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWInternetAddress.h"
+#import "Pantomime/CWMessage.h"
 
 
 //
@@ -54,7 +54,7 @@
   TEST_RELEASE(child);
   TEST_RELEASE(next);
 
-  [super dealloc];
+  //[super dealloc];
 }
 
 
@@ -105,7 +105,7 @@
       	}
 
 
-      RETAIN(theChild);
+      RETAIN_VOID(theChild);
       //RELEASE(child);
       //child = theChild;
       
@@ -225,7 +225,7 @@
   CWContainer *aContainer;
 
   aMutableArray = [[NSMutableArray alloc] init];
-  AUTORELEASE(aMutableArray);
+  AUTORELEASE_VOID(aMutableArray);
 
   aContainer = child;
   

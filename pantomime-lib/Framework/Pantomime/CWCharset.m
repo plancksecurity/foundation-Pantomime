@@ -20,33 +20,33 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWCharset.h>
+#import "Pantomime/CWCharset.h"
 
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWISO8859_1.h>
-#include <Pantomime/CWISO8859_2.h>
-#include <Pantomime/CWISO8859_3.h>
-#include <Pantomime/CWISO8859_4.h>
-#include <Pantomime/CWISO8859_5.h>
-#include <Pantomime/CWISO8859_6.h>
-#include <Pantomime/CWISO8859_7.h>
-#include <Pantomime/CWISO8859_8.h>
-#include <Pantomime/CWISO8859_9.h>
-#include <Pantomime/CWISO8859_10.h>
-#include <Pantomime/CWISO8859_11.h>
-#include <Pantomime/CWISO8859_13.h>
-#include <Pantomime/CWISO8859_14.h>
-#include <Pantomime/CWISO8859_15.h>
-#include <Pantomime/CWKOI8_R.h>
-#include <Pantomime/CWKOI8_U.h>
-#include <Pantomime/CWWINDOWS_1250.h>
-#include <Pantomime/CWWINDOWS_1251.h>
-#include <Pantomime/CWWINDOWS_1252.h>
-#include <Pantomime/CWWINDOWS_1253.h>
-#include <Pantomime/CWWINDOWS_1254.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWISO8859_1.h"
+#import "Pantomime/CWISO8859_2.h"
+#import "Pantomime/CWISO8859_3.h"
+#import "Pantomime/CWISO8859_4.h"
+#import "Pantomime/CWISO8859_5.h"
+#import "Pantomime/CWISO8859_6.h"
+#import "Pantomime/CWISO8859_7.h"
+#import "Pantomime/CWISO8859_8.h"
+#import "Pantomime/CWISO8859_9.h"
+#import "Pantomime/CWISO8859_10.h"
+#import "Pantomime/CWISO8859_11.h"
+#import "Pantomime/CWISO8859_13.h"
+#import "Pantomime/CWISO8859_14.h"
+#import "Pantomime/CWISO8859_15.h"
+#import "Pantomime/CWKOI8_R.h"
+#import "Pantomime/CWKOI8_U.h"
+#import "Pantomime/CWWINDOWS_1250.h"
+#import "Pantomime/CWWINDOWS_1251.h"
+#import "Pantomime/CWWINDOWS_1252.h"
+#import "Pantomime/CWWINDOWS_1253.h"
+#import "Pantomime/CWWINDOWS_1254.h"
 
-#include <Foundation/NSBundle.h>
-#include <Foundation/NSDictionary.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSDictionary.h>
 
 static NSMutableDictionary *charset_name_description = nil;
 static NSMutableDictionary *charset_instance_cache = nil;

@@ -20,12 +20,12 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWMD5.h>
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/NSData+Extensions.h>
+#import "Pantomime/CWMD5.h"
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/NSData+Extensions.h"
 
-#include <string.h>
-#include <sys/types.h>  // For byte order on Mac OS X.
+#import <string.h>
+#import <sys/types.h>  // For byte order on Mac OS X.
 
 #define word32 unsigned int
 
@@ -63,7 +63,7 @@ void md5_hmac(unsigned char *digest, const unsigned char* text, int text_len, co
 - (void) dealloc
 {
   RELEASE(_data);
-  [super dealloc];
+  //[super dealloc];
 }
 
 

@@ -21,32 +21,32 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/NSString+Extensions.h>
+#import "Pantomime/NSString+Extensions.h"
 
-#include <Pantomime/CWCharset.h>
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWInternetAddress.h>
-#include <Pantomime/CWPart.h>
-#include <Pantomime/NSData+Extensions.h>
+#import "Pantomime/CWCharset.h"
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWInternetAddress.h"
+#import "Pantomime/CWPart.h"
+#import "Pantomime/NSData+Extensions.h"
 
-#include <Foundation/NSBundle.h>
+#import <Foundation/NSBundle.h>
 
 //
 // We include the CoreFoundation headers under Mac OS X so we can support
 // more string encodings.
 //
 #ifdef MACOSX
-#include <CoreFoundation/CFString.h>
-#include <CoreFoundation/CFStringEncodingExt.h>
-#include <objc/runtime.h>
+#import <CoreFoundation/CFString.h>
+#import <CoreFoundation/CFStringEncodingExt.h>
+#import <objc/runtime.h>
 #else
-#include <GNUstepBase/Additions.h>
+#import <GNUstepBase/Additions.h>
 #endif
 
-#include <ctype.h>
+#import <ctype.h>
 
 #ifdef HAVE_ICONV
-#include <iconv.h>
+#import "iconv.h>
 #if defined (MACOSX) || defined (__NetBSD__) || defined (__FreeBSD__)
 #define iconv_const_qualifier const
 #else
@@ -193,47 +193,47 @@
  convertToNSStringEncoding: (BOOL) shouldConvert
 {
   // We define some aliases for the string encoding.
-  static struct { NSString *name; int encoding; BOOL fromCoreFoundation; } encodings[] = {
-    {@"ascii"         ,NSASCIIStringEncoding          ,NO},
-    {@"us-ascii"      ,NSASCIIStringEncoding          ,NO},
-    {@"default"       ,NSASCIIStringEncoding          ,NO},  // Ah... spammers.
-    {@"utf-8"         ,NSUTF8StringEncoding           ,NO},
-    {@"iso-8859-1"    ,NSISOLatin1StringEncoding      ,NO},
-    {@"x-user-defined",NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Outlook.
-    {@"unknown"       ,NSISOLatin1StringEncoding      ,NO},  // Once more, blame Outlook.
-    {@"x-unknown"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Pine 4.21.
-    {@"unknown-8bit"  ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Mutt/1.3.28i
-    {@"0"             ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in QUALCOMM Windows Eudora Version 6.0.1.1
-    {@""              ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Ximian Evolution
-    {@"iso8859_1"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Openwave WebEngine
-    {@"iso-8859-2"    ,NSISOLatin2StringEncoding      ,NO},
+  static struct { char *name; int encoding; BOOL fromCoreFoundation; } encodings[] = {
+    {"ascii"         ,NSASCIIStringEncoding          ,NO},
+    {"us-ascii"      ,NSASCIIStringEncoding          ,NO},
+    {"default"       ,NSASCIIStringEncoding          ,NO},  // Ah... spammers.
+    {"utf-8"         ,NSUTF8StringEncoding           ,NO},
+    {"iso-8859-1"    ,NSISOLatin1StringEncoding      ,NO},
+    {"x-user-defined",NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Outlook.
+    {"unknown"       ,NSISOLatin1StringEncoding      ,NO},  // Once more, blame Outlook.
+    {"x-unknown"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Pine 4.21.
+    {"unknown-8bit"  ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Mutt/1.3.28i
+    {"0"             ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in QUALCOMM Windows Eudora Version 6.0.1.1
+    {""              ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Ximian Evolution
+    {"iso8859_1"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Openwave WebEngine
+    {"iso-8859-2"    ,NSISOLatin2StringEncoding      ,NO},
 #ifndef MACOSX
-    {@"iso-8859-3"   ,NSISOLatin3StringEncoding                 ,NO},
-    {@"iso-8859-4"   ,NSISOLatin4StringEncoding                 ,NO},
-    {@"iso-8859-5"   ,NSISOCyrillicStringEncoding               ,NO},
-    {@"iso-8859-6"   ,NSISOArabicStringEncoding                 ,NO},
-    {@"iso-8859-7"   ,NSISOGreekStringEncoding                  ,NO},
-    {@"iso-8859-8"   ,NSISOHebrewStringEncoding                 ,NO},
-    {@"iso-8859-9"   ,NSISOLatin5StringEncoding                 ,NO},
-    {@"iso-8859-10"  ,NSISOLatin6StringEncoding                 ,NO},
-    {@"iso-8859-11"  ,NSISOThaiStringEncoding                   ,NO},
-    {@"iso-8859-13"  ,NSISOLatin7StringEncoding                 ,NO},
-    {@"iso-8859-14"  ,NSISOLatin8StringEncoding                 ,NO},
-    {@"iso-8859-15"  ,NSISOLatin9StringEncoding                 ,NO},
-    {@"koi8-r"       ,NSKOI8RStringEncoding                     ,NO},
-    {@"big5"         ,NSBIG5StringEncoding                      ,NO},
-    {@"gb2312"       ,NSGB2312StringEncoding                    ,NO},
-    {@"utf-7"        ,NSUTF7StringEncoding                      ,NO},
-    {@"unicode-1-1-utf-7", NSUTF7StringEncoding                 ,NO},  // To prever a bug (sort of) in MS Hotmail
+    {"iso-8859-3"   ,NSISOLatin3StringEncoding                 ,NO},
+    {"iso-8859-4"   ,NSISOLatin4StringEncoding                 ,NO},
+    {"iso-8859-5"   ,NSISOCyrillicStringEncoding               ,NO},
+    {"iso-8859-6"   ,NSISOArabicStringEncoding                 ,NO},
+    {"iso-8859-7"   ,NSISOGreekStringEncoding                  ,NO},
+    {"iso-8859-8"   ,NSISOHebrewStringEncoding                 ,NO},
+    {"iso-8859-9"   ,NSISOLatin5StringEncoding                 ,NO},
+    {"iso-8859-10"  ,NSISOLatin6StringEncoding                 ,NO},
+    {"iso-8859-11"  ,NSISOThaiStringEncoding                   ,NO},
+    {"iso-8859-13"  ,NSISOLatin7StringEncoding                 ,NO},
+    {"iso-8859-14"  ,NSISOLatin8StringEncoding                 ,NO},
+    {"iso-8859-15"  ,NSISOLatin9StringEncoding                 ,NO},
+    {"koi8-r"       ,NSKOI8RStringEncoding                     ,NO},
+    {"big5"         ,NSBIG5StringEncoding                      ,NO},
+    {"gb2312"       ,NSGB2312StringEncoding                    ,NO},
+    {"utf-7"        ,NSUTF7StringEncoding                      ,NO},
+    {"unicode-1-1-utf-7", NSUTF7StringEncoding                 ,NO},  // To prever a bug (sort of) in MS Hotmail
 #endif
-    {@"windows-1250" ,NSWindowsCP1250StringEncoding             ,NO},
-    {@"windows-1251" ,NSWindowsCP1251StringEncoding             ,NO},
-    {@"cyrillic (windows-1251)", NSWindowsCP1251StringEncoding  ,NO},  // To prevent a bug in MS Hotmail
-    {@"windows-1252" ,NSWindowsCP1252StringEncoding             ,NO},
-    {@"windows-1253" ,NSWindowsCP1253StringEncoding             ,NO},
-    {@"windows-1254" ,NSWindowsCP1254StringEncoding             ,NO},
-    {@"iso-2022-jp"  ,NSISO2022JPStringEncoding                 ,NO},
-    {@"euc-jp"       ,NSJapaneseEUCStringEncoding               ,NO},
+    {"windows-1250" ,NSWindowsCP1250StringEncoding             ,NO},
+    {"windows-1251" ,NSWindowsCP1251StringEncoding             ,NO},
+    {"cyrillic (windows-1251)", NSWindowsCP1251StringEncoding  ,NO},  // To prevent a bug in MS Hotmail
+    {"windows-1252" ,NSWindowsCP1252StringEncoding             ,NO},
+    {"windows-1253" ,NSWindowsCP1253StringEncoding             ,NO},
+    {"windows-1254" ,NSWindowsCP1254StringEncoding             ,NO},
+    {"iso-2022-jp"  ,NSISO2022JPStringEncoding                 ,NO},
+    {"euc-jp"       ,NSJapaneseEUCStringEncoding               ,NO},
   };
   
   NSString *name;
@@ -241,11 +241,18 @@
 
     name = [[[NSString alloc ] initWithBytes: [theCharset bytes] length: [theCharset length]
                                     encoding: NSUTF8StringEncoding] lowercaseString];
-    AUTORELEASE(name);
-  
-  for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++)
+    AUTORELEASE_VOID(name);
+
+    NSMutableArray *encodingNames = [NSMutableArray array];
+    for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
+        NSString *string = [[NSString alloc] initWithCString:encodings[i].name
+                                                    encoding:NSUTF8StringEncoding];
+        [encodingNames addObject:string];
+    }
+
+    for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++)
     {
-      if ([name isEqualToString: encodings[i].name])
+      if ([name isEqualToString: encodingNames[i]])
         {
           int enc = encodings[i].encoding;
           // Under OS X, we use CoreFoundation if necessary to convert the encoding
@@ -438,11 +445,11 @@
 #endif
     }
 
-#ifdef MACOSX
-  return AUTORELEASE((NSString *)CFStringCreateFromExternalRepresentation(NULL, (CFDataRef)theData, encoding));
-#else
+//#ifdef MACOSX
+  //return AUTORELEASE((NSString *)CFStringCreateFromExternalRepresentation(NULL, (CFDataRef)theData, encoding));
+//#else
   return AUTORELEASE([[NSString alloc] initWithData: theData  encoding: encoding]);
-#endif
+//#endif
 }
 
 

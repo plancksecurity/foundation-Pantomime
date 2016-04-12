@@ -23,9 +23,9 @@
 #ifndef _Pantomime_H_CWService
 #define _Pantomime_H_CWService
 
-#import <Pantomime/CWConnection.h>
+#import "Pantomime/CWConnection.h"
 
-#import <Pantomime/CWConstants.h>
+#import "Pantomime/CWConstants.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSObject.h>
@@ -35,7 +35,7 @@
 
 #ifdef MACOSX
 #import <Foundation/NSMapTable.h>
-#include <CoreFoundation/CoreFoundation.h>
+#import <CoreFoundation/CoreFoundation.h>
 #endif
 
 @class CWService;

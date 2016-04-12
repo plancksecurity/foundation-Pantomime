@@ -20,33 +20,33 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWMessage.h>
+#import "Pantomime/CWMessage.h"
 
 #import <Foundation/Foundation.h>
 
-#include <Pantomime/CWFlags.h>
-#include <Pantomime/CWFolder.h>
-#include <Pantomime/CWInternetAddress.h>
-#include <Pantomime/CWMIMEMultipart.h>
-#include <Pantomime/CWMIMEUtility.h>
-#include <Pantomime/CWRegEx.h>
-#include <Pantomime/NSData+Extensions.h>
-#include <Pantomime/NSString+Extensions.h>
-#include <Pantomime/CWParser.h>
+#import "Pantomime/CWFlags.h"
+#import "Pantomime/CWFolder.h"
+#import "Pantomime/CWInternetAddress.h"
+#import "Pantomime/CWMIMEMultipart.h"
+#import "Pantomime/CWMIMEUtility.h"
+#import "Pantomime/CWRegEx.h"
+#import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/NSString+Extensions.h"
+#import "Pantomime/CWParser.h"
 
-#include <Foundation/NSAutoreleasePool.h>
-#include <Foundation/NSBundle.h>
-#include <Foundation/NSEnumerator.h>
-#include <Foundation/NSTimeZone.h>
-#include <Foundation/NSUserDefaults.h>
+#import <Foundation/NSAutoreleasePool.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSEnumerator.h>
+#import <Foundation/NSTimeZone.h>
+#import <Foundation/NSUserDefaults.h>
 
-#include <Pantomime/CWIMAPCacheManager.h>
+#import "Pantomime/CWIMAPCacheManager.h"
 
-#import "Pantomime-swift.h"
+#import "NSDate+RFC2822.h"
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#import <stdlib.h>
+#import <string.h>
+#import <time.h>
 
 #define CHECK_RANGE(r,len) (r.location < len && (r.length < len-r.location))
 #define LF "\n"
@@ -205,7 +205,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   RELEASE(_rawSource);
   RELEASE(_flags);
   
-  [super dealloc];
+  //[super dealloc];
 }
 
 

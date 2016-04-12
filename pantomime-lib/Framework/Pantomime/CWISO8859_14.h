@@ -23,7 +23,7 @@
 #ifndef _Pantomime_H_CWISO8859_14
 #define _Pantomime_H_CWISO8859_14
 
-#include <Pantomime/CWCharset.h>
+#import "Pantomime/CWCharset.h"
 
 @interface CWISO8859_14 : CWCharset
 

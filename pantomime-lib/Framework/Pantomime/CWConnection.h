@@ -26,7 +26,7 @@
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 
 @protocol CWConnectionDelegate
 
@@ -48,7 +48,7 @@
 */
 @protocol CWConnection
 
-@property (nonatomic, weak, nullable) id<CWConnectionDelegate> delegate;
+@property (nonatomic, nullable, weak, readwrite) id<CWConnectionDelegate> delegate;
 
 /*!
   @method initWithName: port: background:

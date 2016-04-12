@@ -24,14 +24,13 @@
 
 #import <Pantomime/CWIMAPCacheManager.h>
 
-#include <Pantomime/io.h>
 #include <Pantomime/CWConstants.h>
 #include <Pantomime/CWFlags.h>
 #include <Pantomime/CWFolder.h>
 #include <Pantomime/CWIMAPMessage.h>
 #include <Pantomime/CWParser.h>
 
-#include <Foundation/NSArchiver.h>
+#include <Foundation/Foundation.h>
 #include <Foundation/NSAutoreleasePool.h>
 #include <Foundation/NSException.h>
 #include <Foundation/NSFileManager.h>

@@ -33,15 +33,21 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'pantomime-lib/Framework/Pantomime/**/*.{h,m,swift}'
+  s.source_files = 'pantomime-lib/Framework/Pantomime/**/*.{h,m}'
   s.exclude_files = '**/CWLocal*', '**/CWTCP*', '**/CWDNS*', '**/CWsendMail*',
-                    '**/CWPOP3*', '**/Pantomime.h', '**/io.*'
+                    '**/CWPOP3*', '**/Pantomime.h', '**/io.*', '**/CWCacheManager.m',
+                    '**/CWIMAPCacheManager.m', '**/NSFileManager*'
   s.header_mappings_dir = 'pantomime-lib/Framework/'
   s.header_dir = 'Pantomime'
 
-  s.resource_bundles = {
-    'Pantomime-iOS' => ['Pod/Assets/*.png']
-  }
+  #s.resource_bundles = {
+    #'Pantomime-iOS' => ['Pod/Assets/*.png']
+  #}
+
+  #s.subspec 'no-arc' do |sp|
+  #  sp.source_files = 'pantomime-lib/Framework/Pantomime/TCPConnection.m'
+  #  sp.requires_arc = true
+  #end
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

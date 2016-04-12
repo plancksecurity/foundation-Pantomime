@@ -23,7 +23,7 @@
 #ifndef _Pantomime_H_CWWINDOW_1252
 #define _Pantomime_H_CWWINDOW_1252
 
-#include <Pantomime/CWCharset.h>
+#import "Pantomime/CWCharset.h"
 
 @interface CWWINDOWS_1252 : CWCharset
 

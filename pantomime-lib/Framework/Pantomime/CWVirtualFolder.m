@@ -20,9 +20,9 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWVirtualFolder.h>
+#import "Pantomime/CWVirtualFolder.h"
 
-#include <Pantomime/CWConstants.h>
+#import "Pantomime/CWConstants.h"
 
 //
 //
@@ -45,7 +45,7 @@
 - (void) dealloc
 {
   RELEASE(_allFolders);
-  [super dealloc];
+  //[super dealloc];
 }
 
 

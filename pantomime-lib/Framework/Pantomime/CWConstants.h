@@ -52,32 +52,24 @@ typedef NS_ENUM(NSInteger, ConnectionTransport) {
 // Useful macros that we must define ourself on OS X.
 //
 #ifdef MACOSX 
-#define RETAIN(object)          [object retain]
-#define RELEASE(object)         [object release]
-#define AUTORELEASE(object)     [object autorelease]
-#define TEST_RELEASE(object)    ({ if (object) [object release]; })
+#define RETAIN(object) object
+#define RETAIN_VOID(object)
+#define RELEASE(object)
+#define AUTORELEASE(object) object
+#define AUTORELEASE_VOID(object)
+#define TEST_RELEASE(object)    ({ if (object) object = nil; })
 #define ASSIGN(object,value)    ({\
 id __value = (id)(value); \
 id __object = (id)(object); \
 if (__value != __object) \
   { \
-    if (__value != nil) \
-      { \
-        [__value retain]; \
-      } \
     object = __value; \
-    if (__object != nil) \
-      { \
-        [__object release]; \
-      } \
   } \
 })
 #define DESTROY(object) ({ \
   if (object) \
     { \
-      id __o = object; \
       object = nil; \
-      [__o release]; \
     } \
 })
 
@@ -103,7 +95,7 @@ if (__value != __object) \
 // We must define NSObject: -subclassResponsibility: on OS X.
 //
 #ifdef MACOSX
-#include <Pantomime/CWMacOSXGlue.h>
+#include "CWMacOSXGlue.h"
 #endif
 
 //

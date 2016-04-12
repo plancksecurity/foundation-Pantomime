@@ -20,21 +20,21 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWPart.h>
+#import "Pantomime/CWPart.h"
 
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWMessage.h>
-#include <Pantomime/CWMIMEMultipart.h>
-#include <Pantomime/CWMIMEUtility.h>
-#include <Pantomime/NSData+Extensions.h>
-#include <Pantomime/NSString+Extensions.h>
-#include <Pantomime/CWParser.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWMessage.h"
+#import "Pantomime/CWMIMEMultipart.h"
+#import "Pantomime/CWMIMEUtility.h"
+#import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/NSString+Extensions.h"
+#import "Pantomime/CWParser.h"
 
-#include <Foundation/NSAutoreleasePool.h>
-#include <Foundation/NSException.h>
-#include <Foundation/NSValue.h>
+#import <Foundation/NSAutoreleasePool.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSValue.h>
 
-#include <string.h>
+#import <string.h>
 
 #define LF "\n"
 
@@ -73,7 +73,7 @@ static int currentPartVersion = 2;
   RELEASE(_headers);
   RELEASE(_content);
 
-  [super dealloc];
+  //[super dealloc];
 }
 
 
@@ -88,7 +88,7 @@ static int currentPartVersion = 2;
   
   if (aRange.length == 0)
     {
-      AUTORELEASE(self);
+      AUTORELEASE_VOID(self);
       return nil;
     }
 
@@ -439,7 +439,7 @@ static int currentPartVersion = 2;
       aFilename = [[NSString alloc] initWithData: [CWMIMEUtility encodeWordUsingQuotedPrintable: [self filename]
 								 prefixLength: 0]
 				    encoding: NSASCIIStringEncoding];
-      AUTORELEASE(aFilename);
+      AUTORELEASE_VOID(aFilename);
     }
 
   // We encode our Content-Transfer-Encoding header.
@@ -693,7 +693,7 @@ static int currentPartVersion = 2;
 //
 - (void) setHeadersFromData: (NSData *) theHeaders
 {
-  NSAutoreleasePool *pool;
+  //NSAutoreleasePool *pool;
   NSArray *allLines;
   int i, count;
   
@@ -703,7 +703,7 @@ static int currentPartVersion = 2;
     }
 
   // We initialize a local autorelease pool
-  pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 
   // We MUST be sure to unfold all headers properly before
   // decoding the headers
@@ -749,7 +749,7 @@ static int currentPartVersion = 2;
 	}
     }
 
-  RELEASE(pool);
+    } //RELEASE(pool);
 }
 
 

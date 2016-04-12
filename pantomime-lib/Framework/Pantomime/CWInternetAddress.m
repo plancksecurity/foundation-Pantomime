@@ -19,13 +19,13 @@
 **  License along with this library; if not, write to the Free Software
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
-#include <Pantomime/CWInternetAddress.h>
+#import "Pantomime/CWInternetAddress.h"
 
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWMIMEUtility.h>
-#include <Pantomime/NSString+Extensions.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWMIMEUtility.h"
+#import "Pantomime/NSString+Extensions.h"
 
-//#include <Pantomime/elm_defs.h>
+//#import "Pantomime/elm_defs.h>
 
 #import <Foundation/Foundation.h>
 
@@ -157,7 +157,7 @@
 {
   RELEASE(_address);
   RELEASE(_personal);
-  [super dealloc];
+  //[super dealloc];
 }
 
 

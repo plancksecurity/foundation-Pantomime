@@ -20,9 +20,9 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWFlags.h>
+#import "Pantomime/CWFlags.h"
 
-#include <Pantomime/NSData+Extensions.h>
+#import "Pantomime/NSData+Extensions.h"
 
 #define CHECK_FLAG(c, value) \
   theRange = [theData rangeOfCString: c]; \

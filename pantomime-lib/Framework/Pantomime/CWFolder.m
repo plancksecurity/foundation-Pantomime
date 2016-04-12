@@ -21,15 +21,15 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWFolder.h>
+#import "Pantomime/CWFolder.h"
 
 #import <Foundation/Foundation.h>
 
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWContainer.h>
-#include <Pantomime/CWFlags.h>
-#include <Pantomime/CWMessage.h>
-#include <Pantomime/NSString+Extensions.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWContainer.h"
+#import "Pantomime/CWFlags.h"
+#import "Pantomime/CWMessage.h"
+#import "Pantomime/NSString+Extensions.h"
 
 #if __APPLE__
 #include "TargetConditionals.h"
@@ -85,7 +85,7 @@
   TEST_RELEASE(_allVisibleMessages);
   TEST_RELEASE(_cacheManager);
 
-  [super dealloc];
+  //[super dealloc];
 }
 
 
@@ -502,14 +502,13 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 - (void) thread
 {
   NSMutableDictionary *id_table, *subject_table;
-  NSAutoreleasePool *pool;
   int i, count;
 
   // We clean up ...
   TEST_RELEASE(_allContainers);
 
   // We create our local autorelease pool
-  pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 
   // Build id_table and our containers mutable array
     id_table = [NSMutableDictionary dictionaryWithCapacity:16];
@@ -713,7 +712,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 	      CWContainer *c;
 	      
 	      c = aContainer;
-	      RETAIN(c);
+	      RETAIN_VOID(c);
 	      [c->child setParent: nil];
 	      [_allContainers removeObject: c];
 	      [_allContainers addObject: c->child]; // We promote the the root for now
@@ -891,7 +890,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
   // By default we at least sort everything by number.
   //[_allContainers sortUsingSelector: @selector(compareAccordingToNumber:)];
 
-  RELEASE(pool);
+    } //RELEASE(pool);
 }
 
 

@@ -20,18 +20,17 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWIMAPFolder.h>
+#import "Pantomime/CWIMAPFolder.h"
 
-#include <Pantomime/CWConnection.h>
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/CWFlags.h>
-#include <Pantomime/CWIMAPCacheManager.h>
-#include <Pantomime/CWIMAPStore.h>
-#include <Pantomime/CWIMAPMessage.h>
-#include <Pantomime/NSData+Extensions.h>
-#include <Pantomime/NSString+Extensions.h>
+#import "Pantomime/CWConnection.h"
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWFlags.h"
+#import "Pantomime/CWIMAPStore.h"
+#import "Pantomime/CWIMAPMessage.h"
+#import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/NSString+Extensions.h"
 
-#import "Pantomime-swift.h"
+#import "NSDate+RFC2822.h"
 
 //
 // Private methods
@@ -424,7 +423,7 @@
   NSMutableString *aMutableString;
 
   aMutableString = [[NSMutableString alloc] init];
-  AUTORELEASE(aMutableString);
+  AUTORELEASE_VOID(aMutableString);
 
   if ([theFlags contain: PantomimeAnswered])
     {

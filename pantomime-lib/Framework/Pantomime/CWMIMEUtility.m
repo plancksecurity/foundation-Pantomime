@@ -21,16 +21,16 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import <Pantomime/CWMIMEUtility.h>
+#import "Pantomime/CWMIMEUtility.h"
 
-#import <Pantomime/CWConstants.h>
-#import <Pantomime/CWMessage.h>
-#import <Pantomime/CWMIMEMultipart.h>
-#import <Pantomime/NSString+Extensions.h>
-#import <Pantomime/NSData+Extensions.h>
-#import <Pantomime/CWPart.h>
-#import <Pantomime/CWMD5.h>
-#import <Pantomime/CWUUFile.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWMessage.h"
+#import "Pantomime/CWMIMEMultipart.h"
+#import "Pantomime/NSString+Extensions.h"
+#import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/CWPart.h"
+#import "Pantomime/CWMD5.h"
+#import "Pantomime/CWUUFile.h"
 
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSBundle.h>
@@ -39,11 +39,11 @@
 #import <Foundation/NSScanner.h>
 #import <Foundation/NSValue.h>
 
-#include <ctype.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#import <ctype.h>
+#import <unistd.h>
+#import <stdlib.h>
+#import <string.h>
+#import <time.h>
 
 //
 // C functions
@@ -119,7 +119,7 @@ static int seed_count = 1;
 	    {  
 	      aString = [NSString stringWithData: [NSData dataWithBytes: bytes+start  length: i-start]
 				  charset: [theCharset dataUsingEncoding: NSASCIIStringEncoding]];
-	      RETAIN(aString);
+	      RETAIN_VOID(aString);
 	    }
 	  
 	  if (!aString)
@@ -229,7 +229,7 @@ static int seed_count = 1;
       	{  
 	  aString = [NSString stringWithData: [NSData dataWithBytes: bytes+start  length: i-start]
 			      charset: [theCharset dataUsingEncoding: NSASCIIStringEncoding]];
-	  RETAIN(aString);
+	  RETAIN_VOID(aString);
       	}
       
       if (!aString)
@@ -362,7 +362,7 @@ static int seed_count = 1;
   aMutableString = [[NSMutableString alloc] init];
   
   aMutableArray = [[NSMutableArray alloc] init];
-  AUTORELEASE(aMutableArray);
+  AUTORELEASE_VOID(aMutableArray);
   
   // We initialize our scanner with the content of our word
   aScanner = [[NSScanner alloc] initWithString: theWord];
@@ -568,11 +568,13 @@ static int seed_count = 1;
 + (void) setContentFromRawSource: (NSData *) theData
                           inPart: (CWPart *) thePart
 {
-  NSAutoreleasePool *pool;
+  //NSAutoreleasePool *pool;
  
   // We create a temporary autorelease pool since this method can be
   // memory consuming on our default autorelease pool.
-  pool = [[NSAutoreleasePool alloc] init];
+  //pool = [[NSAutoreleasePool alloc] init];
+
+    @autoreleasepool {
 
   //
   // Composite types (message/multipart).
@@ -623,7 +625,7 @@ static int seed_count = 1;
 					  encoding: [thePart contentTransferEncoding]]];
     }
   
-  RELEASE(pool);
+    } //RELEASE(pool);
 }
 
 
@@ -904,7 +906,7 @@ NSString *unique_id()
   [aMutableData appendCFormat: @"%d.%d%s", pid, curtime, random_data];
   aMD5 = [[CWMD5 alloc] initWithData: aMutableData];
   RELEASE(aMutableData);
-  AUTORELEASE(aMD5);
+  AUTORELEASE_VOID(aMD5);
   
   [aMD5 computeDigest];
   

@@ -21,14 +21,14 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWRegEx.h>
+#import "Pantomime/CWRegEx.h"
 
-#include <Pantomime/CWConstants.h>
+#import "Pantomime/CWConstants.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSValue.h>
 
-#include <stdlib.h>
+#import <stdlib.h>
 
 
 //
@@ -103,7 +103,7 @@
 - (void)dealloc
 {
   regfree(&_re);
-  [super dealloc];
+  //[super dealloc];
 }
 
 

@@ -20,20 +20,19 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import <Pantomime/CWIMAPStore.h>
+#import "Pantomime/CWIMAPStore.h"
 
-#import <Pantomime/CWConstants.h>
-#import <Pantomime/CWFlags.h>
-#import <Pantomime/CWFolderInformation.h>
-#import <Pantomime/CWIMAPCacheManager.h>
-#import <Pantomime/CWIMAPFolder.h>
-#import <Pantomime/CWIMAPMessage.h>
-#import <Pantomime/CWMD5.h>
-#import <Pantomime/CWMIMEUtility.h>
-#import <Pantomime/NSData+Extensions.h>
-#import <Pantomime/NSScanner+Extensions.h>
-#import <Pantomime/NSString+Extensions.h>
-#import <Pantomime/CWURLName.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/CWFlags.h"
+#import "Pantomime/CWFolderInformation.h"
+#import "Pantomime/CWIMAPFolder.h"
+#import "Pantomime/CWIMAPMessage.h"
+#import "Pantomime/CWMD5.h"
+#import "Pantomime/CWMIMEUtility.h"
+#import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/NSScanner+Extensions.h"
+#import "Pantomime/NSString+Extensions.h"
+#import "Pantomime/CWURLName.h"
 
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSBundle.h>
@@ -44,8 +43,12 @@
 #import <Foundation/NSScanner.h>
 #import <Foundation/NSValue.h>
 
-#include <ctype.h>
-#include <stdio.h>
+#import "CWIMAPCacheManager.h"
+
+#import "NSDate+RFC2822.h"
+
+#import <ctype.h>
+#import <stdio.h>
 
 //
 // Some static variables used to enhance the performance.
@@ -141,7 +144,7 @@ static inline int has_literal(char *buf, int c)
   RELEASE(arguments);
   RELEASE(info);
   RELEASE(tag);
-  [super dealloc];
+  //[super dealloc];
 }
 
 - (NSString *) description
@@ -233,7 +236,7 @@ static inline int has_literal(char *buf, int c)
   RELEASE(_folderStatus);
   RELEASE(_openFolders);
   RELEASE(_subscribedFolders);
-  [super dealloc];
+  //[super dealloc];
 }
 
 
@@ -1442,7 +1445,7 @@ static inline int has_literal(char *buf, int c)
 	
   if (aFolder)
     {
-      RETAIN(aFolder);
+      RETAIN_VOID(aFolder);
       [aFolder setName: aNewName];
       [_openFolders removeObjectForKey: aName];
       [_openFolders setObject: aFolder  forKey: aNewName];
@@ -1734,7 +1737,7 @@ static inline int has_literal(char *buf, int c)
   if (msn > [_selectedFolder->allMessages count]) return;
 
   aMessage = [_selectedFolder->allMessages objectAtIndex: (msn-1)];
-  RETAIN(aMessage);
+  RETAIN_VOID(aMessage);
   
   // We do NOT use  [_selectedFolder removeMessage: aMessage] since it'll
   // thread the messages everytime we invoke it. We rather thread messages
@@ -2292,7 +2295,7 @@ static inline int has_literal(char *buf, int c)
     }
   else
     {
-      aFolderName = [self _folderNameFromString: [aString retain]];
+      aFolderName = [self _folderNameFromString: aString];
       RELEASE(aString);
     }
   
@@ -2886,7 +2889,7 @@ static inline int has_literal(char *buf, int c)
 //
 - (void) _parseSTARTTLS
 {
-  [(CWConnection *)_connection startTLS];
+  [(id<CWConnection>)_connection startTLS];
   POST_NOTIFICATION(PantomimeServiceInitialized, self, nil);
   PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:),  PantomimeServiceInitialized);
 }

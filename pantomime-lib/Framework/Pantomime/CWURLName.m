@@ -20,10 +20,10 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWURLName.h>
+#import "Pantomime/CWURLName.h"
 
-#include <Pantomime/CWConstants.h>
-#include <Foundation/NSPathUtilities.h>
+#import "Pantomime/CWConstants.h"
+#import <Foundation/NSPathUtilities.h>
 
 //
 // Private methods
@@ -69,7 +69,7 @@
   
   if (_path)
     {
-      RETAIN(_path);
+      RETAIN_VOID(_path);
     }
 
   // We now decode our URL
@@ -91,7 +91,7 @@
   TEST_RELEASE(_username);
   TEST_RELEASE(_password);
   
-  [super dealloc];
+  //[super dealloc];
 }
 
 
@@ -185,7 +185,7 @@
   if (r1.length)
     {
       _username = [theString substringToIndex: r1.location];
-      RETAIN(_username);
+      RETAIN_VOID(_username);
     }
   else
     {
@@ -205,10 +205,10 @@
       _host = [theString substringWithRange: NSMakeRange(r1.location, r2.location - r1.location)];
     }
   
-  RETAIN(_host);
+  RETAIN_VOID(_host);
 
   _foldername = [theString substringFromIndex: (r2.location + 1)];
-  RETAIN(_foldername);
+  RETAIN_VOID(_foldername);
 }
 
 
@@ -224,15 +224,15 @@
   if (!_path)
     {
       _foldername = [theString lastPathComponent];
-      RETAIN(_foldername);
+      RETAIN_VOID(_foldername);
       
       _path = [theString substringToIndex: ([theString length] - [_foldername length])];
-      RETAIN(_path);
+      RETAIN_VOID(_path);
     }
   else
     {
       _foldername = [theString substringFromIndex: ([_path length] + 1)];
-      RETAIN(_foldername);
+      RETAIN_VOID(_foldername);
     }
 }
 
@@ -251,15 +251,15 @@
 {
   NSRange aRange;
 
-  _foldername = [[NSString alloc] initWithString: @"INBOX"];
+  _foldername = @"INBOX";
   
   aRange = [theString rangeOfString: @"@"];
   
   _username = [theString substringToIndex: aRange.location];
-  RETAIN(_username);
+  RETAIN_VOID(_username);
 
   _host = [theString substringFromIndex: (aRange.location + 1)];
-  RETAIN(_host);
+  RETAIN_VOID(_host);
 }
 
 
@@ -278,7 +278,7 @@
       NSString *aString;
 
       _protocol = [theString substringToIndex: aRange.location];
-      RETAIN(_protocol);
+      RETAIN_VOID(_protocol);
       
       aString = [theString substringFromIndex: (aRange.location + aRange.length)];
 

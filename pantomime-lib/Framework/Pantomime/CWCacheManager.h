@@ -24,9 +24,7 @@
 #ifndef _Pantomime_H_CWCacheManager
 #define _Pantomime_H_CWCacheManager
 
-#import <Foundation/NSArray.h>
-#import <Foundation/NSCoder.h>
-#import <Foundation/NSString.h>
+#import <Foundation/Foundation.h>
 
 #if defined(__APPLE__) && (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4)
 #ifndef NSUInteger

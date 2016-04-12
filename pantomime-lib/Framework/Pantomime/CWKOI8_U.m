@@ -1,4 +1,4 @@
-#include <Pantomime/CWKOI8_U.h>
+#import "Pantomime/CWKOI8_U.h"
 
 static struct charset_code code_table[]={
 {0x20,0x0020}, {0x21,0x0021}, {0x22,0x0022}, {0x23,0x0023}, {0x24,0x0024}, 

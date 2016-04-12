@@ -24,8 +24,8 @@
 #ifndef _Pantomime_H_CWRegEx
 #define _Pantomime_H_CWRegEx
 
-#include <sys/types.h>
-#include <regex.h>
+#import "sys/types.h"
+#import "regex.h"
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSString.h>

@@ -23,8 +23,8 @@
 
 #include "CWMacOSXGlue.h"
 
-#include <Foundation/NSException.h>
-#include <Foundation/NSString.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSString.h>
 
 //
 //

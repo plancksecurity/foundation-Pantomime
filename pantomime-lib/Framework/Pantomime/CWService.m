@@ -20,20 +20,20 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <Pantomime/CWService.h>
+#import "Pantomime/CWService.h"
 
-#include <Pantomime/CWConstants.h>
-#include <Pantomime/NSData+Extensions.h>
+#import "Pantomime/CWConstants.h"
+#import "Pantomime/NSData+Extensions.h"
 
-#include <Foundation/NSBundle.h>
-#include <Foundation/NSDictionary.h>
-#include <Foundation/NSNotification.h>
-#include <Foundation/NSPathUtilities.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSNotification.h>
+#import <Foundation/NSPathUtilities.h>
 
-#include <stdlib.h>
-#include <string.h>
+#import <stdlib.h>
+#import <string.h>
 
-#import "Pantomime-swift.h"
+#import "TCPConnection.h"
 
 //
 // It's important that the read buffer be bigger than the PMTU. Since almost all networks
@@ -134,12 +134,12 @@
   TEST_RELEASE(_password);
   RELEASE(_name);
   
-  TEST_RELEASE((id<NSObject>)_connection);
+  TEST_RELEASE(_connection);
   RELEASE(_runLoopModes);
 
   RELEASE(_connection_state.previous_queue);
 
-  [super dealloc];
+  //[super dealloc];
 }
 
 
@@ -474,7 +474,7 @@
                  extra: (void *) theExtra
                forMode: (NSString *) theMode
 {
-  AUTORELEASE(RETAIN(self));    // Don't be deallocated while handling event
+  AUTORELEASE_VOID(RETAIN(self));    // Don't be deallocated while handling event
   switch (theType)
     {
 #ifdef __MINGW32__
