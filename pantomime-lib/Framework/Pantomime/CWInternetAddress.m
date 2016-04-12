@@ -42,7 +42,7 @@
   
   if (!theString)
     {
-      AUTORELEASE(self);
+      AUTORELEASE_VOID(self);
       return nil;
     }
   

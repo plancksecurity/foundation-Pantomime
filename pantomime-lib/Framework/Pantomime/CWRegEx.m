@@ -69,7 +69,7 @@
 	  regerror(status, &_re, error, 255);
 	  free(error);
 	  
-	  AUTORELEASE(self);
+	  AUTORELEASE_VOID(self);
 	  self = nil;
         }
     }
