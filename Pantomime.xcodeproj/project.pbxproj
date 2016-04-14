@@ -70,7 +70,6 @@
 		43E854E11CB7EBB8006867C0 /* ConnectInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854DF1CB7EBB8006867C0 /* ConnectInfo.swift */; };
 		43E854E21CB7EBB8006867C0 /* ImapSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854E01CB7EBB8006867C0 /* ImapSync.swift */; };
 		43E854E61CB7EBC2006867C0 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854E41CB7EBC2006867C0 /* Log.swift */; };
-		43E854E71CB7EBC2006867C0 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854E51CB7EBC2006867C0 /* TestData.swift */; };
 		43E855741CB7EBDD006867C0 /* CWCharset.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EC1CB7EBDD006867C0 /* CWCharset.m */; };
 		43E855751CB7EBDD006867C0 /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EF1CB7EBDD006867C0 /* CWConstants.m */; };
 		43E855761CB7EBDD006867C0 /* CWContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F11CB7EBDD006867C0 /* CWContainer.m */; };
@@ -172,7 +171,6 @@
 		43E854DF1CB7EBB8006867C0 /* ConnectInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectInfo.swift; sourceTree = "<group>"; };
 		43E854E01CB7EBB8006867C0 /* ImapSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImapSync.swift; sourceTree = "<group>"; };
 		43E854E41CB7EBC2006867C0 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		43E854E51CB7EBC2006867C0 /* TestData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		43E854E91CB7EBDD006867C0 /* CWCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheManager.h; sourceTree = "<group>"; };
 		43E854EB1CB7EBDD006867C0 /* CWCharset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCharset.h; sourceTree = "<group>"; };
 		43E854EC1CB7EBDD006867C0 /* CWCharset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCharset.m; sourceTree = "<group>"; };
@@ -369,7 +367,6 @@
 			isa = PBXGroup;
 			children = (
 				43E854E41CB7EBC2006867C0 /* Log.swift */,
-				43E854E51CB7EBC2006867C0 /* TestData.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -695,7 +692,6 @@
 				43E854E21CB7EBB8006867C0 /* ImapSync.swift in Sources */,
 				43E855811CB7EBDD006867C0 /* CWISO8859_10.m in Sources */,
 				43E854E61CB7EBC2006867C0 /* Log.swift in Sources */,
-				43E854E71CB7EBC2006867C0 /* TestData.swift in Sources */,
 				43E8558F1CB7EBDD006867C0 /* CWKOI8_U.m in Sources */,
 				43E8558A1CB7EBDD006867C0 /* CWISO8859_6.m in Sources */,
 				43E8558E1CB7EBDD006867C0 /* CWKOI8_R.m in Sources */,
