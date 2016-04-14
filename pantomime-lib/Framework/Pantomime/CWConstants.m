@@ -69,7 +69,7 @@ NSString* PantomimeMessagePrefetchFailed = @"PantomimeMessagePrefetchFailed";
 // CWService notifications
 NSString* PantomimeProtocolException = @"PantomimeProtocolException";
 NSString* PantomimeAuthenticationCompleted = @"PantomimeAuthenticationCompleted";
-NSString* PantomimeAuthenticationFailed = @"PantomimeAuthenticationCompleted";
+NSString* PantomimeAuthenticationFailed = @"PantomimeAuthenticationFailed";
 NSString* PantomimeConnectionEstablished = @"PantomimeConnectionEstablished";
 NSString* PantomimeConnectionLost = @"PantomimeConnectionLost";
 NSString* PantomimeConnectionTerminated = @"PantomimeConnectionTerminated";
