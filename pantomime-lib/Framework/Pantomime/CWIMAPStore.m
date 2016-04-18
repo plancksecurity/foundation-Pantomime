@@ -1703,16 +1703,16 @@ static inline int has_literal(char *buf, int c)
 
   if (_currentQueueObject && _currentQueueObject->command != IMAP_SELECT &&
       _selectedFolder && 
-      n > [_selectedFolder->allMessages count])
+      n > [_selectedFolder.allMessages count])
     {
       unsigned int uid;
       
       uid = 0;
       
       // We prefetch the new messages from the last UID+1
-      if ([_selectedFolder->allMessages lastObject])
+      if ([_selectedFolder.allMessages lastObject])
 	{
-	  uid = [[_selectedFolder->allMessages lastObject] UID];
+	  uid = [[_selectedFolder.allMessages lastObject] UID];
 	} 
 
       [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", (uid+1)];
@@ -1746,9 +1746,9 @@ static inline int has_literal(char *buf, int c)
   // we have so far. It should be safe since the view hasn't even
   // had the chance to display them.
   //
-  if (msn > [_selectedFolder->allMessages count]) return;
+  if (msn > [_selectedFolder.allMessages count]) return;
 
-  aMessage = [_selectedFolder->allMessages objectAtIndex: (msn-1)];
+  aMessage = [_selectedFolder.allMessages objectAtIndex: (msn-1)];
   RETAIN_VOID(aMessage);
   
   // We do NOT use  [_selectedFolder removeMessage: aMessage] since it'll
@@ -1759,7 +1759,7 @@ static inline int has_literal(char *buf, int c)
   // * We sent an EXPUNGE command - we'll do the threading of the
   //   messages in _parseOK:
   //
-  [_selectedFolder->allMessages removeObject: aMessage];
+  [_selectedFolder removeMessage: aMessage];
   [_selectedFolder updateCache];
   
   // We remove its entry in our cache
@@ -1769,9 +1769,9 @@ static inline int has_literal(char *buf, int c)
     }
   
   // We update all MSNs starting from the message that has been expunged.
-  for (i = (msn-1); i < [_selectedFolder->allMessages count]; i++)
+  for (i = (msn-1); i < [_selectedFolder.allMessages count]; i++)
     {
-      [[_selectedFolder->allMessages objectAtIndex: i] setMessageNumber: (i+1)];
+      [[_selectedFolder.allMessages objectAtIndex: i] setMessageNumber: (i+1)];
     }
   
   //
@@ -1980,7 +1980,7 @@ static inline int has_literal(char *buf, int c)
 	  // is really the messages in our IMAP folder. That is true since we
 	  // synchronized our cache when opening the folder, in IMAPFolder: -prefetch.
 	  //
-	  if (msn > [_selectedFolder->allMessages count])
+	  if (msn > [_selectedFolder.allMessages count])
 	    {
 	      //NSLog(@"============ NEW MESSAGE ======================");
 	      aMessage = [[CWIMAPMessage alloc] init];
@@ -2009,7 +2009,7 @@ static inline int has_literal(char *buf, int c)
 	    }
 	  else
 	    {
-	      aMessage = [_selectedFolder->allMessages objectAtIndex: (msn-1)];
+	      aMessage = [_selectedFolder.allMessages objectAtIndex: (msn-1)];
 	      [aMessage setMessageNumber: msn];
 	      [aMessage setFolder: _selectedFolder];
 	    }
@@ -2771,16 +2771,16 @@ static inline int has_literal(char *buf, int c)
       //NSLog(@"Folder count (to remove UID) = %d", [_selectedFolder->allMessages count]);
       b = NO;
 
-      for (i = ([_selectedFolder->allMessages count]-1); i >= 0; i--)
+      for (i = ([_selectedFolder.allMessages count]-1); i >= 0; i--)
 	{   
-	  aMessage = [_selectedFolder->allMessages objectAtIndex: i];
+	  aMessage = [_selectedFolder.allMessages objectAtIndex: i];
 	  //aMessage = [theCache objectAtIndex: i];
       
 	  if ([aMessage folder] == nil)
 	    {
 	      [[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]];
 	      //NSLog(@"Removed message |%@| UID = %d", [aMessage subject], [aMessage UID]);
-	      [_selectedFolder->allMessages removeObject: aMessage];
+	      [_selectedFolder removeMessage: aMessage];
 	      b = YES;
 	    }
 	  
@@ -2837,7 +2837,7 @@ static inline int has_literal(char *buf, int c)
       // Messages will be fetched starting from that UID + 1.
       //
       //NSLog(@"LAST UID IN CACHE: %u", [[_selectedFolder->allMessages lastObject] UID]);
-      [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (UID FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", ([[_selectedFolder->allMessages lastObject] UID]+1)];
+      [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (UID FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", ([[_selectedFolder.allMessages lastObject] UID]+1)];
       break;
 
     default:

@@ -228,7 +228,7 @@
   // We set the _folder ivar to nil for all messages. This is required in case
   // an IMAPMessage instance was retained and we invoke -setFlags: on it, which
   // will try to access the _folder ivar in order to communicate with the IMAP server.
-  [allMessages makeObjectsPerformSelector: @selector(setFolder:)  withObject: nil];
+  [self.allMessages makeObjectsPerformSelector: @selector(setFolder:)  withObject: nil];
 
   // We close the selected IMAP folder to _expunge_ messages marked as \Deleted
   // if and only we are NOT showing DELETED messages. We also don't send the command

@@ -60,8 +60,8 @@
 
   [_allFolders addObject: theFolder];
 
-  aMutableArray = [[NSMutableArray alloc] initWithArray: self->allMessages];
-  [aMutableArray addObjectsFromArray: theFolder->allMessages];
+  aMutableArray = [[NSMutableArray alloc] initWithArray: self.allMessages];
+  [aMutableArray addObjectsFromArray: theFolder.allMessages];
   [super setMessages: aMutableArray];
   RELEASE(aMutableArray);
 }

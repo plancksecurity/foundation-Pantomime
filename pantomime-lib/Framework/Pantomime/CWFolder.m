@@ -35,6 +35,12 @@
 #include "TargetConditionals.h"
 #endif
 
+@interface CWFolder ()
+
+@property (nonatomic) NSMutableArray *allMessages;
+
+@end
+
 //
 //
 //
@@ -47,7 +53,7 @@
   _properties = [[NSMutableDictionary alloc] init];
   _allVisibleMessages = nil;
   
-  allMessages = [[NSMutableArray alloc] init];
+  _allMessages = [[NSMutableArray alloc] init];
   
   //
   // By default, we don't do message threading so we don't
@@ -79,8 +85,8 @@
   // To be safe, we set the value of the _folder ivar of all CWMessage
   // instances to nil value in case something is retaining them.
   //
-  [allMessages makeObjectsPerformSelector: @selector(setFolder:) withObject: nil];
-  RELEASE(allMessages);
+  [_allMessages makeObjectsPerformSelector: @selector(setFolder:) withObject: nil];
+  RELEASE(_allMessages);
 
   TEST_RELEASE(_allVisibleMessages);
   TEST_RELEASE(_cacheManager);
@@ -123,7 +129,7 @@
 {
   if (theMessage)
     {
-      [allMessages addObject: theMessage];
+      [_allMessages addObject: theMessage];
       
       if (_allVisibleMessages)
 	{
@@ -176,13 +182,13 @@
     {
       int i, count;
 
-      count = [allMessages count];
+      count = [_allMessages count];
       _allVisibleMessages = [[NSMutableArray alloc] initWithCapacity: count];
 
       // quick
       if (_show_deleted && _show_read)
 	{
-	  [_allVisibleMessages addObjectsFromArray: allMessages];
+	  [_allVisibleMessages addObjectsFromArray: _allMessages];
 	  return _allVisibleMessages;
 	}
 
@@ -190,7 +196,7 @@
 	{
 	  CWMessage *aMessage;
 	  
-	  aMessage = [allMessages objectAtIndex: i];
+	  aMessage = [_allMessages objectAtIndex: i];
       
 	  // We show or hide deleted messages
 	  if (_show_deleted)
@@ -247,7 +253,7 @@
   if (theMessages)
     {
       RELEASE(allMessages);
-      allMessages = [[NSMutableArray alloc] initWithArray: theMessages];
+      _allMessages = [[NSMutableArray alloc] initWithArray: theMessages];
 
       if (_allContainers)
 	{
@@ -256,7 +262,7 @@
     }
   else
     {
-      DESTROY(allMessages);
+      DESTROY(_allMessages);
     }
 
   DESTROY(_allVisibleMessages);
@@ -331,7 +337,7 @@
 {
   if (theMessage)
     {
-      [allMessages removeObject: theMessage];
+      [_allMessages removeObject: theMessage];
       
       if (_allVisibleMessages)
 	{
@@ -401,12 +407,12 @@
 {
   int c, i, count;
   
-  c = [allMessages count];
+  c = [_allMessages count];
   count = 0;
 
   for (i = 0; i < c; i++)
     {
-      if ([[(CWMessage *) [allMessages objectAtIndex: i] flags] contain: PantomimeDeleted])
+      if ([[(CWMessage *) [_allMessages objectAtIndex: i] flags] contain: PantomimeDeleted])
 	{
 	  count++;
 	}
@@ -423,12 +429,12 @@
 {
   NSUInteger i, c, count;
   
-  c = [allMessages count];
+  c = [_allMessages count];
   count = 0;
   
   for (i = 0; i < c; i++)
     {
-      if (![[(CWMessage *) [allMessages objectAtIndex: i] flags] contain: PantomimeSeen])
+      if (![[(CWMessage *) [_allMessages objectAtIndex: i] flags] contain: PantomimeSeen])
 	{
 	  count++;
 	}
@@ -446,12 +452,12 @@
   long size;
   int c, i;
 
-  c = [allMessages count];
+  c = [_allMessages count];
   size = 0;
   
   for (i = 0; i < c; i++)
     {
-      size += [(CWMessage *)[allMessages objectAtIndex: i] size];
+      size += [(CWMessage *)[_allMessages objectAtIndex: i] size];
     }
 
   return size;
@@ -517,7 +523,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
   //
   // 1. A., B. and C.
   //
-  count = [allMessages count];
+  count = [_allMessages count];
   for (i = 0; i < count; i++)
     {
       CWContainer *aContainer;
@@ -530,7 +536,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
       aMessage = nil;
       aReference = nil;
 
-      aMessage = [allMessages objectAtIndex: i];
+      aMessage = [_allMessages objectAtIndex: i];
       
       // We skip messages that don't have a valid Message-ID
       if (![aMessage messageID])
@@ -901,11 +907,11 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 {
   int count;
 
-  count = [allMessages count];
+  count = [_allMessages count];
   
   while (count--)
     {
-      [(CWMessage *) [allMessages objectAtIndex: count] setProperty: nil  forKey: @"Container"];
+      [(CWMessage *) [_allMessages objectAtIndex: count] setProperty: nil  forKey: @"Container"];
     }
 
   DESTROY(_allContainers);

@@ -111,32 +111,32 @@ typedef enum {
 /*!
   @const PantomimeFolderSubscribeCompleted
 */
-extern NSString *PantomimeFolderSubscribeCompleted;
+extern NSString * _Nonnull const PantomimeFolderSubscribeCompleted;
 
 /*!
   @const PantomimeFolderSubscribeFailed
 */
-extern NSString *PantomimeFolderSubscribeFailed;
+extern NSString * _Nonnull const PantomimeFolderSubscribeFailed;
 
 /*!
   @const PantomimeFolderUnsubscribeCompleted
 */
-extern NSString *PantomimeFolderUnsubscribeCompleted;
+extern NSString * _Nonnull const PantomimeFolderUnsubscribeCompleted;
 
 /*!
   @const PantomimeFolderUnsubscribeFailed
 */
-extern NSString *PantomimeFolderUnsubscribeFailed;
+extern NSString * _Nonnull const PantomimeFolderUnsubscribeFailed;
 
 /*!
   @const PantomimeFolderStatusCompleted
 */
-extern NSString *PantomimeFolderStatusCompleted;
+extern NSString * _Nonnull const PantomimeFolderStatusCompleted;
 
 /*!
   @const PantomimeFolderStatusFailed
 */
-extern NSString *PantomimeFolderStatusFailed;
+extern NSString * _Nonnull const PantomimeFolderStatusFailed;
 
 
 @class CWConnection;
@@ -180,7 +180,7 @@ extern NSString *PantomimeFolderStatusFailed;
   @param aBOOL YES if prefetch should be done on the folder, NO otherwise.
   @result A CWIMAPFolder instance.
 */
-- (CWIMAPFolder *) folderForName: (NSString *) theName
+- (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName
                             mode: (PantomimeFolderMode) theMode
                         prefetch: (BOOL) aBOOL;
 
@@ -197,8 +197,8 @@ extern NSString *PantomimeFolderStatusFailed;
   @param aBOOL YES to select the folder, NO otherwise.
   @result A CWIMAPFolder instance.
 */
-- (CWIMAPFolder *) folderForName: (NSString *) theName
-                          select: (BOOL) aBOOL;
+- (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName
+                                    select: (BOOL) aBOOL;
 
 /*!
   @method nextTag
@@ -207,7 +207,7 @@ extern NSString *PantomimeFolderStatusFailed;
 	      you shouldn't call this method directly.
   @result The tag as a NSData instance.
 */
-- (NSData *) nextTag;
+- (NSData * _Nullable) nextTag;
 
 /*!
   @method lastTag
@@ -215,7 +215,7 @@ extern NSString *PantomimeFolderStatusFailed;
               sent to the IMAP server.
   @result The tag as a NSData instance.
 */
-- (NSData *) lastTag;
+- (NSData * _Nullable) lastTag;
 
 /*!
   @method subscribeToFolderWithName:
@@ -226,7 +226,7 @@ extern NSString *PantomimeFolderStatusFailed;
 	      notification (and call -folderSubscribeFailed: on the delegate, if any)
   @param theName The name of the folder to subscribe to.
 */
-- (void) subscribeToFolderWithName: (NSString *) theName;
+- (void) subscribeToFolderWithName: (NSString * _Nullable) theName;
 
 /*!
   @method unsubscribeToFolderWithName:
@@ -237,7 +237,7 @@ extern NSString *PantomimeFolderStatusFailed;
 	      notification (and call -folderUnsubscribeFailed: on the delegate, if any)
   @param theName The name of the folder to subscribe to.
 */
-- (void) unsubscribeToFolderWithName: (NSString *) theName;
+- (void) unsubscribeToFolderWithName: (NSString * _Nullable) theName;
 
 /*!
   @method folderStatus:
@@ -255,7 +255,7 @@ extern NSString *PantomimeFolderStatusFailed;
           and the values are CWFolderInformation instance if the information was
 	  loaded, nil otherwise.
 */
-- (NSDictionary *) folderStatus: (NSArray *) theArray;
+- (NSDictionary * _Nullable) folderStatus: (NSArray * _Nullable) theArray;
 
 /*!
   @method sendCommand:info:arguments: ...
@@ -265,7 +265,7 @@ extern NSString *PantomimeFolderStatusFailed;
   @param theInfo The addition info to pass.
   @param theFormat The format defining the variable arguments list.
 */
-- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary *) theInfo  arguments: (NSString *) theFormat, ...;
+- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo  arguments: (NSString * _Nonnull) theFormat, ...;
 
 @end
 

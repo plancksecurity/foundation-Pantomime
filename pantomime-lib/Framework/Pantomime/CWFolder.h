@@ -39,82 +39,82 @@
 /*!
   @const PantomimeFolderAppendCompleted
 */
-extern NSString* PantomimeFolderAppendCompleted;
+extern NSString * _Nonnull const PantomimeFolderAppendCompleted;
 
 /*!
   @const PantomimeFolderAppendFailed
 */
-extern NSString* PantomimeFolderAppendFailed;
+extern NSString * _Nonnull const PantomimeFolderAppendFailed;
 
 /*!
   @const PantomimeFolderCloseCompleted
 */
-extern NSString* PantomimeFolderCloseCompleted;
+extern NSString * _Nonnull const PantomimeFolderCloseCompleted;
 
 /*!
   @const PantomimeFolderCloseFailed
 */
-extern NSString* PantomimeFolderCloseFailed;
+extern NSString * _Nonnull const PantomimeFolderCloseFailed;
 
 /*!
   @const PantomimeFolderExpungeCompleted
 */
-extern NSString* PantomimeFolderExpungeCompleted;
+extern NSString * _Nonnull const PantomimeFolderExpungeCompleted;
 
 /*!
   @const PantomimeFolderExpungeFailed
 */
-extern NSString* PantomimeFolderExpungeFailed;
+extern NSString * _Nonnull const PantomimeFolderExpungeFailed;
 
 /*!
   @const PantomimeFolderListCompleted
 */
-extern NSString* PantomimeFolderListCompleted;
+extern NSString * _Nonnull const PantomimeFolderListCompleted;
 
 /*!
   @const PantomimeFolderListFailed
 */
-extern NSString* PantomimeFolderListFailed;
+extern NSString * _Nonnull const PantomimeFolderListFailed;
 
 /*!
   @const PantomimeFolderListSubscribedCompleted
 */
-extern NSString* PantomimeFolderListSubscribedCompleted;
+extern NSString * _Nonnull const PantomimeFolderListSubscribedCompleted;
 
 /*!
   @const PantomimeFolderListSubscribedFailed
 */
-extern NSString* PantomimeFolderListSubscribedFailed;
+extern NSString * _Nonnull const PantomimeFolderListSubscribedFailed;
 
 /*!
   @const PantomimeFolderOpenCompleted
 */
-extern NSString* PantomimeFolderOpenCompleted;
+extern NSString * _Nonnull const PantomimeFolderOpenCompleted;
 
 /*!
   @const PantomimeFolderOpenFailed
 */
-extern NSString* PantomimeFolderOpenFailed;
+extern NSString * _Nonnull const PantomimeFolderOpenFailed;
 
 /*!
   @const PantomimeFolderPrefetchCompleted
 */
-extern NSString* PantomimeFolderPrefetchCompleted;
+extern NSString * _Nonnull const PantomimeFolderPrefetchCompleted;
 
 /*!
   @const PantomimeFolderPrefetchFailed
 */
-extern NSString* PantomimeFolderPrefetchFailed;
+extern NSString * _Nonnull const PantomimeFolderPrefetchFailed;
 
 /*!
   @const PantomimeFolderSearchCompleted
 */
-extern NSString* PantomimeFolderSearchCompleted;
+extern NSString * _Nonnull const PantomimeFolderSearchCompleted;
 
 /*!
   @const PantomimeFolderSearchFailed
 */
-extern NSString* PantomimeFolderSearchFailed;
+extern NSString * _Nonnull const PantomimeFolderSearchFailed;
 
 
 /*!
@@ -136,7 +136,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      also posted.
   @param theNotification The notification holding the information.
 */
-- (void) folderAppendCompleted: (NSNotification *) theNotification;
+- (void) folderAppendCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderAppendFailed:
@@ -147,7 +147,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      also posted.
   @param theNotification The notification holding the information.
 */
-- (void) folderAppendFailed: (NSNotification *) theNotification;
+- (void) folderAppendFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderCloseCompleted
@@ -156,7 +156,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderCloseCompleted: (NSNotification *) theNotification;
+- (void) folderCloseCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderCloseFailed
@@ -165,7 +165,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderCloseFailed: (NSNotification *) theNotification;
+- (void) folderCloseFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderExpungeCompleted
@@ -174,7 +174,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderExpungeCompleted: (NSNotification *) theNotification;
+- (void) folderExpungeCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderExpungeFailed
@@ -183,7 +183,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderExpungeFailed: (NSNotification *) theNotification;
+- (void) folderExpungeFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderListCompleted
@@ -192,7 +192,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderListCompleted: (NSNotification *) theNotification;
+- (void) folderListCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderListFailed
@@ -201,7 +201,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderListFailed: (NSNotification *) theNotification;
+- (void) folderListFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderListSubscribedCompleted
@@ -210,7 +210,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      of subscribed mailboxes completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderListSubscribedCompleted: (NSNotification *) theNotification;
+- (void) folderListSubscribedCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderListSuscribedFailed
@@ -219,7 +219,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      of subscribed mailboxes failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderListSubscribedFailed: (NSNotification *) theNotification;
+- (void) folderListSubscribedFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderOpenCompleted
@@ -228,7 +228,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderOpenCompleted: (NSNotification *) theNotification;
+- (void) folderOpenCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderOpenFailed
@@ -237,7 +237,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderOpenFailed: (NSNotification *) theNotification;
+- (void) folderOpenFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderPrefetchCompleted
@@ -246,7 +246,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderPrefetchCompleted: (NSNotification *) theNotification;
+- (void) folderPrefetchCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderPrefetchFailed
@@ -255,7 +255,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderPrefetchFailed: (NSNotification *) theNotification;
+- (void) folderPrefetchFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderSearchCompleted
@@ -264,7 +264,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderSearchCompleted: (NSNotification *) theNotification;
+- (void) folderSearchCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderSearchFailed
@@ -273,7 +273,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      operation failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderSearchFailed: (NSNotification *) theNotification;
+- (void) folderSearchFailed: (NSNotification * _Nullable) theNotification;
 
 @end
 
@@ -288,10 +288,8 @@ extern NSString* PantomimeFolderSearchFailed;
 */
 @interface CWFolder : NSObject 
 {
-  @public
-    NSMutableArray *allMessages;
 
-  @protected
+@protected
     NSMutableDictionary *_properties;
     NSString *_name;
 
@@ -317,21 +315,21 @@ extern NSString* PantomimeFolderSearchFailed;
   @param theName The full path of the folder.
   @result The folder, nil in case of an error.
 */
-- (id) initWithName: (NSString *) theName;
+- (id _Nonnull) initWithName: (NSString * _Nonnull) theName;
 
 /*!
   @method name
   @discussion This method returns the name of the folder.
   @result The full name of the folder.
 */
-- (NSString *) name;
+- (NSString * _Nonnull) name;
 
 /*!
   @method setName:
   @discussion Sets the name of a folder.
   @param theName The name of the folder.
 */
-- (void) setName: (NSString *) theName;
+- (void) setName: (NSString * _Nonnull) theName;
 
 /*!
   @method appendMessage:
@@ -345,7 +343,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      this method will NOT thread the appended message.
   @param theMessage The message to append to the folder.
 */
-- (void) appendMessage: (CWMessage *) theMessage;
+- (void) appendMessage: (CWMessage * _Nonnull) theMessage;
 
 
 /*!
@@ -362,8 +360,8 @@ extern NSString* PantomimeFolderSearchFailed;
   @param theData The raw representation of the message to append.
   @param theFlags The flags of the message, nil if no flags need to be kept.
 */
-- (void) appendMessageFromRawSource: (NSData *) theData
-                              flags: (CWFlags *) theFlags;
+- (void) appendMessageFromRawSource: (NSData * _Nonnull) theData
+                              flags: (CWFlags * _Nullable) theFlags;
 
 /*!
   @method allMessages
@@ -375,7 +373,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      messages MIGHT NOT been all completely initialized.
   @result An array of all visible messages.
 */
-- (NSArray *) allMessages;
+- (NSArray * _Nonnull) allMessages;
 
 /*!
   @method setMessages:
@@ -384,7 +382,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	       Normally, you shouldn't use this method directly.
   @param theMessages The array of messages.
 */
-- (void) setMessages: (NSArray *) theMessages;
+- (void) setMessages: (NSArray * _Nonnull) theMessages;
 
 /*!
   @method messageAtIndex:
@@ -394,7 +392,7 @@ extern NSString* PantomimeFolderSearchFailed;
   @param theIndex The index of the message.
   @result The message at the specified index, nil otherwise.
 */
-- (CWMessage *) messageAtIndex: (int) theIndex;
+- (CWMessage * _Nullable) messageAtIndex: (int) theIndex;
 
 /*!
   @method count
@@ -430,7 +428,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      of CWIMAPStore, CWLocalStore or CWPOP3Store.
   @result The associated store.
 */
-- (id) store;
+- (id _Nonnull) store;
 
 /*!
   @method setStore:
@@ -440,7 +438,7 @@ extern NSString* PantomimeFolderSearchFailed;
               the CWFolder instances.
   @param theStore The associated store.
 */
-- (void) setStore: (id) theStore;
+- (void) setStore: (id _Nonnull) theStore;
 
 /*!
   @method removeMessage:
@@ -452,7 +450,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	       folder before returning.
   @param theMessage The CWMessage instance to remove from the folder.
 */
-- (void) removeMessage: (CWMessage *) theMessage;
+- (void) removeMessage: (CWMessage * _Nonnull) theMessage;
 
 /*!
   @method showDeleted
@@ -528,7 +526,7 @@ extern NSString* PantomimeFolderSearchFailed;
               message threading.
   @result Root containers if using message threading, nil otherwise.
 */
-- (NSArray *) allContainers;
+- (NSArray * _Nullable) allContainers;
 
 /*!
   @method thread
@@ -563,7 +561,7 @@ extern NSString* PantomimeFolderSearchFailed;
                     or PantomimeCaseInsensitiveSearch. This parameter is ignored for
 		    CWIMAPFolder instances.
 */
-- (void) search: (NSString *) theString
+- (void) search: (NSString * _Nonnull) theString
            mask: (PantomimeSearchMask) theMask
         options: (PantomimeSearchOption) theOptions;
 
@@ -575,7 +573,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      For a CWPOP3Folder, a CWPOP3CacheManager instance will be returned.
   @result The associated cache manager instance, nil otherwise.
 */
-- (id) cacheManager;
+- (id _Nullable) cacheManager;
 
 /*!
   @method setCacheManager:
@@ -584,7 +582,7 @@ extern NSString* PantomimeFolderSearchFailed;
 	      or CWPOP3CacheManager will generally be used.
   @param theCacheManager The cache manager instance for this folder.
 */
-- (void) setCacheManager: (id) theCacheManager;
+- (void) setCacheManager: (id _Nonnull) theCacheManager;
 
 /*!
   @method mode
@@ -615,8 +613,8 @@ extern NSString* PantomimeFolderSearchFailed;
   @param theFlags The flags to set to all messages.
   @param theMessages The array of messages to which flags will be applied.
 */
-- (void) setFlags: (CWFlags *) theFlags
-         messages: (NSArray *) theMessages;
+- (void) setFlags: (CWFlags * _Nonnull) theFlags
+         messages: (NSArray * _Nonnull) theMessages;
 
 /*!
   @method propertyForKey:
@@ -624,7 +622,7 @@ extern NSString* PantomimeFolderSearchFailed;
               specified key.
   @result The property for the specified key, nil if key isn't found.
 */
-- (id) propertyForKey: (id) theKey;
+- (id _Nullable) propertyForKey: (id _Nonnull) theKey;
 
 /*!
   @method setProperty: forKey:
@@ -635,8 +633,8 @@ extern NSString* PantomimeFolderSearchFailed;
   @param theProperty The value of the property.
   @param theKey The key of the property.
 */
-- (void) setProperty: (id) theProperty
-              forKey: (id) theKey;
+- (void) setProperty: (id _Nonnull) theProperty
+              forKey: (id _Nonnull) theKey;
 @end
 
 #endif // _Pantomime_H_CWFolder
