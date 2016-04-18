@@ -192,6 +192,8 @@ static inline int has_literal(char *buf, int c)
 //
 @implementation CWIMAPStore
 
+@synthesize folderBuilder;
+
 + (void) initialize
 {
   defaultCStringEncoding = [NSString defaultCStringEncoding];
@@ -788,14 +790,23 @@ static inline int has_literal(char *buf, int c)
     {
       CWIMAPFolder *aFolder;
       
-      aFolder = [[CWIMAPFolder alloc] initWithName: theName];
-      
+        aFolder = [self folderWithName:theName];
+
       [aFolder setStore: self];
       [aFolder setSelected: NO];
       return AUTORELEASE(aFolder);
     }
 }
 
+- (CWIMAPFolder *)folderWithName:(NSString *)name
+{
+    if (self.folderBuilder) {
+        CWFolder *folder = [self.folderBuilder folderWithName:name];
+        return (CWIMAPFolder *) folder;
+    } else {
+        return [[CWIMAPFolder alloc] initWithName:name];
+    }
+}
 
 //
 //
@@ -815,7 +826,8 @@ static inline int has_literal(char *buf, int c)
       return aFolder;
     }
 
-  aFolder = [[CWIMAPFolder alloc] initWithName: theName  mode: theMode];
+    aFolder = [self folderWithName:theName];
+    aFolder.mode = theMode;
   [aFolder setStore: self];
   [_openFolders setObject: aFolder  forKey: theName];
   RELEASE(aFolder);

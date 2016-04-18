@@ -37,7 +37,7 @@
   @typedef IMAPCommand
   @abstract Supported IMAP commands.
   @discussion This enum lists the supported IMAP commands available in Pantomime's IMAP client code.
-  @constant IMAP_APPEND The IMAP APPEND command - see 6.3.11. APPEND Command of RFC 3501. 
+  @constant IMAP_APPEND The IMAP APPEND command - see 6.3.11. APPEND Command of RFC 3501.
   @constant IMAP_AUTHENTICATE_CRAM_MD5 CRAM-MD5 authentication.
   @constant IMAP_AUTHENTICATE_LOGIN LOGIN authentication
   @constant IMAP_AUTHORIZATION Special command so that we know we are in the authorization state.
@@ -168,6 +168,8 @@ extern NSString *PantomimeFolderStatusFailed;
     unsigned char _folderSeparator;
     int _tag;
 }
+
+@property (nonatomic, nullable) id<CWFolderBuilding> folderBuilder;
 
 /*!
   @method folderForName:mode:prefetch:

@@ -323,7 +323,9 @@ extern NSString* PantomimeProtocolException;
 @interface CWService : NSObject <RunLoopEvents>
 #endif
 {
-  @protected
+@public
+
+@protected
     NSMutableArray *_supportedMechanisms;
     NSMutableArray *_responsesFromServer;
     NSMutableArray *_capabilities;

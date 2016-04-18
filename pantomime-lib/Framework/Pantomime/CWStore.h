@@ -58,9 +58,14 @@ extern NSString* PantomimeFolderRenameCompleted;
 */
 extern NSString* PantomimeFolderRenameFailed;
 
-
 @class CWFolder;
 @class CWURLName;
+
+@protocol CWFolderBuilding <NSObject>
+
+- (CWFolder *)folderWithName:(NSString *)name;
+
+@end
 
 /*!
   @protocol CWStore
