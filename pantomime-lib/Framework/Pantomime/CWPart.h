@@ -272,7 +272,7 @@
   @discussion This method is used to set the receiver's size.
   @param theSize The value of the size.
 */
-- (void) setSize: (long) theSize;
+- (void) setSize: (NSInteger) theSize;
 
 /*!
   @method dataValue

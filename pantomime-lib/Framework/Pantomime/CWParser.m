@@ -362,7 +362,8 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
       NSData *aData;
 
         NSInteger month;
-      NSUInteger day, year, hours, mins, secs, tz, i, j, len, tot, s;
+        int day, year, hours, mins, secs;
+      NSUInteger tz, i, j, len, tot, s;
       unsigned char *bytes, *word;
 
       aData = [theLine subdataFromIndex: 6];
@@ -458,10 +459,10 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
       if (year < 100) year += 1900;
       
       //printf("len = %d |%s| year = %d\n", len, word, year);
-      
+
       // We parse the time using the hh:mm:ss format.
       i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
-      sscanf((const char*)word, "%ld:%ld:%ld", &hours, &mins, &secs);
+      sscanf((const char*)word, "%d:%d:%d", &hours, &mins, &secs);
       //printf("len = %d |%s| %d:%d:%d\n", len, word, hours, mins, secs);
       
       // We parse the timezone.
@@ -1098,9 +1099,9 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 	  while (YES)
 	    {
 	      // end = NSMaxRange(r1);
-	      r1 = [theLine rangeOfCString: [[NSString stringWithFormat: @"%s*%li", 
+	      r1 = [theLine rangeOfCString: [[NSString stringWithFormat: @"%s*%li",
 						       [[theLine subdataWithRange: theRange] cString],
-						       parameters_count] UTF8String]
+						       (unsigned long)parameters_count] UTF8String]
 			    options: 0
 			    range: NSMakeRange(NSMaxRange(r1), len-NSMaxRange(r1))];
 	      parameters_count++;

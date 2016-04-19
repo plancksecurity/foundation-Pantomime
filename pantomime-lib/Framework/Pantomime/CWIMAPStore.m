@@ -1919,7 +1919,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     {
       aString = [[_responsesFromServer objectAtIndex: i] asciiString];
       //NSLog(@"%i: %@", i, aString);
-      if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", theMSN]])
+      if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)theMSN]])
 	{
 	  seen_fetch = YES;
 	}

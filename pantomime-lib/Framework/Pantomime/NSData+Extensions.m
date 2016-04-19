@@ -121,7 +121,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 {
   const char *inBytes = [self bytes];
   const char *inBytesPtr = inBytes;
-  NSUInteger inLength = [self length];
+  NSInteger inLength = [self length];
 
   char *outBytes = malloc(sizeof(char)*inLength*2);
   char *outBytesPtr = outBytes;
