@@ -392,7 +392,7 @@ extern NSString * _Nonnull const PantomimeFolderSearchFailed;
   @param theIndex The index of the message.
   @result The message at the specified index, nil otherwise.
 */
-- (CWMessage * _Nullable) messageAtIndex: (int) theIndex;
+- (CWMessage * _Nullable) messageAtIndex: (NSUInteger) theIndex;
 
 /*!
   @method count

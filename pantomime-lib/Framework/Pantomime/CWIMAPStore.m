@@ -1748,7 +1748,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   //
   if (msn > [_selectedFolder count]) return;
 
-  aMessage = [_selectedFolder.allMessages objectAtIndex: (msn-1)];
+  aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: (msn-1)];
   RETAIN_VOID(aMessage);
   
   // We do NOT use  [_selectedFolder removeMessage: aMessage] since it'll
@@ -1771,7 +1771,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   // We update all MSNs starting from the message that has been expunged.
   for (i = (msn-1); i < [_selectedFolder count]; i++)
     {
-      [[_selectedFolder.allMessages objectAtIndex: i] setMessageNumber: (i+1)];
+      [[_selectedFolder messageAtIndex: i] setMessageNumber: (i+1)];
     }
   
   //
@@ -2009,7 +2009,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 	    }
 	  else
 	    {
-	      aMessage = [_selectedFolder.allMessages objectAtIndex: (msn-1)];
+	      aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: (msn-1)];
 	      [aMessage setMessageNumber: msn];
 	      [aMessage setFolder: _selectedFolder];
 	    }
@@ -2773,7 +2773,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
       for (i = ([_selectedFolder count]-1); i >= 0; i--)
 	{   
-	  aMessage = [_selectedFolder.allMessages objectAtIndex: i];
+	  aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: i];
 	  //aMessage = [theCache objectAtIndex: i];
       
 	  if ([aMessage folder] == nil)

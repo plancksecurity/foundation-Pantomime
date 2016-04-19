@@ -272,9 +272,9 @@
 //
 //
 //
-- (CWMessage *) messageAtIndex: (int) theIndex
+- (CWMessage *) messageAtIndex: (NSUInteger) theIndex
 {
-  if (theIndex < 0 || theIndex >= [self count])
+  if (theIndex >= [self count])
     {
       return nil;
     }
