@@ -1712,7 +1712,7 @@ static inline int has_literal(char *buf, int c)
       // We prefetch the new messages from the last UID+1
       if ([_selectedFolder.allMessages lastObject])
 	{
-	  uid = [[_selectedFolder.allMessages lastObject] UID];
+	  uid = [_selectedFolder lastUID];
 	} 
 
       [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", (uid+1)];
@@ -2837,7 +2837,7 @@ static inline int has_literal(char *buf, int c)
       // Messages will be fetched starting from that UID + 1.
       //
       //NSLog(@"LAST UID IN CACHE: %u", [[_selectedFolder->allMessages lastObject] UID]);
-      [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (UID FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", ([[_selectedFolder.allMessages lastObject] UID]+1)];
+      [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (UID FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", ([_selectedFolder lastUID]+1)];
       break;
 
     default:

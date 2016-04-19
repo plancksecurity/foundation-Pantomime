@@ -171,6 +171,11 @@ extern NSString* PantomimeMessageStoreFailed;
 */
 - (void) setSelected: (BOOL) theBOOL;
 
+/*!
+ @discussion This can be more efficiently implemented than `[lastMessage UID]`
+ */
+- (NSUInteger) lastUID;
+
 @end
 
 #endif // _Pantomime_H_CWIMAPFolder
