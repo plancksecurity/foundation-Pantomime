@@ -141,7 +141,7 @@ extern NSString* PantomimeMessageStoreFailed;
 	      RFC 3501 for a detailed description of this parameter.
   @result The UID validity of the folder.
 */
-- (unsigned int) UIDValidity;
+- (NSUInteger) UIDValidity;
 
 /*!
   @method setUIDValidity:
@@ -151,7 +151,7 @@ extern NSString* PantomimeMessageStoreFailed;
 	      all cache entries are invalidated.
   @param theUIDValidity The UID validity value.
 */
-- (void) setUIDValidity: (unsigned int) theUIDValidity;
+- (void) setUIDValidity: (NSUInteger) theUIDValidity;
 
 /*!
   @method selected
