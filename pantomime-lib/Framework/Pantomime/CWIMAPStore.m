@@ -1710,7 +1710,7 @@ static inline int has_literal(char *buf, int c)
       uid = 0;
       
       // We prefetch the new messages from the last UID+1
-      if ([_selectedFolder.allMessages lastObject])
+      if ([_selectedFolder count])
 	{
 	  uid = [_selectedFolder lastUID];
 	} 
