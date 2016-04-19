@@ -59,10 +59,10 @@
   @param theCharacter The caracter to be searched for.
   @result The index of the character, -1 if it's not found in the receiver.
 */
-- (int) indexOfCharacter: (unichar) theCharacter;
+- (NSInteger) indexOfCharacter: (unichar) theCharacter;
 
-- (int) indexOfCharacter: (unichar) theCharacter
-               fromIndex: (unsigned int) theIndex;
+- (NSInteger) indexOfCharacter: (unichar) theCharacter
+               fromIndex: (NSUInteger) theIndex;
 
 
 /*!
@@ -110,7 +110,7 @@
   @param theCharset The charset, as NSData.
   @result The encoding which might not be a NSStringEncoding.
 */
-+ (int) encodingForCharset: (NSData *) theCharset;
++ (NSInteger) encodingForCharset: (NSData *) theCharset;
 
 /*!
   @method encodingForCharset:convertToNSStringEncoding:
@@ -121,7 +121,7 @@
   to be used. If set to NO will only be usable for CoreFoundation.
   @result The encoding which might not be a NSStringEncoding.
 */
-+ (int) encodingForCharset: (NSData *) theCharset
++ (NSInteger) encodingForCharset: (NSData *) theCharset
  convertToNSStringEncoding: (BOOL) shouldConvert;
 
 /*!
@@ -132,7 +132,7 @@
                  will be derived from.
   @result The encoding which might not be a NSStringEncoding.
 */
-+ (int) encodingForPart: (CWPart *) thePart;
++ (NSInteger) encodingForPart: (CWPart *) thePart;
 
 /*!
   @method encodingForPart:convertToNSStringEncoding:
@@ -144,7 +144,7 @@
   to be used. If set to NO will only be usable for CoreFoundation.
   @result The encoding which might not be a NSStringEncoding.
 */
-+ (int) encodingForPart: (CWPart *) thePart
++ (NSInteger) encodingForPart: (CWPart *) thePart
  convertToNSStringEncoding: (BOOL) shouldConvert;
 
 /*!

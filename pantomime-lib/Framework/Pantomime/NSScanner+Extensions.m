@@ -29,10 +29,10 @@
 //
 @implementation NSScanner (PantomimeScannerExtensions)
 
-- (BOOL) scanUnsignedInt: (unsigned int *) theValue
+- (BOOL) scanUnsignedInt: (NSUInteger *) theValue
 {
   NSString *s;
-  unsigned int d, v, l1, l2, len;
+  NSUInteger d, v, l1, l2, len;
 
   l1 = l2 = [self scanLocation];
   s = [self string];

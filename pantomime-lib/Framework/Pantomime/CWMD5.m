@@ -37,11 +37,11 @@ struct MD5Context {
 
 void MD5Init(struct MD5Context *context);
 void MD5Update(struct MD5Context *context, unsigned char const *buf,
-               unsigned len);
+               NSUInteger len);
 void MD5Final(unsigned char digest[16], struct MD5Context *context);
 void MD5Transform(word32 buf[4], word32 const in[16]);
 
-void md5_hmac(unsigned char *digest, const unsigned char* text, int text_len, const unsigned char* key, int key_len);
+void md5_hmac(unsigned char *digest, const unsigned char* text, NSUInteger text_len, const unsigned char* key, NSUInteger key_len);
 
 //
 //
@@ -74,7 +74,7 @@ void md5_hmac(unsigned char *digest, const unsigned char* text, int text_len, co
 {
   struct MD5Context ctx;
   unsigned char *bytes;
-  unsigned len;
+  NSUInteger len;
   
   // If we already have computed the digest
   if (_has_computed_digest)
@@ -225,7 +225,7 @@ void MD5Init(struct MD5Context *ctx)
  * Update context to reflect the concatenation of another buffer full
  * of bytes.
  */
-void MD5Update(struct MD5Context *ctx, unsigned char const *buf, unsigned len)
+void MD5Update(struct MD5Context *ctx, unsigned char const *buf, NSUInteger len)
 {
   register word32 t;
   
@@ -418,8 +418,8 @@ void MD5Transform(word32 buf[4], word32 const in[16])
 */
 void
 md5_hmac(unsigned char *digest,
-	 const unsigned char* text, int text_len,
-	 const unsigned char* key, int key_len)
+	 const unsigned char* text, NSUInteger text_len,
+	 const unsigned char* key, NSUInteger key_len)
 {
   struct MD5Context context;
   unsigned char k_ipad[64];    /* inner padding -

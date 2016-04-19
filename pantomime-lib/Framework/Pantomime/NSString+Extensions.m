@@ -77,7 +77,7 @@
 //
 //
 //
-- (int) indexOfCharacter: (unichar) theCharacter
+- (NSInteger) indexOfCharacter: (unichar) theCharacter
 {
   return [self indexOfCharacter: theCharacter  fromIndex: 0];
 }
@@ -86,10 +86,10 @@
 //
 //
 //
-- (int) indexOfCharacter: (unichar) theCharacter
-               fromIndex: (unsigned int) theIndex
+- (NSInteger) indexOfCharacter: (unichar) theCharacter
+               fromIndex: (NSUInteger) theIndex
 {
-  int i, len;
+  NSUInteger i, len;
   
   len = [self length];
   
@@ -138,7 +138,7 @@
 //
 - (NSString *) stringFromQuotedString
 {
-  int len;
+  NSUInteger len;
 
   len = [self length];
   
@@ -181,7 +181,7 @@
 //
 //
 //
-+ (int) encodingForCharset: (NSData *) theCharset
++ (NSInteger) encodingForCharset: (NSData *) theCharset
 {
   return [self encodingForCharset: theCharset convertToNSStringEncoding: YES];
 }
@@ -189,7 +189,7 @@
 //
 // Convenience to be able to use CoreFoundation conversion instead of NSString
 //
-+ (int) encodingForCharset: (NSData *) theCharset
++ (NSInteger) encodingForCharset: (NSData *) theCharset
  convertToNSStringEncoding: (BOOL) shouldConvert
 {
   // We define some aliases for the string encoding.
@@ -310,7 +310,7 @@
 //
 //
 //
-+ (int) encodingForPart: (CWPart *) thePart
++ (NSInteger) encodingForPart: (CWPart *) thePart
 {
   return [self encodingForPart: thePart convertToNSStringEncoding: YES];
 }
@@ -318,10 +318,10 @@
 //
 // Convenience to be able to use CoreFoundation conversion instead of NSString
 //
-+ (int)    encodingForPart: (CWPart *) thePart
++ (NSInteger)    encodingForPart: (CWPart *) thePart
  convertToNSStringEncoding: (BOOL) shouldConvert
 {
-  int encoding;
+  NSInteger encoding;
   
   // We get the encoding we are gonna use. We always favor the default encoding.
   if ([thePart defaultCharset])
@@ -354,7 +354,7 @@
 + (NSString *) stringWithData: (NSData *) theData
                       charset: (NSData *) theCharset
 {
-  int encoding;
+  NSInteger encoding;
   
   if (theData == nil)
     {
@@ -754,7 +754,7 @@
                                          withCharacter: (unichar) theReplacement
 {
   NSMutableString *aMutableString;
-  int len, i;
+  NSUInteger len, i;
   unichar c;
 
   if (!theTarget || !theReplacement || theTarget == theReplacement)
@@ -788,7 +788,8 @@
 //
 - (NSString *) stringByDeletingLastPathComponentWithSeparator: (unsigned char) theSeparator
 {
-  int i, c;
+  NSUInteger c;
+    NSInteger i;
   
   c = [self length];
 
@@ -821,7 +822,7 @@
 //
 - (BOOL) is7bitSafe
 {
-  int i, len;
+  NSUInteger i, len;
   
   // We search for a non-ASCII character.
   len = [self length];
@@ -915,7 +916,7 @@
 {
   CWInternetAddress *anInternetAddress;
   NSMutableString *aMutableString;
-  int i, count;
+  NSUInteger i, count;
   
   aMutableString = [[NSMutableString alloc] init];
   count = [theRecipients count];

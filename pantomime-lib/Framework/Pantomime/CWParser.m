@@ -95,10 +95,10 @@ static struct _timezone {
 //
 //
 //
-int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned char *word)
+NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsigned char *word)
 {
   unsigned char *p;
-  int i;
+  NSUInteger i;
 
   for (p = buf+start, i = start; (isspace(*p) || *p == ','); ++p, ++i);
   
@@ -262,7 +262,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
 {
   NSRange aRange;
   NSData *aData;
-  int x;
+  NSInteger x;
 
   if ([theLine length] <= 14)
     {
@@ -361,7 +361,8 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
     {
       NSData *aData;
 
-      int month, day, year, hours, mins, secs, tz, i, j, len, tot, s;
+        NSInteger month;
+      NSUInteger day, year, hours, mins, secs, tz, i, j, len, tot, s;
       unsigned char *bytes, *word;
 
       aData = [theLine subdataFromIndex: 6];
@@ -460,7 +461,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
       
       // We parse the time using the hh:mm:ss format.
       i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
-      sscanf((const char*)word, "%d:%d:%d", &hours, &mins, &secs);
+      sscanf((const char*)word, "%ld:%ld:%ld", &hours, &mins, &secs);
       //printf("len = %d |%s| %d:%d:%d\n", len, word, hours, mins, secs);
       
       // We parse the timezone.
@@ -534,7 +535,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
   CWInternetAddress *anInternetAddress;
   NSData *aData;
 
-  int i, len, s_len, x, y;
+  NSUInteger i, len, s_len, x, y;
   unsigned char *bytes;
   BOOL b;
 
@@ -654,7 +655,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
 		      quick: (BOOL) theBOOL
 {
   NSData *aData;
-  int x, y;
+  NSInteger x, y;
   
   if (theBOOL)
     {
@@ -753,7 +754,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
       NSArray *allReferences;
       NSData *aReference;
       NSString *aString;
-      int i, count;
+      NSUInteger i, count;
       
       allReferences = [aData componentsSeparatedByCString: " "];
       count = [allReferences count];
@@ -795,7 +796,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
       NSData *aData;
 
       unsigned char *bytes;
-      int i, len, s_len, x, y;
+      NSUInteger i, len, s_len, x, y;
       BOOL b;
       
       aMutableArray = [[NSMutableArray alloc] init];
@@ -992,7 +993,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
   NSMutableData *aMutableData;
   NSRange r1, r2;
   
-  int value_start, value_end, parameters_count,len;
+  NSUInteger value_start, value_end, parameters_count,len;
   BOOL is_rfc2231, has_charset;
 
   is_rfc2231 = has_charset = NO;
@@ -1097,7 +1098,7 @@ int next_word(unsigned char *buf, unsigned int start, unsigned int len, unsigned
 	  while (YES)
 	    {
 	      // end = NSMaxRange(r1);
-	      r1 = [theLine rangeOfCString: [[NSString stringWithFormat: @"%s*%i", 
+	      r1 = [theLine rangeOfCString: [[NSString stringWithFormat: @"%s*%li", 
 						       [[theLine subdataWithRange: theRange] cString],
 						       parameters_count] UTF8String]
 			    options: 0

@@ -36,7 +36,7 @@
 
 - (id) initWithString: (NSString *) theString
 {
-  int a, b;
+  NSInteger a, b;
 
   self = [super init];
   
@@ -72,7 +72,7 @@
 	  
       if (a > 0)
 	{
-	  int c, d;
+	  NSInteger c, d;
 
 	  c = [theString indexOfCharacter: '"'];
 

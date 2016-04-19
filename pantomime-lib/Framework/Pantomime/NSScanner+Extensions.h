@@ -40,7 +40,7 @@
          will be stored.
   @result YES if we find a decimal unsigned int, no otherwise.
 */            
-- (BOOL) scanUnsignedInt: (unsigned int *) theValue;
+- (BOOL) scanUnsignedInt: (NSUInteger *) theValue;
 
 @end
 

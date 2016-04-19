@@ -152,9 +152,9 @@ static int currentPartVersion = 2;
   [theCoder encodeObject: [NSNumber numberWithInt: [self contentDisposition]]];
   [theCoder encodeObject: [self filename]];
  
-  [theCoder encodeObject: [NSNumber numberWithInt: [self contentTransferEncoding]]];
-  [theCoder encodeObject: [NSNumber numberWithInt: [self format]]];
-  [theCoder encodeObject: [NSNumber numberWithInt: _size]];
+  [theCoder encodeObject: [NSNumber numberWithInteger: [self contentTransferEncoding]]];
+    [theCoder encodeObject: [NSNumber numberWithInteger: [self format]]];
+  [theCoder encodeObject: [NSNumber numberWithInteger: _size]];
 
   [theCoder encodeObject: [self boundary]];
   [theCoder encodeObject: [self charset]];
@@ -356,7 +356,7 @@ static int currentPartVersion = 2;
 //
 //
 //
-- (int) lineLength
+- (NSUInteger) lineLength
 {
   return _line_length;
 }
@@ -409,7 +409,7 @@ static int currentPartVersion = 2;
   return _size;
 }
 
-- (void) setSize: (long) theSize
+- (void) setSize: (NSInteger) theSize
 {
   _size = theSize;
 }
@@ -425,7 +425,7 @@ static int currentPartVersion = 2;
   NSData *aDataToSend;
   NSArray *allLines;
   NSString *aFilename; 
-  int i, count;
+  NSUInteger i, count;
 
   aMutableData = [[NSMutableData alloc] init];
   
@@ -587,7 +587,7 @@ static int currentPartVersion = 2;
   else if (([self contentTransferEncoding] == PantomimeEncodingNone || [self contentTransferEncoding] == PantomimeEncoding8bit) &&
 	   [self format] == PantomimeFormatFlowed)
     {
-      int limit;
+      NSUInteger limit;
       
       limit = _line_length;
       
@@ -695,7 +695,7 @@ static int currentPartVersion = 2;
 {
   //NSAutoreleasePool *pool;
   NSArray *allLines;
-  int i, count;
+  NSUInteger i, count;
   
   if (!theHeaders || [theHeaders length] == 0)
     {
@@ -787,7 +787,7 @@ static int currentPartVersion = 2;
 - (id) headerValueForName: (NSString *) theName
 {
   NSArray *allKeys;
-  int count;
+  NSUInteger count;
 
   allKeys = [_headers allKeys];
   count = [allKeys count];

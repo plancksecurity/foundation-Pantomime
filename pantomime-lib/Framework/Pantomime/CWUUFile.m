@@ -151,7 +151,7 @@ void uudecodeline(char *line, NSMutableData *data)
   NSMutableData *aMutableData;
   NSArray *allLines;
   CWUUFile *aUUFile;
-  int i, count;
+  NSUInteger i, count;
 
   aMutableData = [NSMutableData dataWithCapacity: [theString length]];
 

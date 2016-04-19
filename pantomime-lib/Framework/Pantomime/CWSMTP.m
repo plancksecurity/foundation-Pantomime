@@ -48,7 +48,7 @@ static NSData *CRLF;
 static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, BOOL aBOOL)
 {
   CWInternetAddress *theAddress;
-  int i, count;
+  NSUInteger i, count;
 
   count = [theRecipients count];
 
@@ -509,7 +509,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 {
   NSData *aData;
   char *buf;
-  int count;
+  NSUInteger count;
 
   //NSLog(@"IN UPDATE READ");
 
@@ -656,7 +656,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   if ([aData hasCPrefix: "334"])
     {
       NSMutableData *aMutableData;
-      int len_username, len_password;
+      NSUInteger len_username, len_password;
       
       len_username = [_username length];
   
@@ -793,7 +793,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 - (void) _parseEHLO
 {
   NSData *aData;
-  int i, count;
+  NSUInteger i, count;
 
   count = [_responsesFromServer count];
   

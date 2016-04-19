@@ -83,7 +83,7 @@
 //
 //
 //
-- (CWPart *) partAtIndex: (unsigned int) theIndex
+- (CWPart *) partAtIndex: (NSUInteger) theIndex
 {
   return [_parts objectAtIndex: theIndex];
 }

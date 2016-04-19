@@ -52,7 +52,7 @@
                    should be done. 0 disables any wrapping.
   @result Returns a NSData object on success, nil on error.
 */
-- (NSData *) encodeBase64WithLineLength: (int) theLength;
+- (NSData *) encodeBase64WithLineLength: (NSUInteger) theLength;
 
 /*!
   @method unfoldLines
@@ -84,7 +84,7 @@
                    should be done. 0 disables any wrapping.
   @result Returns a NSData object.
 */
-- (NSData *) encodeQuotedPrintableWithLineLength: (int) theLength
+- (NSData *) encodeQuotedPrintableWithLineLength: (NSUInteger) theLength
                                         inHeader: (BOOL) aBOOL;
 /*!
   @method rangeOfData:
@@ -113,7 +113,7 @@
   @result The associated range of the C string in the receiver.
 */
 -(NSRange) rangeOfCString: (const char *) theCString
-                  options: (unsigned int) theOptions;
+                  options: (NSUInteger) theOptions;
 
 /*!
   @method rangeOfCString:
@@ -125,7 +125,7 @@
   @result The associated range of the C string in the receiver.
 */
 -(NSRange) rangeOfCString: (const char *) theCString
-                  options: (unsigned int) theOptions
+                  options: (NSUInteger) theOptions
 	            range: (NSRange) theRange;
 
 /*!
@@ -136,7 +136,7 @@
   @param theIndex The index used to get the subdata from.
   @result The subdata.
 */
-- (NSData *) subdataFromIndex: (int) theIndex;
+- (NSData *) subdataFromIndex: (NSUInteger) theIndex;
 
 /*!
   @method subdataToIndex:
@@ -146,7 +146,7 @@
   @param theIndex The index used to get the subdata to.
   @result The subdata.
 */
-- (NSData *) subdataToIndex: (int) theIndex;
+- (NSData *) subdataToIndex: (NSUInteger) theIndex;
 
 /*!
   @method dataByTrimmingWhiteSpaces
@@ -191,7 +191,7 @@
   @param theCharacter The caracter to be searched for.
   @result The index of the character, -1 if it's not found in the receiver.
 */
-- (int) indexOfCharacter: (char) theCharacter;
+- (NSInteger) indexOfCharacter: (char) theCharacter;
 
 /*!
   @method hasCPrefix:
@@ -264,7 +264,7 @@
 */
 -(const char *) cString;
 
-- (unichar) characterAtIndex: (int) theIndex;
+- (unichar) characterAtIndex: (NSUInteger) theIndex;
 
 /*!
   @method quoteWithLevel:wrappingLimit:
@@ -274,8 +274,8 @@
   @result Returns a quoted string as a NSData instance. An empty NSData 
           instance is returned if <i>theLevel</i> is greater than <i>theLimit</i>.
 */
-- (NSData *) quoteWithLevel: (int) theLevel
-             wrappingLimit: (int) theLimit;
+- (NSData *) quoteWithLevel: (NSUInteger) theLevel
+             wrappingLimit: (NSUInteger) theLimit;
 
 /*!
   @method unwrapWithLimit:
@@ -284,7 +284,7 @@
   @param theQuoteLimit The quote limit to use for unwrapping the string.
   @result The unwrapped string, as a NSData instance.
 */
-- (NSData *) unwrapWithLimit: (int) theQuoteLimit;
+- (NSData *) unwrapWithLimit: (NSUInteger) theQuoteLimit;
 
 /*!
   @method wrapWithLimit:
@@ -295,7 +295,7 @@
                   in characters.
   @result The wrapped string.
 */
-- (NSData *) wrapWithLimit: (int) theLimit;
+- (NSData *) wrapWithLimit: (NSUInteger) theLimit;
 
 @end
 
@@ -335,7 +335,7 @@
   @param theIndex The index where to insert the C string.
 */
 - (void) insertCString: (const char *) theCString
-               atIndex: (int) theIndex;
+               atIndex: (NSUInteger) theIndex;
 
 /*!
   @method replaceCRLFWithLF

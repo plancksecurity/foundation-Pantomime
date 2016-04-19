@@ -63,7 +63,7 @@ static NSData *CRLF;
 //
 // "0" means no literal.
 //
-static inline int has_literal(char *buf, int c)
+static inline int has_literal(char *buf, NSUInteger c)
 {
   char *s;
 
@@ -171,7 +171,7 @@ static inline int has_literal(char *buf, int c)
 - (void) _parseCAPABILITY;
 - (void) _parseEXISTS;
 - (void) _parseEXPUNGE;
-- (void) _parseFETCH: (int) theMSN;
+- (void) _parseFETCH: (NSInteger) theMSN;
 - (void) _parseLIST;
 - (void) _parseLSUB;
 - (void) _parseNO;
@@ -264,7 +264,7 @@ static inline int has_literal(char *buf, int c)
 {
   id aData;
  
-  int i, count;
+  NSUInteger i, count;
   char *buf;
 
   [super updateRead];
@@ -392,7 +392,7 @@ static inline int has_literal(char *buf, int c)
       //
       if (i == 1)
 	{
-	  int d, j, msn, len;
+	  NSInteger d, j, msn, len;
 	  BOOL b;
 
 	  //
@@ -455,7 +455,7 @@ static inline int has_literal(char *buf, int c)
 	  //
 	  if (b)
 	    {
-	      int k;
+	      NSInteger k;
 	      
 	      k = j;
 
@@ -613,7 +613,7 @@ static inline int has_literal(char *buf, int c)
       //
       else
 	{
-	  int j;
+	  NSInteger j;
 
 	  //NSData *foo;
 	  //foo = [NSData dataWithBytes: buf-i  length: i];
@@ -731,7 +731,7 @@ static inline int has_literal(char *buf, int c)
 {
   NSMutableArray *aMutableArray;
   NSString *aString;
-  int i, count;;
+  NSUInteger i, count;;
 
   aMutableArray = [NSMutableArray array];
   count = [_capabilities count];
@@ -987,7 +987,7 @@ static inline int has_literal(char *buf, int c)
       CWIMAPQueueObject *aQueueObject;
       NSString *aString;
       va_list args;
-      int i, count;
+      NSUInteger i, count;
 
       //NSLog(@"sendCommand invoked, cmd = %i", theCommand);
       va_start(args, theFormat);
@@ -1310,7 +1310,7 @@ static inline int has_literal(char *buf, int c)
 
   if (aRange.length)
     {
-      int mark;
+      NSUInteger mark;
 
       mark = aRange.location + 1;
       
@@ -1495,7 +1495,7 @@ static inline int has_literal(char *buf, int c)
 {
   NSMutableArray *aMutableArray;
   NSScanner *aScanner;
-  unsigned int value;
+  NSUInteger value;
 
   aMutableArray = [NSMutableArray array];
 
@@ -1513,7 +1513,7 @@ static inline int has_literal(char *buf, int c)
   while (![aScanner isAtEnd])
     {
       [aScanner scanUnsignedInt: &value];
-      [aMutableArray addObject: [NSNumber numberWithInt: value]];
+      [aMutableArray addObject: [NSNumber numberWithInteger: value]];
     }
 
   RELEASE(aScanner);
@@ -1705,7 +1705,7 @@ static inline int has_literal(char *buf, int c)
       _selectedFolder && 
       n > [_selectedFolder count])
     {
-      unsigned int uid;
+      NSUInteger uid;
       
       uid = 0;
       
@@ -1873,7 +1873,7 @@ static inline int has_literal(char *buf, int c)
 //
 // And we MUST parse the UID correctly.
 //
-- (void) _parseFETCH: (int) theMSN
+- (void) _parseFETCH: (NSInteger) theMSN
 {
   NSMutableString *aMutableString;
   NSCharacterSet *aCharacterSet;
@@ -1885,7 +1885,7 @@ static inline int has_literal(char *buf, int c)
   NSRange aRange;
 
   BOOL done, seen_fetch, must_flush_record;
-  int i, j, count, len;
+  NSInteger i, j, count, len;
   CWCacheRecord *cacheRecord = [[CWCacheRecord alloc] init];
   
   //
@@ -1919,7 +1919,7 @@ static inline int has_literal(char *buf, int c)
     {
       aString = [[_responsesFromServer objectAtIndex: i] asciiString];
       //NSLog(@"%i: %@", i, aString);
-      if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %d FETCH", theMSN]])
+      if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", theMSN]])
 	{
 	  seen_fetch = YES;
 	}
@@ -2026,7 +2026,7 @@ static inline int has_literal(char *buf, int c)
       //
       if ([aWord caseInsensitiveCompare: @"UID"] == NSOrderedSame)
 	{
-	  unsigned int uid;
+	  NSUInteger uid;
 
 	  [aScanner scanUnsignedInt: &uid];
 	  //NSLog(@"uid %d j = %d, scanLoc = %d", uid, j, [aScanner scanLocation]);
@@ -2198,7 +2198,7 @@ static inline int has_literal(char *buf, int c)
 {
   NSString *aFolderName, *aString, *theString;
   NSRange r1, r2;
-  int flags, len;
+  NSUInteger flags, len;
 
   theString = [[_responsesFromServer lastObject] asciiString];
 
@@ -2287,7 +2287,7 @@ static inline int has_literal(char *buf, int c)
 	}
     }
 
-  [_folders setObject: [NSNumber numberWithInt: flags]  forKey: aFolderName];
+  [_folders setObject: [NSNumber numberWithInteger: flags]  forKey: aFolderName];
 }
 
 
@@ -2297,7 +2297,7 @@ static inline int has_literal(char *buf, int c)
 - (void) _parseLSUB
 {
   NSString *aString, *aFolderName;
-  int len;
+  NSUInteger len;
 
   aString = [[NSString alloc] initWithData: [_responsesFromServer lastObject]  encoding: defaultCStringEncoding];
   
@@ -2629,7 +2629,7 @@ static inline int has_literal(char *buf, int c)
 	// Once the STORE has completed, we update the messages.
 	NSArray *theMessages;
 	CWFlags *theFlags;
-	int i, count;
+	NSUInteger i, count;
 	
 	theMessages = [_currentQueueObject->info objectForKey: @"Messages"];
 	theFlags = [_currentQueueObject->info objectForKey: @"Flags"];
@@ -2738,7 +2738,7 @@ static inline int has_literal(char *buf, int c)
 {
   CWIMAPMessage *aMessage;
   NSArray *allResults;
-  int i, count;
+  NSInteger i, count;
   BOOL b;
 
   allResults = [self _uniqueIdentifiersFromData: [_responsesFromServer objectAtIndex: 0]];
@@ -2853,7 +2853,7 @@ static inline int has_literal(char *buf, int c)
 - (void) _parseSELECT
 {
   NSData *aData;
-  int i, count;
+  NSUInteger i, count;
 
   // The last object in _responsesFromServer is a tagged OK response.
   // We need to parse it here.

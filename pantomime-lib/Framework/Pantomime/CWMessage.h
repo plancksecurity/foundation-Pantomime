@@ -92,7 +92,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
     CWFolder *_folder;
     CWFlags *_flags;
 
-    unsigned int _message_number;
+    NSUInteger _message_number;
     BOOL _initialized;    
 }
 
@@ -141,7 +141,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
 	      messages (see 2.3.1.2. of RFC3501 for details).
   @result The MSN, 0 if none was previously set.
 */
-- (unsigned int) messageNumber;
+- (NSUInteger) messageNumber;
 
 /*!
   @method setMessageNumber:
@@ -149,7 +149,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
               of the receiver.
   @param theMessageNumber The value.
 */
-- (void) setMessageNumber: (unsigned int) theMessageNumber;
+- (void) setMessageNumber: (NSUInteger) theMessageNumber;
 
 /*!
   @method messageID
@@ -241,7 +241,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
               the receiver has.
   @result The count.
 */
-- (unsigned int) recipientsCount;
+- (NSUInteger) recipientsCount;
 
 /*!
   @method removeAllRecipients:
@@ -295,7 +295,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
               the receiver.
   @param theBaseSubject The base subject to set.
 */
-- (void) setBaseSubject: (NSString * _Nonnull) theBaseSubject;
+- (void) setBaseSubject: (NSString * _Nullable) theBaseSubject;
 
 /*!
   @method isInitialized
@@ -458,7 +458,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
   @param theProperty The value of the property.
   @param theKey The key of the property.
 */
-- (void) setProperty: (id _Nonnull) theProperty
+- (void) setProperty: (id _Nullable) theProperty
               forKey: (id _Nonnull) theKey;
 
 /*!
@@ -555,7 +555,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
   @param theRecord The cache_record to update.
 */
 - (void) addHeadersFromData: (NSData * _Nonnull) theHeaders
-                     record: (CWCacheRecord * _Nonnull) theRecord;
+                     record: (CWCacheRecord * _Nullable) theRecord;
 
 /*!
   @method setHeadersFromData:record:
@@ -567,7 +567,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
   @param theHeaders The bytes to use.
 */
 - (void) setHeadersFromData: (NSData * _Nonnull) theHeaders
-                     record: (CWCacheRecord * _Nonnull) theRecord;
+                     record: (CWCacheRecord * _Nullable) theRecord;
 @end
 
 

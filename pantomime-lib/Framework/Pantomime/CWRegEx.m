@@ -114,7 +114,8 @@
 {
   NSMutableArray *aMutableArray;
     
-  NSUInteger offset, status;
+    NSUInteger offset;
+    int status;
   char *s, *error;
   regmatch_t rm[1];
   

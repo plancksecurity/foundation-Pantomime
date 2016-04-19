@@ -142,7 +142,7 @@
 	     toFolder: (NSString *) theFolder
 {
   NSMutableString *aMutableString;
-  int i, count;
+  NSUInteger i, count;
 
   // We create our message's UID set
   aMutableString = [[NSMutableString alloc] init];
@@ -266,7 +266,7 @@
 //
 //
 //
-- (unsigned int) UIDValidity
+- (NSUInteger) UIDValidity
 {
   return _uid_validity;
 }
@@ -275,7 +275,7 @@
 //
 //
 //
-- (void) setUIDValidity: (unsigned int) theUIDValidity
+- (void) setUIDValidity: (NSUInteger) theUIDValidity
 {
   _uid_validity = theUIDValidity;
  
@@ -329,7 +329,7 @@
     }
   else
     {
-      int i, count;
+      NSUInteger i, count;
 
       aSequenceSet = AUTORELEASE([[NSMutableString alloc] init]);
       count = [theMessages count];
@@ -466,7 +466,7 @@
 {
   NSMutableData *aMutableData;
   NSArray *allLines;
-  int i, count;
+  NSUInteger i, count;
 
   // We allocate our mutable data object
   aMutableData = [[NSMutableData alloc] initWithCapacity: [theMessage length]];

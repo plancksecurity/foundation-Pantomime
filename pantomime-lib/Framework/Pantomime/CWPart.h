@@ -47,8 +47,8 @@
     NSString *_defaultCharset;
     NSObject *_content;
 
-    int _line_length;
-    int _size;
+    NSUInteger _line_length;
+    NSUInteger _size;
 }
 
 /*!
@@ -215,7 +215,7 @@
               a line can use in a text part.
   @result The length, 0 if not defined.
 */
-- (int) lineLength;
+- (NSUInteger) lineLength;
 
 /*!
   @method setLineLength:

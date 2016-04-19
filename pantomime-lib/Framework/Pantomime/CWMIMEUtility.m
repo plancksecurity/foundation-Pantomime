@@ -49,7 +49,7 @@
 // C functions
 //
 char ent(char **ref);
-char *striphtml(char *s, int encoding);
+char *striphtml(char *s, NSInteger encoding);
 NSString *unique_id();
 
 static const char *hexDigit = "0123456789ABCDEF";
@@ -73,7 +73,7 @@ static int seed_count = 1;
   NSData *charset, *encoded_text;
   NSString *aString;
   
-  int i, length, start, i_charset, i_encoding, end; 
+    NSUInteger length, i, start, i_charset, i_encoding, end;
   const char *bytes;
  
   BOOL ignore_span;
@@ -341,7 +341,7 @@ static int seed_count = 1;
   NSMutableData *aMutableData;
   NSScanner *aScanner;
   
-  int i, count, previousLocation, currentLocation;
+  NSUInteger i, count, previousLocation, currentLocation;
   BOOL mustUseEncoding;
 
   if (!theWord || [theWord length] == 0 )
@@ -371,7 +371,7 @@ static int seed_count = 1;
   
   while ([aScanner scanUpToCharactersFromSet: [NSCharacterSet whitespaceCharacterSet]  intoString: NULL])
     {
-      int length;
+      NSUInteger length;
       
       currentLocation = [aScanner scanLocation]; 
 	  
@@ -481,7 +481,7 @@ static int seed_count = 1;
   NSMutableData *aMutableData;
   NSArray *allParts;
   NSRange aRange;
-  int i, count;
+  NSUInteger i, count;
   
   aMimeMultipart = [[CWMIMEMultipart alloc] init];
 
@@ -667,7 +667,7 @@ static int seed_count = 1;
 // This C function has been written by Abhijit Menon-Sen <ams@wiw.org>
 // This code is in the public domain.
 //
-char *striphtml(char *s, int encoding)
+char *striphtml(char *s, NSInteger encoding)
 {
   char c, *t, *text;
 
@@ -722,7 +722,7 @@ char *striphtml(char *s, int encoding)
 	      if (aData)
 		{
 		  char *bytes;
-		  int len;
+		  NSUInteger len;
 		  
 		  bytes = (char *)[aData bytes];
 		  len = [aData length];

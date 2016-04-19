@@ -52,7 +52,7 @@
 {
   // Must also encode Message's superclass
   [super encodeWithCoder: theCoder];
-  [theCoder encodeObject: [NSNumber numberWithUnsignedInt: _UID]];
+  [theCoder encodeObject: [NSNumber numberWithInteger: _UID]];
 }
 
 

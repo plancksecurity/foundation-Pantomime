@@ -115,7 +115,7 @@ static NSString *comp = @"CWTCPConnection";
     NSInteger count = [self.readStream read:buf maxLength:len];
     [self.logger infoComponent:comp
                        message:[NSString
-                                stringWithFormat:@"read %d: \"%@\"", count,
+                                stringWithFormat:@"read %ld: \"%@\"", (long)count,
                                 [self bufferToString:buf length:len]]];
     return count;
 }
@@ -128,7 +128,7 @@ static NSString *comp = @"CWTCPConnection";
     NSInteger count = [self.writeStream write:buf maxLength:len];
     [self.logger infoComponent:comp
                        message:[NSString
-                                stringWithFormat:@"wrote %d: \"%@\"", count,
+                                stringWithFormat:@"wrote %ld: \"%@\"", (long)count,
                                 [self bufferToString:buf length:len]]];
     return count;
 }

@@ -228,7 +228,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   [theCoder encodeObject: _references];                               // References
   [theCoder encodeObject: [self inReplyTo]];                          // In-Reply-To
   
-  [theCoder encodeObject: [NSNumber numberWithInt: _message_number]]; // Message number
+  [theCoder encodeObject: [NSNumber numberWithInteger: _message_number]]; // Message number
   [theCoder encodeObject: _flags];                                    // Message flags
 }
 
@@ -306,7 +306,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (unsigned int) messageNumber
+- (NSUInteger) messageNumber
 {
   return _message_number;
 }
@@ -315,7 +315,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) setMessageNumber: (unsigned int) theMessageNumber
+- (void) setMessageNumber: (NSUInteger) theMessageNumber
 {
   _message_number = theMessageNumber;
 }
@@ -444,7 +444,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (unsigned int) recipientsCount
+- (NSUInteger) recipientsCount
 {
   return [_recipients count];
 }
@@ -1157,7 +1157,8 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   // We set the Reply-To address in case we need to
   if ([self replyTo])
     {
-      int i, count;
+      NSInteger i;
+        NSUInteger count;
 
       [aMutableData appendCFormat: @"Reply-To: "];
 
@@ -1351,7 +1352,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 {
   NSArray *allLines;
   NSData *aData;
-  int i, count;
+  NSUInteger i, count;
 
   [super setHeadersFromData: theHeaders];
 
@@ -1522,7 +1523,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (int) compareAccordingToNumber: (CWMessage *) aMessage
 {
-  int num;
+  NSUInteger num;
   num = [aMessage messageNumber];
   if (_message_number < num)
     {
@@ -1540,7 +1541,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (int) reverseCompareAccordingToNumber: (CWMessage *) aMessage
 {
-  int num;
+  NSUInteger num;
   num = [aMessage messageNumber];
   if (num < _message_number)
     {
@@ -1752,8 +1753,8 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (int) compareAccordingToSize: (CWMessage *) aMessage
 {
-  int size1 = [self size];
-  int size2 = [aMessage size];
+  NSUInteger size1 = [self size];
+  NSUInteger size2 = [aMessage size];
 
   if (size1 < size2)
     {
@@ -1771,8 +1772,8 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (int) reverseCompareAccordingToSize: (CWMessage *) aMessage
 {
-  int size1 = [aMessage size];
-  int size2 = [self size];
+  NSUInteger size1 = [aMessage size];
+  NSUInteger size2 = [self size];
 
   if (size1 < size2)
     {
@@ -1813,7 +1814,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   NSRange aRange;
 
   BOOL b1, b2;
-  int i;
+  NSInteger i;
   
   aSubject = [self subject];
   

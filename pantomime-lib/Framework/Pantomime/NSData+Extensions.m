@@ -37,7 +37,7 @@
 // C functions and constants
 //
 int getValue(char c);
-void nb64ChunkFor3Characters(char *buf, const char *inBuf, int numChars);
+void nb64ChunkFor3Characters(char *buf, const char *inBuf, NSUInteger numChars);
 
 static const char basis_64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static const char *hexDigit = "0123456789ABCDEF";
@@ -57,7 +57,8 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 - (NSData *) decodeBase64
 {
-  int i, j, length, rawIndex, block, pad, data_len;
+  NSUInteger i, j, rawIndex, block, pad, data_len;
+    NSInteger length;
   const unsigned char *bytes;
   char *raw;
 
@@ -116,17 +117,17 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (NSData *) encodeBase64WithLineLength: (int) theLength
+- (NSData *) encodeBase64WithLineLength: (NSUInteger) theLength
 {
   const char *inBytes = [self bytes];
   const char *inBytesPtr = inBytes;
-  int inLength = [self length];
+  NSUInteger inLength = [self length];
 
   char *outBytes = malloc(sizeof(char)*inLength*2);
   char *outBytesPtr = outBytes;
 
-  int numWordsPerLine = theLength/4;
-  int wordCounter = 0;
+  NSUInteger numWordsPerLine = theLength/4;
+  NSUInteger wordCounter = 0;
 
   // We memset 0 our buffer so with are sure to not have
   // any garbage in it.
@@ -159,7 +160,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (NSData *) unfoldLines
 {
   NSMutableData *aMutableData;
-  int i, length;
+  NSUInteger i, length;
   
   const unsigned char *bytes, *b;
   
@@ -272,12 +273,12 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (NSData *) encodeQuotedPrintableWithLineLength: (int) theLength
+- (NSData *) encodeQuotedPrintableWithLineLength: (NSUInteger) theLength
 					inHeader: (BOOL) aBOOL
 {
   NSMutableData *aMutableData;
   const unsigned char *b;
-  int i, length, line;
+  NSUInteger i, length, line;
   char buf[4];
   
   aMutableData = [[NSMutableData alloc] initWithCapacity: [self length]];
@@ -355,7 +356,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (NSRange) rangeOfData: (NSData *) theData
 {
   const char *b, *bytes, *str;
-  int i, len, slen;
+  NSUInteger i, len, slen;
   
   bytes = [self bytes];
   len = [self length];
@@ -400,7 +401,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 -(NSRange) rangeOfCString: (const char *) theCString
-		  options: (unsigned int) theOptions
+		  options: (NSUInteger) theOptions
 {
   return [self rangeOfCString: theCString 
 	       options: theOptions 
@@ -412,11 +413,11 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 -(NSRange) rangeOfCString: (const char *) theCString
-		  options: (unsigned int) theOptions
+		  options: (NSUInteger) theOptions
 		    range: (NSRange) theRange
 {
   const char *b, *bytes;
-  int i, len, slen;
+  NSUInteger i, len, slen;
   
   if (!theCString)
     {
@@ -469,7 +470,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (NSData *) subdataFromIndex: (int) theIndex
+- (NSData *) subdataFromIndex: (NSUInteger) theIndex
 {
   return [self subdataWithRange: NSMakeRange(theIndex, [self length] - theIndex)];
 }
@@ -478,7 +479,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (NSData *) subdataToIndex: (int) theIndex
+- (NSData *) subdataToIndex: (NSUInteger) theIndex
 {
   return [self subdataWithRange: NSMakeRange(0, theIndex)];
 }
@@ -490,7 +491,8 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (NSData *) dataByTrimmingWhiteSpaces
 {
   const char *bytes;
-  int i, j, len;
+  NSUInteger i, len;
+    NSInteger j;
   
   bytes = [self bytes];
   len = [self length];
@@ -514,7 +516,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 {
   NSMutableData *aMutableData;
   const char *bytes;
-  int i, j, len;
+  NSUInteger i, j, len;
   char *dest;
   
   bytes = [self bytes];
@@ -545,7 +547,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (NSData *) dataFromQuotedData
 {
   const char *bytes;
-  int len;
+  NSUInteger len;
   
   bytes = [self bytes];
   len = [self length];
@@ -570,7 +572,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (NSData *) dataFromSemicolonTerminatedData
 {
   const char *bytes;
-  int len;
+  NSUInteger len;
   
   bytes = [self bytes];
   len = [self length];
@@ -591,10 +593,10 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (int) indexOfCharacter: (char) theCharacter
+- (NSInteger) indexOfCharacter: (char) theCharacter
 {
   const char *b;
-  int i, len;
+  NSUInteger i, len;
  
   b = [self bytes];
   len = [self length];
@@ -615,7 +617,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (BOOL) hasCPrefix: (const char *) theCString
 {
   const char *bytes;
-  int len, slen;
+  NSUInteger len, slen;
   
   if (!theCString)
     {
@@ -647,7 +649,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (BOOL) hasCSuffix: (const char *) theCString
 {
   const char *bytes;
-  int len, slen;
+  NSUInteger len, slen;
   
   if (!theCString) 
     {
@@ -679,7 +681,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (BOOL) hasCaseInsensitiveCPrefix: (const char *) theCString
 {
   const char *bytes;
-  int len, slen;
+  NSUInteger len, slen;
   
   if (!theCString) 
     {
@@ -710,7 +712,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (BOOL) hasCaseInsensitiveCSuffix: (const char *) theCString
 {
   const char *bytes;
-  int len, slen;
+  NSUInteger len, slen;
   
   if (!theCString)
     {
@@ -740,7 +742,8 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 - (NSComparisonResult) caseInsensitiveCCompare: (const char *) theCString
 {
-  int slen, len, clen, i;
+  NSUInteger slen, len, clen;
+    NSInteger i;
   const char *bytes;
   
   // Is this ok?
@@ -795,7 +798,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 {
   NSMutableArray *aMutableArray;
   NSRange r1, r2;
-  int len;
+  NSUInteger len;
   
   aMutableArray = [[NSMutableArray alloc] init];
   len = [self length];
@@ -848,10 +851,10 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (unichar) characterAtIndex: (int) theIndex
+- (unichar) characterAtIndex: (NSUInteger) theIndex
 {
   const char *bytes;
-  int i, len;
+  NSUInteger i, len;
   
   len = [self length];
 
@@ -878,12 +881,12 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (NSData *) unwrapWithLimit: (int) theQuoteLimit
+- (NSData *) unwrapWithLimit: (NSUInteger) theQuoteLimit
 {
   NSMutableData *aMutableData, *lines;
   NSData *aLine;
 
-  int i, len, quote_depth, line_quote_depth, line_start;
+  NSUInteger i, len, quote_depth, line_quote_depth, line_start;
   BOOL is_flowed;
 
   len = [self length];
@@ -1050,12 +1053,12 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (NSData *) wrapWithLimit: (int) theLimit
+- (NSData *) wrapWithLimit: (NSUInteger) theLimit
 {
   NSMutableData *aMutableData;
   NSData *aLine, *part;
   NSArray *lines;
-  int i, j, k, split;
+  NSUInteger i, j, k, split;
   int depth;
 
   // We first verify if the string is valid
@@ -1244,8 +1247,8 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
-- (NSData *) quoteWithLevel: (int) theLevel
-	      wrappingLimit: (int) theLimit
+- (NSData *) quoteWithLevel: (NSUInteger) theLevel
+	      wrappingLimit: (NSUInteger) theLimit
 {
   NSMutableData *aMutableData, *aQuotePrefix;
   NSData *aData, *aLine;
@@ -1334,9 +1337,9 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 - (void) insertCString: (const char *) theCString
-	       atIndex: (int) theIndex
+	       atIndex: (NSUInteger) theIndex
 {
-  int s_length, length;
+  NSUInteger s_length, length;
 
   if (!theCString)
     {
@@ -1385,7 +1388,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (void) replaceCRLFWithLF
 {
   unsigned char *bytes, *bi, *bo;
-  int delta, i,length;
+  NSUInteger delta, i,length;
   
   bytes = [self mutableBytes];
   length = [self length];
@@ -1415,7 +1418,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 {
   NSMutableData *aMutableData;
   unsigned char *bytes, *bi, *bo;
-  int delta, i, length;
+  NSUInteger delta, i, length;
   
   bi = bytes = [self mutableBytes];
   length = [self length];
@@ -1482,7 +1485,7 @@ int getValue(char c)
 //
 //
 //
-void nb64ChunkFor3Characters(char *buf, const char *inBuf, int theLength)
+void nb64ChunkFor3Characters(char *buf, const char *inBuf, NSUInteger theLength)
 {
   if (theLength >= 3)
     {

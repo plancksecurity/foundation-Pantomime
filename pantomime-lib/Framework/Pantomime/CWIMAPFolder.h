@@ -73,7 +73,7 @@ extern NSString* PantomimeMessageStoreFailed;
 @interface CWIMAPFolder : CWFolder
 {
   @private
-    unsigned int _uid_validity;
+    NSUInteger _uid_validity;
     BOOL _selected;
 }
 

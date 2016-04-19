@@ -180,7 +180,7 @@
 { 
   if (_allVisibleMessages == nil)
     {
-      int i, count;
+      NSUInteger i, count;
 
       count = [_allMessages count];
       _allVisibleMessages = [[NSMutableArray alloc] initWithCapacity: count];
@@ -405,7 +405,7 @@
 //
 - (NSUInteger) numberOfDeletedMessages
 {
-  int c, i, count;
+  NSUInteger c, i, count;
   
   c = [self count];
   count = 0;
@@ -450,7 +450,7 @@
 - (long) size;
 {
   long size;
-  int c, i;
+  NSUInteger c, i;
 
   c = [self count];
   size = 0;
@@ -508,7 +508,8 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 - (void) thread
 {
   NSMutableDictionary *id_table, *subject_table;
-  int i, count;
+  NSUInteger count;
+    NSInteger i;
 
   // We clean up ...
   TEST_RELEASE(_allContainers);
@@ -905,7 +906,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 //
 - (void) unthread
 {
-  int count;
+  NSUInteger count;
 
   count = [self count];
   
@@ -966,7 +967,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 - (void) setFlags: (CWFlags *) theFlags
          messages: (NSArray *) theMessages
 {
-  int c, i;
+  NSUInteger c, i;
 
   c = [theMessages count];
   for (i = 0; i < c; i++)
