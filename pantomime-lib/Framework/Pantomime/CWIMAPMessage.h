@@ -66,7 +66,7 @@
 	      notifies the delegate when the fetch has been completed.
   @result The raw source of the message, nil if not yet fully fetched.
 */
-- (NSData *) rawSource;
+- (NSData * _Nullable) rawSource;
 
 /*!
   @method setFlags:
@@ -75,7 +75,7 @@
 	      for this message with the flags specified in the argument.
   @param theFlags The new flags for the receiver.
 */
-- (void) setFlags: (CWFlags *) theFlags;
+- (void) setFlags: (CWFlags * _Nonnull) theFlags;
 
 @end
 

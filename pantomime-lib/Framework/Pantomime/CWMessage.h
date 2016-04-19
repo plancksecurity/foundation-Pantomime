@@ -38,36 +38,36 @@
 /*!
   @const PantomimeMessageFetchCompleted
 */
-extern NSString* PantomimeMessageFetchCompleted;
+extern NSString * _Nonnull const PantomimeMessageFetchCompleted;
 
 /*!
   @const PantomimeMessageFetchFailed
 */
-extern NSString* PantomimeMessageFetchFailed;
+extern NSString * _Nonnull const PantomimeMessageFetchFailed;
 
 /*!
   @const PantomimeMessagePrefetchCompleted
 */
-extern NSString* PantomimeMessagePrefetchCompleted;
+extern NSString * _Nonnull const PantomimeMessagePrefetchCompleted;
 
 /*!
   @const PantomimeMessagePrefetchFailed
 */
-extern NSString* PantomimeMessagePrefetchFailed;
+extern NSString * _Nonnull const PantomimeMessagePrefetchFailed;
 
 /*!
   @const PantomimeMessageChanged
   @discussion This notification is posted when message flags have changed
               but the called didn't ask for flag changes. 
 */
-extern NSString* PantomimeMessageChanged;
+extern NSString * _Nonnull const PantomimeMessageChanged;
 
 /*!
   @const PantomimeMessageExpunged
   @discussion This notification is posted when a message is expunged
               but the called didn't expunge the mailbox.
 */
-extern NSString* PantomimeMessageExpunged;
+extern NSString * _Nonnull const PantomimeMessageExpunged;
 
 
 @class CWFlags;
@@ -107,7 +107,7 @@ extern NSString* PantomimeMessageExpunged;
   @param theHeaders The NSDictionary instance holding all headers / values.
   @result A Message instance, nil on error.
 */
-- (id) initWithHeaders: (NSDictionary *) theHeaders;
+- (id _Nullable) initWithHeaders: (NSDictionary * _Nonnull) theHeaders;
 
 /*!
   @method initWithHeadersFromData:
@@ -117,7 +117,7 @@ extern NSString* PantomimeMessageExpunged;
   @param theHeaders The headers in their raw represnetation.
   @result A Message instance, nil on error.
 */
-- (id) initWithHeadersFromData: (NSData *) theHeaders;
+- (id _Nullable) initWithHeadersFromData: (NSData * _Nonnull) theHeaders;
 
 /*!
   @method from
@@ -125,14 +125,14 @@ extern NSString* PantomimeMessageExpunged;
               "From" header.
   @result The value of the "From" header, as an CWInternetAddress instance.
 */
-- (CWInternetAddress *) from;
+- (CWInternetAddress * _Nullable) from;
 
 /*!
   @method setFrom:
   @discussion This method is used to set the value of the "From:" header.
   @param theInternetAddress The CWInternetAddress instance.
 */
-- (void) setFrom: (CWInternetAddress *) theInternetAddress;
+- (void) setFrom: (CWInternetAddress * _Nonnull) theInternetAddress;
 
 /*!
   @method messageNumber
@@ -157,7 +157,7 @@ extern NSString* PantomimeMessageExpunged;
               the "Message-ID" header.
   @result The value of the "Message-ID" header.
 */
-- (NSString *) messageID;
+- (NSString * _Nullable) messageID;
 
 /*!
   @method setMessageID:
@@ -165,7 +165,7 @@ extern NSString* PantomimeMessageExpunged;
               the "Message-ID" header.
   @param theMessageID The value of the "Message-ID" header.
 */
-- (void) setMessageID: (NSString *) theMessageID;
+- (void) setMessageID: (NSString * _Nonnull) theMessageID;
 
 /*!
   @method inReplyTo
@@ -173,7 +173,7 @@ extern NSString* PantomimeMessageExpunged;
               the "In-Reply-To" header.
   @result The value of the "In-Reply-To" header.
 */
-- (NSString *) inReplyTo;
+- (NSString * _Nullable) inReplyTo;
 
 /*!
   @method setInReplyTo:
@@ -181,7 +181,7 @@ extern NSString* PantomimeMessageExpunged;
               the "In-Reply-To" header.
   @param theInReplyTo The value of the "In-Reply-To" header.
 */
-- (void) setInReplyTo: (NSString *) theInReplyTo;
+- (void) setInReplyTo: (NSString * _Nonnull) theInReplyTo;
 
 /*!
   @method receivedDate
@@ -189,7 +189,7 @@ extern NSString* PantomimeMessageExpunged;
               the "Date" header.
   @result The value of the "Date" header, as a NSCalendarDate instance.
 */
-- (NSDate *) receivedDate;
+- (NSDate * _Nullable) receivedDate;
 
 /*!
   @method setReceivedDate:
@@ -197,7 +197,7 @@ extern NSString* PantomimeMessageExpunged;
               the "Date" header.
   @param theDate The NSCalendarDate instance.
 */
-- (void) setReceivedDate: (NSDate *) theDate;
+- (void) setReceivedDate: (NSDate * _Nonnull) theDate;
 
 /*!
   @method addRecipient:
@@ -208,7 +208,7 @@ extern NSString* PantomimeMessageExpunged;
   @param theAddress The CWInternetAddress instance holding the
                     recipient to add to the list.
 */
-- (void) addRecipient: (CWInternetAddress *) theAddress;
+- (void) addRecipient: (CWInternetAddress * _Nonnull) theAddress;
 
 /*!
   @method removeRecipient:
@@ -216,7 +216,7 @@ extern NSString* PantomimeMessageExpunged;
               recipient from the receiver's list of recipients.
   @param theAddress The recipient to remove.
 */
-- (void) removeRecipient: (CWInternetAddress *) theAddress;
+- (void) removeRecipient: (CWInternetAddress * _Nonnull) theAddress;
 
 /*!
   @method recipients
@@ -224,7 +224,7 @@ extern NSString* PantomimeMessageExpunged;
               of the receiver. All recipient types are returned.
   @result The array of recipients which are all CWInternetAddress instances.
 */
-- (NSArray *) recipients;
+- (NSArray * _Nonnull) recipients;
 
 /*!
   @method setRecipients:
@@ -233,7 +233,7 @@ extern NSString* PantomimeMessageExpunged;
   @param theRecipients The array of CWInternetAddress instances to add
                        to the receiver's list of recipients.
 */
-- (void) setRecipients: (NSArray *) theRecipients;
+- (void) setRecipients: (NSArray * _Nonnull) theRecipients;
 
 /*!
   @method recipientsCount
@@ -256,14 +256,14 @@ extern NSString* PantomimeMessageExpunged;
   @result The value of the "Reply-To" header, as an array of CWInternetAddress instances.
           If there are none, nil is returned.
 */
-- (NSArray *) replyTo;
+- (NSArray * _Nullable) replyTo;
 
 /*!
   @method setReplyTo:
   @discussion This method is used to set the value of the "Reply-To:" header.
   @param theAddressList An array of CWInternetAddress instances.
 */
-- (void) setReplyTo: (NSArray *) theAddressList;
+- (void) setReplyTo: (NSArray * _Nonnull) theAddressList;
 
 /*!
   @method subject
@@ -271,14 +271,14 @@ extern NSString* PantomimeMessageExpunged;
               "Subject" header.
   @result The value of the "Subject" header.
 */
-- (NSString *) subject;
+- (NSString * _Nullable) subject;
 
 /*!
   @method setSubject:
   @discussion This method is used to set the value of the "Subject" header.
   @param theSubject The value to set.
 */
-- (void) setSubject: (NSString *) theSubject;
+- (void) setSubject: (NSString * _Nonnull) theSubject;
 
 /*!
   @method baseSubject
@@ -287,7 +287,7 @@ extern NSString* PantomimeMessageExpunged;
 	      but without the "re" or "fwd" (or whatever) prefix.
   @result The base subject.
 */
-- (NSString *) baseSubject;
+- (NSString * _Nullable) baseSubject;
 
 /*!
   @method setBaseSubject:
@@ -295,7 +295,7 @@ extern NSString* PantomimeMessageExpunged;
               the receiver.
   @param theBaseSubject The base subject to set.
 */
-- (void) setBaseSubject: (NSString *) theBaseSubject;
+- (void) setBaseSubject: (NSString * _Nonnull) theBaseSubject;
 
 /*!
   @method isInitialized
@@ -325,7 +325,7 @@ extern NSString* PantomimeMessageExpunged;
               the receiver.
   @result The CWFlags instance of the receiver.
 */
-- (CWFlags *) flags;
+- (CWFlags * _Nullable) flags;
 
 /*!
   @method setFlags:
@@ -334,7 +334,7 @@ extern NSString* PantomimeMessageExpunged;
 	      CWMessage sometimes overwrite this method.
   @param theFlags The new flags for the receiver.
 */
-- (void) setFlags: (CWFlags *) theFlags;
+- (void) setFlags: (CWFlags * _Nonnull) theFlags;
 
 /*!
   @method MIMEVersion
@@ -342,7 +342,7 @@ extern NSString* PantomimeMessageExpunged;
               "MIME-Version" header.
   @result The value of the header, nil if none was set.
 */
-- (NSString *) MIMEVersion;
+- (NSString * _Nullable) MIMEVersion;
 
 /*!
   @method setMIMEVersion:
@@ -351,7 +351,7 @@ extern NSString* PantomimeMessageExpunged;
 	      previously set.
   @param theMIMEVersion The new value for the header.
 */
-- (void) setMIMEVersion: (NSString *) theMIMEVersion;
+- (void) setMIMEVersion: (NSString * _Nonnull) theMIMEVersion;
 
 /*!
   @method reply:
@@ -364,7 +364,7 @@ extern NSString* PantomimeMessageExpunged;
                  The default mode is PantomimeNormalReplyMode.
   @result A CWMessage instance used for replying.
 */
-- (CWMessage *) reply: (PantomimeReplyMode) theMode;
+- (CWMessage * _Nullable) reply: (PantomimeReplyMode) theMode;
 
 /*!
   @method forward
@@ -375,7 +375,7 @@ extern NSString* PantomimeMessageExpunged;
   @param theMode The type of forward operation to do.
   @result A CWMessage instance used for forwarding.
 */
-- (CWMessage *) forward: (PantomimeForwardMode) theMode;
+- (CWMessage * _Nullable) forward: (PantomimeForwardMode) theMode;
 
 /*!
   @method addHeader: withValue:
@@ -384,8 +384,8 @@ extern NSString* PantomimeMessageExpunged;
   @param theName The header name, which should normally begin with an "X-".
   @param theValue The header value.
 */
-- (void) addHeader: (NSString *) theName
-         withValue: (NSString *) theValue;
+- (void) addHeader: (NSString * _Nonnull) theName
+         withValue: (NSString * _Nonnull) theValue;
 
 /*!
   @method folder
@@ -394,7 +394,7 @@ extern NSString* PantomimeMessageExpunged;
   @result The CWFolder instance in which the message is
           stored, nil if no folder holds the receiver.
 */
-- (CWFolder *) folder;
+- (CWFolder * _Nullable) folder;
 
 /*!
   @method setFolder:
@@ -402,7 +402,7 @@ extern NSString* PantomimeMessageExpunged;
               to the message.
   @param theFolder The folder which holds the receiver.
 */
-- (void) setFolder: (CWFolder *) theFolder;
+- (void) setFolder: (CWFolder * _Nonnull) theFolder;
 
 /*!
   @method rawSource
@@ -414,7 +414,7 @@ extern NSString* PantomimeMessageExpunged;
   @result The raw representation, or nil if it has not
           been loaded.
 */
-- (NSData *) rawSource;
+- (NSData * _Nullable) rawSource;
 
 /*!
   @method setRawSource:
@@ -423,7 +423,7 @@ extern NSString* PantomimeMessageExpunged;
 	      when invoking this method.
   @param theRawSource The raw source of the message.
 */
-- (void) setRawSource: (NSData *) theRawSource;
+- (void) setRawSource: (NSData * _Nonnull) theRawSource;
 
 /*!
   @method organization
@@ -431,7 +431,7 @@ extern NSString* PantomimeMessageExpunged;
               "Organization" header.
   @result The value of the "Organization" header.
 */
-- (NSString *) organization;
+- (NSString * _Nullable) organization;
 
 /*!
   @method setOrganization:
@@ -439,7 +439,7 @@ extern NSString* PantomimeMessageExpunged;
               "Organization" header.
   @param theOrganization The new value of the header.
 */
-- (void) setOrganization: (NSString *) theOrganization;
+- (void) setOrganization: (NSString * _Nonnull) theOrganization;
 
 /*!
   @method propertyForKey:
@@ -447,7 +447,7 @@ extern NSString* PantomimeMessageExpunged;
                specified key.
   @result The property for the specified key, nil if key isn't found.
 */
-- (id) propertyForKey: (id) theKey;
+- (id _Nullable) propertyForKey: (id _Nonnull) theKey;
 
 /*!
   @method setProperty: forKey:
@@ -458,8 +458,8 @@ extern NSString* PantomimeMessageExpunged;
   @param theProperty The value of the property.
   @param theKey The key of the property.
 */
-- (void) setProperty: (id) theProperty
-              forKey: (id) theKey;
+- (void) setProperty: (id _Nonnull) theProperty
+              forKey: (id _Nonnull) theKey;
 
 /*!
   @method resentDate
@@ -467,7 +467,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-Date" header.
   @result The value of the "Resent-Date" header.
 */
-- (NSDate *) resentDate;
+- (NSDate * _Nullable) resentDate;
 
 /*!
   @method setResentDate:
@@ -475,7 +475,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-Date" header.
   @param theResentDate The new value of the header.
 */
-- (void) setResentDate: (NSDate *) theResentDate;
+- (void) setResentDate: (NSDate * _Nonnull) theResentDate;
 
 /*!
   @method resentFrom
@@ -483,7 +483,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-From" header.
   @result The value of the "Resent-From" header.
 */
-- (CWInternetAddress *) resentFrom;
+- (CWInternetAddress * _Nullable) resentFrom;
 
 /*!
   @method setResentFrom:
@@ -491,7 +491,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-From" header.
   @param theInternetAddress The new value of the header.
 */
-- (void) setResentFrom: (CWInternetAddress *) theInternetAddress;
+- (void) setResentFrom: (CWInternetAddress * _Nullable) theInternetAddress;
 
 /*!
   @method resentMessageID
@@ -499,7 +499,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-Message-ID" header.
   @result The value of the "Resent-Message-ID" header.
 */
-- (NSString *) resentMessageID;
+- (NSString * _Nullable) resentMessageID;
 
 /*!
   @method setResentMessageID:
@@ -507,7 +507,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-Message-ID" header.
   @param theResentMessageID The new value of the header.
 */
-- (void) setResentMessageID: (NSString *) theResentMessageID;
+- (void) setResentMessageID: (NSString * _Nonnull) theResentMessageID;
 
 /*!
   @method resentSubject
@@ -515,7 +515,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-Subject" header.
   @result The value of the "Resent-Subject" header.
 */
-- (NSString *) resentSubject;
+- (NSString * _Nullable) resentSubject;
 
 /*!
   @method setResentSubject:
@@ -523,7 +523,7 @@ extern NSString* PantomimeMessageExpunged;
               "Resent-Subject" header.
   @param theResentSubject The new value of the header.
 */
-- (void) setResentSubject: (NSString *) theResentSubject;
+- (void) setResentSubject: (NSString * _Nonnull) theResentSubject;
 
 /*!
   @method allReferences
@@ -534,7 +534,7 @@ extern NSString* PantomimeMessageExpunged;
           to a NSArray of NSString instances. Each instance is normally
 	  a Message-ID.
 */
-- (NSArray *) allReferences;
+- (NSArray * _Nullable) allReferences;
 
 /*!
   @method setReferences:
@@ -542,7 +542,7 @@ extern NSString* PantomimeMessageExpunged;
               header, replacing any previously defined value.
   @param theReferences The array of references.
 */
-- (void) setReferences: (NSArray *) theReferences;
+- (void) setReferences: (NSArray * _Nonnull) theReferences;
 
 /*!
   @method addHeadersFromData:record:
@@ -554,7 +554,8 @@ extern NSString* PantomimeMessageExpunged;
   @param The additional headers, in their raw representation.
   @param theRecord The cache_record to update.
 */
-- (void) addHeadersFromData: (NSData *) theHeaders  record: (CWCacheRecord *) theRecord;
+- (void) addHeadersFromData: (NSData * _Nonnull) theHeaders
+                     record: (CWCacheRecord * _Nonnull) theRecord;
 
 /*!
   @method setHeadersFromData:record:
@@ -565,7 +566,8 @@ extern NSString* PantomimeMessageExpunged;
 	      the decoded information.
   @param theHeaders The bytes to use.
 */
-- (void) setHeadersFromData: (NSData *) theHeaders record: (CWCacheRecord *) theRecord;
+- (void) setHeadersFromData: (NSData * _Nonnull) theHeaders
+                     record: (CWCacheRecord * _Nonnull) theRecord;
 @end
 
 
@@ -574,14 +576,14 @@ extern NSString* PantomimeMessageExpunged;
 //
 @interface CWMessage (Comparing)
 
-- (int) compareAccordingToNumber: (CWMessage *) aMessage;
-- (int) reverseCompareAccordingToNumber: (CWMessage *) aMessage;
-- (int) compareAccordingToDate: (CWMessage *) aMessage;
-- (int) reverseCompareAccordingToDate: (CWMessage *) aMessage;
-- (int) compareAccordingToSender: (CWMessage *) aMessage;
-- (int) reverseCompareAccordingToSender: (CWMessage *) aMessage;
-- (int) compareAccordingToSize: (CWMessage *) aMessage;
-- (int) reverseCompareAccordingToSize: (CWMessage *) aMessage;
+- (int) compareAccordingToNumber: (CWMessage * _Nonnull) aMessage;
+- (int) reverseCompareAccordingToNumber: (CWMessage * _Nonnull) aMessage;
+- (int) compareAccordingToDate: (CWMessage * _Nonnull) aMessage;
+- (int) reverseCompareAccordingToDate: (CWMessage *_Nonnull) aMessage;
+- (int) compareAccordingToSender: (CWMessage * _Nonnull) aMessage;
+- (int) reverseCompareAccordingToSender: (CWMessage * _Nonnull) aMessage;
+- (int) compareAccordingToSize: (CWMessage * _Nonnull) aMessage;
+- (int) reverseCompareAccordingToSize: (CWMessage * _Nonnull) aMessage;
 
 @end
 
