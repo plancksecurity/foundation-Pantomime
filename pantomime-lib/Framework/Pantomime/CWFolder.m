@@ -407,7 +407,7 @@
 {
   int c, i, count;
   
-  c = [_allMessages count];
+  c = [self count];
   count = 0;
 
   for (i = 0; i < c; i++)
@@ -429,7 +429,7 @@
 {
   NSUInteger i, c, count;
   
-  c = [_allMessages count];
+  c = [self count];
   count = 0;
   
   for (i = 0; i < c; i++)
@@ -452,7 +452,7 @@
   long size;
   int c, i;
 
-  c = [_allMessages count];
+  c = [self count];
   size = 0;
   
   for (i = 0; i < c; i++)
@@ -523,7 +523,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
   //
   // 1. A., B. and C.
   //
-  count = [_allMessages count];
+  count = [self count];
   for (i = 0; i < count; i++)
     {
       CWContainer *aContainer;
@@ -907,7 +907,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 {
   int count;
 
-  count = [_allMessages count];
+  count = [self count];
   
   while (count--)
     {

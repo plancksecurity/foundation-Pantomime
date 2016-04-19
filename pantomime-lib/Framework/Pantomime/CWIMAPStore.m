@@ -1703,7 +1703,7 @@ static inline int has_literal(char *buf, int c)
 
   if (_currentQueueObject && _currentQueueObject->command != IMAP_SELECT &&
       _selectedFolder && 
-      n > [_selectedFolder.allMessages count])
+      n > [_selectedFolder count])
     {
       unsigned int uid;
       
@@ -1746,7 +1746,7 @@ static inline int has_literal(char *buf, int c)
   // we have so far. It should be safe since the view hasn't even
   // had the chance to display them.
   //
-  if (msn > [_selectedFolder.allMessages count]) return;
+  if (msn > [_selectedFolder count]) return;
 
   aMessage = [_selectedFolder.allMessages objectAtIndex: (msn-1)];
   RETAIN_VOID(aMessage);
@@ -1769,7 +1769,7 @@ static inline int has_literal(char *buf, int c)
     }
   
   // We update all MSNs starting from the message that has been expunged.
-  for (i = (msn-1); i < [_selectedFolder.allMessages count]; i++)
+  for (i = (msn-1); i < [_selectedFolder count]; i++)
     {
       [[_selectedFolder.allMessages objectAtIndex: i] setMessageNumber: (i+1)];
     }
@@ -1980,7 +1980,7 @@ static inline int has_literal(char *buf, int c)
 	  // is really the messages in our IMAP folder. That is true since we
 	  // synchronized our cache when opening the folder, in IMAPFolder: -prefetch.
 	  //
-	  if (msn > [_selectedFolder.allMessages count])
+	  if (msn > [_selectedFolder count])
 	    {
 	      //NSLog(@"============ NEW MESSAGE ======================");
 	      aMessage = [[CWIMAPMessage alloc] init];
@@ -2771,7 +2771,7 @@ static inline int has_literal(char *buf, int c)
       //NSLog(@"Folder count (to remove UID) = %d", [_selectedFolder->allMessages count]);
       b = NO;
 
-      for (i = ([_selectedFolder.allMessages count]-1); i >= 0; i--)
+      for (i = ([_selectedFolder count]-1); i >= 0; i--)
 	{   
 	  aMessage = [_selectedFolder.allMessages objectAtIndex: i];
 	  //aMessage = [theCache objectAtIndex: i];
