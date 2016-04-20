@@ -81,11 +81,6 @@
 		438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
 		43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPantomimeStatic.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		43980EF41CBD2D4900A7FC3C /* CWLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CWLogging.h; sourceTree = "<group>"; };
-		43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		43E854C01CB7EA9A006867C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		43E854C31CB7EA9A006867C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		43E854C51CB7EA9A006867C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		43E854C81CB7EA9A006867C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		43E854CA1CB7EA9A006867C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43E854CF1CB7EA9B006867C0 /* PantomimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PantomimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E854D31CB7EA9B006867C0 /* PantomimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PantomimeTests.swift; sourceTree = "<group>"; };
@@ -189,7 +184,6 @@
 		43E8556D1CB7EBDD006867C0 /* NSString+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extensions.h"; sourceTree = "<group>"; };
 		43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extensions.m"; sourceTree = "<group>"; };
 		43E8556F1CB7EBDD006867C0 /* Pantomime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pantomime.h; sourceTree = "<group>"; };
-		43E855B71CB7EC84006867C0 /* Pantomime-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pantomime-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,13 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				43E854E81CB7EBDD006867C0 /* Pantomime */,
-				43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */,
-				43E854C01CB7EA9A006867C0 /* ViewController.swift */,
-				43E854C21CB7EA9A006867C0 /* Main.storyboard */,
-				43E854C51CB7EA9A006867C0 /* Assets.xcassets */,
-				43E854C71CB7EA9A006867C0 /* LaunchScreen.storyboard */,
 				43E854CA1CB7EA9A006867C0 /* Info.plist */,
-				43E855B71CB7EC84006867C0 /* Pantomime-Bridging-Header.h */,
 			);
 			path = Pantomime;
 			sourceTree = "<group>";
@@ -526,25 +514,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		43E854C21CB7EA9A006867C0 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				43E854C31CB7EA9A006867C0 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		43E854C71CB7EA9A006867C0 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				43E854C81CB7EA9A006867C0 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		43980E611CBD1B3E00A7FC3C /* Debug */ = {
