@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		433149331CBCEA1100AFC030 /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
-		433149361CBCECE200AFC030 /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149351CBCECE200AFC030 /* NSDate+RFC2822.m */; };
-		438A29EC1CBCF037000E48F7 /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
 		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
 		43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
 		43980E691CBD1B5D00A7FC3C /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149351CBCECE200AFC030 /* NSDate+RFC2822.m */; };
@@ -60,82 +57,8 @@
 		43980EC81CBD1B5D00A7FC3C /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855681CB7EBDD006867C0 /* NSData+Extensions.m */; };
 		43980ECA1CBD1B5D00A7FC3C /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; };
 		43980ECC1CBD1B5D00A7FC3C /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */; };
-		43980EDD1CBD1CF000A7FC3C /* libPantomimeStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */; };
-		43E854BF1CB7EA9A006867C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */; };
-		43E854C11CB7EA9A006867C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854C01CB7EA9A006867C0 /* ViewController.swift */; };
-		43E854C41CB7EA9A006867C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43E854C21CB7EA9A006867C0 /* Main.storyboard */; };
-		43E854C61CB7EA9A006867C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43E854C51CB7EA9A006867C0 /* Assets.xcassets */; };
-		43E854C91CB7EA9A006867C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43E854C71CB7EA9A006867C0 /* LaunchScreen.storyboard */; };
 		43E854D41CB7EA9B006867C0 /* PantomimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854D31CB7EA9B006867C0 /* PantomimeTests.swift */; };
-		43E854E11CB7EBB8006867C0 /* ConnectInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854DF1CB7EBB8006867C0 /* ConnectInfo.swift */; };
-		43E854E21CB7EBB8006867C0 /* ImapSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854E01CB7EBB8006867C0 /* ImapSync.swift */; };
-		43E854E61CB7EBC2006867C0 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E854E41CB7EBC2006867C0 /* Log.swift */; };
-		43E855741CB7EBDD006867C0 /* CWCharset.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EC1CB7EBDD006867C0 /* CWCharset.m */; };
-		43E855751CB7EBDD006867C0 /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EF1CB7EBDD006867C0 /* CWConstants.m */; };
-		43E855761CB7EBDD006867C0 /* CWContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F11CB7EBDD006867C0 /* CWContainer.m */; };
-		43E855781CB7EBDD006867C0 /* CWFlags.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F51CB7EBDD006867C0 /* CWFlags.m */; };
-		43E855791CB7EBDD006867C0 /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F71CB7EBDD006867C0 /* CWFolder.m */; };
-		43E8557A1CB7EBDD006867C0 /* CWFolderInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F91CB7EBDD006867C0 /* CWFolderInformation.m */; };
-		43E8557C1CB7EBDD006867C0 /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
-		43E8557D1CB7EBDD006867C0 /* CWIMAPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FF1CB7EBDD006867C0 /* CWIMAPMessage.m */; };
-		43E8557E1CB7EBDD006867C0 /* CWIMAPStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855011CB7EBDD006867C0 /* CWIMAPStore.m */; };
-		43E8557F1CB7EBDD006867C0 /* CWInternetAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855031CB7EBDD006867C0 /* CWInternetAddress.m */; };
-		43E855801CB7EBDD006867C0 /* CWISO8859_1.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855051CB7EBDD006867C0 /* CWISO8859_1.m */; };
-		43E855811CB7EBDD006867C0 /* CWISO8859_10.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855071CB7EBDD006867C0 /* CWISO8859_10.m */; };
-		43E855821CB7EBDD006867C0 /* CWISO8859_11.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855091CB7EBDD006867C0 /* CWISO8859_11.m */; };
-		43E855831CB7EBDD006867C0 /* CWISO8859_13.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8550B1CB7EBDD006867C0 /* CWISO8859_13.m */; };
-		43E855841CB7EBDD006867C0 /* CWISO8859_14.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8550D1CB7EBDD006867C0 /* CWISO8859_14.m */; };
-		43E855851CB7EBDD006867C0 /* CWISO8859_15.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8550F1CB7EBDD006867C0 /* CWISO8859_15.m */; };
-		43E855861CB7EBDD006867C0 /* CWISO8859_2.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855111CB7EBDD006867C0 /* CWISO8859_2.m */; };
-		43E855871CB7EBDD006867C0 /* CWISO8859_3.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855131CB7EBDD006867C0 /* CWISO8859_3.m */; };
-		43E855881CB7EBDD006867C0 /* CWISO8859_4.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855151CB7EBDD006867C0 /* CWISO8859_4.m */; };
-		43E855891CB7EBDD006867C0 /* CWISO8859_5.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855171CB7EBDD006867C0 /* CWISO8859_5.m */; };
-		43E8558A1CB7EBDD006867C0 /* CWISO8859_6.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855191CB7EBDD006867C0 /* CWISO8859_6.m */; };
-		43E8558B1CB7EBDD006867C0 /* CWISO8859_7.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8551B1CB7EBDD006867C0 /* CWISO8859_7.m */; };
-		43E8558C1CB7EBDD006867C0 /* CWISO8859_8.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8551D1CB7EBDD006867C0 /* CWISO8859_8.m */; };
-		43E8558D1CB7EBDD006867C0 /* CWISO8859_9.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8551F1CB7EBDD006867C0 /* CWISO8859_9.m */; };
-		43E8558E1CB7EBDD006867C0 /* CWKOI8_R.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855211CB7EBDD006867C0 /* CWKOI8_R.m */; };
-		43E8558F1CB7EBDD006867C0 /* CWKOI8_U.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855231CB7EBDD006867C0 /* CWKOI8_U.m */; };
-		43E855961CB7EBDD006867C0 /* CWMacOSXGlue.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855311CB7EBDD006867C0 /* CWMacOSXGlue.m */; };
-		43E855971CB7EBDD006867C0 /* CWMD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855331CB7EBDD006867C0 /* CWMD5.m */; };
-		43E855981CB7EBDD006867C0 /* CWMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855351CB7EBDD006867C0 /* CWMessage.m */; };
-		43E855991CB7EBDD006867C0 /* CWMIMEMultipart.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855371CB7EBDD006867C0 /* CWMIMEMultipart.m */; };
-		43E8559A1CB7EBDD006867C0 /* CWMIMEUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855391CB7EBDD006867C0 /* CWMIMEUtility.m */; };
-		43E8559B1CB7EBDD006867C0 /* CWParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8553B1CB7EBDD006867C0 /* CWParser.m */; };
-		43E8559C1CB7EBDD006867C0 /* CWPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8553D1CB7EBDD006867C0 /* CWPart.m */; };
-		43E855A21CB7EBDD006867C0 /* CWRegEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855491CB7EBDD006867C0 /* CWRegEx.m */; };
-		43E855A41CB7EBDD006867C0 /* CWService.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8554D1CB7EBDD006867C0 /* CWService.m */; };
-		43E855A51CB7EBDD006867C0 /* CWSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8554F1CB7EBDD006867C0 /* CWSMTP.m */; };
-		43E855A71CB7EBDD006867C0 /* CWURLName.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855551CB7EBDD006867C0 /* CWURLName.m */; };
-		43E855A81CB7EBDD006867C0 /* CWUUFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855571CB7EBDD006867C0 /* CWUUFile.m */; };
-		43E855A91CB7EBDD006867C0 /* CWVirtualFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855591CB7EBDD006867C0 /* CWVirtualFolder.m */; };
-		43E855AA1CB7EBDD006867C0 /* CWWINDOWS_1250.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555B1CB7EBDD006867C0 /* CWWINDOWS_1250.m */; };
-		43E855AB1CB7EBDD006867C0 /* CWWINDOWS_1251.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555D1CB7EBDD006867C0 /* CWWINDOWS_1251.m */; };
-		43E855AC1CB7EBDD006867C0 /* CWWINDOWS_1252.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555F1CB7EBDD006867C0 /* CWWINDOWS_1252.m */; };
-		43E855AD1CB7EBDD006867C0 /* CWWINDOWS_1253.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */; };
-		43E855AE1CB7EBDD006867C0 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; };
-		43E855B11CB7EBDD006867C0 /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855681CB7EBDD006867C0 /* NSData+Extensions.m */; };
-		43E855B31CB7EBDD006867C0 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; };
-		43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */; };
-		43E855C71CB80E25006867C0 /* SmtpSend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E855C61CB80E25006867C0 /* SmtpSend.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		43980EDB1CBD1CE300A7FC3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 43E854B31CB7EA9A006867C0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 43980E5A1CBD1B3E00A7FC3C;
-			remoteInfo = PantomimeStatic;
-		};
-		43E854D01CB7EA9B006867C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 43E854B31CB7EA9A006867C0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 43E854BA1CB7EA9A006867C0;
-			remoteInfo = Pantomime;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		43980E591CBD1B3E00A7FC3C /* CopyFiles */ = {
@@ -158,7 +81,6 @@
 		438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
 		43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPantomimeStatic.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		43980EF41CBD2D4900A7FC3C /* CWLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CWLogging.h; sourceTree = "<group>"; };
-		43E854BB1CB7EA9A006867C0 /* Pantomime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pantomime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		43E854C01CB7EA9A006867C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		43E854C31CB7EA9A006867C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -168,9 +90,6 @@
 		43E854CF1CB7EA9B006867C0 /* PantomimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PantomimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		43E854D31CB7EA9B006867C0 /* PantomimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PantomimeTests.swift; sourceTree = "<group>"; };
 		43E854D51CB7EA9B006867C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		43E854DF1CB7EBB8006867C0 /* ConnectInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectInfo.swift; sourceTree = "<group>"; };
-		43E854E01CB7EBB8006867C0 /* ImapSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImapSync.swift; sourceTree = "<group>"; };
-		43E854E41CB7EBC2006867C0 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		43E854E91CB7EBDD006867C0 /* CWCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheManager.h; sourceTree = "<group>"; };
 		43E854EB1CB7EBDD006867C0 /* CWCharset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCharset.h; sourceTree = "<group>"; };
 		43E854EC1CB7EBDD006867C0 /* CWCharset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCharset.m; sourceTree = "<group>"; };
@@ -271,7 +190,6 @@
 		43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extensions.m"; sourceTree = "<group>"; };
 		43E8556F1CB7EBDD006867C0 /* Pantomime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pantomime.h; sourceTree = "<group>"; };
 		43E855B71CB7EC84006867C0 /* Pantomime-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pantomime-Bridging-Header.h"; sourceTree = "<group>"; };
-		43E855C61CB80E25006867C0 /* SmtpSend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmtpSend.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,14 +197,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		43E854B81CB7EA9A006867C0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				43980EDD1CBD1CF000A7FC3C /* libPantomimeStatic.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,7 +230,6 @@
 		43E854BC1CB7EA9A006867C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				43E854BB1CB7EA9A006867C0 /* Pantomime.app */,
 				43E854CF1CB7EA9B006867C0 /* PantomimeTests.xctest */,
 				43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */,
 			);
@@ -331,8 +240,6 @@
 			isa = PBXGroup;
 			children = (
 				43E854E81CB7EBDD006867C0 /* Pantomime */,
-				43E854E31CB7EBC2006867C0 /* Util */,
-				43E854DE1CB7EBB8006867C0 /* Sync */,
 				43E854BE1CB7EA9A006867C0 /* AppDelegate.swift */,
 				43E854C01CB7EA9A006867C0 /* ViewController.swift */,
 				43E854C21CB7EA9A006867C0 /* Main.storyboard */,
@@ -351,24 +258,6 @@
 				43E854D51CB7EA9B006867C0 /* Info.plist */,
 			);
 			path = PantomimeTests;
-			sourceTree = "<group>";
-		};
-		43E854DE1CB7EBB8006867C0 /* Sync */ = {
-			isa = PBXGroup;
-			children = (
-				43E854DF1CB7EBB8006867C0 /* ConnectInfo.swift */,
-				43E854E01CB7EBB8006867C0 /* ImapSync.swift */,
-				43E855C61CB80E25006867C0 /* SmtpSend.swift */,
-			);
-			path = Sync;
-			sourceTree = "<group>";
-		};
-		43E854E31CB7EBC2006867C0 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				43E854E41CB7EBC2006867C0 /* Log.swift */,
-			);
-			path = Util;
 			sourceTree = "<group>";
 		};
 		43E854E81CB7EBDD006867C0 /* Pantomime */ = {
@@ -505,24 +394,6 @@
 			productReference = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		43E854BA1CB7EA9A006867C0 /* Pantomime */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 43E854D81CB7EA9B006867C0 /* Build configuration list for PBXNativeTarget "Pantomime" */;
-			buildPhases = (
-				43E854B71CB7EA9A006867C0 /* Sources */,
-				43E854B81CB7EA9A006867C0 /* Frameworks */,
-				43E854B91CB7EA9A006867C0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				43980EDC1CBD1CE300A7FC3C /* PBXTargetDependency */,
-			);
-			name = Pantomime;
-			productName = Pantomime;
-			productReference = 43E854BB1CB7EA9A006867C0 /* Pantomime.app */;
-			productType = "com.apple.product-type.application";
-		};
 		43E854CE1CB7EA9B006867C0 /* PantomimeTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43E854DB1CB7EA9B006867C0 /* Build configuration list for PBXNativeTarget "PantomimeTests" */;
@@ -534,7 +405,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				43E854D11CB7EA9B006867C0 /* PBXTargetDependency */,
 			);
 			name = PantomimeTests;
 			productName = PantomimeTests;
@@ -552,9 +422,6 @@
 				ORGANIZATIONNAME = "pEp Security S.A.";
 				TargetAttributes = {
 					43980E5A1CBD1B3E00A7FC3C = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					43E854BA1CB7EA9A006867C0 = {
 						CreatedOnToolsVersion = 7.3;
 					};
 					43E854CE1CB7EA9B006867C0 = {
@@ -576,7 +443,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				43E854BA1CB7EA9A006867C0 /* Pantomime */,
 				43E854CE1CB7EA9B006867C0 /* PantomimeTests */,
 				43980E5A1CBD1B3E00A7FC3C /* PantomimeStatic */,
 			);
@@ -584,16 +450,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		43E854B91CB7EA9A006867C0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				43E854C91CB7EA9A006867C0 /* LaunchScreen.storyboard in Resources */,
-				43E854C61CB7EA9A006867C0 /* Assets.xcassets in Resources */,
-				43E854C41CB7EA9A006867C0 /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		43E854CD1CB7EA9B006867C0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -661,69 +517,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		43E854B71CB7EA9A006867C0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				43E855971CB7EBDD006867C0 /* CWMD5.m in Sources */,
-				43E855991CB7EBDD006867C0 /* CWMIMEMultipart.m in Sources */,
-				43E855761CB7EBDD006867C0 /* CWContainer.m in Sources */,
-				43E8558C1CB7EBDD006867C0 /* CWISO8859_8.m in Sources */,
-				43E8557A1CB7EBDD006867C0 /* CWFolderInformation.m in Sources */,
-				43E855861CB7EBDD006867C0 /* CWISO8859_2.m in Sources */,
-				43E854C11CB7EA9A006867C0 /* ViewController.swift in Sources */,
-				43E8557D1CB7EBDD006867C0 /* CWIMAPMessage.m in Sources */,
-				43E855A51CB7EBDD006867C0 /* CWSMTP.m in Sources */,
-				43E8559A1CB7EBDD006867C0 /* CWMIMEUtility.m in Sources */,
-				43E855871CB7EBDD006867C0 /* CWISO8859_3.m in Sources */,
-				43E855741CB7EBDD006867C0 /* CWCharset.m in Sources */,
-				43E855AB1CB7EBDD006867C0 /* CWWINDOWS_1251.m in Sources */,
-				43E855A71CB7EBDD006867C0 /* CWURLName.m in Sources */,
-				43E855A41CB7EBDD006867C0 /* CWService.m in Sources */,
-				43E8557C1CB7EBDD006867C0 /* CWIMAPFolder.m in Sources */,
-				43E855891CB7EBDD006867C0 /* CWISO8859_5.m in Sources */,
-				43E855841CB7EBDD006867C0 /* CWISO8859_14.m in Sources */,
-				438A29EC1CBCF037000E48F7 /* CWTCPConnection.m in Sources */,
-				43E855AC1CB7EBDD006867C0 /* CWWINDOWS_1252.m in Sources */,
-				43E8558D1CB7EBDD006867C0 /* CWISO8859_9.m in Sources */,
-				43E855B41CB7EBDD006867C0 /* NSString+Extensions.m in Sources */,
-				43E855B11CB7EBDD006867C0 /* NSData+Extensions.m in Sources */,
-				43E855C71CB80E25006867C0 /* SmtpSend.swift in Sources */,
-				43E854E21CB7EBB8006867C0 /* ImapSync.swift in Sources */,
-				43E855811CB7EBDD006867C0 /* CWISO8859_10.m in Sources */,
-				43E854E61CB7EBC2006867C0 /* Log.swift in Sources */,
-				43E8558F1CB7EBDD006867C0 /* CWKOI8_U.m in Sources */,
-				43E8558A1CB7EBDD006867C0 /* CWISO8859_6.m in Sources */,
-				43E8558E1CB7EBDD006867C0 /* CWKOI8_R.m in Sources */,
-				43E855B31CB7EBDD006867C0 /* NSScanner+Extensions.m in Sources */,
-				43E855981CB7EBDD006867C0 /* CWMessage.m in Sources */,
-				43E8559B1CB7EBDD006867C0 /* CWParser.m in Sources */,
-				43E855801CB7EBDD006867C0 /* CWISO8859_1.m in Sources */,
-				43E855821CB7EBDD006867C0 /* CWISO8859_11.m in Sources */,
-				43E854BF1CB7EA9A006867C0 /* AppDelegate.swift in Sources */,
-				43E8557F1CB7EBDD006867C0 /* CWInternetAddress.m in Sources */,
-				43E8557E1CB7EBDD006867C0 /* CWIMAPStore.m in Sources */,
-				43E855AA1CB7EBDD006867C0 /* CWWINDOWS_1250.m in Sources */,
-				43E855751CB7EBDD006867C0 /* CWConstants.m in Sources */,
-				433149331CBCEA1100AFC030 /* CWCacheRecord.m in Sources */,
-				43E855791CB7EBDD006867C0 /* CWFolder.m in Sources */,
-				43E8559C1CB7EBDD006867C0 /* CWPart.m in Sources */,
-				43E855A21CB7EBDD006867C0 /* CWRegEx.m in Sources */,
-				43E854E11CB7EBB8006867C0 /* ConnectInfo.swift in Sources */,
-				43E855961CB7EBDD006867C0 /* CWMacOSXGlue.m in Sources */,
-				43E855831CB7EBDD006867C0 /* CWISO8859_13.m in Sources */,
-				43E855781CB7EBDD006867C0 /* CWFlags.m in Sources */,
-				43E855AE1CB7EBDD006867C0 /* CWWINDOWS_1254.m in Sources */,
-				43E855A91CB7EBDD006867C0 /* CWVirtualFolder.m in Sources */,
-				433149361CBCECE200AFC030 /* NSDate+RFC2822.m in Sources */,
-				43E855881CB7EBDD006867C0 /* CWISO8859_4.m in Sources */,
-				43E855AD1CB7EBDD006867C0 /* CWWINDOWS_1253.m in Sources */,
-				43E8558B1CB7EBDD006867C0 /* CWISO8859_7.m in Sources */,
-				43E855A81CB7EBDD006867C0 /* CWUUFile.m in Sources */,
-				43E855851CB7EBDD006867C0 /* CWISO8859_15.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		43E854CB1CB7EA9B006867C0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -733,19 +526,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		43980EDC1CBD1CE300A7FC3C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 43980E5A1CBD1B3E00A7FC3C /* PantomimeStatic */;
-			targetProxy = 43980EDB1CBD1CE300A7FC3C /* PBXContainerItemProxy */;
-		};
-		43E854D11CB7EA9B006867C0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 43E854BA1CB7EA9A006867C0 /* Pantomime */;
-			targetProxy = 43E854D01CB7EA9B006867C0 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		43E854C21CB7EA9A006867C0 /* Main.storyboard */ = {
@@ -874,32 +654,6 @@
 			};
 			name = Release;
 		};
-		43E854D91CB7EA9B006867C0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = Pantomime/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.Pantomime";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Pantomime/Pantomime-Bridging-Header.h";
-			};
-			name = Debug;
-		};
-		43E854DA1CB7EA9B006867C0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = Pantomime/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.Pantomime";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Pantomime/Pantomime-Bridging-Header.h";
-			};
-			name = Release;
-		};
 		43E854DC1CB7EA9B006867C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -941,15 +695,6 @@
 			buildConfigurations = (
 				43E854D61CB7EA9B006867C0 /* Debug */,
 				43E854D71CB7EA9B006867C0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		43E854D81CB7EA9B006867C0 /* Build configuration list for PBXNativeTarget "Pantomime" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				43E854D91CB7EA9B006867C0 /* Debug */,
-				43E854DA1CB7EA9B006867C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
