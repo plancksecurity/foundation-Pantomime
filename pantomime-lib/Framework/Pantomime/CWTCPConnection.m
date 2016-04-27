@@ -183,7 +183,8 @@ static NSString *comp = @"CWTCPConnection";
             break;
         case NSStreamEventErrorOccurred:
             [self.logger infoComponent:comp message:@"NSStreamEventErrorOccurred"];
-            [self.delegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
+            // We abuse ET_EDESC for error indicication
+            [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             break;
         case NSStreamEventEndEncountered:
             [self.logger infoComponent:comp message:@"NSStreamEventEndEncountered"];

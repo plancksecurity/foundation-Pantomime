@@ -499,6 +499,14 @@
 
     case ET_EDESC:
       //NSLog(@"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+            if (_connected) {
+                POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
+                PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+            } else {
+                POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
+                PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
+                                   PantomimeConnectionTimedOut);
+            }
       break;
 #endif
 
