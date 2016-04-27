@@ -958,92 +958,86 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
-//
-// This method appends theCommand to the IMAP tag
-// and sends it to the server.
-//
-// It then sets the last command (w/o the tag) that has been sent.
-//
-// If the server is already processing a query, it queues it in _queue.
-//
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary *) theInfo  arguments: (NSString *) theFormat, ...
 {
-  if (theCommand == IMAP_EMPTY_QUEUE)
+    va_list args;
+
+    va_start(args, theFormat);
+    NSString *aString = [[NSString alloc] initWithFormat: theFormat  arguments: args];
+    [self sendCommand:theCommand info:theInfo string:aString];
+}
+
+- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+              string:(NSString * _Nonnull)theString
+{
+    if (theCommand == IMAP_EMPTY_QUEUE)
     {
-      if ([_queue count])
-	{
-	  // We dequeue the first inserted command from the queue.
-	  _currentQueueObject = [_queue lastObject];
-	}
-      else
-	{
-	  // The queue is empty, we have nothing more to do...
-	  _currentQueueObject = nil;
-	  return;
-	}
+        if ([_queue count])
+        {
+            // We dequeue the first inserted command from the queue.
+            _currentQueueObject = [_queue lastObject];
+        }
+        else
+        {
+            // The queue is empty, we have nothing more to do...
+            _currentQueueObject = nil;
+            return;
+        }
     }
-  else
+    else
     {
-      CWIMAPQueueObject *aQueueObject;
-      NSString *aString;
-      va_list args;
-      NSUInteger i, count;
+        CWIMAPQueueObject *aQueueObject;
+        NSUInteger i, count;
 
-      //NSLog(@"sendCommand invoked, cmd = %i", theCommand);
-      va_start(args, theFormat);
-      
-      aString = [[NSString alloc] initWithFormat: theFormat  arguments: args];
-      
-      //
-      // We must check in the queue if we aren't trying to add a command that is already there.
-      // This could happend if -rawSource is called in IMAPMessage multiple times before
-      // PantomimeMessageFetchCompleted is sent.
-      //
-      // We skip this verification for the IMAP_APPEND command as a messages with the same size
-      // could be quickly appended to the folder and we do NOT want to skip the second one.
-      //
-      count = [_queue count];
+        //
+        // We must check in the queue if we aren't trying to add a command that is already there.
+        // This could happend if -rawSource is called in IMAPMessage multiple times before
+        // PantomimeMessageFetchCompleted is sent.
+        //
+        // We skip this verification for the IMAP_APPEND command as a messages with the same size
+        // could be quickly appended to the folder and we do NOT want to skip the second one.
+        //
+        count = [_queue count];
 
-      for (i = 0; i < count; i++)
-	{
-	  aQueueObject = [_queue objectAtIndex: i];
-	  if (aQueueObject->command == theCommand && theCommand != IMAP_APPEND && [aQueueObject->arguments isEqualToString: aString])
-	    {
-	      RELEASE(aString);
-	      //NSLog(@"A COMMAND ALREADY EXIST!!!!");
-	      return;
-	    }   
-	}
+        for (i = 0; i < count; i++)
+        {
+            aQueueObject = [_queue objectAtIndex: i];
+            if (aQueueObject->command == theCommand && theCommand != IMAP_APPEND && [aQueueObject->arguments isEqualToString: theString])
+            {
+                //NSLog(@"A COMMAND ALREADY EXIST!!!!");
+                return;
+            }
+        }
 
-      aQueueObject = [[CWIMAPQueueObject alloc] initWithCommand: theCommand  arguments: aString  tag: [self nextTag]  info: theInfo];
-      RELEASE(aString);
-      
-      [_queue insertObject: aQueueObject  atIndex: 0];
-      RELEASE(aQueueObject);
-      
-      //NSLog(@"queue size = %d", [_queue count]);
-      
-      // If we had queued commands, we return since we'll eventually
-      // dequeue them one by one. Otherwise, we run it immediately.
-      if ([_queue count] > 1)
-	{
-	  //NSLog(@"QUEUED |%@|", aString);
-	  return;
-	}
+        aQueueObject = [[CWIMAPQueueObject alloc] initWithCommand: theCommand  arguments: theString  tag: [self nextTag]  info: theInfo];
+        RELEASE(aString);
 
-      _currentQueueObject = aQueueObject;
+        [_queue insertObject: aQueueObject  atIndex: 0];
+        RELEASE(aQueueObject);
+
+        //NSLog(@"queue size = %d", [_queue count]);
+
+        // If we had queued commands, we return since we'll eventually
+        // dequeue them one by one. Otherwise, we run it immediately.
+        if ([_queue count] > 1)
+        {
+            //NSLog(@"QUEUED |%@|", aString);
+            return;
+        }
+
+        _currentQueueObject = aQueueObject;
     }
-     
-  //NSLog(@"Sending |%@|", _currentQueueObject->arguments);
-  _lastCommand = _currentQueueObject->command;
 
-  [self writeData: _currentQueueObject->tag];
-  [self writeData: [NSData dataWithBytes: " "  length: 1]];
-  [self writeData: [_currentQueueObject->arguments dataUsingEncoding: defaultCStringEncoding]];
-  [self writeData: CRLF];
+    //NSLog(@"Sending |%@|", _currentQueueObject->arguments);
+    _lastCommand = _currentQueueObject->command;
 
-  POST_NOTIFICATION(@"PantomimeCommandSent", self, _currentQueueObject->info);
-  PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
+    [self writeData: _currentQueueObject->tag];
+    [self writeData: [NSData dataWithBytes: " "  length: 1]];
+    [self writeData: [_currentQueueObject->arguments dataUsingEncoding: defaultCStringEncoding]];
+    [self writeData: CRLF];
+
+    POST_NOTIFICATION(@"PantomimeCommandSent", self, _currentQueueObject->info);
+    PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
 }
 
 //
@@ -2009,7 +2003,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 	    }
 	  else
 	    {
-	      aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: (msn-1)];
+            // NOTE: The messages in a persistent folder are not zero based any more.
+            // Therefore, msn is used as is, not msn - 1.
+	      aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: msn];
 	      [aMessage setMessageNumber: msn];
 	      [aMessage setFolder: _selectedFolder];
 	    }

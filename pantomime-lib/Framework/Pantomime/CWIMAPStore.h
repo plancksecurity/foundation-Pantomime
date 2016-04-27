@@ -267,6 +267,17 @@ extern NSString * _Nonnull const PantomimeFolderStatusFailed;
 */
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo  arguments: (NSString * _Nonnull) theFormat, ...;
 
+/*!
+ @method sendCommand:info:string: ...
+ @discussion This method is used to send commands to the IMAP server.
+ Normally, you should not call this method directly.
+ @param theCommand The IMAP command to send.
+ @param theInfo The addition info to pass.
+ @param string The parameter string
+ */
+- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+              string:(NSString * _Nonnull)theString;
+
 @end
 
 #endif // _Pantomime_H_IMAPStore
