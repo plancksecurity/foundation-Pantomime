@@ -42,6 +42,11 @@ static NSString *comp = @"CWTCPConnection";
     return self;
 }
 
+- (void)dealloc
+{
+    [self close];
+}
+
 - (void)startTLS
 {
     [self.readStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL

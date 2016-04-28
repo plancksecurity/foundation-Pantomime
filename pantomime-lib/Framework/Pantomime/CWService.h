@@ -350,7 +350,7 @@ extern NSString* PantomimeProtocolException;
     unsigned int _lastCommand;
     unsigned int _port;
     BOOL _connected;
-    id _delegate;
+    id __weak _delegate;
     
     id<CWConnection> _connection;
     NSTimer * _timer;
