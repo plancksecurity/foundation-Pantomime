@@ -77,6 +77,9 @@ extern NSString* PantomimeMessageStoreFailed;
     BOOL _selected;
 }
 
+/** The UIDNEXT value, as indicated by the server */
+@property NSUInteger nextUID;
+
 /*!
   @method initWithName: mode:
   @discussion This method is used to initialize the receiver

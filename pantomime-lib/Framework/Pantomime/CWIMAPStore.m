@@ -2848,46 +2848,52 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseSELECT
 {
-  NSData *aData;
-  NSUInteger i, count;
+    NSData *aData;
+    NSUInteger i, count;
 
-  // The last object in _responsesFromServer is a tagged OK response.
-  // We need to parse it here.
-  count = [_responsesFromServer count];
+    // The last object in _responsesFromServer is a tagged OK response.
+    // We need to parse it here.
+    count = [_responsesFromServer count];
 
-  for (i = 0; i < count; i++)
+    for (i = 0; i < count; i++)
     {
-      aData = [[_responsesFromServer objectAtIndex: i] dataByTrimmingWhiteSpaces];
-     
-      //NSLog(@"|%@|", [aData asciiString]);
-      // * OK [UIDVALIDITY 1052146864] 
-      if ([aData hasCPrefix: "* OK [UIDVALIDITY"])
-	{
-	  [self _parseUIDVALIDITY: [aData cString]];
-	}
-      
-      // 3c4d OK [READ-ONLY] Completed
-      if ([aData rangeOfCString: "OK [READ-ONLY]"].length)
-	{
-	  [_selectedFolder setMode: PantomimeReadOnlyMode];
-	}
+        aData = [[_responsesFromServer objectAtIndex: i] dataByTrimmingWhiteSpaces];
 
-      // 1a2b OK [READ-WRITE] Completed
-      if ([aData rangeOfCString: "OK [READ-WRITE]"].length)
-	{
-	  [_selectedFolder setMode: PantomimeReadWriteMode];
-	}
+        //NSLog(@"|%@|", [aData asciiString]);
+        // * OK [UIDVALIDITY 1052146864]
+        if ([aData hasCPrefix: "* OK [UIDVALIDITY"])
+        {
+            [self _parseUIDVALIDITY: [aData cString]];
+        }
+
+        // S: * OK [UIDNEXT 4392] Predicted next UID
+        if ([aData hasCPrefix: "* OK [UIDNEXT"])
+        {
+            [self _parseUIDNEXT: [aData cString]];
+        }
+
+        // 3c4d OK [READ-ONLY] Completed
+        if ([aData rangeOfCString: "OK [READ-ONLY]"].length)
+        {
+            [_selectedFolder setMode: PantomimeReadOnlyMode];
+        }
+
+        // 1a2b OK [READ-WRITE] Completed
+        if ([aData rangeOfCString: "OK [READ-WRITE]"].length)
+        {
+            [_selectedFolder setMode: PantomimeReadWriteMode];
+        }
     }
 
-  if (_connection_state.reconnecting)
+    if (_connection_state.reconnecting)
     {
-      [self _restoreQueue];
+        [self _restoreQueue];
     }
-  else
+    else
     {
-      [_selectedFolder setSelected: YES];
-      POST_NOTIFICATION(PantomimeFolderOpenCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
-      PERFORM_SELECTOR_2(_delegate, @selector(folderOpenCompleted:), PantomimeFolderOpenCompleted, _selectedFolder, @"Folder");
+        [_selectedFolder setSelected: YES];
+        POST_NOTIFICATION(PantomimeFolderOpenCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+        PERFORM_SELECTOR_2(_delegate, @selector(folderOpenCompleted:), PantomimeFolderOpenCompleted, _selectedFolder, @"Folder");
     }
 }
 
@@ -2959,6 +2965,12 @@ static inline int has_literal(char *buf, NSUInteger c)
   [_selectedFolder setUIDValidity: n];
 }
 
+- (void) _parseUIDNEXT: (const char *) theString
+{
+    unsigned int n;
+    sscanf(theString, "* OK [UIDNEXT %u]", &n);
+    [_selectedFolder setNextUID:n];
+}
 
 //
 //
