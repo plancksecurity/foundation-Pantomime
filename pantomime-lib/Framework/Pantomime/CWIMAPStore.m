@@ -2861,7 +2861,7 @@ static inline int has_literal(char *buf, NSUInteger c)
      
       //NSLog(@"|%@|", [aData asciiString]);
       // * OK [UIDVALIDITY 1052146864] 
-      if ([aData hasCPrefix: "* OK [UIDVALIDITY"] && [aData hasCSuffix: "]"])
+      if ([aData hasCPrefix: "* OK [UIDVALIDITY"])
 	{
 	  [self _parseUIDVALIDITY: [aData cString]];
 	}
