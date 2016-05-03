@@ -50,7 +50,7 @@
   @param theMutableData The data from which to split lines from.
   @result A line as a NSData instance, nil if no line was splitted.
 */
-static inline NSData *split_lines(NSMutableData *theMutableData)
+static inline NSData *  _Nonnull split_lines(NSMutableData * _Nonnull theMutableData)
 {
   char *bytes, *end;
   NSUInteger i, count;
@@ -78,47 +78,47 @@ static inline NSData *split_lines(NSMutableData *theMutableData)
 /*!
   @const PantomimeAuthenticationCompleted
 */
-extern NSString* PantomimeAuthenticationCompleted;
+extern NSString * _Nonnull PantomimeAuthenticationCompleted;
 
 /*!
   @const PantomimeAuthenticationFailed
 */
-extern NSString* PantomimeAuthenticationFailed;
+extern NSString * _Nonnull PantomimeAuthenticationFailed;
 
 /*!
   @const PantomimeConnectionEstablished
 */
-extern NSString* PantomimeConnectionEstablished;
+extern NSString * _Nonnull PantomimeConnectionEstablished;
 
 /*!
   @const PantomimeConnectionLost
 */
-extern NSString* PantomimeConnectionLost;
+extern NSString * _Nonnull PantomimeConnectionLost;
 
 /*!
   @const PantomimeConnectionTerminated
 */
-extern NSString* PantomimeConnectionTerminated;
+extern NSString * _Nonnull PantomimeConnectionTerminated;
 
 /*!
   @const PantomimeConnectionTimedOut
 */
-extern NSString* PantomimeConnectionTimedOut;
+extern NSString * _Nonnull PantomimeConnectionTimedOut;
 
 /*!
   @const PantomimeRequestCancelled
 */
-extern NSString* PantomimeRequestCancelled;
+extern NSString * _Nonnull PantomimeRequestCancelled;
 
 /*!
   @const PantomimeServiceInitialized
 */
-extern NSString* PantomimeServiceInitialized;
+extern NSString * _Nonnull PantomimeServiceInitialized;
 
 /*!
   @const PantomimeServiceReconnected
 */
-extern NSString* PantomimeServiceReconnected;
+extern NSString * _Nonnull PantomimeServiceReconnected;
 
 /*!
   @const PantomimeProtocolException
@@ -127,7 +127,7 @@ extern NSString* PantomimeServiceReconnected;
 	       of the CWService subclasses. This would
 	       mean that Pantomime has a bug.
 */
-extern NSString* PantomimeProtocolException;
+extern NSString * _Nonnull PantomimeProtocolException;
 
 /*!
   @category NSObject (CWServiceClient)
@@ -152,7 +152,7 @@ extern NSString* PantomimeProtocolException;
 	      from the notification's userInfo using the "Mechanism" key.
   @param theNotification The notification holding the information.
 */
-- (void) authenticationCompleted: (NSNotification *) theNotification;
+- (void) authenticationCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method authenticationFailed:
@@ -163,7 +163,7 @@ extern NSString* PantomimeProtocolException;
 	      from the notification's userInfo using the "Mechanism" key.
   @param theNotification The notification holding the information.
 */
-- (void) authenticationFailed: (NSNotification *) theNotification;
+- (void) authenticationFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method connectionEstablished:
@@ -171,7 +171,7 @@ extern NSString* PantomimeProtocolException;
               A PantomimeConnectionEstablished notification is also posted.
   @param theNotification The notification holding the information.
 */
-- (void) connectionEstablished: (NSNotification *) theNotification;
+- (void) connectionEstablished: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method connectionLost:
@@ -180,7 +180,7 @@ extern NSString* PantomimeProtocolException;
               A PantomimeConnectionLost notification is also posted.
   @param theNotification The notification holding the information.
 */
-- (void) connectionLost: (NSNotification *) theNotification;
+- (void) connectionLost: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method connectionTerminated:
@@ -189,7 +189,7 @@ extern NSString* PantomimeProtocolException;
 	      A PantomimeConnectionTerminated notification is also posted.
   @param theNotification The notification holding the information.
 */
-- (void) connectionTerminated: (NSNotification *) theNotification;
+- (void) connectionTerminated: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method connectionTimedOut:
@@ -203,7 +203,7 @@ extern NSString* PantomimeProtocolException;
 	      A PantomimeConnectionTimedOut notification is also posted.
   @param theNotification The notification holding the information.
 */
-- (void) connectionTimedOut: (NSNotification *) theNotification;
+- (void) connectionTimedOut: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method service: receivedData:
@@ -212,7 +212,7 @@ extern NSString* PantomimeProtocolException;
   @param theService The CWService instance that generated network activity.
   @param theData The received bytes.
 */
-- (void) service: (CWService *) theService  receivedData: (NSData *) theData;
+- (void) service: (CWService * _Nonnull) theService  receivedData: (NSData * _Nonnull) theData;
 
 /*!
   @method service: sentData:
@@ -221,7 +221,7 @@ extern NSString* PantomimeProtocolException;
   @param theService The CWService instance that generated network activity.
   @param theData The sent bytes.
 */
-- (void) service: (CWService *) theService  sentData: (NSData *) theData;
+- (void) service: (CWService * _Nonnull) theService  sentData: (NSData * _Nonnull) theData;
 
 /*!
   @method requestCancelled:
@@ -231,7 +231,7 @@ extern NSString* PantomimeProtocolException;
 	      A PantomimeRequestCancelled notification is also posted.
   @param theNotification The notification holding the information.
 */
-- (void) requestCancelled: (NSNotification *) theNotification;
+- (void) requestCancelled: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method serviceInitialized:
@@ -241,7 +241,7 @@ extern NSString* PantomimeProtocolException;
 	      A PantomimeServiceInitialized notification is also posted.
   @param theNotification The notification holding the information.
 */
-- (void) serviceInitialized: (NSNotification *) theNotification;
+- (void) serviceInitialized: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method serviceReconnected:
@@ -252,57 +252,57 @@ extern NSString* PantomimeProtocolException;
               A PantomimeServiceReconnected notification is also posted.
   @param theNotification The notification holding the information.
 */
-- (void) serviceReconnected: (NSNotification *) theNotification;
+- (void) serviceReconnected: (NSNotification * _Nullable) theNotification;
 
-- (void) commandSent: (NSNotification *) theNotification;
+- (void) commandSent: (NSNotification * _Nullable) theNotification;
 
-- (void) folderRenameFailed: (NSNotification *) theNotification;
+- (void) folderRenameFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) messageChanged: (NSNotification *) theNotification;
+- (void) messageChanged: (NSNotification * _Nullable) theNotification;
 
-- (void) messageExpunged: (NSNotification *) theNotification;
+- (void) messageExpunged: (NSNotification * _Nullable) theNotification;
 
-- (void) messagePrefetchCompleted: (NSNotification *) theNotification;
+- (void) messagePrefetchCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) messageFetchCompleted: (NSNotification *) theNotification;
+- (void) messageFetchCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) folderCreateFailed: (NSNotification *) theNotification;
+- (void) folderCreateFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) folderDeleteFailed: (NSNotification *) theNotification;
+- (void) folderDeleteFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) folderSubscribeFailed: (NSNotification *) theNotification;
+- (void) folderSubscribeFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) messagesCopyFailed: (NSNotification *) theNotification;
+- (void) messagesCopyFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) folderStatusFailed: (NSNotification *) theNotification;
+- (void) folderStatusFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) messageStoreFailed: (NSNotification *) theNotification;
+- (void) messageStoreFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) folderUnsubscribeFailed: (NSNotification *) theNotification;
+- (void) folderUnsubscribeFailed: (NSNotification * _Nullable) theNotification;
 
-- (void) commandCompleted: (NSNotification *) theNotification;
+- (void) commandCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) folderCreateCompleted: (NSNotification *) theNotification;
+- (void) folderCreateCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) folderDeleteCompleted: (NSNotification *) theNotification;
+- (void) folderDeleteCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) folderRenameCompleted: (NSNotification *) theNotification;
+- (void) folderRenameCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) folderSubscribeCompleted: (NSNotification *) theNotification;
+- (void) folderSubscribeCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) messagesCopyCompleted: (NSNotification *) theNotification;
+- (void) messagesCopyCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) messageStoreCompleted: (NSNotification *) theNotification;
+- (void) messageStoreCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) folderUnsubscribeCompleted: (NSNotification *) theNotification;
+- (void) folderUnsubscribeCompleted: (NSNotification * _Nullable) theNotification;
 
-- (void) folderStatusCompleted: (NSNotification *) theNotification;
+- (void) folderStatusCompleted: (NSNotification * _Nullable) theNotification;
 
 @end
 
 @interface CWConnectionState : NSObject
 
-@property (nonatomic, strong) NSMutableArray *previous_queue;
+@property (nonatomic, strong) NSMutableArray * _Nullable previous_queue;
 @property (nonatomic) BOOL reconnecting;
 @property (nonatomic) BOOL opening_mailbox;
 
@@ -368,11 +368,11 @@ extern NSString* PantomimeProtocolException;
   @param transport How to connect to the server (e.g., use TLS)
   @result An instance of a Service class, nil on error.
 */
-- (id) initWithName: (NSString *) theName
-               port: (unsigned int) thePort
-          transport: (ConnectionTransport) transport;
+- (id _Nonnull) initWithName: (NSString * _Nonnull) theName
+                        port: (unsigned int) thePort
+                   transport: (ConnectionTransport) transport;
 
-- (void)setLogger:(id<CWLogging>)logger;
+- (void)setLogger:(id<CWLogging> _Nonnull)logger;
 
 /*!
   @method setDelegate:
@@ -382,7 +382,7 @@ extern NSString* PantomimeProtocolException;
 	      based on actions performed.
   @param theDelegate The delegate, which implements various callback methods.
 */
-- (void) setDelegate: (id) theDelegate;
+- (void) setDelegate: (id _Nonnull) theDelegate;
 
 /*!
   @method delegate
@@ -396,7 +396,7 @@ extern NSString* PantomimeProtocolException;
   @discussion This method is used to obtain the server name.
   @result The server name.
 */
-- (NSString *) name;
+- (NSString * _Nonnull) name;
 
 /*!
   @method setName:
@@ -404,7 +404,7 @@ extern NSString* PantomimeProtocolException;
               we will eventually connect to.
   @param theName The name of the server.
 */
-- (void) setName: (NSString *) theName;
+- (void) setName: (NSString * _Nonnull) theName;
 
 /*!
   @method port
@@ -427,7 +427,7 @@ extern NSString* PantomimeProtocolException;
               object for the service (usually a CWTCPConnection instance).
   @result The associated connectio object.
 */
-- (id<CWConnection>) connection;
+- (id<CWConnection> _Nonnull) connection;
 
 /*!
   @method username
@@ -435,7 +435,7 @@ extern NSString* PantomimeProtocolException;
               used to authenticate to the service.
   @result The username.
 */
-- (NSString *) username;
+- (NSString * _Nullable) username;
 
 /*!
   @method setUsername:
@@ -443,7 +443,7 @@ extern NSString* PantomimeProtocolException;
               to authenticate to the service.
   @param theUsername The username for authentication.
 */
-- (void) setUsername: (NSString *) theUsername;
+- (void) setUsername: (NSString * _Nonnull) theUsername;
 
 /*!
   @method supportedMechanisms
@@ -452,7 +452,7 @@ extern NSString* PantomimeProtocolException;
   @result An array of NSString instances which indicates
           what SASL mechanisms are supported.
 */
-- (NSArray *) supportedMechanisms;
+- (NSArray *  _Nonnull) supportedMechanisms;
 
 /*!
   @method isConnected
@@ -475,9 +475,9 @@ extern NSString* PantomimeProtocolException;
   @param thePassword The password to use.
   @param theMechanism The authentication mechanism to use.
 */
-- (void) authenticate: (NSString *) theUsername
-             password: (NSString *) thePassword
-            mechanism: (NSString *) theMechanism;
+- (void) authenticate: (NSString * _Nonnull) theUsername
+             password: (NSString * _Nonnull) thePassword
+            mechanism: (NSString * _Nonnull) theMechanism;
 
 /*!
   @method cancelRequest
@@ -536,10 +536,10 @@ extern NSString* PantomimeProtocolException;
   @param theExtra Additional information.
   @param theMode The runloop modes.
 */
-- (void) receivedEvent: (void *) theData
+- (void) receivedEvent: (void * _Nullable) theData
                   type: (RunLoopEventType) theType
-                 extra: (void *) theExtra
-               forMode: (NSString *) theMode;
+                 extra: (void * _Nullable) theExtra
+               forMode: (NSString * _Nullable) theMode;
 
 /*!
   @method reconnect
@@ -568,7 +568,7 @@ extern NSString* PantomimeProtocolException;
               You should never have to invoke this method directly.
   @param The bytes to buffer, as a NSData instance.
 */
-- (void) writeData: (NSData *) theData;
+- (void) writeData: (NSData * _Nonnull) theData;
 
 /*!
   @method addRunLoopMode:
@@ -579,7 +579,7 @@ extern NSString* PantomimeProtocolException;
   @param The additional mode. NSDefaultRunLoopMode is always present so there
          is no need to add it.
 */
-- (void) addRunLoopMode: (NSString *) theMode;
+- (void) addRunLoopMode: (NSString * _Nonnull) theMode;
 
 /*!
   @method connectionTimeout
@@ -657,7 +657,7 @@ extern NSString* PantomimeProtocolException;
               associated service.
   @result The capabilities, as an array of NSString instances.
 */
-- (NSArray *) capabilities;
+- (NSArray * _Nonnull) capabilities;
 
 @end
 
