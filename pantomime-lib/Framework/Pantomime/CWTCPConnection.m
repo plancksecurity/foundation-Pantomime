@@ -125,7 +125,7 @@ static NSString *comp = @"CWTCPConnection";
     [self.logger infoComponent:comp
                        message:[NSString
                                 stringWithFormat:@"read %ld: \"%@\"", (long)count,
-                                [self bufferToString:buf length:len]]];
+                                [self bufferToString:buf length:count]]];
     return count;
 }
 
