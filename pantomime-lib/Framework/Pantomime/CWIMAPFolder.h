@@ -80,6 +80,9 @@ extern NSString* PantomimeMessageStoreFailed;
 /** The UIDNEXT value, as indicated by the server */
 @property NSUInteger nextUID;
 
+/** The result from an EXISTS response */
+@property NSUInteger existsCount;
+
 /*!
   @method initWithName: mode:
   @discussion This method is used to initialize the receiver

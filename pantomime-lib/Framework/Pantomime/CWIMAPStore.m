@@ -1695,6 +1695,8 @@ static inline int has_literal(char *buf, NSUInteger c)
   
   //NSLog(@"_parseExists: %d", n);
 
+    _selectedFolder.existsCount = n;
+
   if (_currentQueueObject && _currentQueueObject->command != IMAP_SELECT &&
       _selectedFolder && 
       n > [_selectedFolder count])
