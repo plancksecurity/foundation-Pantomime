@@ -389,7 +389,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
   @discussion This method is used to get the delegate of the CWService's instance.
   @result The delegate, nil if none was previously set.
 */
-- (id) delegate;
+- (id _Nullable) delegate;
 
 /*!
   @method name
