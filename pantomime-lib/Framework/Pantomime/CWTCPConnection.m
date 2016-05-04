@@ -21,6 +21,7 @@ static NSString *comp = @"CWTCPConnection";
 @property (nonatomic, strong) NSInputStream *readStream;
 @property (nonatomic, strong) NSOutputStream *writeStream;
 @property (nonatomic, strong) NSMutableSet<NSStream *> *openConnections;
+@property (nonatomic, strong) NSError *streamError;
 
 @end
 
@@ -191,7 +192,17 @@ static NSString *comp = @"CWTCPConnection";
             [self.delegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            [self.logger infoComponent:comp message:@"NSStreamEventErrorOccurred"];
+            [self.logger
+             infoComponent:comp
+             message:[NSString
+                      stringWithFormat:@"NSStreamEventErrorOccurred: read: %@, write: %@",
+                      [self.readStream.streamError localizedDescription],
+                      [self.writeStream.streamError localizedDescription]]];
+            if (self.readStream.streamError) {
+                self.streamError = self.readStream.streamError;
+            } else if (self.writeStream.streamError) {
+                self.streamError = self.writeStream.streamError;
+            }
             // We abuse ET_EDESC for error indicication
             [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             break;

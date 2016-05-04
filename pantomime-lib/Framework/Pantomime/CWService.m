@@ -372,28 +372,25 @@
     }
 
   if (count == 0)
-    {
+  {
       //
       // We check to see if we got disconnected.
       //
-      // The data that causes select to return is the EOF because the other side
-      // has closed the connection. This causes read to return zero. 
-      //
-      if (_connected)
-	{
-	  [_connection close];
-	  POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
-	  PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
-	}
-    }
+      if (_connection.streamError)
+      {
+          [_connection close];
+          POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
+          PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+      }
+  }
   else
-    {
+  {
       // We reset our connection timeout counter. This could happen when we are performing operations
       // that return a large amount of data. The queue might be non-empty but network I/O could be
       // going on at the same time. This could also be problematic for lenghty IMAP search or
       // mailbox preload.
       _counter = 0;
-    }
+  }
 }
  
  

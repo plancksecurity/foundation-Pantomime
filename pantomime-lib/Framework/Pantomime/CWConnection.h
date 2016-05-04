@@ -51,6 +51,7 @@
 
 @property (nonatomic, nullable, weak, readwrite) id<CWConnectionDelegate> delegate;
 @property (nonatomic, nullable, weak) id<CWLogging> logger;
+@property (nonatomic, readonly) NSError * _Nullable streamError;
 
 /*!
   @method initWithName: port: background:
