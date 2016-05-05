@@ -134,7 +134,6 @@
   return self;
 }
 
-
 //
 //
 //
@@ -149,6 +148,15 @@
   return self;
 }
 
+- (id) initWithPersonal: (NSString *) thePersonal
+                address: (NSString *) theAddress
+                   type: (PantomimeRecipientType) theType
+{
+    if (self = [self initWithPersonal:thePersonal address:theAddress]) {
+        [self setType: theType];
+    }
+    return self;
+}
 
 //
 //

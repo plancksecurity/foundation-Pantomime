@@ -67,8 +67,22 @@
               part of an Internet address.
   @param thePersonal The personal part of the Internet address.
   @param theAddress The address part of the Internet address.
+  @param theType The address type
   @result The CWInternetAddress instance, nil on error.
 */
+- (id) initWithPersonal: (NSString *) thePersonal
+                address: (NSString *) theAddress
+                   type: (PantomimeRecipientType) theType;
+
+/*!
+ @method initWithPersonal: address:
+ @discussion This method is used to initialize a CWInternetAddress
+ instance using the specified personal and address
+ part of an Internet address.
+ @param thePersonal The personal part of the Internet address.
+ @param theAddress The address part of the Internet address.
+ @result The CWInternetAddress instance, nil on error.
+ */
 - (id) initWithPersonal: (NSString *) thePersonal
                 address: (NSString *) theAddress;
 
