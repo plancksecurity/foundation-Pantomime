@@ -62,7 +62,7 @@
   @param theData The bytes to use.
   @result A CWPart instance, nil on error.
 */
-- (id) initWithData: (NSData *) theData;
+- (id _Nonnull) initWithData: (NSData * _Nonnull) theData;
 
 /*!
   @method initWithData: charset:
@@ -73,8 +73,8 @@
   @param theCharset The charset to force.
   @result A CWPart instance, nil on error.
 */
-- (id) initWithData: (NSData *) theData
-            charset: (NSString *) theCharset;
+- (id _Nonnull) initWithData: (NSData * _Nonnull) theData
+                     charset: (NSString * _Nonnull) theCharset;
 
 /*!
   @method setHeadersFromData:
@@ -83,7 +83,7 @@
 	      defined values of headers found in <i>theHeaders</i>.
   @param theHeaders The bytes to use.
 */
-- (void) setHeadersFromData: (NSData *) theHeaders;
+- (void) setHeadersFromData: (NSData * _Nonnull) theHeaders;
 
 /*!
   @method contentType
@@ -96,7 +96,7 @@
   @result The value. If none was set, nil will
           be returned.
 */ 
-- (NSString *) contentType;
+- (NSString * _Nullable) contentType;
 
 /*!
   @method setContentType:
@@ -104,7 +104,7 @@
               the receiver's "Content-Type" header.
   @param theContentType The "Content-Type" value.
 */
-- (void) setContentType: (NSString*) theContentType;
+- (void) setContentType: (NSString * _Nonnull) theContentType;
 
 /*!
   @method contentID
@@ -113,7 +113,7 @@
   @result The value. If none was set, nil will
           be returned.
 */ 
-- (NSString *) contentID;
+- (NSString * _Nullable) contentID;
 
 /*!
   @method setContentID:
@@ -121,7 +121,7 @@
               the receiver's "Content-ID" header.
   @param theContentID The "Content-ID" value.
 */                 
-- (void) setContentID: (NSString *) theContentID;
+- (void) setContentID: (NSString * _Nonnull) theContentID;
  
 /*!
   @method contentDescription
@@ -130,7 +130,7 @@
   @result The value. If none was set, nil will
           be returned.
 */ 
-- (NSString *) contentDescription;
+- (NSString * _Nullable) contentDescription;
 
 /*!
   @method setContentDescription:
@@ -138,7 +138,7 @@
               the receiver's "Content-Description" header.
   @param theContentDescription The "Content-Description" value.
 */                              
-- (void) setContentDescription: (NSString *) theContentDescription;
+- (void) setContentDescription: (NSString * _Nonnull) theContentDescription;
 
 /*!
   @method contentDisposition
@@ -181,7 +181,7 @@
               file, if any.
   @result The name of the file, nil if none was specified.
 */
-- (NSString *) filename;
+- (NSString * _Nullable) filename;
 
 /*!
   @method setFilename:
@@ -190,7 +190,7 @@
                      the length of the string is 0, "unknown" will
 		     be set as the filename.
 */
-- (void) setFilename: (NSString *) theFilename;     
+- (void) setFilename: (NSString * _Nonnull) theFilename;
 
 /*!
   @method format
@@ -234,8 +234,8 @@
   @param theSubType The right part of the MIME type.
   @result YES if it matches, NO otherwise.
 */
-- (BOOL) isMIMEType: (NSString *) thePrimaryType
-            subType: (NSString *) theSubType;
+- (BOOL) isMIMEType: (NSString * _Nonnull) thePrimaryType
+            subType: (NSString * _Nonnull) theSubType;
 
 /*!
   @method content
@@ -245,7 +245,7 @@
 	      or a CWMessage instance.
   @result The decoded content of the part.
 */
-- (NSObject *) content;
+- (NSObject * _Nullable) content;
 
 /*!
   @method setContent:
@@ -257,7 +257,7 @@
 	      will be thrown.
   @param theContent The content of the part.
 */
-- (void) setContent: (NSObject *) theContent;
+- (void) setContent: (NSObject * _Nullable) theContent;
 
 /*!
   @method size
@@ -284,7 +284,7 @@
 	      "Subject" and so on.
   @result The encoded CWPart instance, as a NSData instance.
 */
-- (NSData *) dataValue;
+- (NSData * _Nullable) dataValue;
 
 /*!
   @method boundary
@@ -292,7 +292,7 @@
               parts that compose a multipart composite part.
   @result The boundary as a NSData instance, nil if none was set.
 */
-- (NSData *) boundary;
+- (NSData * _Nullable) boundary;
 
 /*!
   @method setBoundary:
@@ -300,7 +300,7 @@
               parts that compose a multipart composite part message.
   @param theBoundary The value of the boundary.
 */
-- (void) setBoundary: (NSData *) theBoundary;
+- (void) setBoundary: (NSData * _Nonnull) theBoundary;
 
 /*!
   @method protocol
@@ -309,7 +309,7 @@
 	      is often present in PGP encoded messages.
   @result The value of the "protocol" parameter, nil if none was set.
 */
-- (NSData *) protocol;
+- (NSData * _Nullable) protocol;
 
 /*!
   @method setProtocol:
@@ -318,7 +318,7 @@
 	      found in the Content-Type header in -dataValue.
   @param theProtocol The value of the "protocol" parameter.
 */
-- (void) setProtocol: (NSData *) theProtocol;
+- (void) setProtocol: (NSData * _Nonnull) theProtocol;
 
 /*!
   @method charset
@@ -326,7 +326,7 @@
               parameter found in the Content-Type header.
   @result The value of the "charset" parameter, "us-ascii" if none was set.
 */
-- (NSString *) charset;
+- (NSString * _Nullable) charset;
 
 /*!
   @method setCharset:
@@ -334,7 +334,7 @@
               found in the Content-Type header.
   @param theCharset The charset to use.
 */
-- (void) setCharset: (NSString *) theCharset;
+- (void) setCharset: (NSString * _Nonnull) theCharset;
 
 /*!
   @method defaultCharset
@@ -342,7 +342,7 @@
               enforced for usage when decoding the part.
   @result The enforced charset.
 */
-- (NSString *) defaultCharset;
+- (NSString * _Nonnull) defaultCharset;
 
 /*!
   @method setDefaultCharset:
@@ -350,7 +350,7 @@
               enforced for usage when the part is being decoded.
   @param theCharset The charset to force.
 */
-- (void) setDefaultCharset: (NSString *) theCharset;
+- (void) setDefaultCharset: (NSString * _Nonnull) theCharset;
 
 /*!
   @method parameterForKey:
@@ -362,7 +362,7 @@
   @param theKey  The key for which the value will be returned.
   @result The parameter value, nil if non-existent.
 */
-- (id) parameterForKey: (NSString *) theKey;
+- (id _Nullable) parameterForKey: (NSString * _Nonnull) theKey;
 
 /*!
   @method setPrameter:forKey:
@@ -376,14 +376,14 @@
 		      for the specified key,
   @param theKey  The key for which the value will be set.
 */
-- (void) setParameter: (id) theParameter  forKey: (NSString *) theKey;
+- (void) setParameter: (id _Nonnull) theParameter  forKey: (NSString * _Nonnull) theKey;
 
 /*!
   @method allHeaders
   @discussion This method is used to return all header names / values.
   @result The NSDictionary holding everything.
 */
-- (NSDictionary *) allHeaders;
+- (NSDictionary * _Nonnull) allHeaders;
 
 /*!
   @method headerValueForName:
@@ -393,7 +393,7 @@
   @param theName The name of the header. For example, it could be "Date".
   @result The value of the header.
 */
-- (id) headerValueForName: (NSString *) theName;
+- (id _Nonnull) headerValueForName: (NSString * _Nonnull) theName;
 
 /*!
   @method setHeaders:
@@ -402,7 +402,7 @@
 	      of the receiver.
   @param theHeaders The headers to add.
 */
-- (void) setHeaders: (NSDictionary *) theHeaders;
+- (void) setHeaders: (NSDictionary * _Nonnull) theHeaders;
 
 @end
 
