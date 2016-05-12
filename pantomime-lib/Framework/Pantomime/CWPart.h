@@ -104,7 +104,7 @@
               the receiver's "Content-Type" header.
   @param theContentType The "Content-Type" value.
 */
-- (void) setContentType: (NSString * _Nonnull) theContentType;
+- (void) setContentType: (NSString * _Nullable) theContentType;
 
 /*!
   @method contentID
@@ -121,7 +121,7 @@
               the receiver's "Content-ID" header.
   @param theContentID The "Content-ID" value.
 */                 
-- (void) setContentID: (NSString * _Nonnull) theContentID;
+- (void) setContentID: (NSString * _Nullable) theContentID;
  
 /*!
   @method contentDescription
@@ -138,7 +138,7 @@
               the receiver's "Content-Description" header.
   @param theContentDescription The "Content-Description" value.
 */                              
-- (void) setContentDescription: (NSString * _Nonnull) theContentDescription;
+- (void) setContentDescription: (NSString * _Nullable) theContentDescription;
 
 /*!
   @method contentDisposition
@@ -190,7 +190,7 @@
                      the length of the string is 0, "unknown" will
 		     be set as the filename.
 */
-- (void) setFilename: (NSString * _Nonnull) theFilename;
+- (void) setFilename: (NSString * _Nullable) theFilename;
 
 /*!
   @method format
@@ -300,7 +300,7 @@
               parts that compose a multipart composite part message.
   @param theBoundary The value of the boundary.
 */
-- (void) setBoundary: (NSData * _Nonnull) theBoundary;
+- (void) setBoundary: (NSData * _Nullable) theBoundary;
 
 /*!
   @method protocol
@@ -318,7 +318,7 @@
 	      found in the Content-Type header in -dataValue.
   @param theProtocol The value of the "protocol" parameter.
 */
-- (void) setProtocol: (NSData * _Nonnull) theProtocol;
+- (void) setProtocol: (NSData * _Nullable) theProtocol;
 
 /*!
   @method charset
@@ -334,7 +334,7 @@
               found in the Content-Type header.
   @param theCharset The charset to use.
 */
-- (void) setCharset: (NSString * _Nonnull) theCharset;
+- (void) setCharset: (NSString * _Nullable) theCharset;
 
 /*!
   @method defaultCharset
@@ -350,7 +350,7 @@
               enforced for usage when the part is being decoded.
   @param theCharset The charset to force.
 */
-- (void) setDefaultCharset: (NSString * _Nonnull) theCharset;
+- (void) setDefaultCharset: (NSString * _Nullable) theCharset;
 
 /*!
   @method parameterForKey:
@@ -362,7 +362,7 @@
   @param theKey  The key for which the value will be returned.
   @result The parameter value, nil if non-existent.
 */
-- (id _Nullable) parameterForKey: (NSString * _Nonnull) theKey;
+- (id _Nullable) parameterForKey: (NSString * _Nullable) theKey;
 
 /*!
   @method setPrameter:forKey:
