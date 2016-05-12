@@ -2005,8 +2005,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 	    }
 	  else
 	    {
-            // NOTE: The messages in a persistent folder are not zero based any more.
-            // Therefore, msn is used as is, not msn - 1.
 	      aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: msn];
 	      [aMessage setMessageNumber: msn];
 	      [aMessage setFolder: _selectedFolder];
