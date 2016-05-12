@@ -40,7 +40,7 @@
  @param theUID The UID of the message to obtain from the cache.
  @result The instance, nil if not present in the receiver's cache.
  */
-- (CWIMAPMessage *) messageWithUID: (NSUInteger) theUID;
+- (CWIMAPMessage * _Nullable) messageWithUID: (NSUInteger) theUID;
 
 
 /*!
@@ -75,7 +75,7 @@
  @param theRecord The record to write.
  @param theMessage The message associated to the record <i>theRecord</i>.
  */
-- (void) writeRecord: (CWCacheRecord *) theRecord  message: (CWIMAPMessage *) theMessage;
+- (void) writeRecord: (CWCacheRecord *_Nullable) theRecord  message: (CWIMAPMessage * _Nonnull) theMessage;
 
 
 @end
@@ -103,7 +103,7 @@
   @param theUID The UID of the message to obtain from the cache.
   @result The instance, nil if not present in the receiver's cache.
 */
-- (CWIMAPMessage *) messageWithUID: (NSUInteger) theUID;
+- (CWIMAPMessage * _Nullable) messageWithUID: (NSUInteger) theUID;
 
 
 /*!
@@ -138,7 +138,7 @@
   @param theRecord The record to write.
   @param theMessage The message associated to the record <i>theRecord</i>.
 */
-- (void) writeRecord: (CWCacheRecord *) theRecord  message: (id) theMessage;
+- (void) writeRecord: (CWCacheRecord * _Nullable) theRecord  message: (id _Nonnull) theMessage;
 @end
 
 #endif // _Pantomime_H_CWIMAPCacheManager

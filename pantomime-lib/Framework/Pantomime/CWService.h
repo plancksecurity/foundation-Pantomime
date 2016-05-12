@@ -350,7 +350,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
     unsigned int _lastCommand;
     unsigned int _port;
     BOOL _connected;
-    id __weak _delegate;
+    id __weak _Nullable _delegate;
     
     id<CWConnection> _connection;
     NSTimer * _timer;
@@ -382,7 +382,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 	      based on actions performed.
   @param theDelegate The delegate, which implements various callback methods.
 */
-- (void) setDelegate: (id _Nonnull) theDelegate;
+- (void) setDelegate: (id _Nullable) theDelegate;
 
 /*!
   @method delegate

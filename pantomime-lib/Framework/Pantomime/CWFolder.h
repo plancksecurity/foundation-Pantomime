@@ -293,7 +293,7 @@ extern NSString * _Nonnull const PantomimeFolderSearchFailed;
     NSMutableDictionary *_properties;
     NSString *_name;
 
-    id _cacheManager;
+    __weak id _cacheManager;
     id _store;
 
     NSMutableArray *_allVisibleMessages;

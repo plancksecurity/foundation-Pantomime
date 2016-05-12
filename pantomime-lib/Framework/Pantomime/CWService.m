@@ -146,7 +146,7 @@
 //
 // access / mutation methods
 //
-- (void) setDelegate: (id) theDelegate
+- (void) setDelegate: (id _Nullable) theDelegate
 {
   _delegate = theDelegate;
 }
