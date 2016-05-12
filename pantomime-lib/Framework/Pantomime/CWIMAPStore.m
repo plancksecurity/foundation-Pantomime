@@ -2005,6 +2005,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 	    }
 	  else
 	    {
+            // TODO: DZ: Load message by UID, not msn, if the UID is available
 	      aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: msn];
 	      [aMessage setMessageNumber: msn];
 	      [aMessage setFolder: _selectedFolder];
