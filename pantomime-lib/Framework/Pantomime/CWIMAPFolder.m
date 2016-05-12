@@ -189,7 +189,8 @@
       // We must send this command since our IMAP cache might be empty (or have been removed).
       // In that case, we much fetch again all messages, starting at UID 1.
       //
-      [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (UID FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", 1];
+      [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                arguments: @"UID FETCH %u:* %@", 1, PantomimeIMAPDefaultDescriptors];
     }
 }
 

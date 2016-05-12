@@ -2835,7 +2835,9 @@ static inline int has_literal(char *buf, NSUInteger c)
       // Messages will be fetched starting from that UID + 1.
       //
       //NSLog(@"LAST UID IN CACHE: %u", [[_selectedFolder->allMessages lastObject] UID]);
-      [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (UID FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", ([_selectedFolder lastUID]+1)];
+            [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                    arguments: @"UID FETCH %u:* %@", ([_selectedFolder lastUID]+1),
+             PantomimeIMAPDefaultDescriptors];
       break;
 
     default:

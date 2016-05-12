@@ -22,6 +22,8 @@
 
 #import <Foundation/NSString.h>
 
+NSString * _Nonnull const PantomimeIMAPDefaultDescriptors = @"(UID FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])";
+
 // CWDNSManager notifications
 NSString* PantomimeDNSResolutionCompleted = @"PantomimeDNSResolutionCompleted";
 NSString* PantomimeDNSResolutionFailed = @"PantomimeDNSResolutionFailed";

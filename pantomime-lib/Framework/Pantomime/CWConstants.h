@@ -386,4 +386,9 @@ typedef enum
   PantomimeResentBccRecipient = 6
 } PantomimeRecipientType;
 
+/*!
+ The list of IMAP descriptors the IMAP sync needs.
+ */
+extern NSString * _Nonnull const PantomimeIMAPDefaultDescriptors;
+
 #endif // _Pantomime_H_CWConstants
