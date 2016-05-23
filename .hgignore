@@ -6,3 +6,4 @@ Pods/.*
 TestData\.swift
 \.git/
 \.gitkeep
+^build/.*$
