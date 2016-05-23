@@ -153,17 +153,20 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 @end
 
+@interface CWIMAPStore ()
+
+/**
+ Regular expression for extracting the UID from a FETCH response.
+ */
+@property (nonatomic, nonnull, strong) NSRegularExpression *uidRegex;
+
+@end
 
 //
 // Private methods
 //
 @interface CWIMAPStore (Private)
-- (NSString *) _folderNameFromString: (NSString *) theString;
-- (void) _parseFlags: (NSString *) aString
-             message: (CWIMAPMessage *) theMessage
-	      record: (CWCacheRecord *) theRecord;
-- (void) _renameFolder;
-- (NSArray *) _uniqueIdentifiersFromData: (NSData *) theData;
+
 - (void) _parseAUTHENTICATE_CRAM_MD5;
 - (void) _parseAUTHENTICATE_LOGIN;
 - (void) _parseBAD;
@@ -185,6 +188,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseSTARTTLS;
 - (void) _parseUIDVALIDITY: (const char *) theString;
 - (void) _restoreQueue;
+
 @end
 
 //
@@ -223,7 +227,13 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     _lastCommand = IMAP_AUTHORIZATION;
     _currentQueueObject = nil;
-  
+
+    NSError *error;
+    _uidRegex = [NSRegularExpression
+                 regularExpressionWithPattern:@".*UID (\\d+).*"
+                 options: 0 error: &error];
+    assert(error == nil);
+
     return self;
 }
 
@@ -1911,10 +1921,22 @@ static inline int has_literal(char *buf, NSUInteger c)
   //
   must_flush_record = seen_fetch = NO;
 
+    NSUInteger theUID = 0;
   for (i = 0; i <= count; i++)
     {
-      aString = [[_responsesFromServer objectAtIndex: i] asciiString];
-      //NSLog(@"%i: %@", i, aString);
+        aString = [[_responsesFromServer objectAtIndex: i] asciiString];
+        NSTextCheckingResult *match = [self.uidRegex
+                                       firstMatchInString:aString options:0
+                                       range:NSMakeRange(0, aString.length)];
+        if (match) {
+            NSRange r = [match rangeAtIndex:1];
+            if (r.location != NSNotFound) {
+                NSString *uidString = [aString substringWithRange:r];
+                theUID = uidString.integerValue;
+            }
+        }
+
+        //NSLog(@"%i: %@", i, aString);
       if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)theMSN]])
 	{
 	  seen_fetch = YES;
@@ -1968,15 +1990,13 @@ static inline int has_literal(char *buf, NSUInteger c)
 	  [aScanner scanInt: &msn];
 	  //NSLog(@"msn = %d", msn);
 
-	  //
-	  // If the MSN is > then the folder's count, that means it's
-	  // a new message.
-	  //
-	  // We can safely assume this since what we have in _selectedFolder->allMessages
-	  // is really the messages in our IMAP folder. That is true since we
-	  // synchronized our cache when opening the folder, in IMAPFolder: -prefetch.
-	  //
-	  if (msn > [_selectedFolder count])
+        // Try to retrieve the message by UID
+        if (theUID > 0) {
+            aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
+            [aMessage setMessageNumber: msn];
+            [aMessage setFolder: _selectedFolder];
+        }
+	  if (aMessage == nil)
 	    {
 	      //NSLog(@"============ NEW MESSAGE ======================");
 	      aMessage = [[CWIMAPMessage alloc] init];
@@ -2003,15 +2023,10 @@ static inline int has_literal(char *buf, NSUInteger c)
 	      
 	      RELEASE(aMessage);
 	    }
-	  else
-	    {
-            // TODO: DZ: Load message by UID, not msn, if the UID is available
-	      aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: msn];
-	      [aMessage setMessageNumber: msn];
-	      [aMessage setFolder: _selectedFolder];
-	    }
 	}
-      if (!aMessage)
+        // end of reading MSN
+
+        if (!aMessage)
 	{
 	  RELEASE(aMutableString);
 	  RELEASE(aMutableArray);

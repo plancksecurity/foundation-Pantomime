@@ -63,6 +63,7 @@ extern NSString* PantomimeMessageStoreCompleted;
 */
 extern NSString* PantomimeMessageStoreFailed;
 
+@class CWIMAPMessage;
 
 /*!
   @class CWIMAPFolder
@@ -181,6 +182,11 @@ extern NSString* PantomimeMessageStoreFailed;
  @discussion This can be more efficiently implemented than `[lastMessage UID]`
  */
 - (NSUInteger) lastUID;
+
+/**
+ @return The message (or nil) with the given UID.
+ */
+- (CWIMAPMessage *)messageByUID:(NSInteger)uid;
 
 @end
 
