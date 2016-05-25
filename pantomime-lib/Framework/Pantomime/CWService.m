@@ -441,39 +441,41 @@
 }
 
 
+- (void)writeInternalData:(NSData *)theData
+{
+    if (theData && [theData length])
+    {
+        [_wbuf appendData: theData];
+
+        //
+        // Let's not try to enable the write callback if we are not connected
+        // There's no reason to try to enable the write callback if we
+        // are not connected.
+        //
+        if (!_connected)
+        {
+            return;
+        }
+
+        // If possible, we write immediately
+        if ([_connection canWrite]) {
+            [self updateWrite];
+        }
+    }
+}
+
 /**
  This can potentially be called from arbitrary threads, so acces has to be
  synchronized.
  */
 - (void) writeData: (NSData *) theData
 {
-    dispatch_block_t block = ^{
-        if (theData && [theData length])
-        {
-            [_wbuf appendData: theData];
-
-            //
-            // Let's not try to enable the write callback if we are not connected
-            // There's no reason to try to enable the write callback if we
-            // are not connected.
-            //
-            if (!_connected)
-            {
-                return;
-            }
-
-            // If possible, we write immediately
-            if ([_connection canWrite]) {
-                [self updateWrite];
-            }
-        }
-    };
-    if ([NSThread currentThread] != [NSThread mainThread]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            block();
-        });
+    NSThread *backgroundThread = ((CWTCPConnection *) self.connection).backgroundThread;
+    if ([NSThread currentThread] != backgroundThread) {
+        [self performSelector:@selector(writeInternalData:) onThread:backgroundThread
+                   withObject:theData waitUntilDone:NO];
     } else {
-        block();
+        [self writeInternalData:theData];
     }
 }
 

@@ -22,6 +22,7 @@ static NSString *comp = @"CWTCPConnection";
 @property (nonatomic, strong) NSOutputStream *writeStream;
 @property (nonatomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
+@property (nonnull, strong) NSThread *backgroundThread;
 
 @end
 
@@ -145,6 +146,15 @@ static NSString *comp = @"CWTCPConnection";
 
 - (void)connect
 {
+    self.backgroundThread = [[NSThread alloc]
+                             initWithTarget:self
+                             selector:@selector(connectInBackgroundAndStartRunLoop)
+                             object:nil];
+    [self.backgroundThread start];
+}
+
+- (void)connectInBackgroundAndStartRunLoop
+{
     CFReadStreamRef readStream = nil;
     CFWriteStreamRef writeStream = nil;
     CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
@@ -158,6 +168,16 @@ static NSString *comp = @"CWTCPConnection";
         self.writeStream = CFBridgingRelease(writeStream);
         [self setupStream:self.readStream];
         [self setupStream:self.writeStream];
+    }
+
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    while (1) {
+        if ( [NSThread currentThread].isCancelled ) {
+            break;
+        }
+        @autoreleasepool {
+            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
+        }
     }
 }
 
