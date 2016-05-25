@@ -1176,7 +1176,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) close
 {
-  [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
+    [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
+    [self.connection close];
 }
 
 

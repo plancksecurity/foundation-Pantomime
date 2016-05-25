@@ -511,6 +511,7 @@
             if (_connected) {
                 POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+                [self close];
             } else {
                 POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),

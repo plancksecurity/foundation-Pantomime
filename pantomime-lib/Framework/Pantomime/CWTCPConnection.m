@@ -12,6 +12,8 @@
 
 static NSString *comp = @"CWTCPConnection";
 
+static NSInteger s_numberOfConnectionThreads = 0;
+
 @interface CWTCPConnection ()
 
 @property (nonatomic) BOOL connected;
@@ -22,13 +24,19 @@ static NSString *comp = @"CWTCPConnection";
 @property (nonatomic, strong) NSOutputStream *writeStream;
 @property (nonatomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
-@property (nonnull, strong) NSThread *backgroundThread;
+@property (nullable, strong) NSThread *backgroundThread;
+@property (nonatomic) BOOL gettingClosed;
 
 @end
 
 @implementation CWTCPConnection
 
 @synthesize logger;
+
++ (NSInteger)numberOfRunningConnections
+{
+    return s_numberOfConnectionThreads;
+}
 
 - (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
@@ -100,7 +108,8 @@ static NSString *comp = @"CWTCPConnection";
     [self closeAndRemoveStream:self.readStream];
     [self closeAndRemoveStream:self.writeStream];
     self.connected = NO;
-    [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+    self.gettingClosed = YES;
+    [self cancelBackgroundThead];
 }
 
 - (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
@@ -150,11 +159,16 @@ static NSString *comp = @"CWTCPConnection";
                              initWithTarget:self
                              selector:@selector(connectInBackgroundAndStartRunLoop)
                              object:nil];
+    self.backgroundThread.name = [NSString stringWithFormat:@"CWTCPConnection 0x%u",
+                                  (NSUInteger) self.backgroundThread];
     [self.backgroundThread start];
 }
 
 - (void)connectInBackgroundAndStartRunLoop
 {
+    NSLog(@"start thread %@", self.backgroundThread.name);
+    s_numberOfConnectionThreads++;
+
     CFReadStreamRef readStream = nil;
     CFWriteStreamRef writeStream = nil;
     CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
@@ -179,12 +193,26 @@ static NSString *comp = @"CWTCPConnection";
             [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
         }
     }
+    s_numberOfConnectionThreads--;
+    NSLog(@"end thread %@", self.backgroundThread.name);
+    self.backgroundThread = nil;
 }
 
 - (BOOL)canWrite
 {
     return [self.writeStream hasSpaceAvailable];
 }
+
+- (void)cancelBackgroundThead
+{
+    if (self.backgroundThread) {
+        [self.backgroundThread cancel];
+        [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
+                waitUntilDone:NO];
+    }
+}
+
+- (void)cancelNoop {}
 
 #pragma mark -- NSStreamDelegate
 
@@ -223,12 +251,13 @@ static NSString *comp = @"CWTCPConnection";
             } else if (self.writeStream.streamError) {
                 self.streamError = self.writeStream.streamError;
             }
-            // We abuse ET_EDESC for error indicication
+            // We abuse ET_EDESC for error indicication.
             [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self cancelBackgroundThead];
             break;
         case NSStreamEventEndEncountered:
             [self.logger infoComponent:comp message:@"NSStreamEventEndEncountered"];
-            [self.delegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
+            [self close];
             break;
     }
 }

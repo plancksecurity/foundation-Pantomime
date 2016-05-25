@@ -342,12 +342,15 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	  return;
 	}
     }
-  
-  _lastCommand = aQueueObject->command;
 
-  // We send the command to the POP3 server.
-  [self writeData: [aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding]];
-  [self writeData: CRLF];
+    NSLog(@"aQueueObject 0x%u on thread %@",
+          (NSUInteger) aQueueObject, [[NSThread currentThread] name]);
+    // TODO: Why is aQueueObject sometimes nil?
+    if (aQueueObject) {
+        _lastCommand = aQueueObject->command;
+        [self writeData: [aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding]];
+        [self writeData: CRLF];
+    }
 }
 
 
