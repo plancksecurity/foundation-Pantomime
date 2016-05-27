@@ -39,7 +39,13 @@
 #endif
 
 #ifdef MACOSX
-typedef enum {ET_RDESC, ET_WDESC, ET_EDESC} RunLoopEventType;
+
+typedef NS_ENUM(NSInteger, RunLoopEventType) {
+    ET_RDESC,
+    ET_WDESC,
+    ET_EDESC,
+};
+
 #endif
 
 typedef NS_ENUM(NSInteger, ConnectionTransport) {
