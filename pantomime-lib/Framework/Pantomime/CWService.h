@@ -354,7 +354,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
     id __weak _Nullable _delegate;
     
     id<CWConnection> _connection;
-    NSTimer * _timer;
     int _counter;
     CWConnectionState *_connection_state;
 }

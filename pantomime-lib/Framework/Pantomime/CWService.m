@@ -243,11 +243,6 @@
 //
 - (void) cancelRequest
 {
-  // If we were in the process of establishing
-  // a connection, let's stop our internal timer.
-  [_timer invalidate];
-  DESTROY(_timer);
-
   [_connection close];
   DESTROY(_connection);
   [_queue removeAllObjects];
