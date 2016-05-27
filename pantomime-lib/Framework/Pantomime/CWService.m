@@ -270,14 +270,17 @@
 
   if (_connected)
     {
-      [_connection close];
+        [_connection close];
 
-      POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
-      PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
+        POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
     }
+
+    [_connection setDelegate:nil];
+    _connection = nil;
 }
 
-// 
+//
 // If the connection or binding succeeds, zero  is  returned.
 // On  error, -1 is returned, and errno is set appropriately
 //
