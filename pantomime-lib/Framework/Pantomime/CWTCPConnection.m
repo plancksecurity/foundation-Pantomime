@@ -8,7 +8,8 @@
 
 #import "CWTCPConnection.h"
 
-#import "Pantomime/CWLogging.h"
+#import "CWLogging.h"
+#import "CWConnectionThread.h"
 
 static NSString *comp = @"CWTCPConnection";
 
@@ -155,7 +156,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)connect
 {
-    self.backgroundThread = [[NSThread alloc]
+    self.backgroundThread = [[CWConnectionThread alloc]
                              initWithTarget:self
                              selector:@selector(connectInBackgroundAndStartRunLoop)
                              object:nil];
