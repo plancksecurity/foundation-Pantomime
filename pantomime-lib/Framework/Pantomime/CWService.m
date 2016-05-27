@@ -35,6 +35,7 @@
 #import <string.h>
 
 #import "CWTCPConnection.h"
+#import "CWThreadSafeArray.h"
 
 //
 // It's important that the read buffer be bigger than the PMTU. Since almost all networks
@@ -56,72 +57,6 @@
 //
 #define DEFAULT_TIMEOUT 60
 
-@interface MyArray ()
-
-@property (nonatomic, strong) NSMutableArray *array;
-
-@end
-
-@implementation MyArray
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _array = [[NSMutableArray alloc] init];
-    }
-    return self;
-}
-
-- (void)removeAllObjects
-{
-    [self.array removeAllObjects];
-}
-
-- (NSUInteger)count
-{
-    return self.array.count;
-}
-
-- (id)lastObject
-{
-    id obj = [self.array lastObject];
-    if (!obj) {
-        NSLog(@"How can this happen?");
-    }
-    return obj;
-}
-
-- (void)addObject:(id _Nonnull)obj
-{
-    if (!obj) {
-        NSLog(@"There: Trying to add nil!");
-    }
-    [self.array addObject:obj];
-}
-
-- (id)objectAtIndex:(NSUInteger)index
-{
-    return [self.array objectAtIndex:index];
-}
-
-- (void)insertObject:(id)anObject atIndex:(NSUInteger)index
-{
-    [self.array insertObject:anObject atIndex:index];
-}
-
-- (void)removeLastObject
-{
-    [self.array removeLastObject];
-}
-
-- (void)addObjectsFromArray:(NSArray * _Nonnull)otherArray
-{
-    [self.array addObjectsFromArray:otherArray];
-}
-
-@end
-
 @interface CWService ()
 
 @property (nonatomic) ConnectionTransport connectionTransport;
@@ -141,10 +76,10 @@
 {
   self = [super init];
 
-  _supportedMechanisms = [[NSMutableArray alloc] init];
-  _responsesFromServer = [[NSMutableArray alloc] init];
-  _capabilities = [[NSMutableArray alloc] init];
-  _queue = [[MyArray alloc] init];
+  _supportedMechanisms = [[CWThreadSafeArray alloc] init];
+  _responsesFromServer = [[CWThreadSafeArray alloc] init];
+  _capabilities = [[CWThreadSafeArray alloc] init];
+  _queue = [[CWThreadSafeArray alloc] init];
   _username = nil;
   _password = nil;
 
@@ -152,7 +87,7 @@
   _rbuf = [[NSMutableData alloc] init];
   _wbuf = [[NSMutableData alloc] init];
 
-  _runLoopModes = [[NSMutableArray alloc] initWithObjects: NSDefaultRunLoopMode, nil];
+  _runLoopModes = [[CWThreadSafeArray alloc] initWithArray:@[NSDefaultRunLoopMode]];
   _connectionTimeout = _readTimeout = _writeTimeout = DEFAULT_TIMEOUT;
   _counter = _lastCommand = 0;
 
@@ -265,7 +200,7 @@
 //
 - (NSArray *) supportedMechanisms
 {
-  return [NSArray arrayWithArray: _supportedMechanisms];
+  return [_supportedMechanisms array];
 }
 
 
@@ -673,7 +608,7 @@
 
 - (NSArray *) capabilities
 {
-  return _capabilities;
+  return [_capabilities array];
 }
 
 @end

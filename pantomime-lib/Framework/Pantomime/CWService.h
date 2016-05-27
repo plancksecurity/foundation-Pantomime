@@ -40,6 +40,7 @@
 #endif
 
 @class CWService;
+@class CWThreadSafeArray;
 
 /*!
   @function split_lines
@@ -308,19 +309,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 
 @end
 
-@interface MyArray : NSObject
-
-- (void)removeAllObjects;
-- (NSUInteger)count;
-- (id _Nullable)lastObject;
-- (void)addObject:(id _Nonnull)obj;
-- (id)objectAtIndex:(NSUInteger)index;
-- (void)insertObject:(id)anObject atIndex:(NSUInteger)index;
-- (void)removeLastObject;
-- (void)addObjectsFromArray:(NSArray * _Nonnull)otherArray;
-
-@end
-
 #ifdef MACOSX
 
 /*!
@@ -339,11 +327,11 @@ extern NSString * _Nonnull PantomimeProtocolException;
 @public
 
 @protected
-    NSMutableArray *_supportedMechanisms;
-    NSMutableArray *_responsesFromServer;
-    NSMutableArray *_capabilities;
-    NSMutableArray *_runLoopModes;
-    MyArray *_queue;
+    CWThreadSafeArray *_supportedMechanisms;
+    CWThreadSafeArray *_responsesFromServer;
+    CWThreadSafeArray *_capabilities;
+    CWThreadSafeArray *_runLoopModes;
+    CWThreadSafeArray *_queue;
     NSMutableData *_wbuf;
     NSMutableData *_rbuf;
     NSString *_mechanism;

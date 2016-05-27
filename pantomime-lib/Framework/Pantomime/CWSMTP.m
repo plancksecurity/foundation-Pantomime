@@ -33,6 +33,7 @@
 #import <Foundation/NSNotification.h>
 
 #import "CWConnection.h"
+#import "CWThreadSafeArray.h"
 
 //
 // Some static variables used to enhance the performance.

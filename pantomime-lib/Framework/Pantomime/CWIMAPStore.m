@@ -44,6 +44,7 @@
 #import <Foundation/NSValue.h>
 
 #import "CWIMAPCacheManager.h"
+#import "CWThreadSafeArray.h"
 
 #import "NSDate+RFC2822.h"
 
@@ -1259,7 +1260,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
   //NSLog(@"CWIMAPStore: -reconnect");
   
-  [_connection_state.previous_queue addObjectsFromArray: _queue];
+  [_connection_state.previous_queue addObjectsFromArray: [_queue array]];
   _connection_state.reconnecting = YES;
   
   // We flush our read/write buffers.
