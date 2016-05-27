@@ -56,6 +56,72 @@
 //
 #define DEFAULT_TIMEOUT 60
 
+@interface MyArray ()
+
+@property (nonatomic, strong) NSMutableArray *array;
+
+@end
+
+@implementation MyArray
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _array = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
+- (void)removeAllObjects
+{
+    [self.array removeAllObjects];
+}
+
+- (NSUInteger)count
+{
+    return self.array.count;
+}
+
+- (id)lastObject
+{
+    id obj = [self.array lastObject];
+    if (!obj) {
+        NSLog(@"How can this happen?");
+    }
+    return obj;
+}
+
+- (void)addObject:(id _Nonnull)obj
+{
+    if (!obj) {
+        NSLog(@"There: Trying to add nil!");
+    }
+    [self.array addObject:obj];
+}
+
+- (id)objectAtIndex:(NSUInteger)index
+{
+    return [self.array objectAtIndex:index];
+}
+
+- (void)insertObject:(id)anObject atIndex:(NSUInteger)index
+{
+    [self.array insertObject:anObject atIndex:index];
+}
+
+- (void)removeLastObject
+{
+    [self.array removeLastObject];
+}
+
+- (void)addObjectsFromArray:(NSArray * _Nonnull)otherArray
+{
+    [self.array addObjectsFromArray:otherArray];
+}
+
+@end
+
 @interface CWService ()
 
 @property (nonatomic) ConnectionTransport connectionTransport;
@@ -78,7 +144,7 @@
   _supportedMechanisms = [[NSMutableArray alloc] init];
   _responsesFromServer = [[NSMutableArray alloc] init];
   _capabilities = [[NSMutableArray alloc] init];
-  _queue = [[NSMutableArray alloc] init];
+  _queue = [[MyArray alloc] init];
   _username = nil;
   _password = nil;
 

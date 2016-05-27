@@ -313,6 +313,13 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	{
 	  // We dequeue the first inserted command from the queue.
 	  aQueueObject = [_queue lastObject];
+        if (!aQueueObject) {
+            NSLog(@"_queue has %d objects", _queue.count);
+            for (NSObject *obj in _queue) {
+                NSLog(@"obj %@", obj);
+            }
+            NSLog(@"aQueueObject nil");
+        }
 	}
       else
 	{
@@ -343,8 +350,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	}
     }
 
-    NSLog(@"aQueueObject 0x%u on thread %@",
-          (NSUInteger) aQueueObject, [[NSThread currentThread] name]);
     // TODO: Why is aQueueObject sometimes nil?
     if (aQueueObject) {
         _lastCommand = aQueueObject->command;
