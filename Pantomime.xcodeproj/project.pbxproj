@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4317986D1CF8326D007DD655 /* CWThreadSafeArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 4317986B1CF83173007DD655 /* CWThreadSafeArray.m */; };
-		431798711CF83CC7007DD655 /* CWConnectionThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 4317986F1CF83C63007DD655 /* CWConnectionThread.m */; };
 		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
 		43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
 		43980E691CBD1B5D00A7FC3C /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149351CBCECE200AFC030 /* NSDate+RFC2822.m */; };
@@ -77,8 +76,6 @@
 /* Begin PBXFileReference section */
 		4317986A1CF83173007DD655 /* CWThreadSafeArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWThreadSafeArray.h; sourceTree = "<group>"; };
 		4317986B1CF83173007DD655 /* CWThreadSafeArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSafeArray.m; sourceTree = "<group>"; };
-		4317986E1CF83C63007DD655 /* CWConnectionThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWConnectionThread.h; sourceTree = "<group>"; };
-		4317986F1CF83C63007DD655 /* CWConnectionThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWConnectionThread.m; sourceTree = "<group>"; };
 		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
 		433149321CBCEA1100AFC030 /* CWCacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCacheRecord.m; sourceTree = "<group>"; };
 		433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
@@ -258,8 +255,6 @@
 		43E854E81CB7EBDD006867C0 /* Pantomime */ = {
 			isa = PBXGroup;
 			children = (
-				4317986E1CF83C63007DD655 /* CWConnectionThread.h */,
-				4317986F1CF83C63007DD655 /* CWConnectionThread.m */,
 				4317986A1CF83173007DD655 /* CWThreadSafeArray.h */,
 				4317986B1CF83173007DD655 /* CWThreadSafeArray.m */,
 				434426FF1CE486660015CD6F /* CWIMAPCacheManager.h */,
@@ -465,7 +460,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */,
-				431798711CF83CC7007DD655 /* CWConnectionThread.m in Sources */,
 				43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */,
 				43980E691CBD1B5D00A7FC3C /* NSDate+RFC2822.m in Sources */,
 				43980E6C1CBD1B5D00A7FC3C /* CWCharset.m in Sources */,
