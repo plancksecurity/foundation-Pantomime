@@ -416,6 +416,11 @@
     return [[[self allMessages] lastObject] UID];
 }
 
+- (CWIMAPMessage * _Nullable)messageByUID:(NSInteger)uid
+{
+    return nil;
+}
+
 @end
 
 

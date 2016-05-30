@@ -37,7 +37,7 @@
               toFolder: has successfully completed. -messagesCopyCompleted:
 	      is also called on the delegate, if any.
 */
-extern NSString* PantomimeMessagesCopyCompleted;
+extern NSString * _Nonnull PantomimeMessagesCopyCompleted;
 
 /*!
   @const PantomimeMessagesCopyFailed
@@ -45,7 +45,7 @@ extern NSString* PantomimeMessagesCopyCompleted;
               toFolder: has failed to complete. -messagesCopyFailed:
 	      is also called on the delegate, if any.
 */
-extern NSString* PantomimeMessagesCopyFailed;
+extern NSString * _Nonnull PantomimeMessagesCopyFailed;
 
 /*!
   @const PantomimeMessageStoreCompleted
@@ -53,7 +53,7 @@ extern NSString* PantomimeMessagesCopyFailed;
               messages: has successfully completed. -messageStoreCompleted:
 	      is also called on the delegate, if any.
 */
-extern NSString* PantomimeMessageStoreCompleted;
+extern NSString * _Nonnull PantomimeMessageStoreCompleted;
 
 /*!
   @const PantomimeMessageStoreFailed
@@ -61,7 +61,7 @@ extern NSString* PantomimeMessageStoreCompleted;
               messages: has failed to completed. -messageStoreFailed:
 	      is also called on the delegate, if any.
 */
-extern NSString* PantomimeMessageStoreFailed;
+extern NSString * _Nonnull PantomimeMessageStoreFailed;
 
 @class CWIMAPMessage;
 
@@ -96,8 +96,8 @@ extern NSString* PantomimeMessageStoreFailed;
                  PantomimeFolderMode enum.
   @result An CWIMAPFolder instance, nil on error.
 */
-- (id) initWithName: (NSString *) theName
-               mode: (PantomimeFolderMode) theMode;
+- (id _Nullable) initWithName: (NSString * _Nonnull) theName
+                       mode: (PantomimeFolderMode) theMode;
 
 /*!
   @method appendMessageFromRawSource:flags:internalDate
@@ -112,9 +112,9 @@ extern NSString* PantomimeMessageStoreFailed;
   @param theFlags The flags of the message, nil if no flags need to be kept.
   @param theDate The INTERNALDATE of the message, or nil to use the current date.
 */
-- (void) appendMessageFromRawSource: (NSData *) theData
-                              flags:(CWFlags *) theFlags
-                       internalDate: (NSDate *) theDate;
+- (void) appendMessageFromRawSource: (NSData * _Nonnull) theData
+                              flags:(CWFlags * _Nullable) theFlags
+                       internalDate: (NSDate * _Nullable) theDate;
 
 /*!
   @method copyMessages: toFolder:
@@ -129,8 +129,8 @@ extern NSString* PantomimeMessageStoreFailed;
   @param theFolder The name of the target folder. The name must include
                    hierarchy separators if the target folder is a subfolder.
 */
-- (void) copyMessages: (NSArray *) theMessages
-             toFolder: (NSString *) theFolder;
+- (void) copyMessages: (NSArray * _Nonnull) theMessages
+             toFolder: (NSString * _Nonnull) theFolder;
 
 /*!
   @method prefetch
@@ -186,7 +186,7 @@ extern NSString* PantomimeMessageStoreFailed;
 /**
  @return The message (or nil) with the given UID.
  */
-- (CWIMAPMessage *)messageByUID:(NSInteger)uid;
+- (CWIMAPMessage * _Nullable)messageByUID:(NSInteger)uid;
 
 @end
 
