@@ -913,13 +913,13 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (NSEnumerator *) folderEnumerator
 {
-  if (![_folders count])
-    {
-      [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" \"*\""];
-      return nil;
+    if (![_folders count]) {
+        // Only top level folders: LIST "" %
+        [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" %%"];
+        return nil;
     }
 
-  return [_folders keyEnumerator];
+    return [_folders keyEnumerator];
 }
 
 
