@@ -178,19 +178,28 @@
 //
 - (void) prefetch
 {
-  // We first update the messages in our cache, if we need to.
-  if (_cacheManager && [self count])
-    {
-      [_store sendCommand: IMAP_UID_SEARCH  info: nil  arguments: @"UID SEARCH 1:*"];
-    }
-  else
-    {
-      //
-      // We must send this command since our IMAP cache might be empty (or have been removed).
-      // In that case, we much fetch again all messages, starting at UID 1.
-      //
-      [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                arguments: @"UID FETCH %u:* %@", 1, PantomimeIMAPDefaultDescriptors];
+    // Maximum number of mails to prefetch
+    NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
+
+    if ([self lastUID] > 0) {
+        // See https://tools.ietf.org/html/rfc4549#section-4.3.1
+
+        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                  arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
+         PantomimeIMAPDefaultDescriptors];
+        [_store sendCommand: IMAP_UID_FETCH_FLAGS info: nil
+                  arguments: @"UID FETCH %u:* FLAGS", [self lastUID] + 1];
+    } else {
+        // Local cache seems to be empty.
+
+        NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails;
+        if (lowestMessageNumberToFetch <= 0) {
+            lowestMessageNumberToFetch = 1;
+        }
+
+        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                  arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
+         PantomimeIMAPDefaultDescriptors];
     }
 }
 

@@ -111,7 +111,9 @@
 
       if (!_headers_were_prefetched)
 	{
-	  [aStore sendCommand: IMAP_UID_FETCH_HEADER_FIELDS_NOT  info: nil  arguments: @"UID FETCH %u:%u BODY.PEEK[HEADER.FIELDS.NOT (From To Cc Subject Date Message-ID References In-Reply-To)]", _UID, _UID];
+	  [aStore sendCommand: IMAP_UID_FETCH_HEADER_FIELDS_NOT
+                     info: nil
+                arguments: @"UID FETCH %u:%u %@", _UID, PantomimeIMAPDefaultDescriptors];
 	}
 
       // If we are no longer connected to the IMAP server, we don't send the 2nd command.

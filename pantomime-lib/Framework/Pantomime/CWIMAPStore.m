@@ -777,8 +777,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (id) folderForName: (NSString *) theName
 {
   return [self folderForName: theName
-	       mode: PantomimeReadWriteMode
-	       prefetch: YES];
+	       mode: PantomimeReadWriteMode];
 }
 
 
@@ -825,7 +824,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 #warning VERIFY FOR NoSelect
 - (CWIMAPFolder *) folderForName: (NSString *) theName
 			    mode: (PantomimeFolderMode) theMode
-			prefetch: (BOOL) aBOOL
 {  
   CWIMAPFolder *aFolder;
   
@@ -877,11 +875,6 @@ static inline int has_literal(char *buf, NSUInteger c)
   // This folder becomes the selected one. This will have to be improved in the future.
   // No need to retain "aFolder" here. The "_openFolders" dictionary already retains it.
   _selectedFolder = aFolder;
-
-  if (aBOOL)
-    {
-      [_selectedFolder prefetch];
-    }
 
   return _selectedFolder;
 }
@@ -1698,33 +1691,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseEXISTS
 {
-  NSData *aData;
-  int n;
-  
-  aData = [_responsesFromServer lastObject];
+    NSData *aData;
+    int n;
 
-  sscanf([aData cString], "* %d EXISTS", &n);
-  
-  //NSLog(@"_parseExists: %d", n);
-
+    aData = [_responsesFromServer lastObject];
+    sscanf([aData cString], "* %d EXISTS", &n);
     _selectedFolder.existsCount = n;
-
-  if (_currentQueueObject && _currentQueueObject->command != IMAP_SELECT &&
-      _selectedFolder && 
-      n > [_selectedFolder count])
-    {
-      NSUInteger uid;
-      
-      uid = 0;
-      
-      // We prefetch the new messages from the last UID+1
-      if ([_selectedFolder count])
-	{
-	  uid = [_selectedFolder lastUID];
-	} 
-
-      [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil  arguments: @"UID FETCH %u:* (FLAGS RFC822.SIZE BODY.PEEK[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To)])", (uid+1)];
-    }
 }
 
 
@@ -2845,15 +2817,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 	  //NSLog(@"removing for UID %d", [[allResults objectAtIndex: i] unsignedIntValue]);
 	  [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] remove: PantomimeSeen];
 	}
-      
-      //
-      // We obtain the last UID of our cache.
-      // Messages will be fetched starting from that UID + 1.
-      //
-      //NSLog(@"LAST UID IN CACHE: %u", [[_selectedFolder->allMessages lastObject] UID]);
-            [self sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                    arguments: @"UID FETCH %u:* %@", ([_selectedFolder lastUID]+1),
-             PantomimeIMAPDefaultDescriptors];
       break;
 
     default:

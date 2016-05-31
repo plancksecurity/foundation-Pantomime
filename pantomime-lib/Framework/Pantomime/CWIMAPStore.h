@@ -73,39 +73,40 @@
   @constant IMAP_EMPTY_QUEUE Special command to empty the command queue.
 */
 typedef enum {
-  IMAP_APPEND = 0x1,
-  IMAP_AUTHENTICATE_CRAM_MD5,
-  IMAP_AUTHENTICATE_LOGIN,
-  IMAP_AUTHORIZATION,
-  IMAP_CAPABILITY,
-  IMAP_CLOSE,
-  IMAP_CREATE,
-  IMAP_DELETE,
-  IMAP_EXAMINE,
-  IMAP_EXPUNGE,
-  IMAP_LIST,
-  IMAP_LOGIN,
-  IMAP_LOGOUT,
-  IMAP_LSUB,
-  IMAP_NOOP,
-  IMAP_RENAME,
-  IMAP_SELECT,
-  IMAP_STARTTLS,
-  IMAP_STATUS,
-  IMAP_SUBSCRIBE,
-  IMAP_UID_COPY,
-  IMAP_UID_FETCH_BODY_TEXT,
-  IMAP_UID_FETCH_HEADER_FIELDS,
-  IMAP_UID_FETCH_HEADER_FIELDS_NOT,
-  IMAP_UID_FETCH_RFC822,
-  IMAP_UID_SEARCH,
-  IMAP_UID_SEARCH_ALL,
-  IMAP_UID_SEARCH_ANSWERED,
-  IMAP_UID_SEARCH_FLAGGED,
-  IMAP_UID_SEARCH_UNSEEN,
-  IMAP_UID_STORE,
-  IMAP_UNSUBSCRIBE,
-  IMAP_EMPTY_QUEUE
+    IMAP_APPEND = 0x1,
+    IMAP_AUTHENTICATE_CRAM_MD5,
+    IMAP_AUTHENTICATE_LOGIN,
+    IMAP_AUTHORIZATION,
+    IMAP_CAPABILITY,
+    IMAP_CLOSE,
+    IMAP_CREATE,
+    IMAP_DELETE,
+    IMAP_EXAMINE,
+    IMAP_EXPUNGE,
+    IMAP_LIST,
+    IMAP_LOGIN,
+    IMAP_LOGOUT,
+    IMAP_LSUB,
+    IMAP_NOOP,
+    IMAP_RENAME,
+    IMAP_SELECT,
+    IMAP_STARTTLS,
+    IMAP_STATUS,
+    IMAP_SUBSCRIBE,
+    IMAP_UID_COPY,
+    IMAP_UID_FETCH_BODY_TEXT,
+    IMAP_UID_FETCH_HEADER_FIELDS,
+    IMAP_UID_FETCH_FLAGS,
+    IMAP_UID_FETCH_HEADER_FIELDS_NOT,
+    IMAP_UID_FETCH_RFC822,
+    IMAP_UID_SEARCH,
+    IMAP_UID_SEARCH_ALL,
+    IMAP_UID_SEARCH_ANSWERED,
+    IMAP_UID_SEARCH_FLAGGED,
+    IMAP_UID_SEARCH_UNSEEN,
+    IMAP_UID_STORE,
+    IMAP_UNSUBSCRIBE,
+    IMAP_EMPTY_QUEUE
 } IMAPCommand;
 
 /*!
@@ -171,18 +172,21 @@ extern NSString * _Nonnull const PantomimeFolderStatusFailed;
 
 @property (nonatomic, nullable) id<CWFolderBuilding> folderBuilder;
 
+/**
+ Maximum count of messages to prefetch.
+ */
+@property (nonatomic) NSUInteger maxPrefetchCount;
+
 /*!
   @method folderForName:mode:prefetch:
   @discussion This method is used to get the folder with
-              the specified name and mode.
+              the specified name and mode. Also selects the folder.
   @param theName The name of the folder to obtain.
   @param theMode The mode to use. The value is one of the PantomimeFolderMode enum.
-  @param aBOOL YES if prefetch should be done on the folder, NO otherwise.
   @result A CWIMAPFolder instance.
 */
 - (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName
-                            mode: (PantomimeFolderMode) theMode
-                        prefetch: (BOOL) aBOOL;
+                            mode: (PantomimeFolderMode) theMode;
 
 /*!
   @method folderForName:select:
