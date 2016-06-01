@@ -1815,7 +1815,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 // Subject: Test mail
 // Date: Tue, 16 Dec 2003 15:52:23 GMT
 // Message-Id: <200312161552.PAA07523@aaaaaaa.bbb.ccccccccccccccc.com>
-// 
+//
 //  UID 29905)
 //
 //

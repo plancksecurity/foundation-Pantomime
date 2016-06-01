@@ -187,10 +187,12 @@
         [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
                   arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
          PantomimeIMAPDefaultDescriptors];
-        [_store sendCommand: IMAP_UID_FETCH_FLAGS info: nil
-                  arguments: @"UID FETCH %u:* FLAGS", [self lastUID] + 1];
+
+        // TODO: Update old mails fast
+        /*[_store sendCommand: IMAP_UID_FETCH_FLAGS info: nil
+                  arguments: @"UID FETCH 1:%u FLAGS", [self lastUID]];*/
     } else {
-        // Local cache seems to be empty.
+        // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
 
         NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails;
         if (lowestMessageNumberToFetch <= 0) {
