@@ -427,7 +427,7 @@
     return [[[self allMessages] lastObject] UID];
 }
 
-- (CWIMAPMessage * _Nullable)messageByUID:(NSInteger)uid
+- (CWIMAPMessage * _Nullable)messageByUID:(NSUInteger)uid
 {
     return nil;
 }

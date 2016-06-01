@@ -186,7 +186,7 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 /**
  @return The message (or nil) with the given UID.
  */
-- (CWIMAPMessage * _Nullable)messageByUID:(NSInteger)uid;
+- (CWIMAPMessage * _Nullable)messageByUID:(NSUInteger)uid;
 
 @end
 
