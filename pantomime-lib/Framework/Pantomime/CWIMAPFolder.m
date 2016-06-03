@@ -182,26 +182,26 @@
     NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
 
     if ([self lastUID] > 0) {
-        // See https://tools.ietf.org/html/rfc4549#section-4.3.1
-
-        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                  arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
-         PantomimeIMAPDefaultDescriptors];
-
+        // Very inefficient, but pantomime cannot parse more than one literal per response :(
+        for (NSString *descriptor in @[PantomimeIMAPDefaultDescriptors, PantomimeIMAPFullBody]) {
+            [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                      arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
+             descriptor];
+        }
         // TODO: Update old mails fast
-        /*[_store sendCommand: IMAP_UID_FETCH_FLAGS info: nil
-                  arguments: @"UID FETCH 1:%u FLAGS", [self lastUID]];*/
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
-
         NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails + 1;
         if (lowestMessageNumberToFetch <= 0) {
             lowestMessageNumberToFetch = 1;
         }
 
-        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                  arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
-         PantomimeIMAPDefaultDescriptors];
+        // Very inefficient, but pantomime cannot parse more than one literal per response :(
+        for (NSString *descriptor in @[PantomimeIMAPDefaultDescriptors, PantomimeIMAPFullBody]) {
+            [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                      arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
+             descriptor];
+        }
     }
 }
 

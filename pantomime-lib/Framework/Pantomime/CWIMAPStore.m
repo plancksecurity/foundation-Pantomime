@@ -2054,20 +2054,6 @@ static inline int has_literal(char *buf, NSUInteger c)
             j = [aScanner scanLocation];
         }
         //
-        // Note:
-        //
-        // Novell's IMAP server doesn't distinguish a NOT BODY.PEEK from a standard one (ie., no NOT). So we can have:
-        //
-        // 000b UID FETCH 3071053:3071053 BODY.PEEK[HEADER.FIELDS.NOT (From To Cc Subject Date Message-ID References In-Reply-To MIME-Version)]
-        // * 1 FETCH (UID 3071053 BODY[HEADER.FIELDS ("From" "To" "Cc" "Subject" "Date" "Message-ID" "References" "In-Reply-To" "MIME-Version")] {1030}
-        //
-        else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS.NOT"] == NSOrderedSame ||
-                 _lastCommand == IMAP_UID_FETCH_HEADER_FIELDS_NOT) {
-            [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
-            [aMessage addHeadersFromData:  [_currentQueueObject->info objectForKey: @"NSData"] record: NULL];
-            break;
-        }
-        //
         // We must not break immediately after parsing this information. It's very important
         // since servers like Exchange might send us responses like:
         //
@@ -2075,7 +2061,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         // If we break right away, we'll skip the size and more importantly, the UID.
         //
-        else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS"] == NSOrderedSame) {
+        else if ([aWord caseInsensitiveCompare: @"BODY[HEADER]"] == NSOrderedSame) {
             [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
             [aMessage setHeadersFromData: [_currentQueueObject->info objectForKey: @"NSData"]  record: cacheRecord];
         }
