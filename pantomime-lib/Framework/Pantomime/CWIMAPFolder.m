@@ -194,7 +194,7 @@
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
 
-        NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails;
+        NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails + 1;
         if (lowestMessageNumberToFetch <= 0) {
             lowestMessageNumberToFetch = 1;
         }
