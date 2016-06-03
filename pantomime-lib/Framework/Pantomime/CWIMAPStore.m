@@ -1781,6 +1781,27 @@ static inline int has_literal(char *buf, NSUInteger c)
   //NSLog(@"Expunged %d", msn);
 }
 
+/**
+ @Return: The UID extracted from a list of NSData (as part of a fetch request), or
+ 0 if none could be identified.
+ */
+- (NSUInteger)extractUIDFromDataArray:(NSArray *)datas
+{
+    for (NSData *data in datas) {
+        NSString *aString = [data asciiString];
+        NSTextCheckingResult *match = [self.uidRegex
+                                       firstMatchInString:aString options:0
+                                       range:NSMakeRange(0, aString.length)];
+        if (match) {
+            NSRange r = [match rangeAtIndex:1];
+            if (r.location != NSNotFound) {
+                NSString *uidString = [aString substringWithRange:r];
+                return uidString.integerValue;
+            }
+        }
+    }
+    return 0;
+}
 
 //
 //
@@ -1855,296 +1876,269 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseFETCH: (NSInteger) theMSN
 {
-  NSMutableString *aMutableString;
-  NSCharacterSet *aCharacterSet;
-  CWIMAPMessage *aMessage;
-  NSScanner *aScanner;
+    NSMutableString *aMutableString;
+    NSCharacterSet *aCharacterSet;
+    CWIMAPMessage *aMessage;
+    NSScanner *aScanner;
 
-  NSMutableArray *aMutableArray;
-  NSString *aWord, *aString;
-  NSRange aRange;
+    NSMutableArray *aMutableArray;
+    NSString *aWord, *aString;
+    NSRange aRange;
 
-  BOOL done, seen_fetch, must_flush_record;
-  NSInteger i, j, count, len;
-  CWCacheRecord *cacheRecord = [[CWCacheRecord alloc] init];
-  
-  //
-  // The folder might have been closed so we must not try to
-  // update it for no good reason.
-  //
-  if (!_selectedFolder) return;
-  
-  count = [_responsesFromServer count]-1;
-   
-  //NSLog(@"RESPONSES FROM SERVER: %d", count);
-  
-  aMutableString = [[NSMutableString alloc] init];
-  aMutableArray = [[NSMutableArray alloc] init];
+    BOOL done, seen_fetch, must_flush_record;
+    NSInteger i, j, count, len;
+    CWCacheRecord *cacheRecord = [[CWCacheRecord alloc] init];
 
-  //
-  // Note:
-  //
-  // We must be careful here to NOT consider all responses from the server. For example,
-  // UW IMAP might send us:
-  // 1 UID SEARCH ANSWERED
-  // * SEARCH
-  // * 1 FETCH (FLAGS (\Recent \Seen) UID 1)
-  // 1 OK UID SEARCH completed
-  //
-  // In such response, we must NOT consider the "* SEARCH" response.
-  //
-  must_flush_record = seen_fetch = NO;
+    //
+    // The folder might have been closed so we must not try to
+    // update it for no good reason.
+    //
+    if (!_selectedFolder) return;
 
-    NSUInteger theUID = 0;
-  for (i = 0; i <= count; i++)
-    {
-        aString = [[_responsesFromServer objectAtIndex: i] asciiString];
-        NSTextCheckingResult *match = [self.uidRegex
-                                       firstMatchInString:aString options:0
-                                       range:NSMakeRange(0, aString.length)];
-        if (match) {
-            NSRange r = [match rangeAtIndex:1];
-            if (r.location != NSNotFound) {
-                NSString *uidString = [aString substringWithRange:r];
-                theUID = uidString.integerValue;
-            }
+    count = [_responsesFromServer count]-1;
+
+    //NSLog(@"RESPONSES FROM SERVER: %d", count);
+
+    aMutableString = [[NSMutableString alloc] init];
+    aMutableArray = [[NSMutableArray alloc] init];
+
+    //
+    // Note:
+    //
+    // We must be careful here to NOT consider all responses from the server. For example,
+    // UW IMAP might send us:
+    // 1 UID SEARCH ANSWERED
+    // * SEARCH
+    // * 1 FETCH (FLAGS (\Recent \Seen) UID 1)
+    // 1 OK UID SEARCH completed
+    //
+    // In such response, we must NOT consider the "* SEARCH" response.
+    //
+    must_flush_record = seen_fetch = NO;
+
+    // Extract the UID from anywhere in the response
+    NSUInteger theUID = [self extractUIDFromDataArray:_responsesFromServer.array];
+
+    // Try to retrieve the message by UID
+    if (theUID > 0) {
+        aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
+    }
+
+    if (aMessage == nil) {
+        aMessage = [[CWIMAPMessage alloc] init];
+    }
+
+    [aMessage setUID:theUID];
+
+    // We set some initial properties to our message;
+    [aMessage setInitialized: NO];
+    [aMessage setFolder: _selectedFolder];
+    [_selectedFolder appendMessage: aMessage];
+
+    // We add the new message to our cache.
+    if ([_selectedFolder cacheManager]) {
+        if (must_flush_record)
+        {
+            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
         }
+
+        CLEAR_CACHE_RECORD(cacheRecord);
+        must_flush_record = YES;
+
+        //[[_selectedFolder cacheManager] addObject: aMessage];
+    }
+
+    for (i = 0; i <= count; i++) {
+        aString = [[_responsesFromServer objectAtIndex: i] asciiString];
 
         //NSLog(@"%i: %@", i, aString);
-      if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)theMSN]])
-	{
-	  seen_fetch = YES;
-	}
-
-      if (seen_fetch)
-	{
-	  [aMutableArray addObject: [_responsesFromServer objectAtIndex: i]];
-	  [aMutableString appendString: aString];
-	  if (i < count-1)
-	    {
-	      [aMutableString appendString: @" "];
-	    }
-	}
-    }
-  
-  //NSLog(@"GOT TO PARSE: |%@|", aMutableString);
-
-  aCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-  len = [aMutableString length];
-  aMessage = nil;
-  i = j = 0;
-  
-  aScanner = [[NSScanner alloc] initWithString: aMutableString];
-  [aScanner setScanLocation: i];
-  
-  done = ![aScanner scanUpToCharactersFromSet: aCharacterSet  intoString: NULL];
-
-  //
-  // We tokenize our string into words
-  //
-  while (!done)
-    {
-      j = [aScanner scanLocation];
-      aWord = [[aMutableString substringWithRange: NSMakeRange(i,j-i)] stringByTrimmingWhiteSpaces];
-      
-      //NSLog(@"WORD |%@|", aWord);
-      
-      if ([aWord characterAtIndex: 0] == '(')
-	{
-	  aWord = [aWord substringFromIndex: 1];
-	}
-
-      //
-      // We read the MSN
-      //
-      if ([aWord characterAtIndex: 0] == '*')
-	{
-	  int msn;
-
-	  [aScanner scanInt: &msn];
-	  //NSLog(@"msn = %d", msn);
-
-        // Try to retrieve the message by UID
-        if (theUID > 0) {
-            aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
-            [aMessage setMessageNumber: msn];
-            [aMessage setFolder: _selectedFolder];
+        if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)theMSN]])
+        {
+            seen_fetch = YES;
         }
-	  if (aMessage == nil)
-	    {
-	      //NSLog(@"============ NEW MESSAGE ======================");
-	      aMessage = [[CWIMAPMessage alloc] init];
-	      
-	      // We set some initial properties to our message;
-	      [aMessage setInitialized: NO];
-	      [aMessage setFolder: _selectedFolder];
-	      [aMessage setMessageNumber: msn];
-	      [_selectedFolder appendMessage: aMessage];
-	      
-	      // We add the new message to our cache.
-	      if ([_selectedFolder cacheManager])
-		{
-		  if (must_flush_record)
-		    {
-		      [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
-		    }
-		  
-		  CLEAR_CACHE_RECORD(cacheRecord);
-		  must_flush_record = YES;
 
-		  //[[_selectedFolder cacheManager] addObject: aMessage];
-		}
-	      
-	      RELEASE(aMessage);
-	    }
-	}
+        if (seen_fetch) {
+            [aMutableArray addObject: [_responsesFromServer objectAtIndex: i]];
+            [aMutableString appendString: aString];
+            if (i < count-1) {
+                [aMutableString appendString: @" "];
+            }
+        }
+    }
+
+    //NSLog(@"GOT TO PARSE: |%@|", aMutableString);
+
+    aCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    len = [aMutableString length];
+    i = j = 0;
+
+    aScanner = [[NSScanner alloc] initWithString: aMutableString];
+    [aScanner setScanLocation: i];
+
+    done = ![aScanner scanUpToCharactersFromSet: aCharacterSet  intoString: NULL];
+
+    //
+    // We tokenize our string into words
+    //
+    while (!done) {
+        j = [aScanner scanLocation];
+        aWord = [[aMutableString substringWithRange: NSMakeRange(i,j-i)] stringByTrimmingWhiteSpaces];
+
+        //NSLog(@"WORD |%@|", aWord);
+
+        if ([aWord characterAtIndex: 0] == '(') {
+            aWord = [aWord substringFromIndex: 1];
+        }
+
+        //
+        // We read the MSN
+        //
+        if ([aWord characterAtIndex: 0] == '*') {
+            int msn;
+
+            [aScanner scanInt: &msn];
+            //NSLog(@"msn = %d", msn);
+            [aMessage setMessageNumber: msn];
+        }
         // end of reading MSN
 
-        if (!aMessage)
-	{
-	  RELEASE(aMutableString);
-	  RELEASE(aMutableArray);
-	  RELEASE(aScanner);
-	  return;
-	}
-      //
-      // We read our UID
-      //
-      if ([aWord caseInsensitiveCompare: @"UID"] == NSOrderedSame)
-	{
-	  NSUInteger uid;
+        if (!aMessage) {
+            RELEASE(aMutableString);
+            RELEASE(aMutableArray);
+            RELEASE(aScanner);
+            return;
+        }
+        //
+        // We read our UID
+        //
+        if ([aWord caseInsensitiveCompare: @"UID"] == NSOrderedSame)
+        {
+            NSUInteger uid;
 
-	  [aScanner scanUnsignedInt: &uid];
-	  //NSLog(@"uid %d j = %d, scanLoc = %d", uid, j, [aScanner scanLocation]);
-	  
-	  if ([aMessage UID] == 0)
-	    {
-	      [aMessage setUID: uid];
-	      cacheRecord.imap_uid = uid;
-	    }
+            [aScanner scanUnsignedInt: &uid];
+            //NSLog(@"uid %d j = %d, scanLoc = %d", uid, j, [aScanner scanLocation]);
 
-	  j = [aScanner scanLocation];
-	}
-      //
-      // We read our flags. We usually get something like FLAGS (\Seen)
-      //
-      else if ([aWord caseInsensitiveCompare: @"FLAGS"] == NSOrderedSame)
-	{
-	  // We get the substring inside our ( )
-	  aRange = [aMutableString rangeOfString: @")"  options: 0  range: NSMakeRange(j,len-j)]; 
-	  //NSLog(@"Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
-	  [self _parseFlags: [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]
-		message: aMessage
-		record: cacheRecord];
+            if ([aMessage UID] == 0)
+            {
+                [aMessage setUID: uid];
+                cacheRecord.imap_uid = uid;
+            }
 
-	  j = aRange.location + 1;
-	  [aScanner setScanLocation: j];
-	}
-      //
-      // We read the RFC822 message size
-      //
-      else if ([aWord caseInsensitiveCompare: @"RFC822.SIZE"] == NSOrderedSame)
-	{
-	  int size;
+            j = [aScanner scanLocation];
+        }
+        //
+        // We read our flags. We usually get something like FLAGS (\Seen)
+        //
+        else if ([aWord caseInsensitiveCompare: @"FLAGS"] == NSOrderedSame) {
+            // We get the substring inside our ( )
+            aRange = [aMutableString rangeOfString: @")"  options: 0  range: NSMakeRange(j,len-j)];
+            //NSLog(@"Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
+            [self _parseFlags: [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]
+                      message: aMessage
+                       record: cacheRecord];
 
-	  [aScanner scanInt: &size];
-	  //NSLog(@"size = %d", size);
-	  [aMessage setSize: size];
-	  cacheRecord.size = size;
+            j = aRange.location + 1;
+            [aScanner setScanLocation: j];
+        }
+        //
+        // We read the RFC822 message size
+        //
+        else if ([aWord caseInsensitiveCompare: @"RFC822.SIZE"] == NSOrderedSame) {
+            int size;
 
-	  j = [aScanner scanLocation];
-	}
-      //
-      // Note:
-      //
-      // Novell's IMAP server doesn't distinguish a NOT BODY.PEEK from a standard one (ie., no NOT). So we can have:
-      //
-      // 000b UID FETCH 3071053:3071053 BODY.PEEK[HEADER.FIELDS.NOT (From To Cc Subject Date Message-ID References In-Reply-To MIME-Version)]
-      // * 1 FETCH (UID 3071053 BODY[HEADER.FIELDS ("From" "To" "Cc" "Subject" "Date" "Message-ID" "References" "In-Reply-To" "MIME-Version")] {1030}
-      //
-      else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS.NOT"] == NSOrderedSame ||
-	       _lastCommand == IMAP_UID_FETCH_HEADER_FIELDS_NOT)
-	{
-	  [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
-	  [aMessage addHeadersFromData:  [_currentQueueObject->info objectForKey: @"NSData"] record: NULL];
-	  break;
-	}
-      //
-      // We must not break immediately after parsing this information. It's very important
-      // since servers like Exchange might send us responses like:
-      //
-      // * 1 FETCH (FLAGS (\Seen) RFC822.SIZE 4491 BODY[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To Content-Type)] {337} UID 614348)
-      //
-      // If we break right away, we'll skip the size and more importantly, the UID.
-      //
-      else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS"] == NSOrderedSame)
-	{
-	  [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
-	  [aMessage setHeadersFromData: [_currentQueueObject->info objectForKey: @"NSData"]  record: cacheRecord];
-	}
-      //
-      //
-      //
-      else if ([aWord caseInsensitiveCompare: @"BODY[TEXT]"] == NSOrderedSame)
-	{
-	  [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
-	  if (![aMessage content])
-	    {
-	      NSData *aData;
-	      
-	      //
-	      // We do an initial check for the message body. If we haven't read a literal,
-	      // [_currentQueueObject->info objectForKey: @"NSData"] returns nil. This can
-	      // happen with messages having a totally emtpy body. For those messages,
-	      // we simply set a default content, being an empty NSData instance.
-	      //
-	      aData = [_currentQueueObject->info objectForKey: @"NSData"];
-	      
-	      if (!aData) aData = [NSData data];
-	      
-	      [CWMIMEUtility setContentFromRawSource: aData  inPart: aMessage];
-	      [aMessage setInitialized: YES];
+            [aScanner scanInt: &size];
+            //NSLog(@"size = %d", size);
+            [aMessage setSize: size];
+            cacheRecord.size = size;
 
-	      [_currentQueueObject->info setObject: aMessage  forKey: @"Message"];
+            j = [aScanner scanLocation];
+        }
+        //
+        // Note:
+        //
+        // Novell's IMAP server doesn't distinguish a NOT BODY.PEEK from a standard one (ie., no NOT). So we can have:
+        //
+        // 000b UID FETCH 3071053:3071053 BODY.PEEK[HEADER.FIELDS.NOT (From To Cc Subject Date Message-ID References In-Reply-To MIME-Version)]
+        // * 1 FETCH (UID 3071053 BODY[HEADER.FIELDS ("From" "To" "Cc" "Subject" "Date" "Message-ID" "References" "In-Reply-To" "MIME-Version")] {1030}
+        //
+        else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS.NOT"] == NSOrderedSame ||
+                 _lastCommand == IMAP_UID_FETCH_HEADER_FIELDS_NOT) {
+            [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
+            [aMessage addHeadersFromData:  [_currentQueueObject->info objectForKey: @"NSData"] record: NULL];
+            break;
+        }
+        //
+        // We must not break immediately after parsing this information. It's very important
+        // since servers like Exchange might send us responses like:
+        //
+        // * 1 FETCH (FLAGS (\Seen) RFC822.SIZE 4491 BODY[HEADER.FIELDS (From To Cc Subject Date Message-ID References In-Reply-To Content-Type)] {337} UID 614348)
+        //
+        // If we break right away, we'll skip the size and more importantly, the UID.
+        //
+        else if ([aWord caseInsensitiveCompare: @"BODY[HEADER.FIELDS"] == NSOrderedSame) {
+            [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
+            [aMessage setHeadersFromData: [_currentQueueObject->info objectForKey: @"NSData"]  record: cacheRecord];
+        }
+        //
+        //
+        //
+        else if ([aWord caseInsensitiveCompare: @"BODY[TEXT]"] == NSOrderedSame) {
+            [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
+            if (![aMessage content]) {
+                NSData *aData;
 
-	      POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
-	      PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
-	    }
-	  break;
-	}
-      //
-      //
-      //
-      else if ([aWord caseInsensitiveCompare: @"RFC822"] == NSOrderedSame)
-	{
-	  [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
-	  [aMessage setRawSource: [_currentQueueObject->info objectForKey: @"NSData"]];
-	  POST_NOTIFICATION(PantomimeMessageFetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
-	  PERFORM_SELECTOR_2(_delegate, @selector(messageFetchCompleted:), PantomimeMessageFetchCompleted, aMessage, @"Message");
-	  break;
-	}
+                //
+                // We do an initial check for the message body. If we haven't read a literal,
+                // [_currentQueueObject->info objectForKey: @"NSData"] returns nil. This can
+                // happen with messages having a totally emtpy body. For those messages,
+                // we simply set a default content, being an empty NSData instance.
+                //
+                aData = [_currentQueueObject->info objectForKey: @"NSData"];
 
-      i = j;
-      done = ![aScanner scanUpToCharactersFromSet: aCharacterSet  intoString: NULL];
+                if (!aData) aData = [NSData data];
 
-      if (done && must_flush_record)
-	{
-	  [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
-	}
+                [CWMIMEUtility setContentFromRawSource: aData  inPart: aMessage];
+                [aMessage setInitialized: YES];
+
+                [_currentQueueObject->info setObject: aMessage  forKey: @"Message"];
+
+                POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
+                PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
+            }
+            break;
+        }
+        //
+        //
+        //
+        else if ([aWord caseInsensitiveCompare: @"RFC822"] == NSOrderedSame) {
+            [[_currentQueueObject->info objectForKey: @"NSData"] replaceCRLFWithLF];
+            [aMessage setRawSource: [_currentQueueObject->info objectForKey: @"NSData"]];
+            POST_NOTIFICATION(PantomimeMessageFetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
+            PERFORM_SELECTOR_2(_delegate, @selector(messageFetchCompleted:), PantomimeMessageFetchCompleted, aMessage, @"Message");
+            break;
+        }
+        
+        i = j;
+        done = ![aScanner scanUpToCharactersFromSet: aCharacterSet  intoString: NULL];
+        
+        if (done && must_flush_record)
+        {
+            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
+        }
     }
- 
-
-  RELEASE(aScanner);
-  RELEASE(aMutableString);
-
-  //
-  // It is important that we remove the responses we have processed. This is particularly
-  // useful if we are caching an IMAP mailbox. We could receive thousands of untagged
-  // FETCH responses and we don't want to go over them again and again everytime
-  // this method is invoked.
-  //
-  [_responsesFromServer removeObjectsInArray: aMutableArray];
-  RELEASE(aMutableArray);
+    
+    
+    RELEASE(aScanner);
+    RELEASE(aMutableString);
+    
+    //
+    // It is important that we remove the responses we have processed. This is particularly
+    // useful if we are caching an IMAP mailbox. We could receive thousands of untagged
+    // FETCH responses and we don't want to go over them again and again everytime
+    // this method is invoked.
+    //
+    [_responsesFromServer removeObjectsInArray: aMutableArray];
+    RELEASE(aMutableArray);
     RELEASE(cacheRecord);
 }
 
