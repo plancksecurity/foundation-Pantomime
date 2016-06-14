@@ -2090,6 +2090,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                 POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
                 PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
+
+                [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
             }
             break;
         }
@@ -2554,7 +2556,10 @@ static inline int has_literal(char *buf, NSUInteger c)
             PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyCompleted:), PantomimeMessagesCopyCompleted, _currentQueueObject->info);
             break;
 
-        case IMAP_UID_FETCH_HEADER_FIELDS:
+            // Since we download mail all in one, and we first have to fetch headers and then
+            // body (pantomime cannot deal with several literals per response), we signal the
+            // end of prefetch when all new mails have been downloadad.
+        case IMAP_UID_FETCH_BODY_TEXT:
         {
             _connection_state.opening_mailbox = NO;
 
