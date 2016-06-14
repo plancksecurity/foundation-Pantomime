@@ -273,7 +273,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) updateRead
 {
-  id aData;
+  NSData *aData;
  
   NSUInteger i, count;
   char *buf;
