@@ -22,7 +22,7 @@
 
 #import <Foundation/NSString.h>
 
-NSString * _Nonnull const PantomimeIMAPDefaultDescriptors = @"(UID FLAGS RFC822.SIZE BODY.PEEK[HEADER])";
+NSString * _Nonnull const PantomimeIMAPDefaultDescriptors = @"(UID FLAGS RFC822.SIZE BODY[HEADER])";
 NSString * _Nonnull const PantomimeIMAPFullBody = @"(UID BODY[TEXT])";
 
 // CWDNSManager notifications

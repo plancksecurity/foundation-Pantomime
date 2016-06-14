@@ -181,14 +181,18 @@
     // Maximum number of mails to prefetch
     NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
 
+    // Sending two very similar requests in parallel is ineffecient,
+    // but pantomime cannot parse more than one literal per response :(
     if ([self lastUID] > 0) {
-        // Very inefficient, but pantomime cannot parse more than one literal per response :(
-        for (NSString *descriptor in @[PantomimeIMAPDefaultDescriptors, PantomimeIMAPFullBody]) {
-            [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                      arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
-             descriptor];
-        }
+        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                  arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
+         PantomimeIMAPDefaultDescriptors];
+        [_store sendCommand: IMAP_UID_FETCH_BODY_TEXT  info: nil
+                  arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
+         PantomimeIMAPFullBody];
+
         // TODO: Update old mails fast
+
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails + 1;
@@ -196,12 +200,12 @@
             lowestMessageNumberToFetch = 1;
         }
 
-        // Very inefficient, but pantomime cannot parse more than one literal per response :(
-        for (NSString *descriptor in @[PantomimeIMAPDefaultDescriptors, PantomimeIMAPFullBody]) {
-            [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                      arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
-             descriptor];
-        }
+        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
+                  arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
+         PantomimeIMAPDefaultDescriptors];
+        [_store sendCommand: IMAP_UID_FETCH_BODY_TEXT  info: nil
+                  arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
+         PantomimeIMAPFullBody];
     }
 }
 
