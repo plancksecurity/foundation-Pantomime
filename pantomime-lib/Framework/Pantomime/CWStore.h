@@ -31,39 +31,45 @@
 /*!
   @const PantomimeFolderCreateCompleted
 */
-extern NSString* PantomimeFolderCreateCompleted;
+extern NSString * _Nonnull PantomimeFolderCreateCompleted;
 
 /*!
   @const PantomimeFolderCreateFailed
 */
-extern NSString* PantomimeFolderCreateFailed;
+extern NSString * _Nonnull PantomimeFolderCreateFailed;
 
 /*!
   @const PantomimeFolderDeleteCompleted
 */
-extern NSString* PantomimeFolderDeleteCompleted;
+extern NSString * _Nonnull PantomimeFolderDeleteCompleted;
 
 /*!
   @const PantomimeFolderDeleteFailed
 */
-extern NSString* PantomimeFolderDeleteFailed;
+extern NSString * _Nonnull PantomimeFolderDeleteFailed;
 
 /*!
   @const PantomimeFolderRenameCompleted
 */
-extern NSString* PantomimeFolderRenameCompleted;
+extern NSString * _Nonnull PantomimeFolderRenameCompleted;
 
 /*!
   @const PantomimeFolderRenameFailed
 */
-extern NSString* PantomimeFolderRenameFailed;
+extern NSString * _Nonnull PantomimeFolderRenameFailed;
 
 @class CWFolder;
 @class CWURLName;
 
 @protocol CWFolderBuilding <NSObject>
 
-- (CWFolder *)folderWithName:(NSString *)name;
+/**
+ If the folder builder needs to do work in a background queue, this provides access to it,
+ in order to estimate about whether a sync operation is really finshed or not.
+ */
+@property (nonatomic, readonly, nullable) NSOperationQueue *backgroundQueue;
+
+- (CWFolder * _Nonnull)folderWithName:(NSString * _Nonnull)name;
 
 @end
 
@@ -84,7 +90,7 @@ extern NSString* PantomimeFolderRenameFailed;
 	      accessible in POP3.
   @result A CWFolder subclass instance.
 */
-- (id) defaultFolder;
+- (id _Nonnull) defaultFolder;
 
 /*!
   @method folderForName:
@@ -93,7 +99,7 @@ extern NSString* PantomimeFolderRenameFailed;
   @param theName The name of the folder to obtain.
   @result A CWFolder subclass instance.
 */
-- (id) folderForName: (NSString *) theName;
+- (id _Nullable) folderForName: (NSString * _Nullable) theName;
 
 /*!
   @method folderForURL:
@@ -103,7 +109,7 @@ extern NSString* PantomimeFolderRenameFailed;
   @param theURL The URL, as a NSString instance.
   @result A CWFolder subclass instance.
 */
-- (id) folderForURL: (NSString *) theURL;
+- (id _Nullable) folderForURL: (NSString * _Nullable) theURL;
 
 /*!
   @method folderEnumerator
@@ -112,7 +118,7 @@ extern NSString* PantomimeFolderRenameFailed;
 	      are returned, not actual CWFolder subclass instances.
   @result The list of folder names.
 */
-- (NSEnumerator *) folderEnumerator;
+- (NSEnumerator * _Nullable) folderEnumerator;
 
 /*!
   @method subscribedFolderEnumerator
@@ -123,7 +129,7 @@ extern NSString* PantomimeFolderRenameFailed;
 	      returned by -folderEnumerator.
   @result The list of folder names.
 */
-- (NSEnumerator *) subscribedFolderEnumerator;
+- (NSEnumerator * _Nullable) subscribedFolderEnumerator;
 
 /*!
   @method openFoldersEnumerator
@@ -131,7 +137,7 @@ extern NSString* PantomimeFolderRenameFailed;
               instance which are in the open state in the receiver.
   @result The list of open folders.
 */
-- (NSEnumerator *) openFoldersEnumerator;
+- (NSEnumerator * _Nullable) openFoldersEnumerator;
 
 /*!
   @method removeFolderFromOpenFolders:
@@ -141,7 +147,7 @@ extern NSString* PantomimeFolderRenameFailed;
   @param theFolder The CWFolder subclass instance to remove from the
                    list of open folders.
 */
-- (void) removeFolderFromOpenFolders: (CWFolder *) theFolder;
+- (void) removeFolderFromOpenFolders: (CWFolder * _Nullable) theFolder;
 
 /*!
   @method folderForNameIsOpen:
@@ -150,7 +156,7 @@ extern NSString* PantomimeFolderRenameFailed;
 	      in the receiver.
   @result YES if it is in an open state, NO otherwise.
 */
-- (BOOL) folderForNameIsOpen: (NSString *) theName;
+- (BOOL) folderForNameIsOpen: (NSString * _Nullable) theName;
 
 /*!
   @method folderTypeForFolderName:
@@ -160,7 +166,7 @@ extern NSString* PantomimeFolderRenameFailed;
   @param theName The name of the folder.
   @result The type of the folder.
 */
-- (PantomimeFolderType) folderTypeForFolderName: (NSString *) theName;
+- (PantomimeFolderType) folderTypeForFolderName: (NSString * _Nullable) theName;
 
 /*!
   @method folderSeparator
@@ -196,9 +202,9 @@ extern NSString* PantomimeFolderRenameFailed;
   @param theType The folder type. Accepted values are part of the PantomimeFolderFormat enum.
   @param theContents The initial content of the folder. It must be in mbox format.
 */
-- (void) createFolderWithName: (NSString *) theName 
+- (void) createFolderWithName: (NSString * _Nullable) theName
                          type: (PantomimeFolderFormat) theType
-                     contents: (NSData *) theContents;
+                     contents: (NSData * _Nullable) theContents;
 
 /*!
   @method deleteFolderWithName:
@@ -208,7 +214,7 @@ extern NSString* PantomimeFolderRenameFailed;
 	      the PantomimeFolderDeleteFailed notification.
   @param theName The name of the folder to delete.
 */
-- (void) deleteFolderWithName: (NSString *) theName;
+- (void) deleteFolderWithName: (NSString * _Nullable) theName;
 
 /*!
   @method renameFolderWithName:toName:
@@ -218,8 +224,8 @@ extern NSString* PantomimeFolderRenameFailed;
   @param theName The name of the folder to rename.
   @param theNewName The name of the folder to rename it to.
 */
-- (void) renameFolderWithName: (NSString *) theName
-                       toName: (NSString *) theNewName;
+- (void) renameFolderWithName: (NSString * _Nullable) theName
+                       toName: (NSString * _Nullable) theNewName;
 @end
 
 #endif // _Pantomime_H_CWStore
