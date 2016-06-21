@@ -316,7 +316,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	  // We dequeue the first inserted command from the queue.
 	  aQueueObject = [_queue lastObject];
         if (!aQueueObject) {
-            NSLog(@"_queue has %d objects", _queue.count);
+            NSLog(@"_queue has %lu objects", (unsigned long) _queue.count);
             for (NSObject *obj in _queue) {
                 NSLog(@"obj %@", obj);
             }

@@ -159,8 +159,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
                              initWithTarget:self
                              selector:@selector(connectInBackgroundAndStartRunLoop)
                              object:nil];
-    self.backgroundThread.name = [NSString stringWithFormat:@"CWTCPConnection 0x%u",
-                                  (NSUInteger) self.backgroundThread];
+    self.backgroundThread.name = [NSString stringWithFormat:@"CWTCPConnection 0x%lu",
+                                  (unsigned long) self.backgroundThread];
     [self.backgroundThread start];
 }
 
