@@ -382,7 +382,7 @@ typedef enum
   @constant PantomimeResentBccRecipient Recipient which will obtain a black carbon copy of the message
                                         being redirected.
 */
-typedef enum
+typedef NS_ENUM(NSInteger, PantomimeRecipientType)
 {
   PantomimeToRecipient = 1,
   PantomimeCcRecipient = 2,
@@ -390,7 +390,7 @@ typedef enum
   PantomimeResentToRecipient = 4,
   PantomimeResentCcRecipient = 5,
   PantomimeResentBccRecipient = 6
-} PantomimeRecipientType;
+};
 
 /**
  The list of IMAP descriptors the IMAP sync needs.
