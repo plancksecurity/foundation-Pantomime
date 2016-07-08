@@ -58,7 +58,7 @@
     dispatch_sync(self.backgroundQueue, ^{
         id theLast = [self.mutableArray lastObject];
         if (!theLast) {
-            NSLog(@"self.count %lu", (unsigned long) self.count);
+            NSLog(@"self.count %lu", (unsigned long) self.mutableArray.count);
             for (id o in self.mutableArray) {
                 NSLog(@"Element %@", o);
             }
