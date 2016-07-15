@@ -319,7 +319,7 @@
 //
 - (NSString *) description
 {
-  return [NSString stringWithFormat:@"%@ (%d)", [self stringValue], self.type];
+  return [NSString stringWithFormat:@"%@ (%d)", [self stringValue], (int) self.type];
 }
 
 //
