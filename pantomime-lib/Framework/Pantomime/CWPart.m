@@ -817,4 +817,17 @@ static int currentPartVersion = 2;
       [_headers removeAllObjects];
     }
 }
+
+- (NSString *)description
+{
+    NSMutableString *str = [NSMutableString stringWithFormat:@"Part %ld bytes", self.size];
+    if (self.contentType) {
+        [str appendFormat:@", %@", self.contentType];
+    }
+    if (self.filename) {
+        [str appendFormat:@", %@", self.filename];
+    }
+    return str;
+}
+
 @end
