@@ -1187,7 +1187,20 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
     {
       [aMutableData appendCFormat: @"In-Reply-To: %@%s", [self inReplyTo], LF];
     }
-  
+
+    if ([[self allReferences] count]) {
+        [aMutableData appendCString:"References:"];
+        BOOL first = true;
+        for (NSString *ref in [self allReferences]) {
+            if (first) {
+                [aMutableData appendCFormat:@" %@", ref];
+                first = NO;
+            } else {
+                [aMutableData appendCFormat:@" %s %@", LF, ref];
+            }
+        }
+        [aMutableData appendCFormat:@"%s", LF];
+    }
 
   // We now set all X-* headers
   allHeaderKeyEnumerator = [_headers keyEnumerator];
