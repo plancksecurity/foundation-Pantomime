@@ -46,6 +46,12 @@ NSString* PantomimeFolderPrefetchCompleted = @"PantomimeFolderPrefetchCompleted"
 NSString* PantomimeFolderPrefetchFailed = @"PantomimeFolderPrefetchFailed";
 NSString* PantomimeFolderSearchCompleted = @"PantomimeFolderSearchCompleted";
 NSString* PantomimeFolderSearchFailed = @"PantomimeFolderSearchFailed";
+NSString* PantomimeFolderNameParsed = @"PantomimeFolderNameParsed";
+
+NSString * PantomimeFolderNameKey = @"PantomimeFolderNameKey";
+NSString * PantomimeFolderFlagsKey = @"PantomimeFolderFlagsKey";
+NSString * PantomimeFolderInfo = @"PantomimeFolderInfo";
+
 
 // CWIMAPFolder notifications
 NSString* PantomimeMessagesCopyCompleted = @"PantomimeMessagesCopyCompleted";

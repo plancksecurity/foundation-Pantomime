@@ -116,6 +116,32 @@ extern NSString * _Nonnull const PantomimeFolderSearchCompleted;
 */
 extern NSString * _Nonnull const PantomimeFolderSearchFailed;
 
+/*!
+ @const PantomimeFolderNameParsed
+ @discussion Notification name for when a folder has been parsed in response to a LIST.
+ */
+extern NSString * _Nonnull const PantomimeFolderNameParsed;
+
+/*!
+ @const PantomimeFolderNameKey
+ @discussion Key name for folder name in a user info dictionary for
+   PantomimeFolderNameParsed notifications.
+ */
+extern NSString * _Nonnull const PantomimeFolderNameKey;
+
+/*!
+ @const PantomimeFolderFlagsKey
+ @discussion Key name for folder flags in a user info dictionary for
+   PantomimeFolderNameParsed notifications.
+ */
+extern NSString * _Nonnull const PantomimeFolderFlagsKey;
+
+/*!
+ @const PantomimeFolderInfo
+ @discussion Name for the key into the dictionary sent to the delegate for
+   receiving folders in response to LIST commands.
+ */
+extern NSString * _Nonnull const PantomimeFolderInfo;
 
 /*!
   @category NSObject (PantomimeFolderDelegate)
@@ -274,6 +300,13 @@ extern NSString * _Nonnull const PantomimeFolderSearchFailed;
   @param theNotification The notification holding the information.
  */
 - (void) folderSearchFailed: (NSNotification * _Nullable) theNotification;
+
+/*!
+ @discussion Called when there has been a folder name parsed
+   typically in response to a LIST command).
+ @param theNotification The notification holding some information.
+ */
+- (void) folderNameParsed: (NSNotification * _Nullable) theNotification;
 
 @end
 

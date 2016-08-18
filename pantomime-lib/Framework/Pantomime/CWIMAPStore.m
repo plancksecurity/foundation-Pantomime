@@ -908,7 +908,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     if (![_folders count]) {
         // Only top level folders: LIST "" %
-        [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" %%"];
+        [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
         return nil;
     }
 
@@ -2255,7 +2255,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 	}
     }
 
-  [_folders setObject: [NSNumber numberWithInteger: flags]  forKey: aFolderName];
+    // Inform client about potential new folder, so it can be saved.
+    NSDictionary *userInfo = @{PantomimeFolderNameKey: aFolderName,
+                               PantomimeFolderFlagsKey:
+                                   [NSNumber numberWithInteger: flags]};
+    POST_NOTIFICATION(PantomimeFolderNameParsed, self, userInfo);
+    PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
+                       PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
+
+    [_folders setObject: [NSNumber numberWithInteger: flags]  forKey: aFolderName];
 }
 
 
