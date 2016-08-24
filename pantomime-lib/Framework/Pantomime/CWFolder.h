@@ -123,6 +123,13 @@ extern NSString * _Nonnull const PantomimeFolderSearchFailed;
 extern NSString * _Nonnull const PantomimeFolderNameParsed;
 
 /*!
+ @const PantomimeFolderInfo
+ @discussion Name for the key into the dictionary sent to the delegate for
+ receiving folders in response to LIST commands.
+ */
+extern NSString * _Nonnull const PantomimeFolderInfo;
+
+/*!
  @const PantomimeFolderNameKey
  @discussion Key name for folder name in a user info dictionary for
    PantomimeFolderNameParsed notifications.
@@ -137,11 +144,11 @@ extern NSString * _Nonnull const PantomimeFolderNameKey;
 extern NSString * _Nonnull const PantomimeFolderFlagsKey;
 
 /*!
- @const PantomimeFolderInfo
- @discussion Name for the key into the dictionary sent to the delegate for
-   receiving folders in response to LIST commands.
+ @const PantomimeFolderSeparatorKey
+ @discussion Key name for folder separator in a user info dictionary for
+ PantomimeFolderNameParsed notifications.
  */
-extern NSString * _Nonnull const PantomimeFolderInfo;
+extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
 
 /*!
   @category NSObject (PantomimeFolderDelegate)

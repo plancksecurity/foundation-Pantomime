@@ -2258,7 +2258,10 @@ static inline int has_literal(char *buf, NSUInteger c)
     // Inform client about potential new folder, so it can be saved.
     NSDictionary *userInfo = @{PantomimeFolderNameKey: aFolderName,
                                PantomimeFolderFlagsKey:
-                                   [NSNumber numberWithInteger: flags]};
+                                   [NSNumber numberWithInteger: flags],
+                               PantomimeFolderSeparatorKey:
+                                   [NSString stringWithFormat:@"%c",
+                                    [self folderSeparator]]};
     POST_NOTIFICATION(PantomimeFolderNameParsed, self, userInfo);
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
