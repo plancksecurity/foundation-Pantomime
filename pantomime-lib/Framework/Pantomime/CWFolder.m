@@ -205,7 +205,7 @@
 	    }
 	  else
 	    {
-	      if ([[aMessage flags] contain: PantomimeDeleted])
+	      if ([[aMessage flags] contain: PantomimeFlagDeleted])
 		{
 		  // Do nothing
 		  continue;
@@ -226,9 +226,9 @@
 	    }
 	  else
 	    {
-	      if ([[aMessage flags] contain: PantomimeSeen])
+	      if ([[aMessage flags] contain: PantomimeFlagSeen])
 		{
-		  if (![[aMessage flags] contain: PantomimeDeleted])
+		  if (![[aMessage flags] contain: PantomimeFlagDeleted])
 		    {
 		      [_allVisibleMessages removeObject: aMessage];
 		    }
@@ -412,7 +412,7 @@
 
   for (i = 0; i < c; i++)
     {
-      if ([[(CWMessage *) [_allMessages objectAtIndex: i] flags] contain: PantomimeDeleted])
+      if ([[(CWMessage *) [_allMessages objectAtIndex: i] flags] contain: PantomimeFlagDeleted])
 	{
 	  count++;
 	}
@@ -434,7 +434,7 @@
   
   for (i = 0; i < c; i++)
     {
-      if (![[(CWMessage *) [_allMessages objectAtIndex: i] flags] contain: PantomimeSeen])
+      if (![[(CWMessage *) [_allMessages objectAtIndex: i] flags] contain: PantomimeFlagSeen])
 	{
 	  count++;
 	}

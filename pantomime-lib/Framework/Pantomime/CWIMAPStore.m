@@ -1372,7 +1372,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   
   if (aRange.length > 0)
     {
-      [theFlags add: PantomimeSeen];
+      [theFlags add: PantomimeFlagSeen];
     }
 
   // We check if the message has the Recent flag
@@ -1381,7 +1381,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   
   if (aRange.length > 0)
     {
-      [theFlags add: PantomimeRecent];
+      [theFlags add: PantomimeFlagRecent];
     }
   
   // We check if the message has the Deleted flag
@@ -1390,7 +1390,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   
   if (aRange.length > 0)
     {
-      [theFlags add: PantomimeDeleted];
+      [theFlags add: PantomimeFlagDeleted];
     }
   
   // We check if the message has the Answered flag
@@ -1399,7 +1399,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   
   if (aRange.length > 0)
     {
-      [theFlags add: PantomimeAnswered];
+      [theFlags add: PantomimeFlagAnswered];
     }
   
   // We check if the message has the Flagged flag
@@ -1408,7 +1408,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   
   if (aRange.length > 0)
     {
-      [theFlags add: PantomimeFlagged];
+      [theFlags add: PantomimeFlagFlagged];
     }
   
   // We check if the message has the Draft flag
@@ -1417,7 +1417,7 @@ static inline int has_literal(char *buf, NSUInteger c)
   
   if (aRange.length > 0)
     {
-      [theFlags add: PantomimeDraft];
+      [theFlags add: PantomimeFlagDraft];
     }
 
   [[theMessage flags] replaceWithFlags: theFlags];
@@ -2788,7 +2788,7 @@ static inline int has_literal(char *buf, NSUInteger c)
       //     
       for (i = 0; i < count; i++)
 	{
-	  [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] add: PantomimeAnswered];
+	  [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] add: PantomimeFlagAnswered];
 	}
       [self sendCommand: IMAP_UID_SEARCH_FLAGGED  info: nil  arguments: @"UID SEARCH FLAGGED"];
       break;
@@ -2799,7 +2799,7 @@ static inline int has_literal(char *buf, NSUInteger c)
       //     
       for (i = 0; i < count; i++)
 	{
-	  [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] add: PantomimeFlagged];
+	  [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] add: PantomimeFlagFlagged];
 	}
       [self sendCommand: IMAP_UID_SEARCH_UNSEEN  info: nil  arguments: @"UID SEARCH UNSEEN"];
       break;
@@ -2811,7 +2811,7 @@ static inline int has_literal(char *buf, NSUInteger c)
       for (i = 0; i < count; i++)
 	{
 	  //NSLog(@"removing for UID %d", [[allResults objectAtIndex: i] unsignedIntValue]);
-	  [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] remove: PantomimeSeen];
+	  [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] remove: PantomimeFlagSeen];
 	}
       break;
 

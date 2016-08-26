@@ -440,7 +440,7 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
               present in the folder. Hidden messages will NOT
 	      be part of the value returned. So, for example, if
 	      a folder has 10 messages, 2 of them have the
-	      PantomimeDeleted flag set and -setShowDeleted: NO was
+	      PantomimeFlagDeleted flag set and -setShowDeleted: NO was
 	      invoked on the folder, this method will return
 	      8 as the messages count.
   @result The number of messages in the folder.
@@ -529,7 +529,7 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
 /*!
   @method numberOfDeletedMessages
   @discussion This method returns the number of messages in this
-              folder that have the PantomimeDeleted flag set.
+              folder that have the PantomimeFlagDeleted flag set.
   @result The number of message marked has deleted, 0 if none.
 */
 - (NSUInteger) numberOfDeletedMessages;
@@ -537,7 +537,7 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
 /*!
   @method numberOfUnreadMessages
   @discussion This method returns the number of messages in this
-              folder that do not have the PantomimeSeen flag set.
+              folder that do not have the PantomimeFlagSeen flag set.
   @result The number of unread messages, 0 if none.
 */
 - (NSUInteger) numberOfUnreadMessages;
@@ -554,9 +554,9 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
 /*!
   @method updateCache
   @discussion This method is used to update our cache (_allVisibleMessages).
-              Applications can call this method if they set the PantomimeDeleted flags to
+              Applications can call this method if they set the PantomimeFlagDeleted flags to
               messages inside this folder. If not called, the cache won't be updated
-              the messages having the flag PantomimeDeleted will still be visible.
+              the messages having the flag PantomimeFlagDeleted will still be visible.
 */
 - (void) updateCache;
 

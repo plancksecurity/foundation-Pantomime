@@ -267,7 +267,7 @@
 
 
 //
-// This method returns all messages that have the flag PantomimeDeleted.
+// This method returns all messages that have the flag PantomimeFlagDeleted.
 //
 - (void) expunge
 {
@@ -451,27 +451,27 @@
   aMutableString = [[NSMutableString alloc] init];
   AUTORELEASE_VOID(aMutableString);
 
-  if ([theFlags contain: PantomimeAnswered])
+  if ([theFlags contain: PantomimeFlagAnswered])
     {
       [aMutableString appendString: @"\\Answered "];
     }
 
-  if ([theFlags contain: PantomimeDraft] )
+  if ([theFlags contain: PantomimeFlagDraft] )
     {
       [aMutableString appendString: @"\\Draft "];
     }
 
-  if ([theFlags contain: PantomimeFlagged])
+  if ([theFlags contain: PantomimeFlagFlagged])
     {
       [aMutableString appendString: @"\\Flagged "];
     }
 
-  if ([theFlags contain: PantomimeSeen])
+  if ([theFlags contain: PantomimeFlagSeen])
     {
       [aMutableString appendString: @"\\Seen "];
     }
   
-  if ([theFlags contain: PantomimeDeleted])
+  if ([theFlags contain: PantomimeFlagDeleted])
     {
       [aMutableString appendString: @"\\Deleted "];
     }

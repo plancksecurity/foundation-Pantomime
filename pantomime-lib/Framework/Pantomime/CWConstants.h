@@ -221,22 +221,22 @@ typedef enum
   @abstract Valid message flags.
   @discussion This enum lists valid message flags. Flags can be combined
               using a bitwise OR.
-  @constant PantomimeAnswered The message has been answered.
-  @constant PantomimeDraft The message is an unsent, draft message.
-  @constant PantomimeFlagged The message is flagged.
-  @constant PantomimeRecent The message has been recently received.
-  @constant PantomimeSeen The message has been read.
-  @constant PantomimeDeleted The message is marked as deleted.
+  @constant PantomimeFlagAnswered The message has been answered.
+  @constant PantomimeFlagDraft The message is an unsent, draft message.
+  @constant PantomimeFlagFlagged The message is flagged.
+  @constant PantomimeFlagRecent The message has been recently received.
+  @constant PantomimeFlagSeen The message has been read.
+  @constant PantomimeFlagDeleted The message is marked as deleted.
 */
-typedef enum
+typedef NS_ENUM(NSUInteger, PantomimeFlag)
 {
-  PantomimeAnswered = 1,
-  PantomimeDraft = 2,
-  PantomimeFlagged = 4,
-  PantomimeRecent = 8,
-  PantomimeSeen = 16,
-  PantomimeDeleted = 32
-} PantomimeFlag;
+  PantomimeFlagAnswered = 1,
+  PantomimeFlagDraft = 2,
+  PantomimeFlagFlagged = 4,
+  PantomimeFlagRecent = 8,
+  PantomimeFlagSeen = 16,
+  PantomimeFlagDeleted = 32
+};
 
 
 /*!

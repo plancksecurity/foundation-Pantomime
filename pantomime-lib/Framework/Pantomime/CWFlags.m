@@ -96,18 +96,18 @@
     {    
       if (theFormat == PantomimeFormatMbox)
 	{
-	  CHECK_FLAG("R", PantomimeSeen);
-	  CHECK_FLAG("D", PantomimeDeleted);
-	  CHECK_FLAG("A", PantomimeAnswered);
-	  CHECK_FLAG("F", PantomimeFlagged);
+	  CHECK_FLAG("R", PantomimeFlagSeen);
+	  CHECK_FLAG("D", PantomimeFlagDeleted);
+	  CHECK_FLAG("A", PantomimeFlagAnswered);
+	  CHECK_FLAG("F", PantomimeFlagFlagged);
 	}
       else if (theFormat == PantomimeFormatMaildir)
 	{
-	  CHECK_FLAG("S", PantomimeSeen);
-	  CHECK_FLAG("R", PantomimeAnswered);
-	  CHECK_FLAG("F", PantomimeFlagged);
-	  CHECK_FLAG("D", PantomimeDraft);
-	  CHECK_FLAG("T", PantomimeDeleted);
+	  CHECK_FLAG("S", PantomimeFlagSeen);
+	  CHECK_FLAG("R", PantomimeFlagAnswered);
+	  CHECK_FLAG("F", PantomimeFlagFlagged);
+	  CHECK_FLAG("D", PantomimeFlagDraft);
+	  CHECK_FLAG("T", PantomimeFlagDeleted);
 	}
     }
 }
@@ -160,7 +160,7 @@
 //
 - (NSString *) statusString
 {
-  return [NSString stringWithFormat: @"%cO", ([self contain: PantomimeSeen] ? 'R' : ' ')];
+  return [NSString stringWithFormat: @"%cO", ([self contain: PantomimeFlagSeen] ? 'R' : ' ')];
 }
 
 //
@@ -181,17 +181,17 @@
 
   aMutableString = [[NSMutableString alloc] init];
   
-  if ([self contain: PantomimeDeleted])
+  if ([self contain: PantomimeFlagDeleted])
     {
       [aMutableString appendFormat: @"%c", 'D'];
     }
 
-  if ([self contain: PantomimeFlagged])
+  if ([self contain: PantomimeFlagFlagged])
     {
       [aMutableString appendFormat: @"%c", 'F'];
     }
 
-  if ([self contain: PantomimeAnswered])
+  if ([self contain: PantomimeFlagAnswered])
     {
       [aMutableString appendFormat: @"%c", 'A'];
     }
@@ -209,27 +209,27 @@
   
   aMutableString = [[NSMutableString alloc] initWithString: @"2,"];
   
-  if ([self contain: PantomimeDraft])
+  if ([self contain: PantomimeFlagDraft])
     {
       [aMutableString appendString: @"D"];
     }
   
-  if ([self contain: PantomimeFlagged])
+  if ([self contain: PantomimeFlagFlagged])
     {
       [aMutableString appendString: @"F"];
     }
   
-  if ([self contain: PantomimeAnswered])
+  if ([self contain: PantomimeFlagAnswered])
     {
       [aMutableString appendString: @"R"];
     }
   
-  if ([self contain: PantomimeSeen])
+  if ([self contain: PantomimeFlagSeen])
     {
       [aMutableString appendString: @"S"];
     }
   
-  if ([self contain: PantomimeDeleted])
+  if ([self contain: PantomimeFlagDeleted])
     {
       [aMutableString appendString: @"T"];
     }
