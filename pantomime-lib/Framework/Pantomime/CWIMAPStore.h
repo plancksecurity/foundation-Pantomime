@@ -159,11 +159,11 @@ extern NSString * _Nonnull const PantomimeFolderStatusCompleted;
 extern NSString * _Nonnull const PantomimeFolderStatusFailed;
 
 /*!
- @const PantomimeBadResponseKey
+ @const PantomimeBadResponseInfoKey
  @discussion Key name for an IMAP response that could not be parsed, for the
  PantomimeActionFailed notifications.
  */
-extern NSString * _Nonnull const PantomimeBadResponseKey;
+extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 
 @class CWConnection;
 @class CWFlags;
