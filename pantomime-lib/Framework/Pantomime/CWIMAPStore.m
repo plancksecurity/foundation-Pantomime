@@ -1604,33 +1604,38 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseBAD
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
+    NSData *aData;
 
-  switch (_lastCommand)
+    aData = [_responsesFromServer lastObject];
+
+    switch (_lastCommand)
     {
-    case IMAP_LOGIN:
-      // This can happen if we got an empty username or password.
-      AUTHENTICATION_FAILED(_delegate, _mechanism);
-      break;
+        case IMAP_LOGIN:
+            // This can happen if we got an empty username or password.
+            AUTHENTICATION_FAILED(_delegate, _mechanism);
+            break;
 
-    default:
-      // We got a BAD response that we could not handle. Raise an exception for now
-      // and remove the command that caused this from the queue.
-      [_queue removeLastObject];
-      [_responsesFromServer removeAllObjects];
-      [NSException raise: PantomimeProtocolException
-		   format: @"Unable to handle IMAP response (%@).", [aData asciiString]];
+        default:
+            // We got a BAD response that we could not handle. Inform the delegate,
+            // post a notification and remove the command that caused this from the queue.
+            [_queue removeLastObject];
+            [_responsesFromServer removeAllObjects];
+
+            NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
+
+            POST_NOTIFICATION(PantomimeActionFailed, self, userInfo);
+            PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:),
+                               PantomimeActionFailed, userInfo,
+                               PantomimeErrorInfo);
     }
 
-  if (![aData hasCPrefix: "*"])
+    if (![aData hasCPrefix: "*"])
     {
-      [_queue removeLastObject];
-      [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
+        [_queue removeLastObject];
+        [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
     }
 
-  [_responsesFromServer removeAllObjects];
+    [_responsesFromServer removeAllObjects];
 }
 
 

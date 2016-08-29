@@ -130,6 +130,25 @@ extern NSString * _Nonnull const PantomimeFolderUnsubscribeCompleted;
 extern NSString * _Nonnull const PantomimeFolderUnsubscribeFailed;
 
 /*!
+ @discussion Used for bad responses (see _parseBad).
+ @const PantomimeActionFailed
+ */
+extern NSString * _Nonnull const PantomimeActionFailed;
+
+/*!
+ @discussion Used as a key for the user info dict where you find the bad response
+ that triggered _parseBad.
+ @const PantomimeBadResponseInfoKey
+ */
+extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
+
+/*!
+ @discussion The key under which the user info dict is stored for actionFailed:.
+ @const PantomimeErrorInfo
+ */
+extern NSString * _Nonnull const PantomimeErrorInfo;
+
+/*!
   @const PantomimeFolderStatusCompleted
 */
 extern NSString * _Nonnull const PantomimeFolderStatusCompleted;
@@ -139,6 +158,12 @@ extern NSString * _Nonnull const PantomimeFolderStatusCompleted;
 */
 extern NSString * _Nonnull const PantomimeFolderStatusFailed;
 
+/*!
+ @const PantomimeBadResponseKey
+ @discussion Key name for an IMAP response that could not be parsed, for the
+ PantomimeActionFailed notifications.
+ */
+extern NSString * _Nonnull const PantomimeBadResponseKey;
 
 @class CWConnection;
 @class CWFlags;

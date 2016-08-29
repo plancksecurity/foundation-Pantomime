@@ -299,6 +299,14 @@ extern NSString * _Nonnull PantomimeProtocolException;
 
 - (void) folderStatusCompleted: (NSNotification * _Nullable) theNotification;
 
+/*!
+ @method actionFailed:
+ @discussion This is called when a response could not be parsed.
+ A PantomimeActionFailed notification is also posted.
+ @param theNotification The notification holding the information.
+ */
+- (void) actionFailed: (NSNotification * _Nullable) theNotification;
+
 @end
 
 @interface CWConnectionState : NSObject
