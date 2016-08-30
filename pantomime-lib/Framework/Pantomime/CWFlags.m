@@ -42,6 +42,10 @@
   return self;
 }
 
+- (PantomimeFlag)rawFlags
+{
+    return flags;
+}
 
 //
 // NSCoding protocol

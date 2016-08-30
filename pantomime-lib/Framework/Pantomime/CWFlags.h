@@ -53,6 +53,8 @@
 */
 - (id) initWithFlags: (PantomimeFlag) theFlags;
 
+- (PantomimeFlag)rawFlags;
+
 /*!
   @method add:
   @discussion This method is used to add (combine) an additional
