@@ -55,6 +55,8 @@
 
 - (PantomimeFlag)rawFlags;
 
+- (short)rawFlagsAsShort;
+
 /*!
   @method add:
   @discussion This method is used to add (combine) an additional

@@ -47,6 +47,11 @@
     return flags;
 }
 
+- (short)rawFlagsAsShort
+{
+    return (short) flags;
+}
+
 //
 // NSCoding protocol
 //
