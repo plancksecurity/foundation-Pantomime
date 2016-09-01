@@ -57,6 +57,8 @@
 
 - (short)rawFlagsAsShort;
 
+- (NSString *)asString;
+
 /*!
   @method add:
   @discussion This method is used to add (combine) an additional

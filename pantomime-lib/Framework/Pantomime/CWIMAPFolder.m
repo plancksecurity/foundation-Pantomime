@@ -36,7 +36,6 @@
 // Private methods
 //
 @interface CWIMAPFolder (Private)
-- (NSString *) _flagsAsStringFromFlags: (CWFlags *) theFlags;
 - (NSData *) _removeInvalidHeadersFromMessage: (NSData *) theMessage;
 @end
 
@@ -94,7 +93,7 @@
  
   if (theFlags)
     {
-      flagsAsString = [self _flagsAsStringFromFlags: theFlags];
+      flagsAsString = [theFlags asString];
     }
   else
     {
@@ -376,13 +375,13 @@
   if (theFlags->flags == 0)
     {
       [aMutableString appendFormat: @"UID STORE %@ -FLAGS.SILENT (", aSequenceSet];
-      [aMutableString appendString: [self _flagsAsStringFromFlags: [aMessage flags]]];
+      [aMutableString appendString: [[aMessage flags] asString]];
       [aMutableString appendString: @")"];
     }
   else
     {
       [aMutableString appendFormat: @"UID STORE %@ FLAGS.SILENT (", aSequenceSet];
-      [aMutableString appendString: [self _flagsAsStringFromFlags: theFlags]];
+      [aMutableString appendString: [theFlags asString]];
       [aMutableString appendString: @")"];
     }
   
@@ -443,42 +442,6 @@
 // Private methods
 // 
 @implementation CWIMAPFolder (Private)
-
-- (NSString *) _flagsAsStringFromFlags: (CWFlags *) theFlags
-{
-  NSMutableString *aMutableString;
-
-  aMutableString = [[NSMutableString alloc] init];
-  AUTORELEASE_VOID(aMutableString);
-
-  if ([theFlags contain: PantomimeFlagAnswered])
-    {
-      [aMutableString appendString: @"\\Answered "];
-    }
-
-  if ([theFlags contain: PantomimeFlagDraft] )
-    {
-      [aMutableString appendString: @"\\Draft "];
-    }
-
-  if ([theFlags contain: PantomimeFlagFlagged])
-    {
-      [aMutableString appendString: @"\\Flagged "];
-    }
-
-  if ([theFlags contain: PantomimeFlagSeen])
-    {
-      [aMutableString appendString: @"\\Seen "];
-    }
-  
-  if ([theFlags contain: PantomimeFlagDeleted])
-    {
-      [aMutableString appendString: @"\\Deleted "];
-    }
-
-  return [aMutableString stringByTrimmingWhiteSpaces];
-}
-
 
 //
 //

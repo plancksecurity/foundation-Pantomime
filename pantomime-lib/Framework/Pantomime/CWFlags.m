@@ -23,6 +23,7 @@
 #import "Pantomime/CWFlags.h"
 
 #import "Pantomime/NSData+Extensions.h"
+#import "Pantomime/NSString+Extensions.h"
 
 #define CHECK_FLAG(c, value) \
   theRange = [theData rangeOfCString: c]; \
@@ -50,6 +51,42 @@
 - (short)rawFlagsAsShort
 {
     return (short) flags;
+}
+
+- (NSString *)asString
+{
+    NSMutableString *aMutableString;
+
+    aMutableString = [[NSMutableString alloc] init];
+    AUTORELEASE_VOID(aMutableString);
+
+    if ([self contain: PantomimeFlagAnswered])
+    {
+        [aMutableString appendString: @"\\Answered "];
+    }
+
+    if ([self contain: PantomimeFlagDraft] )
+    {
+        [aMutableString appendString: @"\\Draft "];
+    }
+
+    if ([self contain: PantomimeFlagFlagged])
+    {
+        [aMutableString appendString: @"\\Flagged "];
+    }
+
+    if ([self contain: PantomimeFlagSeen])
+    {
+        [aMutableString appendString: @"\\Seen "];
+    }
+
+    if ([self contain: PantomimeFlagDeleted])
+    {
+        [aMutableString appendString: @"\\Deleted "];
+    }
+
+    return [aMutableString stringByTrimmingWhiteSpaces];
+
 }
 
 //
