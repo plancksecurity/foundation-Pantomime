@@ -376,7 +376,7 @@
   if (theFlags->flags == 0)
     {
       [aMutableString appendFormat: @"UID STORE %@ -FLAGS.SILENT (", aSequenceSet];
-      [aMutableString appendString: [self _flagsAsStringFromFlags: theFlags]];
+      [aMutableString appendString: [self _flagsAsStringFromFlags: [aMessage flags]]];
       [aMutableString appendString: @")"];
     }
   else
