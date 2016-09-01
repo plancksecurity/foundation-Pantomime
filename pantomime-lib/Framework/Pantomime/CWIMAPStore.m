@@ -2618,8 +2618,8 @@ static inline int has_literal(char *buf, NSUInteger c)
             CWFlags *theFlags;
             NSUInteger i, count;
 
-            theMessages = [_currentQueueObject->info objectForKey: @"Messages"];
-            theFlags = [_currentQueueObject->info objectForKey: @"Flags"];
+            theMessages = [_currentQueueObject->info objectForKey: PantomimeMessagesKey];
+            theFlags = [_currentQueueObject->info objectForKey: PantomimeFlagsKey];
             count = [theMessages count];
 
             for (i = 0; i < count; i++)

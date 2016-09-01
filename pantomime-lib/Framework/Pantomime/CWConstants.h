@@ -402,4 +402,14 @@ extern NSString * _Nonnull const PantomimeIMAPDefaultDescriptors;
  */
 extern NSString * _Nonnull const PantomimeIMAPFullBody;
 
+/**
+ Dictionary key for the messages (for UID STORE commands).
+ */
+extern NSString * _Nonnull const PantomimeMessagesKey;
+
+/**
+ Dictionary key for the flags (for UID STORE commands).
+ */
+extern NSString * _Nonnull const PantomimeFlagsKey;
+
 #endif // _Pantomime_H_CWConstants

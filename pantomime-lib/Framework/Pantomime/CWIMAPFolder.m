@@ -105,7 +105,7 @@
   
   if (theFlags)
     {
-      aDictionary = [NSDictionary dictionaryWithObjectsAndKeys: aData, @"NSDataToAppend", theData, @"NSData", self, @"Folder", theFlags, @"Flags", nil];
+      aDictionary = [NSDictionary dictionaryWithObjectsAndKeys: aData, @"NSDataToAppend", theData, @"NSData", self, @"Folder", theFlags, PantomimeFlagsKey, nil];
     }
   else
     {
@@ -163,7 +163,8 @@
  
   // We send our IMAP command
   [_store sendCommand: IMAP_UID_COPY
-	  info: [NSDictionary dictionaryWithObjectsAndKeys: theMessages, @"Messages", theFolder, @"Name", self, @"Folder", nil]
+	  info: [NSDictionary dictionaryWithObjectsAndKeys: theMessages,
+             PantomimeMessagesKey, theFolder, @"Name", self, @"Folder", nil]
 	  arguments: @"UID COPY %@ \"%@\"",
 	  aMutableString,
 	  [theFolder modifiedUTF7String]];
@@ -386,7 +387,8 @@
     }
   
   [_store sendCommand: IMAP_UID_STORE
-	  info: [NSDictionary dictionaryWithObjectsAndKeys: theMessages, @"Messages", theFlags, @"Flags", nil]
+	  info: [NSDictionary dictionaryWithObjectsAndKeys: theMessages,
+             PantomimeMessagesKey, theFlags, PantomimeFlagsKey, nil]
 	  arguments: aMutableString];
   RELEASE(aMutableString);
 }

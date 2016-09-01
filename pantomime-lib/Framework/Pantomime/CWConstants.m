@@ -110,3 +110,5 @@ NSString* PantomimeFolderRenameFailed = @"PantomimeFolderRenameFailed";
 NSString* PantomimeMessageNotSent = @"PantomimeMessageNotSent";
 NSString* PantomimeMessageSent = @"PantomimeMessageSent";
 
+NSString *PantomimeMessagesKey = @"PantomimeMessagesKey";
+NSString *PantomimeFlagsKey = @"PantomimeFlagsKey";
