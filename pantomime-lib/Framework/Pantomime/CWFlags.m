@@ -43,6 +43,15 @@
   return self;
 }
 
+- (instancetype) initWithNumber: (NSNumber *) theNumber
+{
+    self = [super init];
+    if (self) {
+        flags = [theNumber integerValue];
+    }
+    return self;
+}
+
 - (PantomimeFlag)rawFlags
 {
     return flags;
@@ -281,6 +290,11 @@
     }
 
   return AUTORELEASE(aMutableString);
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<CWFlags: 0x%x %@>", (uint) self, [self asString]];
 }
 
 @end

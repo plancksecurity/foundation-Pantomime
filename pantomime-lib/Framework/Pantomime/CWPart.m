@@ -29,6 +29,8 @@
 #import "Pantomime/NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 #import "Pantomime/CWParser.h"
+#import "Pantomime/CWFlags.h"
+#import "Pantomime/CWIMAPMessage.h"
 
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSException.h>
@@ -820,13 +822,28 @@ static int currentPartVersion = 2;
 
 - (NSString *)description
 {
-    NSMutableString *str = [NSMutableString stringWithFormat:@"Part %ld bytes", self.size];
+    NSMutableString *str = [NSMutableString
+                            stringWithFormat:@"<CWPart 0x%u Part %ld bytes",
+                            (uint) self, self.size];
     if (self.contentType) {
         [str appendFormat:@", %@", self.contentType];
     }
     if (self.filename) {
         [str appendFormat:@", %@", self.filename];
     }
+    if ([self isKindOfClass:[CWIMAPMessage class]]) {
+        NSUInteger uid = [((CWIMAPMessage *) self) UID];
+        [str appendFormat:@" uid %lu", (unsigned long) uid];
+    }
+    if ([self isKindOfClass:[CWMessage class]]) {
+        CWFlags *flags = [((CWMessage *) self) flags];
+        NSString *flagsString = [flags asString];
+        if (flagsString.length == 0) {
+            flagsString = @"0";
+        }
+        [str appendFormat:@" %@", flagsString];
+    }
+    [str appendString:@">"];
     return str;
 }
 

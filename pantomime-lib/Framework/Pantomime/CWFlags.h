@@ -53,6 +53,8 @@
 */
 - (id) initWithFlags: (PantomimeFlag) theFlags;
 
+- (id) initWithNumber: (NSNumber *) theNumber;
+
 - (PantomimeFlag)rawFlags;
 
 - (short)rawFlagsAsShort;
