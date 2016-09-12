@@ -325,7 +325,7 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
               the receiver.
   @result The CWFlags instance of the receiver.
 */
-- (CWFlags * _Nullable) flags;
+- (CWFlags * _Nonnull) flags;
 
 /*!
   @method setFlags:
