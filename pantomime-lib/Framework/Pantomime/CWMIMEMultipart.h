@@ -78,7 +78,7 @@
   @result The CWPart instance. If the index is out of bounds,
           an NSRangeException is raised.
 */
-- (CWPart *) partAtIndex: (NSUInteger) theIndex;
+- (CWPart  * _Nonnull) partAtIndex: (NSUInteger) theIndex;
 
 @end
 
