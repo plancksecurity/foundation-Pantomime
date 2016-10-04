@@ -52,7 +52,7 @@
               to the multipart instance.
   @param thePart The CWPart instance to add.
 */
-- (void) addPart: (CWPart *) thePart;
+- (void) addPart: (CWPart * _Nonnull) thePart;
 
 /*!
   @method removePart:
@@ -60,7 +60,7 @@
               from the multipart instance.
   @param thePart The CWPart instance to remove.
 */
-- (void) removePart: (CWPart *) thePart;
+- (void) removePart: (CWPart * _Nonnull) thePart;
 
 /*!
   @method count

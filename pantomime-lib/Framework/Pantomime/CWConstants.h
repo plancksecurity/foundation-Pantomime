@@ -79,9 +79,10 @@ if (__value != __object) \
     } \
 })
 
+#if !defined(NSLocalizedString)
 #define NSLocalizedString(key, comment) \
   [[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil]
-
+#endif
 #define _(X) NSLocalizedString (X, @"")
 #endif
 

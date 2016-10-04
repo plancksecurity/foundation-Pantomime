@@ -50,7 +50,7 @@
 //
 //
 //
-- (void) addPart: (CWPart *) thePart 
+- (void) addPart: (CWPart * _Nonnull) thePart
 {
   if (thePart)
     {
@@ -62,7 +62,7 @@
 //
 //
 //
-- (void) removePart: (CWPart *) thePart
+- (void) removePart: (CWPart * _Nonnull) thePart
 {
   if (thePart)
     {
