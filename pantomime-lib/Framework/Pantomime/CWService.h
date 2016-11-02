@@ -484,7 +484,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
   @param theMechanism The authentication mechanism to use.
 */
 - (void) authenticate: (NSString * _Nonnull) theUsername
-             password: (NSString * _Nonnull) thePassword
+             password: (NSString * _Nullable) thePassword
             mechanism: (NSString * _Nonnull) theMechanism;
 
 /*!
