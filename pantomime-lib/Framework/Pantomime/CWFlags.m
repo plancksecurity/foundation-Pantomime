@@ -43,12 +43,18 @@
   return self;
 }
 
-- (instancetype) initWithNumber: (NSNumber *) theNumber
+- (instancetype) initWithInt: (NSInteger) theInt
 {
     self = [super init];
     if (self) {
-        flags = [theNumber integerValue];
+        flags = theInt;
     }
+    return self;
+}
+
+- (instancetype) initWithNumber: (NSNumber *) theNumber
+{
+    self = [self initWithInt:[theNumber integerValue]];
     return self;
 }
 

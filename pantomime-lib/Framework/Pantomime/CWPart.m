@@ -832,10 +832,10 @@ static int currentPartVersion = 2;
         [str appendFormat:@", %@", self.filename];
     }
     if ([self isKindOfClass:[CWIMAPMessage class]]) {
-        NSUInteger uid = [((CWIMAPMessage *) self) UID];
-        [str appendFormat:@" uid %lu", (unsigned long) uid];
-    }
-    if ([self isKindOfClass:[CWMessage class]]) {
+        [str appendFormat:@" messageID %@", [((CWIMAPMessage *) self) messageID]];
+
+        [str appendFormat:@" uid %lu", (unsigned long) [((CWIMAPMessage *) self) UID]];
+
         CWFlags *flags = [((CWMessage *) self) flags];
         NSString *flagsString = [flags asString];
         if (flagsString.length == 0) {
