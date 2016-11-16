@@ -1805,6 +1805,10 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
         }
     }
+    for (NSData *data in datas) {
+        NSString *aString = [data asciiString];
+        NSLog(@"extractUID: '%@'", aString);
+    }
     return 0;
 }
 
