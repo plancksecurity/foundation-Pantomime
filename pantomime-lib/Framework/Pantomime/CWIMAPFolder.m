@@ -173,25 +173,18 @@
 }
 
 
-//
-//
-//
+/**
+ For key sync to work, we have to fetch the whole mail.
+ */
 - (void) prefetch
 {
     // Maximum number of mails to prefetch
     NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
 
-    // Sending two very similar requests in parallel is ineffecient,
-    // but pantomime cannot parse more than one literal per response :(
     if ([self lastUID] > 0) {
-        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                  arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
-         PantomimeIMAPDefaultDescriptors];
-        [_store sendCommand: IMAP_UID_FETCH_BODY_TEXT  info: nil
-                  arguments: @"UID FETCH %u:* %@", [self lastUID] + 1,
-         PantomimeIMAPFullBody];
-
-        // TODO: Update old mails fast
+        [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
+                  arguments: @"UID FETCH %u:* RFC822", [self lastUID] + 1];
+        // TODO Update old mails fast
 
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
@@ -200,12 +193,8 @@
             lowestMessageNumberToFetch = 1;
         }
 
-        [_store sendCommand: IMAP_UID_FETCH_HEADER_FIELDS  info: nil
-                  arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
-         PantomimeIMAPDefaultDescriptors];
-        [_store sendCommand: IMAP_UID_FETCH_BODY_TEXT  info: nil
-                  arguments: @"FETCH %u:* %@", lowestMessageNumberToFetch,
-         PantomimeIMAPFullBody];
+        [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
+                  arguments: @"UID FETCH %u:* RFC822", lowestMessageNumberToFetch];
     }
 }
 
