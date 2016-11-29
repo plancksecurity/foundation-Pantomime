@@ -831,9 +831,11 @@ static int currentPartVersion = 2;
     if (self.filename) {
         [str appendFormat:@", %@", self.filename];
     }
+    if ([self isKindOfClass:[CWMessage class]]) {
+        [str appendFormat:@" msn %lu", (unsigned long) [((CWIMAPMessage *) self) messageNumber]];
+    }
     if ([self isKindOfClass:[CWIMAPMessage class]]) {
         [str appendFormat:@" messageID %@", [((CWIMAPMessage *) self) messageID]];
-
         [str appendFormat:@" uid %lu", (unsigned long) [((CWIMAPMessage *) self) UID]];
 
         CWFlags *flags = [((CWMessage *) self) flags];

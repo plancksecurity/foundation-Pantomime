@@ -106,6 +106,11 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSString *arguments;
     NSData *tag;
     int literal;
+
+    /**
+     A mapping from MSN to UID, for handling untagged responses that only mention the MSN.
+     */
+    NSMutableDictionary<NSNumber *, NSNumber *> *validatedMSNs;
 }
 - (id) initWithCommand: (IMAPCommand) theCommand
 	     arguments: (NSString *) theArguments
@@ -121,6 +126,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 		  info: (NSDictionary *) theInfo
 {
   self = [super init];
+
+    validatedMSNs = [NSMutableDictionary new];
 
   command = theCommand;
   literal = 0;
@@ -1805,10 +1812,12 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
         }
     }
-    for (NSData *data in datas) {
+    /*
+     for (NSData *data in datas) {
         NSString *aString = [data asciiString];
         NSLog(@"extractUID: '%@'", aString);
     }
+     */
     return 0;
 }
 
@@ -1928,12 +1937,22 @@ static inline int has_literal(char *buf, NSUInteger c)
     // Extract the UID from anywhere in the response
     NSUInteger theUID = [self extractUIDFromDataArray:_responsesFromServer.array];
 
+    if (theUID == 0) {
+        // If there is no UID in this response, try to deduce it from the mapping
+        theUID = [[_currentQueueObject->validatedMSNs
+                   objectForKey:[NSNumber numberWithInteger:theMSN]] integerValue];
+    }
+
+    //NSLog(@"*** parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
+
     // Try to retrieve the message by UID
     if (theUID > 0) {
+        //NSLog(@"*** Using existing message for UID %lu", (unsigned long)theUID);
         aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
     }
 
     if (aMessage == nil) {
+        //NSLog(@"*** New message");
         aMessage = [[CWIMAPMessage alloc] init];
     }
 
@@ -2006,8 +2025,12 @@ static inline int has_literal(char *buf, NSUInteger c)
             int msn;
 
             [aScanner scanInt: &msn];
-            //NSLog(@"msn = %d", msn);
+            //NSLog(@"*** msn = %d", msn);
             [aMessage setMessageNumber: msn];
+
+            // Store any mapping MSN -> UID that came from the server
+            [_currentQueueObject->validatedMSNs setObject:[NSNumber numberWithInteger:theUID]
+                                                   forKey:[NSNumber numberWithInteger:theMSN]];
         }
         // end of reading MSN
 
