@@ -183,7 +183,7 @@
 
     if ([self lastUID] > 0) {
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-                  arguments: @"UID FETCH %u:* RFC822", [self lastUID] + 1];
+                  arguments: @"UID FETCH %u:* (FLAGS RFC822)", [self lastUID] + 1];
         // TODO Update old mails fast
 
     } else {
@@ -194,7 +194,7 @@
         }
 
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-                  arguments: @"UID FETCH %u:* RFC822", lowestMessageNumberToFetch];
+                  arguments: @"UID FETCH %u:* (FLAGS RFC822)", lowestMessageNumberToFetch];
     }
 }
 
