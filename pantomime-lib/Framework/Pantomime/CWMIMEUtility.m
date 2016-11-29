@@ -260,6 +260,14 @@ static int seed_count = 1;
   return AUTORELEASE(aMutableData);
 }
 
++ (NSData *)hostname {
+    NSMutableData *aMutableData = [NSMutableData new];
+    char s[65];
+    memset(s, 0, sizeof(s));
+    gethostname(s, sizeof(s)-1);
+    [aMutableData appendCFormat: @"%s", s];
+    return aMutableData;
+}
 
 //
 // Instead of using [[NSHost currentHost] name],
@@ -269,18 +277,14 @@ static int seed_count = 1;
 //
 + (NSData *) globallyUniqueID
 {
-  NSMutableData *aMutableData;
-  char s[65];
-  
- 
-  aMutableData = [[NSMutableData alloc] init];
-  [aMutableData appendCFormat: @"%@", unique_id()];
- 
-  memset(s, 0, sizeof(s));
-  gethostname(s, sizeof(s)-1);
-  [aMutableData appendCFormat: @"@%s", s];
+    NSMutableData *aMutableData;
 
-  return AUTORELEASE(aMutableData);
+    aMutableData = [[NSMutableData alloc] init];
+    [aMutableData appendCFormat: @"%@", unique_id()];
+
+    [aMutableData appendCFormat: @"@%@", [self hostname]];
+
+    return AUTORELEASE(aMutableData);
 }
 
 

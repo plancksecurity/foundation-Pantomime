@@ -86,6 +86,11 @@
 */
 + (NSData *) globallyUniqueBoundary;
 
+/**
+ @result The local hostname as NSData. Used by globallyUniqueID.
+ */
++ (NSData *)hostname;
+
 /*!
   @method globallyUniqueID
   @discussion This method is used to generate a unique ID that CWMessage (or CWPart)
