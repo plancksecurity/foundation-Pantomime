@@ -2113,6 +2113,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             NSData *aData = [_currentQueueObject->info objectForKey: @"NSData"];
             if (!aData) aData = [NSData data];
 
+            [aMessage setHeadersFromData: aData record: cacheRecord];
             [CWMIMEUtility setContentFromRawSource: aData  inPart: aMessage];
             [aMessage setRawSource: aData];
 
