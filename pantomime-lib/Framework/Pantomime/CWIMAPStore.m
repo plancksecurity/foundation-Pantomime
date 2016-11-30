@@ -1440,8 +1440,11 @@ static inline int has_literal(char *buf, NSUInteger c)
   if (_lastCommand != IMAP_UID_FETCH_BODY_TEXT && _lastCommand != IMAP_UID_FETCH_HEADER_FIELDS &&
       _lastCommand != IMAP_UID_FETCH_HEADER_FIELDS_NOT && _lastCommand != IMAP_UID_FETCH_RFC822)
     {
-      POST_NOTIFICATION(PantomimeMessageChanged, self, [NSDictionary dictionaryWithObject: theMessage  forKey: @"Message"]);
-      PERFORM_SELECTOR_1(_delegate, @selector(messageChanged:), PantomimeMessageChanged);
+        NSDictionary *userInfo = [NSDictionary
+                                  dictionaryWithObject: theMessage  forKey: @"Message"];
+        POST_NOTIFICATION(PantomimeMessageChanged, self, userInfo);
+        PERFORM_SELECTOR_2(_delegate, @selector(messageChanged:), PantomimeMessageChanged,
+                           userInfo, PantomimeMessageChanged);
     }
 }
 
