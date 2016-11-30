@@ -184,11 +184,6 @@
     if ([self lastUID] > 0) {
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
                   arguments: @"UID FETCH %u:* (FLAGS RFC822)", [self lastUID] + 1];
-
-        NSUInteger first = [self firstUID];
-        NSUInteger last = [self lastUID];
-        [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
-                  arguments: @"UID FETCH %u:%u (FLAGS)", [self firstUID], [self lastUID]];
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails + 1;
@@ -197,7 +192,7 @@
         }
 
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-                  arguments: @"UID FETCH %u:* (FLAGS RFC822)", lowestMessageNumberToFetch];
+                  arguments: @"FETCH %u:* (UID FLAGS RFC822)", lowestMessageNumberToFetch];
     }
 }
 
