@@ -196,6 +196,11 @@
     }
 }
 
+- (void)syncExisting
+{
+    [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
+              arguments: @"UID FETCH %u:%u (FLAGS)", [self firstUID], [self lastUID]];
+}
 
 //
 // This method simply close the selected mailbox (ie. folder)

@@ -142,6 +142,12 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 - (void) prefetch;
 
 /*!
+ @discussion Syncs the flags of existing mails, thereby finding out flag changes
+ and deleted messages.
+ */
+- (void)syncExisting;
+
+/*!
   @method UIDValidity
   @discussion This method is used to obtain the UID validity of an IMAP folder.
               Refer to "2.3.1.1. Unique Identifier (UID) Message Attribute" of
