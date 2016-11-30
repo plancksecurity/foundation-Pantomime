@@ -179,7 +179,13 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 - (void) setSelected: (BOOL) theBOOL;
 
 /*!
+ @result The lowest UID of all the messages contained (locally) in that folder.
+ */
+- (NSUInteger) firstUID;
+
+/*!
  @discussion This can be more efficiently implemented than `[lastMessage UID]`
+ @result The highest UID of all the messages contained (locally) in that folder.
  */
 - (NSUInteger) lastUID;
 

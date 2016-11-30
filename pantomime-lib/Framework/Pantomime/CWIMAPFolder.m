@@ -184,8 +184,11 @@
     if ([self lastUID] > 0) {
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
                   arguments: @"UID FETCH %u:* (FLAGS RFC822)", [self lastUID] + 1];
-        // TODO Update old mails fast
 
+        NSUInteger first = [self firstUID];
+        NSUInteger last = [self lastUID];
+        [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
+                  arguments: @"UID FETCH %u:%u (FLAGS)", [self firstUID], [self lastUID]];
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails + 1;
@@ -415,6 +418,12 @@
   // We send our SEARCH command. Store->searchResponse will have the result.
   [_store sendCommand: IMAP_UID_SEARCH_ALL  info: [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]  arguments: aString];
 }
+
+- (NSUInteger) firstUID
+{
+    return [[[self allMessages] firstObject] UID];
+}
+
 
 - (NSUInteger) lastUID
 {
