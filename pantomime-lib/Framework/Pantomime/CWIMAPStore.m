@@ -2635,6 +2635,12 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
             break;
 
+        case IMAP_UID_FETCH_FLAGS: {
+            _connection_state.opening_mailbox = NO;
+            POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+            PERFORM_SELECTOR_2(_delegate, @selector(folderSyncCompleted:), PantomimeFolderSyncCompleted, _selectedFolder, @"Folder");
+        }
+
         case IMAP_UID_SEARCH_ALL:
             //
             // Before assuming we got a result and initialized everything in _parseSEARCH,
