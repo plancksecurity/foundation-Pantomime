@@ -418,10 +418,10 @@
 				TargetAttributes = {
 					43980E5A1CBD1B3E00A7FC3C = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0810;
 					};
 					43E854CE1CB7EA9B006867C0 = {
 						CreatedOnToolsVersion = 7.3;
-						TestTargetID = 43E854BA1CB7EA9A006867C0;
 					};
 				};
 			};
@@ -530,6 +530,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -539,6 +540,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -588,6 +590,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -631,6 +634,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -639,27 +643,25 @@
 		43E854DC1CB7EA9B006867C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PantomimeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.PantomimeTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pantomime.app/Pantomime";
+				SWIFT_VERSION = 3.0.1;
 			};
 			name = Debug;
 		};
 		43E854DD1CB7EA9B006867C0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = PantomimeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.PantomimeTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Pantomime.app/Pantomime";
+				SWIFT_VERSION = 3.0.1;
 			};
 			name = Release;
 		};
