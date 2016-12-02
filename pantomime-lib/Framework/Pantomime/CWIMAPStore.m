@@ -106,11 +106,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSString *arguments;
     NSData *tag;
     int literal;
-
-    /**
-     A mapping from MSN to UID, for handling untagged responses that only mention the MSN.
-     */
-    NSMutableDictionary<NSNumber *, NSNumber *> *validatedMSNs;
 }
 - (id) initWithCommand: (IMAPCommand) theCommand
 	     arguments: (NSString *) theArguments
@@ -126,9 +121,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 		  info: (NSDictionary *) theInfo
 {
   self = [super init];
-
-    validatedMSNs = [NSMutableDictionary new];
-
   command = theCommand;
   literal = 0;
 
@@ -1942,8 +1934,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     if (theUID == 0) {
         // If there is no UID in this response, try to deduce it from the mapping
-        theUID = [[_currentQueueObject->validatedMSNs
-                   objectForKey:[NSNumber numberWithInteger:theMSN]] integerValue];
+        theUID = [_selectedFolder uidForMSN:theMSN];
     }
 
     //NSLog(@"*** parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
@@ -2032,8 +2023,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             [aMessage setMessageNumber: msn];
 
             // Store any mapping MSN -> UID that came from the server
-            [_currentQueueObject->validatedMSNs setObject:[NSNumber numberWithInteger:theUID]
-                                                   forKey:[NSNumber numberWithInteger:theMSN]];
+            [_selectedFolder matchUID:theUID withMSN:theMSN];
         }
         // end of reading MSN
 

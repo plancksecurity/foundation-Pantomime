@@ -32,11 +32,17 @@
 
 #import "NSDate+RFC2822.h"
 
+@interface CWIMAPFolder ()
+@property NSMutableDictionary *uids;
+@end
+
 //
 // Private methods
 //
 @interface CWIMAPFolder (Private)
+
 - (NSData *) _removeInvalidHeadersFromMessage: (NSData *) theMessage;
+
 @end
 
 
@@ -50,6 +56,7 @@
   if ((self = [super initWithName: theName]) == nil)
     return nil;
 
+    self.uids = [NSMutableDictionary new];
   [self setSelected: NO];
   return self;
 }
@@ -433,6 +440,40 @@
 - (CWIMAPMessage * _Nullable)messageByUID:(NSUInteger)uid
 {
     return nil;
+}
+
+- (void)matchUID:(NSUInteger)uid withMSN:(NSUInteger)msn
+{
+    [self.uids setObject:[NSNumber numberWithUnsignedInteger:uid]
+                  forKey:[NSNumber numberWithUnsignedInteger:msn]];
+}
+
+- (NSUInteger)uidForMSN:(NSUInteger)msn
+{
+    return [[self.uids objectForKey:[NSNumber numberWithUnsignedInteger:msn]]
+            unsignedIntegerValue];
+}
+
+- (void)expungeMSN:(NSUInteger)msn
+{
+    NSArray<NSNumber *> *keysAsc = [self.uids
+                                    keysSortedByValueUsingSelector:@selector(unsignedIntegerValue)];
+    if (keysAsc.count) {
+        NSUInteger lowest = [[keysAsc firstObject] unsignedIntegerValue];
+        NSNumber *highestKey = [keysAsc lastObject];
+        if (msn >= lowest) {
+            NSArray<NSNumber *> *keysDesc = [[keysAsc reverseObjectEnumerator] allObjects];
+            NSArray<NSNumber *> *toRework = [keysDesc
+                                             filteredArrayUsingPredicate:
+                                             [NSPredicate
+                                              predicateWithFormat:@"integerValue > msn"]];
+            for (NSNumber *num in toRework) {
+                NSNumber *value = [self.uids objectForKey:num];
+                [self.uids setObject:value forKey:[NSNumber numberWithInt:num.integerValue - 1]];
+            }
+            [self.uids removeObjectForKey:highestKey];
+        }
+    }
 }
 
 @end

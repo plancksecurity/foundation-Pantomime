@@ -200,6 +200,22 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
  */
 - (CWIMAPMessage * _Nullable)messageByUID:(NSUInteger)uid;
 
+/*!
+ @abstract Associates the given UID with the message sequence number.
+ */
+- (void)matchUID:(NSUInteger)uid withMSN:(NSUInteger)msn;
+
+/*!
+ @abstract Retrieves the UID for the given MSN, if it exists.
+ @result: 0 if the UID cannot be determined.
+ */
+- (NSUInteger)uidForMSN:(NSUInteger)msn;
+
+/*!
+ @abstract: Try to expunge the given message, if the UID can be found out.
+ */
+- (void)expungeMSN:(NSUInteger)msn;
+
 @end
 
 #endif // _Pantomime_H_CWIMAPFolder
