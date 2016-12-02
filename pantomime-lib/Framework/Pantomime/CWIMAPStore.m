@@ -2140,7 +2140,15 @@ static inline int has_literal(char *buf, NSUInteger c)
             if (!aData) aData = [NSData data];
 
             [aMessage setHeadersFromData: aData record: cacheRecord];
-            [CWMIMEUtility setContentFromRawSource: aData  inPart: aMessage];
+
+            NSRange aRange = [aData rangeOfCString: "\n\n"];
+            if (aRange.length != 0) {
+                [CWMIMEUtility setContentFromRawSource:
+                 [aData subdataWithRange: NSMakeRange(aRange.location + 2,
+                                                      [aData length] - (aRange.location + 2))]
+                                                inPart: aMessage];
+            }
+
             [aMessage setRawSource: aData];
 
             [aMessage setInitialized: YES];
