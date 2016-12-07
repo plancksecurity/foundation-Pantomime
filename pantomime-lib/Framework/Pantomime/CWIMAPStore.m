@@ -2698,8 +2698,11 @@ static inline int has_literal(char *buf, NSUInteger c)
     //
     if (![aData hasCPrefix: "*"])// || _lastCommand == IMAP_AUTHORIZATION)
     {
-        //NSLog(@"REMOVING QUEUE OBJECT");      
-        [_currentQueueObject->info setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
+        //NSLog(@"REMOVING QUEUE OBJECT");
+        if (_currentQueueObject && _currentQueueObject->info) {
+            [_currentQueueObject->info
+             setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
+        }
         POST_NOTIFICATION(@"PantomimeCommandCompleted", self, _currentQueueObject->info);
         PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", _currentQueueObject->info);
         
