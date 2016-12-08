@@ -21,7 +21,7 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"CWThreadSafeArray.init %@", self);
+        NSLog(@"CWThreadSafeArray.init %@\n", self);
         _backgroundQueue = dispatch_queue_create("ThreadSafeArray", DISPATCH_QUEUE_SERIAL);
         _elements = [[NSMutableOrderedSet alloc] init];
     }
@@ -39,7 +39,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"CWThreadSafeArray.dealloc %@", self);
+    NSLog(@"CWThreadSafeArray.dealloc %@\n", self);
 }
 
 - (void)removeAllObjects

@@ -120,7 +120,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 		  info: (NSDictionary *) theInfo
 {
   self = [super init];
-    NSLog(@"CWIMAPQueueObject.init %@ %d %@", self, theCommand, theArguments);
+    NSLog(@"CWIMAPQueueObject.init %@ %d %@\n", self, theCommand, theArguments);
   _command = theCommand;
   _literal = 0;
 
@@ -141,7 +141,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 - (void) dealloc
 {
-    NSLog(@"CWIMAPQueueObject.dealloc %@", self);
+    NSLog(@"CWIMAPQueueObject.dealloc %@\n", self);
   RELEASE(arguments);
   RELEASE(info);
   RELEASE(tag);
@@ -219,7 +219,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     self = [super initWithName: theName  port: thePort transport: transport];
 
-    NSLog(@"CWIMAPStore.init %@", self);
+    NSLog(@"CWIMAPStore.init %@\n", self);
 
     _folderSeparator = 0;
     _selectedFolder = nil;
@@ -248,7 +248,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) dealloc
 {
-    NSLog(@"CWIMAPStore.dealloc %@", self);
+    NSLog(@"CWIMAPStore.dealloc %@\n", self);
   //NSLog(@"IMAPStore: -dealloc");
   RELEASE(_folders);
   RELEASE(_folderStatus);
