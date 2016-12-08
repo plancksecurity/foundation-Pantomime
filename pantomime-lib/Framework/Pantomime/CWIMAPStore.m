@@ -120,7 +120,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 		  info: (NSDictionary *) theInfo
 {
   self = [super init];
-    NSLog(@"CWIMAPQueueObject.init %@ %d %@\n", self, theCommand, theArguments);
+    NSLog(@"CWIMAPQueueObject.init %@\n", self);
   _command = theCommand;
   _literal = 0;
 
