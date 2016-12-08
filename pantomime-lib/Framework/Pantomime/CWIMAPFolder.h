@@ -142,10 +142,10 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 - (void) prefetch;
 
 /*!
- @discussion Syncs the flags of existing mails, thereby finding out flag changes
- and deleted messages.
+ @discussion Syncs the flags of existing mails (until the given lastUID),
+ thereby finding out flag changes and deleted messages.
  */
-- (void)syncExisting;
+- (void)syncExisting:(NSUInteger)lastUID;
 
 /*!
   @method UIDValidity
