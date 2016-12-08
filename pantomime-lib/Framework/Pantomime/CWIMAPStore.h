@@ -182,8 +182,6 @@ extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 @interface CWIMAPStore : CWService <CWStore>
 {
   @private
-    CWIMAPQueueObject *_currentQueueObject;
-  
     NSMutableDictionary *_folders;
     NSMutableDictionary *_openFolders;
     NSMutableDictionary *_folderStatus;
