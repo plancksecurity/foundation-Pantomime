@@ -120,7 +120,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 		  info: (NSDictionary *) theInfo
 {
   self = [super init];
-    NSLog(@"CWIMAPQueueObject.init %d %@", theCommand, theArguments);
+    NSLog(@"CWIMAPQueueObject.init %@ %d %@", self, theCommand, theArguments);
   _command = theCommand;
   _literal = 0;
 
@@ -141,7 +141,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 - (void) dealloc
 {
-    NSLog(@"CWIMAPQueueObject.dealloc");
+    NSLog(@"CWIMAPQueueObject.dealloc %@", self);
   RELEASE(arguments);
   RELEASE(info);
   RELEASE(tag);
@@ -219,6 +219,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     self = [super initWithName: theName  port: thePort transport: transport];
 
+    NSLog(@"CWIMAPStore.init %@", self);
+
     _folderSeparator = 0;
     _selectedFolder = nil;
     _tag = 1;
@@ -246,7 +248,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) dealloc
 {
-  //NSLog(@"IMAPStore: -dealloc"); 
+    NSLog(@"CWIMAPStore.dealloc %@", self);
+  //NSLog(@"IMAPStore: -dealloc");
   RELEASE(_folders);
   RELEASE(_folderStatus);
   RELEASE(_openFolders);
@@ -993,9 +996,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
     else
     {
-        CWIMAPQueueObject *aQueueObject;
-        NSUInteger i, count;
-
         //
         // We must check in the queue if we aren't trying to add a command that is already there.
         // This could happend if -rawSource is called in IMAPMessage multiple times before
@@ -1004,19 +1004,18 @@ static inline int has_literal(char *buf, NSUInteger c)
         // We skip this verification for the IMAP_APPEND command as a messages with the same size
         // could be quickly appended to the folder and we do NOT want to skip the second one.
         //
-        count = [_queue count];
-
-        for (i = 0; i < count; i++)
-        {
-            aQueueObject = [_queue objectAtIndex: i];
-            if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND && [aQueueObject.arguments isEqualToString: theString])
+        for (CWIMAPQueueObject *aQueueObject in _queue) {
+            if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
+                [aQueueObject.arguments isEqualToString: theString])
             {
                 //NSLog(@"A COMMAND ALREADY EXIST!!!!");
                 return;
             }
         }
 
-        aQueueObject = [[CWIMAPQueueObject alloc] initWithCommand: theCommand  arguments: theString  tag: [self nextTag]  info: theInfo];
+        CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
+                                           initWithCommand: theCommand  arguments: theString
+                                           tag: [self nextTag]  info: theInfo];
         RELEASE(aString);
 
         [_queue insertObject: aQueueObject  atIndex: 0];

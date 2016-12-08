@@ -10,7 +10,7 @@
 
 @interface CWThreadSafeArray ()
 
-@property (nonatomic, strong) NSMutableArray *mutableArray;
+@property (nonatomic, strong) NSMutableOrderedSet *elements;
 @property (nonatomic) dispatch_queue_t backgroundQueue;
 
 @end
@@ -21,8 +21,9 @@
 {
     self = [super init];
     if (self) {
+        NSLog(@"CWThreadSafeArray.init %@", self);
         _backgroundQueue = dispatch_queue_create("ThreadSafeArray", DISPATCH_QUEUE_SERIAL);
-        _mutableArray = [[NSMutableArray alloc] init];
+        _elements = [[NSMutableOrderedSet alloc] init];
     }
     return self;
 }
@@ -31,15 +32,20 @@
 {
     self = [self init];
     if (self) {
-        _mutableArray = [[NSMutableArray alloc] initWithArray:anArray];
+        _elements = [[NSMutableOrderedSet alloc] initWithArray:anArray];
     }
     return  self;
+}
+
+- (void)dealloc
+{
+    NSLog(@"CWThreadSafeArray.dealloc %@", self);
 }
 
 - (void)removeAllObjects
 {
     dispatch_sync(self.backgroundQueue, ^{
-        [self.mutableArray removeAllObjects];
+        [self.elements removeAllObjects];
     });
 }
 
@@ -47,7 +53,7 @@
 {
     __block NSUInteger theCount = 0;
     dispatch_sync(self.backgroundQueue, ^{
-        theCount = self.mutableArray.count;
+        theCount = self.elements.count;
     });
     return theCount;
 }
@@ -56,10 +62,10 @@
 {
     __block id obj = nil;
     dispatch_sync(self.backgroundQueue, ^{
-        id theLast = [self.mutableArray lastObject];
+        id theLast = [self.elements lastObject];
         if (!theLast) {
-            NSLog(@"self.count %lu", (unsigned long) self.mutableArray.count);
-            for (id o in self.mutableArray) {
+            NSLog(@"self.count %lu", (unsigned long) self.elements.count);
+            for (id o in self.elements) {
                 NSLog(@"Element %@", o);
             }
         }
@@ -74,7 +80,7 @@
         if (!obj) {
             NSLog(@"There: Trying to add nil!");
         }
-        [self.mutableArray addObject:obj];
+        [self.elements addObject:obj];
     });
 }
 
@@ -82,7 +88,7 @@
 {
     __block id obj = nil;
     dispatch_sync(self.backgroundQueue, ^{
-        obj = [self.mutableArray objectAtIndex:index];
+        obj = [self.elements objectAtIndex:index];
     });
     return obj;
 }
@@ -90,21 +96,21 @@
 - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
 {
     dispatch_sync(self.backgroundQueue, ^{
-        [self.mutableArray insertObject:anObject atIndex:index];
+        [self.elements insertObject:anObject atIndex:index];
     });
 }
 
 - (void)removeLastObject
 {
     dispatch_sync(self.backgroundQueue, ^{
-        [self.mutableArray removeLastObject];
+        [self.elements removeObjectAtIndex:self.elements.count - 1];
     });
 }
 
 - (void)addObjectsFromArray:(NSArray * _Nonnull)otherArray
 {
     dispatch_sync(self.backgroundQueue, ^{
-        [self.mutableArray addObjectsFromArray:otherArray];
+        [self.elements addObjectsFromArray:otherArray];
     });
 }
 
@@ -114,7 +120,7 @@
 {
     __block NSUInteger result = 0;
     dispatch_sync(self.backgroundQueue, ^{
-        result = [self.mutableArray countByEnumeratingWithState:state objects:buffer count:len];
+        result = [self.elements countByEnumeratingWithState:state objects:buffer count:len];
     });
     return result;
 }
@@ -123,7 +129,7 @@
 {
     __block BOOL result = NO;
     dispatch_sync(self.backgroundQueue, ^{
-        result = [self.mutableArray containsObject:anObject];
+        result = [self.elements containsObject:anObject];
     });
     return result;
 }
@@ -131,7 +137,7 @@
 - (void)removeObjectsInArray:(NSArray * _Nonnull)otherArray
 {
     dispatch_sync(self.backgroundQueue, ^{
-        [self.mutableArray removeObjectsInArray:otherArray];
+        [self.elements removeObjectsInArray:otherArray];
     });
 }
 
@@ -139,7 +145,7 @@
 {
     __block NSArray *result = nil;
     dispatch_sync(self.backgroundQueue, ^{
-        result = [[NSArray alloc] initWithArray:self.mutableArray];
+        result = self.elements.array;
     });
     return result;
 }
