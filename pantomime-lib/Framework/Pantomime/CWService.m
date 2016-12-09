@@ -24,7 +24,7 @@
 
 #import "Pantomime/CWConstants.h"
 #import "Pantomime/NSData+Extensions.h"
-#import "Pantomime/CWLogging.h"
+#import "Pantomime/CWLogger.h"
 
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSDictionary.h>
@@ -119,7 +119,7 @@
 //
 - (void) dealloc
 {
-  //NSLog(@"Service: -dealloc");
+  //INFO(NSStringFromClass([self class]), @"Service: -dealloc");
   [self setDelegate: nil];
 
   RELEASE(_supportedMechanisms);
@@ -291,8 +291,6 @@
                                             transport: self.connectionTransport
                                            background: NO];
 
-    _connection.logger = self.logger;
-
     if (!_connection)
     {
         return -1;
@@ -314,8 +312,6 @@
                                                  port: _port
                                             transport: self.connectionTransport
                                            background: YES];
-
-    _connection.logger = self.logger;
 
     if (!_connection)
     {
@@ -424,7 +420,7 @@
 		     withObject: [_wbuf subdataToIndex: (int) count]];
 	}
       
-      //NSLog(@"count = %d, len = %d", count, len);
+      //INFO(NSStringFromClass([self class]), @"count = %d, len = %d", count, len);
 
       // If we have been able to write everything...
       if (count == len)
@@ -506,7 +502,7 @@
       break;
 
     case ET_EDESC:
-      //NSLog(@"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+      //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
                 POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
@@ -542,7 +538,7 @@
 		      type: (RunLoopEventType) theType
 		   forMode: (NSString *) theMode
 {
-  //NSLog(@"timed out event!");
+  //INFO(NSStringFromClass([self class]), @"timed out event!");
   return nil;
 }
 

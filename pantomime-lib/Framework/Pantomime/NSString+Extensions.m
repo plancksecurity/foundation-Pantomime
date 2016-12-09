@@ -428,7 +428,7 @@
 	{
 	  if (realloc(o_bytes, total_length) == NULL)
             {
-              NSLog(@"stringWithData, realloc() failed, returning nil");
+              INFO(NSStringFromClass([self class]), @"stringWithData, realloc() failed, returning nil");
               iconv_close(conv);
               return nil;
             }

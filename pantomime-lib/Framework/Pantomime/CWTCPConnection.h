@@ -10,7 +10,7 @@
 
 #import "CWConnection.h"
 
-#import "Pantomime/CWLogging.h"
+#import "Pantomime/CWLogger.h"
 
 @interface CWTCPConnection : NSObject<CWConnection, NSStreamDelegate>
 

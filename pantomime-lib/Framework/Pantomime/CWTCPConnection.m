@@ -8,7 +8,7 @@
 
 #import "CWTCPConnection.h"
 
-#import "CWLogging.h"
+#import "Pantomime/CWLogger.h"
 
 static NSString *comp = @"CWTCPConnection";
 
@@ -30,8 +30,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
 @end
 
 @implementation CWTCPConnection
-
-@synthesize logger;
 
 + (NSInteger)numberOfRunningConnections
 {
@@ -55,6 +53,11 @@ static NSInteger s_numberOfConnectionThreads = 0;
 - (void)dealloc
 {
     [self close];
+}
+
+- (id<CWLogging>)logger
+{
+    return [CWLogger logger];
 }
 
 - (void)startTLS
@@ -166,7 +169,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)connectInBackgroundAndStartRunLoop
 {
-    NSLog(@"start thread %@", self.backgroundThread.name);
+    INFO(NSStringFromClass([self class]), @"start thread %@", self.backgroundThread.name);
     s_numberOfConnectionThreads++;
 
     CFReadStreamRef readStream = nil;
@@ -194,7 +197,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
         }
     }
     s_numberOfConnectionThreads--;
-    NSLog(@"end thread %@", self.backgroundThread.name);
+    INFO(NSStringFromClass([self class]), @"end thread %@", self.backgroundThread.name);
     self.backgroundThread = nil;
 }
 

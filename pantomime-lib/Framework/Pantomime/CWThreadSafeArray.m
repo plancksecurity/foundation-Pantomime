@@ -6,6 +6,8 @@
 //  Copyright © 2016 pEp Security S.A. All rights reserved.
 //
 
+#import "CWLogger.h"
+
 #import "CWThreadSafeArray.h"
 
 @interface CWThreadSafeArray ()
@@ -21,7 +23,7 @@
 {
     self = [super init];
     if (self) {
-        NSLog(@"CWThreadSafeArray.init %@\n", self);
+        INFO(NSStringFromClass([self class]), @"CWThreadSafeArray.init %@\n", self);
         _backgroundQueue = dispatch_queue_create("ThreadSafeArray", DISPATCH_QUEUE_SERIAL);
         _elements = [[NSMutableOrderedSet alloc] init];
     }
@@ -39,7 +41,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"CWThreadSafeArray.dealloc %@\n", self);
+    INFO(NSStringFromClass([self class]), @"CWThreadSafeArray.dealloc %@\n", self);
 }
 
 - (void)removeAllObjects
@@ -64,9 +66,9 @@
     dispatch_sync(self.backgroundQueue, ^{
         id theLast = [self.elements lastObject];
         if (!theLast) {
-            NSLog(@"self.count %lu", (unsigned long) self.elements.count);
+            INFO(NSStringFromClass([self class]), @"self.count %lu", (unsigned long) self.elements.count);
             for (id o in self.elements) {
-                NSLog(@"Element %@", o);
+                INFO(NSStringFromClass([self class]), @"Element %@", o);
             }
         }
         obj = theLast;
@@ -78,7 +80,7 @@
 {
     dispatch_sync(self.backgroundQueue, ^{
         if (!obj) {
-            NSLog(@"There: Trying to add nil!");
+            INFO(NSStringFromClass([self class]), @"There: Trying to add nil!");
         }
         [self.elements addObject:obj];
     });

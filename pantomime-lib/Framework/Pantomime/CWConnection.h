@@ -27,7 +27,7 @@
 #import <Foundation/NSString.h>
 
 #import "CWConstants.h"
-#import "Pantomime/CWLogging.h"
+#import "Pantomime/CWLogger.h"
 
 @protocol CWConnectionDelegate
 
@@ -50,7 +50,6 @@
 @protocol CWConnection
 
 @property (nonatomic, nullable, weak, readwrite) id<CWConnectionDelegate> delegate;
-@property (nonatomic, nullable, weak) id<CWLogging> logger;
 @property (nonatomic, readonly) NSError * _Nullable streamError;
 
 /*!

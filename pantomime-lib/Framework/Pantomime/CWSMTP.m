@@ -173,7 +173,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) dealloc
 {
-  //NSLog(@"SMTP: -dealloc");
+  //INFO(NSStringFromClass([self class]), @"SMTP: -dealloc");
   RELEASE(_message);
   RELEASE(_data);
   RELEASE(_recipients);
@@ -316,11 +316,11 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	  // We dequeue the first inserted command from the queue.
 	  aQueueObject = [_queue lastObject];
         if (!aQueueObject) {
-            NSLog(@"_queue has %lu objects", (unsigned long) _queue.count);
+            INFO(NSStringFromClass([self class]), @"_queue has %lu objects", (unsigned long) _queue.count);
             for (NSObject *obj in _queue) {
-                NSLog(@"obj %@", obj);
+                INFO(NSStringFromClass([self class]), @"obj %@", obj);
             }
-            NSLog(@"aQueueObject nil");
+            INFO(NSStringFromClass([self class]), @"aQueueObject nil");
         }
 	}
       else
@@ -521,7 +521,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   char *buf;
   NSUInteger count;
 
-  //NSLog(@"IN UPDATE READ");
+  //INFO(NSStringFromClass([self class]), @"IN UPDATE READ");
 
   [super updateRead];
 
@@ -1077,7 +1077,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   if ([aData hasCPrefix: "421"])
     {
       // FIXME: - lost connection
-      //NSLog(@"LOST CONNECTION TO THE SERVER");
+      //INFO(NSStringFromClass([self class]), @"LOST CONNECTION TO THE SERVER");
       [super close];
     }
   else

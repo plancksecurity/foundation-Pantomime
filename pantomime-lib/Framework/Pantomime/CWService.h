@@ -26,7 +26,7 @@
 #import "Pantomime/CWConnection.h"
 
 #import "Pantomime/CWConstants.h"
-#import "Pantomime/CWLogging.h"
+#import "Pantomime/CWLogger.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSObject.h>
@@ -379,8 +379,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (id _Nonnull) initWithName: (NSString * _Nonnull) theName
                         port: (unsigned int) thePort
                    transport: (ConnectionTransport) transport;
-
-- (void)setLogger:(id<CWLogging> _Nonnull)logger;
 
 /*!
   @method setDelegate:

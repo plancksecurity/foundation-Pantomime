@@ -24,6 +24,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Pantomime/CWLogger.h"
+
 #import "Pantomime/CWConstants.h"
 #import "Pantomime/CWFlags.h"
 #import "Pantomime/CWInternetAddress.h"
@@ -369,7 +371,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
       aData = [theLine subdataFromIndex: 6];
       word = malloc(256);
       
-      //NSLog(@"Have to parse |%@|", [aData asciiString]);
+      //INFO(NSStringFromClass([self class]), @"Have to parse |%@|", [aData asciiString]);
 
       bytes = (unsigned char*)[aData bytes];
       tot = [aData length];
@@ -419,7 +421,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 
       if (isalpha(*word))
 	{
-	  //NSLog(@"UNIX DATE");
+	  //INFO(NSStringFromClass([self class]), @"UNIX DATE");
 	  
 	  // We skip the first word, no need for it.
 	  i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
@@ -431,7 +433,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
       // We got a RFC 822 date. The syntax is:
       // day month year hh:mm:ss zone
       // For example: 03 Apr 2003 17:27:06 +0200
-      //NSLog(@"RFC-822 time");
+      //INFO(NSStringFromClass([self class]), @"RFC-822 time");
       day = atoi((const char*)word);
       
       //printf("len = %d |%s| day = %d\n", len, word, day);
@@ -1172,7 +1174,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 	  
 	      if (r2.length && r2.location > r1.location+1)
 		{
-		  NSLog(@"WE'VE GOT A LANGUAGE!");
+		  INFO(NSStringFromClass([self class]), @"WE'VE GOT A LANGUAGE!");
 		}
 
 	      aCharset = [aMutableData subdataToIndex: r2.location-1];

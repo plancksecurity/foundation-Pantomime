@@ -68,14 +68,14 @@ static unsigned short version = 1;
 
   if ((_fd = open([thePath UTF8String], O_RDWR|O_CREAT, S_IRUSR|S_IWUSR)) < 0) 
     {
-      NSLog(@"CANNOT CREATE OR OPEN THE CACHE!)");
+      INFO(NSStringFromClass([self class]), @"CANNOT CREATE OR OPEN THE CACHE!)");
       abort();
     }
 
   if (lseek(_fd, 0L, SEEK_SET) < 0)
     {
       close(_fd);
-      NSLog(@"UNABLE TO LSEEK INITIAL");
+      INFO(NSStringFromClass([self class]), @"UNABLE TO LSEEK INITIAL");
       abort();
     }
 
@@ -92,9 +92,9 @@ static unsigned short version = 1;
             {
 
               if (errno == EACCES || errno == EROFS)
-                NSLog(@"UNABLE TO TRUNCATE CACHE FILE WITH OLD VERSION, NOT WRITABLE");
+                INFO(NSStringFromClass([self class]), @"UNABLE TO TRUNCATE CACHE FILE WITH OLD VERSION, NOT WRITABLE");
               else
-                NSLog(@"UNABLE TO TRUNCATE CACHE FILE WITH OLD VERSION");
+                INFO(NSStringFromClass([self class]), @"UNABLE TO TRUNCATE CACHE FILE WITH OLD VERSION");
               close(_fd);
               abort();
             }
@@ -119,7 +119,7 @@ static unsigned short version = 1;
 //
 - (void) dealloc
 {
-  //NSLog(@"CWIMAPCacheManager: -dealloc");
+  //INFO(NSStringFromClass([self class]), @"CWIMAPCacheManager: -dealloc");
   
   NSFreeMapTable(_table);
   if (_fd >= 0) close(_fd);
@@ -140,14 +140,14 @@ static unsigned short version = 1;
 
   if (lseek(_fd, 10L, SEEK_SET) < 0)
     {
-      NSLog(@"lseek failed in initInRange:");
+      INFO(NSStringFromClass([self class]), @"lseek failed in initInRange:");
       abort();
     }
 
   begin = theRange.location;
   end = (NSMaxRange(theRange) <= _count ? NSMaxRange(theRange) : _count);
   
-  //NSLog(@"init from %d to %d, count = %d, size of char %d  UID validity = %d", begin, end, _count, sizeof(char), _UIDValidity);
+  //INFO(NSStringFromClass([self class]), @"init from %d to %d, count = %d, size of char %d  UID validity = %d", begin, end, _count, sizeof(char), _UIDValidity);
 
   pool = [[NSAutoreleasePool alloc] init];
   s = (unsigned char *)malloc(65536);
@@ -160,7 +160,7 @@ static unsigned short version = 1;
 
       // We parse the record length, date, flags, position in file and the size.
       len = read_unsigned_int(_fd);
-      //NSLog(@"i = %d, len = %d", i, len);
+      //INFO(NSStringFromClass([self class]), @"i = %d, len = %d", i, len);
 
       r = (unsigned char *)malloc(len-4);
 
@@ -170,7 +170,7 @@ static unsigned short version = 1;
 	  continue;
 	}
       
-      if (read(_fd, r, len-4) < 0) { NSLog(@"read failed"); abort(); }
+      if (read(_fd, r, len-4) < 0) { INFO(NSStringFromClass([self class]), @"read failed"); abort(); }
       
       ((CWFlags *)[aMessage flags])->flags = read_unsigned_int_memory(r);  // FASTER and _RIGHT_ since we can't call -setFlags: on CWIMAPMessage
       [aMessage setReceivedDate: [NSCalendarDate dateWithTimeIntervalSince1970: read_unsigned_int_memory(r+4)]];
@@ -262,7 +262,7 @@ static unsigned short version = 1;
 //
 - (void) invalidate
 {
-  //NSLog(@"IMAPCacheManager - INVALIDATING the cache...");
+  //INFO(NSStringFromClass([self class]), @"IMAPCacheManager - INVALIDATING the cache...");
   [super invalidate];
   _UIDValidity = 0;
   [self synchronize];
@@ -279,11 +279,11 @@ static unsigned short version = 1;
 
   _count = [_folder->allMessages count];
   
-  //NSLog(@"CWIMAPCacheManager: -synchronize with folder count = %d", _count);
+  //INFO(NSStringFromClass([self class]), @"CWIMAPCacheManager: -synchronize with folder count = %d", _count);
 
   if (lseek(_fd, 0L, SEEK_SET) < 0)
     {
-      NSLog(@"fseek failed");
+      INFO(NSStringFromClass([self class]), @"fseek failed");
       abort();
     }
   
@@ -292,7 +292,7 @@ static unsigned short version = 1;
   write_unsigned_int(_fd, _count);
   write_unsigned_int(_fd, _UIDValidity);
   
-  //NSLog(@"Synching flags");
+  //INFO(NSStringFromClass([self class]), @"Synching flags");
   for (i = 0; i < _count; i++)
     {
       len = read_unsigned_int(_fd);
@@ -300,7 +300,7 @@ static unsigned short version = 1;
       write_unsigned_int(_fd, flags);
       lseek(_fd, (len-8), SEEK_CUR);
     }
-  //NSLog(@"Done!");
+  //INFO(NSStringFromClass([self class]), @"Done!");
  
   return (fsync(_fd) == 0);
 }
@@ -315,7 +315,7 @@ static unsigned short version = 1;
 
   if (lseek(_fd, 0L, SEEK_END) < 0)
     {
-      NSLog(@"COULD NOT LSEEK TO END OF FILE");
+      INFO(NSStringFromClass([self class]), @"COULD NOT LSEEK TO END OF FILE");
       abort();
     }
   
@@ -363,11 +363,11 @@ static unsigned short version = 1;
   unsigned int i, len, size, total_length, v;
   unsigned char *buf;
 
-  //NSLog(@"expunge: rewriting cache");
+  //INFO(NSStringFromClass([self class]), @"expunge: rewriting cache");
 
   if (lseek(_fd, 10L, SEEK_SET) < 0)
     {
-      NSLog(@"fseek failed");
+      INFO(NSStringFromClass([self class]), @"fseek failed");
       abort();
     }
   
@@ -382,19 +382,19 @@ static unsigned short version = 1;
 
   for (i = 0; i < _count; i++)
     {
-      //NSLog(@"===========");
+      //INFO(NSStringFromClass([self class]), @"===========");
       len = read_unsigned_int(_fd);
       if (len <= 4)	// sanity check, we read len-4 bytes later on
 	continue;
 
-      //NSLog(@"i = %d  len = %d", i, len);
+      //INFO(NSStringFromClass([self class]), @"i = %d  len = %d", i, len);
       v = htonl(len);
       memcpy((buf+total_length), (char *)&v, 4);
       
       // We write the rest of the record into the memory
       if (read(_fd, (buf+total_length+4), len-4) < 0)
 	{
-	  NSLog(@"read failed");
+	  INFO(NSStringFromClass([self class]), @"read failed");
 	  abort();
 	}
       
@@ -406,14 +406,14 @@ static unsigned short version = 1;
 	}
       else
 	{
-	  //NSLog(@"Message not found! uid = %d  table count = %d",
+	  //INFO(NSStringFromClass([self class]), @"Message not found! uid = %d  table count = %d",
 	  //					uid, NSCountMapTable(_table));
 	}
     }
 
   if (lseek(_fd, 0L, SEEK_SET) < 0)
     {
-      NSLog(@"fseek failed");
+      INFO(NSStringFromClass([self class]), @"fseek failed");
       abort();
     }
 
@@ -431,11 +431,11 @@ static unsigned short version = 1;
       if (errno == EAGAIN)
         {
           // Perhaps we could handle this more gracefully?
-          NSLog(@"EXPUNGE CACHE: WRITE OUT ERROR, EAGAIN");
+          INFO(NSStringFromClass([self class]), @"EXPUNGE CACHE: WRITE OUT ERROR, EAGAIN");
         }
       else
         {
-          NSLog(@"EXPUNGE CACHE: WRITE OUT INCOMPLETE");
+          INFO(NSStringFromClass([self class]), @"EXPUNGE CACHE: WRITE OUT INCOMPLETE");
         }
       abort();
     }
@@ -444,15 +444,15 @@ static unsigned short version = 1;
     {
       
       if (errno == EACCES || errno == EROFS)
-        NSLog(@"UNABLE TO EXPUNGE CACHE, NOT WRITABLE");
+        INFO(NSStringFromClass([self class]), @"UNABLE TO EXPUNGE CACHE, NOT WRITABLE");
       else if (errno == EFBIG)
-        NSLog(@"UNABLE TO EXPUNGE CACHE, EFBIG");
+        INFO(NSStringFromClass([self class]), @"UNABLE TO EXPUNGE CACHE, EFBIG");
       else
-        NSLog(@"UNABLE TO EXPUNGE CACHE");
+        INFO(NSStringFromClass([self class]), @"UNABLE TO EXPUNGE CACHE");
       abort();
     }
   free(buf);
 
-  //NSLog(@"Done! New size = %d", size);
+  //INFO(NSStringFromClass([self class]), @"Done! New size = %d", size);
 }
 @end

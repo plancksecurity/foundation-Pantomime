@@ -671,7 +671,7 @@ void dns_socket_callback(CFSocketRef s, CFSocketCallBackType type, CFDataRef add
   // - nscount: 0 name server resource record in the authority records section
   // - arcount: 0 resource record in the additional records section
   //
-  //NSLog(@"(0x0100:\t%d to %d\n1:\t\t%d to %d\n", 0x0100, htons(0x0100), 1, htons(1));
+  //INFO(NSStringFromClass([self class]), @"(0x0100:\t%d to %d\n1:\t\t%d to %d\n", 0x0100, htons(0x0100), 1, htons(1));
   header = (dns_packet_header *)packet;
   header->packet_id = htons(theRequest->packet_id);
   header->flags = htons(0x0100);    
