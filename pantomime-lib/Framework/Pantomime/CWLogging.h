@@ -16,7 +16,11 @@
 /** Log a verbose message */
 - (void)infoComponent:(NSString *)component message:(NSString *)message;
 
+/** Issue a warning */
 - (void)warnComponent:(NSString *)component message:(NSString *)message;
+
+/** Issue an error message */
+- (void)errorComponent:(NSString *)component message:(NSString *)message;
 
 @end
 
