@@ -469,7 +469,7 @@
                                               predicateWithFormat:@"integerValue > msn"]];
             for (NSNumber *num in toRework) {
                 NSNumber *value = [self.uids objectForKey:num];
-                [self.uids setObject:value forKey:[NSNumber numberWithInt:num.integerValue - 1]];
+                [self.uids setObject:value forKey:[NSNumber numberWithInt:num.intValue - 1]];
             }
             [self.uids removeObjectForKey:highestKey];
         }
