@@ -103,35 +103,9 @@
       return;
     }
 
-  if (!_content)
-    {
-      id aStore;
-
-      aStore = [(CWIMAPFolder *)[self folder] store];
-
-      if (!_headers_were_prefetched)
-	{
-	  [aStore sendCommand: IMAP_UID_FETCH_HEADER_FIELDS_NOT
-                     info: nil
-                arguments: @"UID FETCH %u:%u %@", _UID, PantomimeIMAPDefaultDescriptors];
-	}
-
-      // If we are no longer connected to the IMAP server, we don't send the 2nd command.
-      // This will prevent us from calling the delegate method twice (the one that handles
-      // the disconnection from the IMAP server).
-      if ([aStore isConnected])
-	{
-	  [aStore sendCommand: IMAP_UID_FETCH_BODY_TEXT  info: nil  arguments: @"UID FETCH %u:%u BODY[TEXT]", _UID, _UID];
-	}
-
-      // Since we are loading asynchronously our message, it's not yet initialized. It'll be set as an initialized one
-      // in CWIMAPStore once the body is fully loaded.
-      [super setInitialized: NO];
-    }
-  
-  _headers_were_prefetched = YES;
+    _headers_were_prefetched = YES;
+    [super setInitialized: YES];
 }
-
 
 //
 //
