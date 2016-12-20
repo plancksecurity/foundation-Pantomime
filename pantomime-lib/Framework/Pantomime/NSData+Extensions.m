@@ -419,11 +419,10 @@ static const char *hexDigit = "0123456789ABCDEF";
   const char *b, *bytes;
   NSUInteger i, len, slen;
   
-  if (!theCString)
-    {
-      return NSMakeRange(NSNotFound,0);
+    if (!theCString || theRange.length == 0) {
+        return NSMakeRange(NSNotFound,0);
     }
-  
+
   bytes = [self bytes];
   len = [self length];
   slen = strlen(theCString);
