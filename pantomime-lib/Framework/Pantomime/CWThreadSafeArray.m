@@ -105,7 +105,9 @@
 - (void)removeLastObject
 {
     dispatch_sync(self.backgroundQueue, ^{
-        [self.elements removeObjectAtIndex:self.elements.count - 1];
+        if (self.elements.count > 0) {
+            [self.elements removeObjectAtIndex:self.elements.count - 1];
+        }
     });
 }
 
