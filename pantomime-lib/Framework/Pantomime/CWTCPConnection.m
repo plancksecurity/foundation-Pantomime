@@ -169,7 +169,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)connectInBackgroundAndStartRunLoop
 {
-    INFO(NSStringFromClass([self class]), @"start thread %@", self.backgroundThread.name);
     s_numberOfConnectionThreads++;
 
     CFReadStreamRef readStream = nil;
@@ -197,7 +196,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
         }
     }
     s_numberOfConnectionThreads--;
-    INFO(NSStringFromClass([self class]), @"end thread %@", self.backgroundThread.name);
     self.backgroundThread = nil;
 }
 
