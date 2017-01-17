@@ -1113,8 +1113,17 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
       [aMutableData appendCString: LF];
     }
   
-  // We set our Message-ID
-  [aMutableData appendCFormat: @"Message-ID: <%@>%s", [self messageID], LF];
+    // We set our Message-ID
+    // Make sure to only output it if it exists, and avoid double angle brackets
+    NSString *theMessageID = [self messageID];
+    if ([theMessageID length] > 0) {
+        if ([theMessageID length] > 2 &&
+            [[theMessageID substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
+            theMessageID = [theMessageID
+                            substringWithRange:NSMakeRange(1, [theMessageID length] - 2)];
+        }
+        [aMutableData appendCFormat: @"Message-ID: <%@>%s", theMessageID, LF];
+    }
 
   // We set our MIME-Version header
   [aMutableData appendCFormat: @"MIME-Version: 1.0%s", LF];
