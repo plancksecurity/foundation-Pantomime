@@ -27,6 +27,7 @@
 #import "Pantomime/CWFlags.h"
 #import "Pantomime/CWIMAPStore.h"
 #import "Pantomime/CWIMAPMessage.h"
+#import "Pantomime/CWLogger.h"
 #import "Pantomime/NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
@@ -203,10 +204,14 @@
     }
 }
 
-- (void)syncExisting:(NSUInteger)lastUID
+- (void)syncExistingFirstUID:(NSUInteger)firstUID lastUID:(NSUInteger)lastUID
 {
-    [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
-              arguments: @"UID FETCH %u:%u (FLAGS)", [self firstUID], lastUID];
+    if (firstUID <= lastUID) {
+        [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
+                  arguments: @"UID FETCH %u:%u (FLAGS)", [self firstUID], lastUID];
+    } else {
+        ERROR(@"", @"UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
+    }
 }
 
 //
