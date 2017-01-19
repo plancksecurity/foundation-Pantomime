@@ -831,21 +831,20 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (CWIMAPFolder *) folderForName: (NSString *) theName
 			    mode: (PantomimeFolderMode) theMode
 {  
-  CWIMAPFolder *aFolder;
-  
-  aFolder = [_openFolders objectForKey: theName];
+    CWIMAPFolder *aFolder = [_openFolders objectForKey: theName];
 
-  // Careful here, we might return a non-selected mailbox.
-  if (aFolder)
-    {
-      return aFolder;
+    if (aFolder) {
+        if ([_selectedFolder.name isEqualToString:theName]) {
+            return aFolder;
+        }
+    } else {
+        aFolder = [self folderWithName:theName];
+        [_openFolders setObject: aFolder  forKey: theName];
+        RELEASE(aFolder);
     }
 
-    aFolder = [self folderWithName:theName];
+    [aFolder setStore: self];
     aFolder.mode = theMode;
-  [aFolder setStore: self];
-  [_openFolders setObject: aFolder  forKey: theName];
-  RELEASE(aFolder);
 
   //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
 
