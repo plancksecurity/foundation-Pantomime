@@ -30,3 +30,9 @@
 
 #define INFO(COMP, FORMAT, ...)\
 [[CWLogger logger] infoComponent:COMP message:[NSString stringWithFormat:FORMAT, ##__VA_ARGS__]];
+
+#define WARN(COMP, FORMAT, ...)\
+[[CWLogger logger] warnComponent:COMP message:[NSString stringWithFormat:FORMAT, ##__VA_ARGS__]];
+
+#define ERROR(COMP, FORMAT, ...)\
+[[CWLogger logger] errorComponent:COMP message:[NSString stringWithFormat:FORMAT, ##__VA_ARGS__]];
