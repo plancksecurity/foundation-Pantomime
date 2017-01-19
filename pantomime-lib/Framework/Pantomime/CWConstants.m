@@ -43,6 +43,7 @@ NSString* PantomimeFolderListSubscribedFailed = @"PantomimeFolderListSubscribedF
 NSString* PantomimeFolderOpenCompleted = @"PantomimeFolderOpenCompleted";
 NSString* PantomimeFolderOpenFailed = @"PantomimeFolderOpenFailed";
 NSString* PantomimeFolderSyncCompleted = @"PantomimeFolderSyncCompleted";
+NSString* PantomimeFolderSyncFailed = @"PantomimeFolderSyncFailed";
 NSString* PantomimeFolderPrefetchCompleted = @"PantomimeFolderPrefetchCompleted";
 NSString* PantomimeFolderPrefetchFailed = @"PantomimeFolderPrefetchFailed";
 NSString* PantomimeFolderSearchCompleted = @"PantomimeFolderSearchCompleted";

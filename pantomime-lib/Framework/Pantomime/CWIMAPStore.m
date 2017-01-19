@@ -1289,6 +1289,14 @@ static inline int has_literal(char *buf, NSUInteger c)
   [self sendCommand: IMAP_STARTTLS  info: nil  arguments: @"STARTTLS"];
 }
 
+- (void)signalFolderSyncError
+{
+    POST_NOTIFICATION(PantomimeFolderSyncFailed, self,
+                      [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+    PERFORM_SELECTOR_2(_delegate, @selector(folderSyncFailed:),
+                       PantomimeFolderSyncFailed, _selectedFolder, @"Folder");
+}
+
 @end
 
 

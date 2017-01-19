@@ -211,6 +211,7 @@
                   arguments: @"UID FETCH %u:%u (FLAGS)", [self firstUID], lastUID];
     } else {
         ERROR(@"", @"UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
+        [_store signalFolderSyncError];
     }
 }
 

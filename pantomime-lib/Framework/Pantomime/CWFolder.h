@@ -107,6 +107,11 @@ extern NSString * _Nonnull const PantomimeFolderPrefetchCompleted;
 extern NSString * _Nonnull const PantomimeFolderSyncCompleted;
 
 /*!
+ @const PantomimeFolderSyncFailed
+ */
+extern NSString * _Nonnull const PantomimeFolderSyncFailed;
+
+/*!
   @const PantomimeFolderPrefetchFailed
 */
 extern NSString * _Nonnull const PantomimeFolderPrefetchFailed;
@@ -294,6 +299,15 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
  @param theNotification The notification holding the information.
  */
 - (void) folderSyncCompleted: (NSNotification * _Nullable) theNotification;
+
+/*!
+ @method folderSyncFailed
+ @discussion This method is automatically invoked on the store's
+ delegate in order to indicate that the flags sync
+ operation failed.
+ @param theNotification The notification holding the information.
+ */
+- (void) folderSyncFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderPrefetchFailed

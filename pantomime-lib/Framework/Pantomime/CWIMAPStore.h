@@ -305,6 +305,8 @@ extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
               string:(NSString * _Nonnull)theString;
 
+- (void)signalFolderSyncError;
+
 @end
 
 #endif // _Pantomime_H_IMAPStore
