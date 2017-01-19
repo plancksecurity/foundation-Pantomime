@@ -206,11 +206,12 @@
 
 - (void)syncExistingFirstUID:(NSUInteger)firstUID lastUID:(NSUInteger)lastUID
 {
-    if (firstUID <= lastUID) {
+    if (firstUID <= lastUID && firstUID > 0) {
         [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
-                  arguments: @"UID FETCH %u:%u (FLAGS)", [self firstUID], lastUID];
+                  arguments: @"UID FETCH %u:%u (FLAGS)", firstUID, lastUID];
     } else {
-        ERROR(@"", @"UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
+        ERROR(NSStringFromClass([self class]),
+              @"UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
         [_store signalFolderSyncError];
     }
 }
