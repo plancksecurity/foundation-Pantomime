@@ -522,7 +522,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
         [components setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: tz]];
         NSDate *date = [calendar dateFromComponents:components];
 
-      [theMessage setReceivedDate:date];
+      [theMessage setOriginationDate:date];
       free(word);
     }
 }

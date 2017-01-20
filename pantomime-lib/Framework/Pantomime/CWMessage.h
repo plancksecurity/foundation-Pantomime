@@ -184,20 +184,20 @@ extern NSString * _Nonnull const PantomimeMessageExpunged;
 - (void) setInReplyTo: (NSString * _Nonnull) theInReplyTo;
 
 /*!
-  @method receivedDate
+  @method originationDate
   @discussion This method is used to obtain the value of
               the "Date" header.
   @result The value of the "Date" header, as a NSCalendarDate instance.
 */
-- (NSDate * _Nullable) receivedDate;
+- (NSDate * _Nullable) originationDate;
 
 /*!
-  @method setReceivedDate:
+  @method setOriginationDate:
   @discussion This method is used to set the value of
               the "Date" header.
   @param theDate The NSCalendarDate instance.
 */
-- (void) setReceivedDate: (NSDate * _Nonnull) theDate;
+- (void) setOriginationDate: (NSDate * _Nonnull) theDate;
 
 /*!
   @method addRecipient:

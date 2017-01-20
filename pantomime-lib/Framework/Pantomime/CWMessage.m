@@ -219,7 +219,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
   [CWMessage setVersion: currentMessageVersion];
 
-  [theCoder encodeObject: [self receivedDate]];                       // Date
+  [theCoder encodeObject: [self originationDate]];                       // Date
   [theCoder encodeObject: [self from]];                               // From
   [theCoder encodeObject: _recipients];                               // To and Cc (Bcc, at worst)
   [theCoder encodeObject: [self subject]];                            // Subject
@@ -244,7 +244,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   _properties = [[NSMutableDictionary alloc] init];
   _recipients = [[NSMutableArray alloc] init];
   
-  [self setReceivedDate: [theCoder decodeObject]];              // Date
+  [self setOriginationDate: [theCoder decodeObject]];              // Date
   [self setFrom: [theCoder decodeObject]];                      // From
   [self setRecipients: [theCoder decodeObject]];                // To and Cc (Bcc, at worst)
   [self setSubject: [theCoder decodeObject]];                   // Subject
@@ -376,7 +376,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (NSDate *) receivedDate
+- (NSDate *) originationDate
 {
   return [_headers objectForKey: @"Date"];
 }
@@ -385,7 +385,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) setReceivedDate: (NSDate*) theDate
+- (void) setOriginationDate: (NSDate*) theDate
 {
   if (theDate)
     {
@@ -778,9 +778,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   
   // We verify if we have a Date value. We might receive messages w/o this field
   // (Yes, I know, it's borken but it's happening).
-  if ([self receivedDate])
+  if ([self originationDate])
     {
-      [aMutableData insertCString: [[NSString stringWithFormat: @"On %@ ", [[self receivedDate] description]] UTF8String]
+      [aMutableData insertCString: [[NSString stringWithFormat: @"On %@ ", [[self originationDate] description]] UTF8String]
 		    atIndex: 0];
     }
 
@@ -843,10 +843,10 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   
       // We verify if we have a Date value. We might receive messages w/o this field
       // (Yes, I know, it's borken but it's happening).
-      if ([self receivedDate])
+      if ([self originationDate])
 	{
 	  [aMutableData appendCString: "\nDate: "];
-	  [aMutableData appendData: [[[self receivedDate] description] dataUsingEncoding: NSASCIIStringEncoding]];
+	  [aMutableData appendData: [[[self originationDate] description] dataUsingEncoding: NSASCIIStringEncoding]];
 	}
       
       [aMutableData appendCString: "\nFrom: "];
@@ -1414,7 +1414,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
       else if ([aLine hasCaseInsensitiveCPrefix: "Date"])
 	{
 	  [CWParser parseDate: aLine  inMessage: self];
-	  if (theRecord && [self receivedDate]) theRecord.date = [[self receivedDate] timeIntervalSince1970]; 
+	  if (theRecord && [self originationDate]) theRecord.date = [[self originationDate] timeIntervalSince1970]; 
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "From"] &&
 	       ![aLine hasCaseInsensitiveCPrefix: "From "])
@@ -1581,8 +1581,8 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (int) compareAccordingToDate: (CWMessage *) aMessage
 {
-  NSDate *date1 = [self receivedDate];
-  NSDate *date2 = [aMessage receivedDate];
+  NSDate *date1 = [self originationDate];
+  NSDate *date2 = [aMessage originationDate];
   NSTimeInterval timeInterval;
 
   if (date1 == nil || date2 == nil)
@@ -1608,8 +1608,8 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (int) reverseCompareAccordingToDate: (CWMessage *) aMessage
 {
-  NSDate *date2 = [self receivedDate];
-  NSDate *date1 = [aMessage receivedDate];
+  NSDate *date2 = [self originationDate];
+  NSDate *date1 = [aMessage originationDate];
   NSTimeInterval timeInterval;
 
   if (date1 == nil || date2 == nil)
