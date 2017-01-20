@@ -841,9 +841,13 @@ static int currentPartVersion = 2;
         CWFlags *flags = [((CWMessage *) self) flags];
         NSString *flagsString = [flags asString];
         if (flagsString.length == 0) {
-            flagsString = @"0";
+            flagsString = @"NoFlags";
         }
         [str appendFormat:@" %@", flagsString];
+
+        if (((CWMessage *) self).originationDate) {
+            [str appendFormat:@" %@", ((CWMessage *) self).originationDate];
+        }
     }
     [str appendString:@">"];
     return str;
