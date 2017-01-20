@@ -1086,22 +1086,24 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   // new message.
   aMutableData = [[NSMutableData alloc] init];
   
+    if ([self originationDate]) {
+        aCalendarDate = [self originationDate];
+    } else {
 #ifndef MACOSX
-  if ([[NSUserDefaults standardUserDefaults] objectForKey: @"Local Time Zone"])
-    {
-      aCalendarDate = [[NSDate date] dateWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"
-				     timeZone: [NSTimeZone systemTimeZone]];
-    }
-  else
-    {
-      tzset();
-      aCalendarDate = [[NSDate date] dateWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"
-				     timeZone: [NSTimeZone timeZoneWithAbbreviation: 
-							     [NSString stringWithCString: tzname[1]]]];
-    }
+        if ([[NSUserDefaults standardUserDefaults] objectForKey: @"Local Time Zone"]) {
+            aCalendarDate = [[NSDate date] dateWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"
+                                                         timeZone: [NSTimeZone systemTimeZone]];
+        } else {
+            tzset();
+            aCalendarDate = [[NSDate date] dateWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"
+                                                         timeZone: [NSTimeZone timeZoneWithAbbreviation:
+                                                                    [NSString stringWithCString: tzname[1]]]];
+        }
 #else
-  aCalendarDate = [NSDate date];
+        aCalendarDate = [NSDate date];
 #endif
+    }
+
     [aMutableData appendCFormat: @"Date: %@%s", aCalendarDate.rfc2822String, LF];
   
   // We set the subject, if we have one!
