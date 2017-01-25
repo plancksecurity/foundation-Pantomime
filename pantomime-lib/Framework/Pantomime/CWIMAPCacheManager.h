@@ -30,6 +30,7 @@
 @class CWFolder;
 @class CWIMAPMessage;
 @class CacheRecord;
+@class CWMessageUpdate;
 
 @protocol CWIMAPCache <NSObject, CWCache>
 
@@ -75,7 +76,9 @@
  @param theRecord The record to write.
  @param theMessage The message associated to the record <i>theRecord</i>.
  */
-- (void) writeRecord: (CWCacheRecord *_Nullable) theRecord  message: (CWIMAPMessage * _Nonnull) theMessage;
+- (void) writeRecord: (CWCacheRecord *_Nullable) theRecord
+             message: (CWIMAPMessage * _Nonnull) theMessage
+       messageUpdate:(CWMessageUpdate * _Nonnull)messageUpdate;
 
 
 @end

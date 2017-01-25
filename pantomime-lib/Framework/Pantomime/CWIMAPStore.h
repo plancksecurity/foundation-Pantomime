@@ -309,4 +309,17 @@ extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 
 @end
 
+@interface CWMessageUpdate : NSObject
+
+@property (nonatomic) BOOL flags;
+@property (nonatomic) BOOL rfc822;
+@property (nonatomic) BOOL rfc822Size;
+@property (nonatomic) BOOL bodyHeader;
+@property (nonatomic) BOOL bodyText;
+@property (nonatomic) BOOL uid;
+
+- (BOOL)isFlagsOnly;
+
+@end
+
 #endif // _Pantomime_H_IMAPStore

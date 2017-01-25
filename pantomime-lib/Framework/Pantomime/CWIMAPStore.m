@@ -2011,6 +2011,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     done = ![aScanner scanUpToCharactersFromSet: aCharacterSet  intoString: NULL];
 
+    CWMessageUpdate *messageUpdate = [CWMessageUpdate new];
+
     //
     // We tokenize our string into words
     //
@@ -2062,6 +2064,8 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
 
             j = [aScanner scanLocation];
+
+            messageUpdate.uid = YES;
         }
         //
         // We read our flags. We usually get something like FLAGS (\Seen)
@@ -2076,6 +2080,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             j = aRange.location + 1;
             [aScanner setScanLocation: j];
+
+            messageUpdate.flags = YES;
         }
         //
         // We read the RFC822 message size
@@ -2089,6 +2095,8 @@ static inline int has_literal(char *buf, NSUInteger c)
             cacheRecord.size = size;
 
             j = [aScanner scanLocation];
+
+            messageUpdate.rfc822Size = YES;
         }
         //
         // We must not break immediately after parsing this information. It's very important
@@ -2101,6 +2109,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         else if ([aWord caseInsensitiveCompare: @"BODY[HEADER]"] == NSOrderedSame) {
             [[self.currentQueueObject.info objectForKey: @"NSData"] replaceCRLFWithLF];
             [aMessage setHeadersFromData: [self.currentQueueObject.info objectForKey: @"NSData"]  record: cacheRecord];
+            messageUpdate.bodyHeader = YES;
         }
         //
         //
@@ -2128,7 +2137,9 @@ static inline int has_literal(char *buf, NSUInteger c)
                 POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
                 PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
 
-                [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
+                messageUpdate.bodyText = YES;
+                [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+                                              messageUpdate: messageUpdate];
             }
             break;
         }
@@ -2162,7 +2173,9 @@ static inline int has_literal(char *buf, NSUInteger c)
             PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:),
                                PantomimeMessagePrefetchCompleted, aMessage, @"Message");
 
-            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
+            messageUpdate.rfc822 = YES;
+            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+                                          messageUpdate: messageUpdate];
 
             break;
         }
@@ -2172,7 +2185,8 @@ static inline int has_literal(char *buf, NSUInteger c)
         
         if (done && must_flush_record)
         {
-            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
+            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+                                          messageUpdate: messageUpdate];
         }
     }
     
@@ -3036,6 +3050,24 @@ static inline int has_literal(char *buf, NSUInteger c)
 
   POST_NOTIFICATION(PantomimeServiceReconnected, self, nil);
   PERFORM_SELECTOR_1(_delegate, @selector(serviceReconnected:), PantomimeServiceReconnected);
+}
+
+@end
+
+@implementation CWMessageUpdate
+
+- (BOOL)isFlagsOnly
+{
+    return self.flags && !self.bodyHeader && !self.bodyText &&
+    !self.rfc822 && !self.rfc822Size;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:
+            @"<CWMessageUpdate: 0x%x flags %d bodyHeader %d bodyText %d rfc822 %d rfc822Size %d uid %d>",
+            (uint) self, self.flags, self.bodyHeader, self.bodyText, self.rfc822, self.rfc822Size,
+            self.uid];
 }
 
 @end
