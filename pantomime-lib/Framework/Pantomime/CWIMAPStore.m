@@ -1431,10 +1431,6 @@ static inline int has_literal(char *buf, NSUInteger c)
       [theFlags add: PantomimeFlagDraft];
     }
 
-    if ([theFlags contain:PantomimeFlagSeen] && ![[theMessage flags] contain:PantomimeFlagSeen]) {
-        INFO(NSStringFromClass(self.class), @"suddenly flagged seen, why?");
-    }
-
     [[theMessage flags] replaceWithFlags: theFlags];
   theRecord.flags = theFlags->flags;
   RELEASE(theFlags);
