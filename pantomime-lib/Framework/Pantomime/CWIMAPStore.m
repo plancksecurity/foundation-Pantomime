@@ -1431,7 +1431,11 @@ static inline int has_literal(char *buf, NSUInteger c)
       [theFlags add: PantomimeFlagDraft];
     }
 
-  [[theMessage flags] replaceWithFlags: theFlags];
+    if ([theFlags contain:PantomimeFlagSeen] && ![[theMessage flags] contain:PantomimeFlagSeen]) {
+        INFO(NSStringFromClass(self.class), @"suddenly flagged seen, why?");
+    }
+
+    [[theMessage flags] replaceWithFlags: theFlags];
   theRecord.flags = theFlags->flags;
   RELEASE(theFlags);
   
@@ -1953,12 +1957,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     // Try to retrieve the message by UID
     if (theUID > 0) {
-        //INFO(NSStringFromClass([self class]), @"*** Using existing message for UID %lu", (unsigned long)theUID);
+        INFO(NSStringFromClass([self class]), @"*** Trying existing message for UID %lu", (unsigned long)theUID);
         aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
     }
 
     if (aMessage == nil) {
-        //INFO(NSStringFromClass([self class]), @"*** New message");
+        INFO(NSStringFromClass([self class]), @"*** New message");
         aMessage = [[CWIMAPMessage alloc] init];
     }
 
