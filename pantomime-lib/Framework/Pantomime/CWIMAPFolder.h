@@ -212,6 +212,28 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 - (NSUInteger)uidForMSN:(NSUInteger)msn;
 
 /*!
+ @abstract Retrieves the MSN for the given UID, if it exists.
+ @result: 0 if the MSN cannot be determined.
+ */
+- (NSUInteger)msnForUID:(NSUInteger)uid;
+
+/*!
+ @abstract Does the given UID still exist? I.e., was it referenced in the last sync?
+ */
+- (BOOL)existsUID:(NSUInteger)uid;
+
+/*!
+ @abstract The set of all UIDs that were mentioned in the last sync.
+ @result: An `NSSet` of all the UIDs that were mentioned in the last sync.
+ */
+- (NSSet * _Nonnull)existingUIDs;
+
+/*!
+ @abstract Resets the state of the gathered UID -> MSN matches
+ */
+- (void)resetMatchedUIDs;
+
+/*!
  @abstract: Try to expunge the given message, if the UID can be found out.
  */
 - (void)expungeMSN:(NSUInteger)msn;

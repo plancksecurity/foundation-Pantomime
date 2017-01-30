@@ -34,7 +34,8 @@
 #import "NSDate+RFC2822.h"
 
 @interface CWIMAPFolder ()
-@property NSMutableDictionary *uids;
+@property NSMutableDictionary *uidToMsnMap;
+@property NSMutableDictionary *msnToUidMap;
 @end
 
 //
@@ -57,7 +58,8 @@
   if ((self = [super initWithName: theName]) == nil)
     return nil;
 
-    self.uids = [NSMutableDictionary new];
+    self.uidToMsnMap = [NSMutableDictionary new];
+    self.msnToUidMap = [NSMutableDictionary new];
   [self setSelected: NO];
   return self;
 }
@@ -451,19 +453,43 @@
 
 - (void)matchUID:(NSUInteger)uid withMSN:(NSUInteger)msn
 {
-    [self.uids setObject:[NSNumber numberWithUnsignedInteger:uid]
-                  forKey:[NSNumber numberWithUnsignedInteger:msn]];
+    [self.msnToUidMap setObject:[NSNumber numberWithUnsignedInteger:uid]
+                         forKey:[NSNumber numberWithUnsignedInteger:msn]];
+    [self.uidToMsnMap setObject:[NSNumber numberWithUnsignedInteger:msn]
+                         forKey:[NSNumber numberWithUnsignedInteger:uid]];
 }
 
 - (NSUInteger)uidForMSN:(NSUInteger)msn
 {
-    return [[self.uids objectForKey:[NSNumber numberWithUnsignedInteger:msn]]
+    return [[self.msnToUidMap objectForKey:[NSNumber numberWithUnsignedInteger:msn]]
             unsignedIntegerValue];
+}
+
+- (NSUInteger)msnForUID:(NSUInteger)uid
+{
+    return [[self.uidToMsnMap objectForKey:[NSNumber numberWithUnsignedInteger:uid]]
+            unsignedIntegerValue];
+}
+
+- (BOOL)existsUID:(NSUInteger)uid
+{
+    return [self.uidToMsnMap objectForKey:[NSNumber numberWithUnsignedInteger:uid]] != nil;
+}
+
+- (NSSet * _Nonnull)existingUIDs
+{
+    return [NSSet setWithArray:self.uidToMsnMap.allKeys];
+}
+
+- (void)resetMatchedUIDs
+{
+    [self.uidToMsnMap removeAllObjects];
+    [self.msnToUidMap removeAllObjects];
 }
 
 - (void)expungeMSN:(NSUInteger)msn
 {
-    NSArray<NSNumber *> *keysAsc = [self.uids
+    NSArray<NSNumber *> *keysAsc = [self.uidToMsnMap
                                     keysSortedByValueUsingSelector:@selector(unsignedIntegerValue)];
     if (keysAsc.count) {
         NSUInteger lowest = [[keysAsc firstObject] unsignedIntegerValue];
@@ -475,10 +501,10 @@
                                              [NSPredicate
                                               predicateWithFormat:@"integerValue > msn"]];
             for (NSNumber *num in toRework) {
-                NSNumber *value = [self.uids objectForKey:num];
-                [self.uids setObject:value forKey:[NSNumber numberWithInt:num.intValue - 1]];
+                NSNumber *value = [self.uidToMsnMap objectForKey:num];
+                [self.uidToMsnMap setObject:value forKey:[NSNumber numberWithInt:num.intValue - 1]];
             }
-            [self.uids removeObjectForKey:highestKey];
+            [self.uidToMsnMap removeObjectForKey:highestKey];
         }
     }
 }
