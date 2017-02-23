@@ -521,16 +521,21 @@ static int currentPartVersion = 2;
   // We encode our Content-Disposition header. We ignore other parameters
   // (other than the filename one) since they are pretty much worthless.
   // See RFC2183 for details.
-  if ([self contentDisposition] == PantomimeAttachmentDisposition)
-    {
-      [aMutableData appendCString: "Content-Disposition: attachment"];
+    PantomimeContentDisposition disposition = [self contentDisposition];
+    if (disposition == PantomimeAttachmentDisposition ||
+        disposition == PantomimeInlineDisposition) {
+        if (disposition == PantomimeAttachmentDisposition) {
+            [aMutableData appendCString: "Content-Disposition: attachment"];
+        } else {
+            [aMutableData appendCString: "Content-Disposition: inline"];
+        }
 
-      if (aFilename && [aFilename length])
-	{
-	  [aMutableData appendCFormat: @"; filename=\"%@\"", aFilename];
-	}
-      
-      [aMutableData appendCString: LF];
+        if (aFilename && [aFilename length])
+        {
+            [aMutableData appendCFormat: @"; filename=\"%@\"", aFilename];
+        }
+
+        [aMutableData appendCString: LF];
     }
 
   if ([_content isKindOfClass: [CWMessage class]])
