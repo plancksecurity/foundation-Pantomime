@@ -426,7 +426,11 @@ static const char *hexDigit = "0123456789ABCDEF";
   bytes = [self bytes];
   len = [self length];
   slen = strlen(theCString);
-  
+
+    if (theRange.length < slen) {
+        return NSMakeRange(NSNotFound,0);
+    }
+
   b = bytes;
   
   if (len > theRange.location + theRange.length)
