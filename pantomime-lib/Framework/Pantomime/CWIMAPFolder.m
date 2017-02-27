@@ -499,7 +499,7 @@
             NSArray<NSNumber *> *toRework = [keysDesc
                                              filteredArrayUsingPredicate:
                                              [NSPredicate
-                                              predicateWithFormat:@"integerValue > msn"]];
+                                              predicateWithFormat:@"integerValue > %d", msn]];
             for (NSNumber *num in toRework) {
                 NSNumber *value = [self.uidToMsnMap objectForKey:num];
                 [self.uidToMsnMap setObject:value forKey:[NSNumber numberWithInt:num.intValue - 1]];
