@@ -15,6 +15,7 @@
 		4338E3861DF1BD750070176B /* CWContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F11CB7EBDD006867C0 /* CWContainer.m */; };
 		4338E3871DF1BD850070176B /* CWFlags.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F51CB7EBDD006867C0 /* CWFlags.m */; };
 		4338E3881DF1BDA00070176B /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EF1CB7EBDD006867C0 /* CWConstants.m */; };
+		433C51A11E64786A00272E19 /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 430A6E291DFAA795006273A5 /* CWLogger.m */; };
 		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
 		43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
 		43980E691CBD1B5D00A7FC3C /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149351CBCECE200AFC030 /* NSDate+RFC2822.m */; };
@@ -528,6 +529,7 @@
 				4338E3861DF1BD750070176B /* CWContainer.m in Sources */,
 				4338E3871DF1BD850070176B /* CWFlags.m in Sources */,
 				4338E3851DF1BC880070176B /* FolderTests.m in Sources */,
+				433C51A11E64786A00272E19 /* CWLogger.m in Sources */,
 				4338E37C1DF1BBFF0070176B /* CWIMAPFolder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
