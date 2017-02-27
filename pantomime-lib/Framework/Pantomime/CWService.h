@@ -27,6 +27,7 @@
 
 #import "Pantomime/CWConstants.h"
 #import "Pantomime/CWLogger.h"
+#import "Pantomime/NSData+Extensions.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSObject.h>
@@ -53,27 +54,25 @@
 */
 static inline NSData *  _Nonnull split_lines(NSMutableData * _Nonnull theMutableData)
 {
-  char *bytes, *end;
-  NSUInteger i, count;
+    char *bytes, *end;
+    NSUInteger i, count;
 
-  end = bytes = (char *)[theMutableData mutableBytes];
-  count = [theMutableData length];
+    bytes = (char *)[theMutableData mutableBytes];
+    end = bytes + 1;
+    count = [theMutableData length];
 
-  for (i = 0; i < count; i++)
-    {
-      if (*end == '\n' && *(end-1) == '\r')
-	{
-	  NSData *aData;
+    for (i = 1; i < count; i++) {
+        if (*end == '\n' && *(end-1) == '\r') {
+            NSData *aData;
 	  
-	  aData = [NSData dataWithBytes: bytes  length: (i-1)];
-	  memmove(bytes,end+1,count-i-1);
-	  [theMutableData setLength: count-i-1];
-	  return aData;
-	}
-
-      end++;
+            aData = [NSData dataWithBytes: bytes  length: (i-1)];
+            memmove(bytes,end+1,count-i-1);
+            [theMutableData setLength: count-i-1];
+            return aData;
+        }
+        end++;
     }
-  return nil;
+    return nil;
 }
 
 /*!
