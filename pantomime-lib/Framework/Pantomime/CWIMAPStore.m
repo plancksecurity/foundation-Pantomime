@@ -2146,7 +2146,8 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         //
         //
-        else if ([aWord caseInsensitiveCompare: @"RFC822"] == NSOrderedSame) {
+        else if ([aWord caseInsensitiveCompare: @"RFC822"] == NSOrderedSame ||
+                 [aWord caseInsensitiveCompare: @"BODY[]"] == NSOrderedSame) {
             [[self.currentQueueObject.info objectForKey: @"NSData"] replaceCRLFWithLF];
 
             NSData *aData = [self.currentQueueObject.info objectForKey: @"NSData"];
