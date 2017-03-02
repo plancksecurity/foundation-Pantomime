@@ -41,9 +41,8 @@
 static NSStringEncoding defaultCStringEncoding;
 static NSData *CRLF;
 
-// The string used to do EHLO
-static NSString *pEpEHLO = @"EHLO pretty.easy.privacy";
-static NSString *pEpHELO = @"HELO pretty.easy.privacy";
+// The hostname/domain used to do EHLO/HELO
+static NSString *pEpEHLOBase = @"pretty.Easy.privacy";
 
 //
 // This function returns the next recipient from the array depending
@@ -718,7 +717,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   // 220 <domain> Service ready
   if ([aData hasCPrefix: "220"])
     {
-      [self sendCommand: SMTP_EHLO  arguments: pEpEHLO];
+      [self sendCommand: SMTP_EHLO  arguments: [NSString stringWithFormat:@"EHLO %@", pEpEHLOBase]];
     }
   else
     {
@@ -873,7 +872,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	{
 	  // The server doesn't handle EHLO. We send it
 	  // a HELO greeting instead.
-	  [self sendCommand: SMTP_HELO  arguments: pEpHELO];
+	  [self sendCommand: SMTP_HELO  arguments: [NSString stringWithFormat:@"HELO %@", pEpEHLOBase]];
 	  break;
 	}
     }
@@ -1045,7 +1044,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
       // We now forget about the initial negotiated state; see RFC2487 for more details,
       [_supportedMechanisms removeAllObjects];
-      [self sendCommand: SMTP_EHLO  arguments: pEpEHLO];
+      [self sendCommand: SMTP_EHLO  arguments: [NSString stringWithFormat:@"EHLO %@", pEpEHLOBase]];
     }
   else
     {
