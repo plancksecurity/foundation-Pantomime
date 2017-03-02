@@ -41,6 +41,9 @@
 static NSStringEncoding defaultCStringEncoding;
 static NSData *CRLF;
 
+// The string used to do EHLO
+static NSString *pEpEHLO = @"EHLO pretty.easy.privacy";
+static NSString *pEpHELO = @"HELO pretty.easy.privacy";
 
 //
 // This function returns the next recipient from the array depending
@@ -354,6 +357,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
     // TODO: Why is aQueueObject sometimes nil?
     if (aQueueObject) {
+        INFO(NSStringFromClass([self class]), @"Sending |%@|", aQueueObject->arguments);
         _lastCommand = aQueueObject->command;
         [self writeData: [aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding]];
         [self writeData: CRLF];
@@ -714,7 +718,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   // 220 <domain> Service ready
   if ([aData hasCPrefix: "220"])
     {
-      [self sendCommand: SMTP_EHLO  arguments: @"EHLO localhost.localdomain"];
+      [self sendCommand: SMTP_EHLO  arguments: pEpEHLO];
     }
   else
     {
@@ -869,7 +873,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	{
 	  // The server doesn't handle EHLO. We send it
 	  // a HELO greeting instead.
-	  [self sendCommand: SMTP_HELO  arguments: @"HELO localhost.localdomain"];
+	  [self sendCommand: SMTP_HELO  arguments: pEpHELO];
 	  break;
 	}
     }
@@ -1041,7 +1045,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
       // We now forget about the initial negotiated state; see RFC2487 for more details,
       [_supportedMechanisms removeAllObjects];
-      [self sendCommand: SMTP_EHLO  arguments: @"EHLO localhost.localdomain"];
+      [self sendCommand: SMTP_EHLO  arguments: pEpEHLO];
     }
   else
     {
