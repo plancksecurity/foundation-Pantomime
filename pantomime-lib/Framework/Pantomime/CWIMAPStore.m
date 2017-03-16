@@ -2379,7 +2379,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     RELEASE(aString);
 }
 
-
 //
 //
 //
@@ -2462,10 +2461,36 @@ static inline int has_literal(char *buf, NSUInteger c)
             PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeFailed:), PantomimeFolderUnsubscribeFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
             break;
 
+        case IMAP_AUTHORIZATION:
+        case IMAP_CAPABILITY:
+        case IMAP_CLOSE:
+        case IMAP_EXAMINE:
+        case IMAP_LIST:
+        case IMAP_LOGOUT:
+        case IMAP_LSUB:
+        case IMAP_NOOP:
+        case IMAP_STARTTLS:
+        case IMAP_UID_FETCH_BODY_TEXT:
+        case IMAP_UID_FETCH_HEADER_FIELDS:
+        case IMAP_UID_FETCH_FLAGS:
+        case IMAP_UID_FETCH_HEADER_FIELDS_NOT:
+        case IMAP_UID_FETCH_RFC822:
+        case IMAP_UID_SEARCH:
+        case IMAP_UID_SEARCH_ANSWERED:
+        case IMAP_UID_SEARCH_FLAGGED:
+        case IMAP_UID_SEARCH_UNSEEN:
+        case IMAP_EMPTY_QUEUE:
+            POST_NOTIFICATION(PantomimeActionFailed, self, self.currentQueueObject.info);
+            PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+            break;
         default:
+            INFO(NSStringFromClass([self class]), @"Unhandled \"NO\" response!");
+#if DEBUG
+            NSAssert(false, @"");
+#endif
             break;
     }
-
+    
     //
     // If the NO response is tagged response, we remove the current
     // queued object from the queue since it reached completion.
@@ -2495,7 +2520,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     //INFO(NSStringFromClass([self class]), @"Parsing noop responses...");
     // FIXME
 }
-
 
 //
 //
