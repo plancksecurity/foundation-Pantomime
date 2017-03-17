@@ -598,7 +598,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                     case IMAP_UID_SEARCH_UNSEEN:
                         [self _parseSEARCH_CACHE];
                         break;
-
                     default:
                         [self _parseSEARCH];
                 }
@@ -2485,9 +2484,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             break;
         default:
             INFO(NSStringFromClass([self class]), @"Unhandled \"NO\" response!");
-#if DEBUG
             NSAssert(false, @"");
-#endif
             break;
     }
     
