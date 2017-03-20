@@ -1628,6 +1628,19 @@ static inline int has_literal(char *buf, NSUInteger c)
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
 
+        case IMAP_SELECT: {
+            [_queue removeLastObject];
+            [_responsesFromServer removeAllObjects];
+
+            NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
+
+            POST_NOTIFICATION(PantomimeFolderOpenFailed, self, userInfo);
+            PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:),
+                               PantomimeFolderOpenFailed, userInfo,
+                               PantomimeErrorInfo);
+        }
+            break;
+
         default:
             // We got a BAD response that we could not handle. Inform the delegate,
             // post a notification and remove the command that caused this from the queue.
