@@ -300,7 +300,12 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<CWFlags: 0x%x %@>", (uint) self, [self asString]];
+    return [self debugDescription];
+}
+
+- (NSString *)debugDescription
+{
+    return [NSString stringWithFormat:@"<%@: %p> %@", [self class], self, [self asString]];
 }
 
 @end
