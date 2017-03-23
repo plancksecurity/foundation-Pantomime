@@ -64,6 +64,13 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
 @protocol CWFolderBuilding <NSObject>
 
 /**
+ The strategy for "unselecting" a mailbox used by the client might be
+ to select a folder that does not exist on the server.
+ Since this folder should not be persisted, its name should be "black-listed" here.
+ */
+@property (nonatomic, nullable) NSString *folderNameToIgnore;
+
+/**
  If the folder builder needs to do work in a background queue, this provides access to it,
  in order to estimate about whether a sync operation is really finshed or not.
  */
