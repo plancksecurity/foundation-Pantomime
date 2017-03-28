@@ -354,7 +354,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	}
     }
 
-    // TODO: Why is aQueueObject sometimes nil?
     if (aQueueObject) {
         BOOL isPrivate = NO;
         if ((aQueueObject->command == SMTP_AUTH_CRAM_MD5 ||
@@ -375,6 +374,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
         [self writeData: [aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding]];
         [self writeData: CRLF];
+    } else {
+        // TODO: Why is aQueueObject sometimes nil?
+        INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
     }
 }
 
