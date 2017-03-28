@@ -270,10 +270,13 @@
 
   if (_connected)
     {
+        _connected = NO;
         [_connection close];
 
         POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
         PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
+    } else {
+        INFO(NSStringFromClass(self.class), @"CWService.close: Double invocation");
     }
 
     [_connection setDelegate:nil];
