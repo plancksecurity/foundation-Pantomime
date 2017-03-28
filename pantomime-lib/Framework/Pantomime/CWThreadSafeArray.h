@@ -21,7 +21,7 @@
 - (void)removeLastObject;
 - (void)addObjectsFromArray:(NSArray * _Nonnull)otherArray;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState * _Nonnull)state
-                                  objects:(id _Nonnull __unsafe_unretained [])buffer
+                                  objects:(id _Nonnull __unsafe_unretained [_Nonnull])buffer
                                     count:(NSUInteger)len;
 - (BOOL)containsObject:(id _Nonnull)anObject;
 - (void)removeObjectsInArray:(NSArray * _Nonnull)otherArray;
