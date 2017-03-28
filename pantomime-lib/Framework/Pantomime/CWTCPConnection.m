@@ -52,9 +52,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)dealloc
 {
-    [self.logger infoComponent:comp
-                       message:[NSString
-                                stringWithFormat:@"%x dealloc", (unsigned int) self]];
+    INFO(NSStringFromClass([self class]), @"dealloc %@", self);
     [self close];
 }
 
