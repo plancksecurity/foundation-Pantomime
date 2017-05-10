@@ -250,7 +250,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) close
 {
-    [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
+    if (_connected) {
+        [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
+    }
     [super close];
 }
 
