@@ -3093,6 +3093,20 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 @implementation CWMessageUpdate
 
++ (instancetype _Nonnull)newComplete
+{
+    CWMessageUpdate *msgUpdate = [CWMessageUpdate new];
+
+    msgUpdate.bodyHeader = true;
+    msgUpdate.bodyText = true;
+    msgUpdate.flags = true;
+    msgUpdate.rfc822 = true;
+    msgUpdate.rfc822Size = true;
+    msgUpdate.uid = true;
+
+    return msgUpdate;
+}
+
 - (BOOL)isFlagsOnly
 {
     return self.flags && !self.bodyHeader && !self.bodyText &&

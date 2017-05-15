@@ -318,6 +318,12 @@ extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 @property (nonatomic) BOOL bodyText;
 @property (nonatomic) BOOL uid;
 
+/*!
+ @method newComplete
+ @return An instance for updating everything.
+ */
++ (instancetype _Nonnull)newComplete;
+
 - (BOOL)isFlagsOnly;
 
 @end
