@@ -2495,7 +2495,12 @@ static inline int has_literal(char *buf, NSUInteger c)
         case IMAP_UID_SEARCH_UNSEEN:
         case IMAP_EMPTY_QUEUE:
             POST_NOTIFICATION(PantomimeActionFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+            if ([[self currentQueueObject] info]) {
+                PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed,
+                                   [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+            } else {
+                PERFORM_SELECTOR_1(_delegate, @selector(actionFailed:), PantomimeActionFailed);
+            }
             break;
         default:
             INFO(NSStringFromClass([self class]), @"Unhandled \"NO\" response!");
