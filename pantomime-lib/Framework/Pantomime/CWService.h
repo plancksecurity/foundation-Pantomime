@@ -300,11 +300,19 @@ extern NSString * _Nonnull PantomimeProtocolException;
 
 /*!
  @method actionFailed:
- @discussion This is called when a response could not be parsed.
+ @discussion This is called when a NO response is received.
  A PantomimeActionFailed notification is also posted.
  @param theNotification The notification holding the information.
  */
 - (void) actionFailed: (NSNotification * _Nullable) theNotification;
+
+/*!
+ @method badResponse:
+ @discussion This is called when a response could not be parsed.
+ A PantomimeBadResponse notification is also posted.
+ @param theNotification The notification holding the information.
+ */
+- (void) badResponse: (NSNotification * _Nullable) theNotification;
 
 @end
 

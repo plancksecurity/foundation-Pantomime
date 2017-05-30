@@ -1651,9 +1651,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
 
-            POST_NOTIFICATION(PantomimeActionFailed, self, userInfo);
-            PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:),
-                               PantomimeActionFailed, userInfo,
+            POST_NOTIFICATION(PantomimeBadResponse, self, userInfo);
+            PERFORM_SELECTOR_2(_delegate, @selector(badResponse:),
+                               PantomimeBadResponse, userInfo,
                                PantomimeErrorInfo);
     }
 

@@ -130,10 +130,16 @@ extern NSString * _Nonnull const PantomimeFolderUnsubscribeCompleted;
 extern NSString * _Nonnull const PantomimeFolderUnsubscribeFailed;
 
 /*!
- @discussion Used for bad responses (see _parseBad).
+ @discussion Used for NO responses (see _parseNO).
  @const PantomimeActionFailed
  */
 extern NSString * _Nonnull const PantomimeActionFailed;
+
+/*!
+ @discussion Used for bad responses (see _parseBad).
+ @const PantomimeBadResponse
+ */
+extern NSString * _Nonnull const PantomimeBadResponse;
 
 /*!
  @discussion Used as a key for the user info dict where you find the bad response

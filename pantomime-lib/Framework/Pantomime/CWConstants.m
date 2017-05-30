@@ -71,6 +71,7 @@ NSString* PantomimeFolderUnsubscribeFailed = @"PantomimeFolderUnsubscribeFailed"
 NSString* PantomimeActionFailed = @"PantomimeActionFailed";
 NSString* PantomimeBadResponseInfoKey = @"PantomimeBadResponseInfoKey";
 NSString* PantomimeErrorInfo = @"PantomimeErrorInfo";
+NSString* PantomimeBadResponse = @"PantomimeBadResponse";
 
 // CWMessage notifications
 NSString* PantomimeMessageChanged = @"PantomimeMessageChanged";
