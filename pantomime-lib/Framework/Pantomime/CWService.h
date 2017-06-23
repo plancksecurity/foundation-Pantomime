@@ -668,9 +668,9 @@ extern NSString * _Nonnull PantomimeProtocolException;
   @method capabilities
   @discussion This method is used to obtain the capabilities of the
               associated service.
-  @result The capabilities, as an array of NSString instances.
+  @result The capabilities, as a set of NSString instances.
 */
-- (NSArray<NSString *> * _Nonnull) capabilities;
+- (NSSet<NSString *> * _Nonnull) capabilities;
 
 @end
 

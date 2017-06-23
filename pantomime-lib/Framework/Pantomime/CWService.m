@@ -603,9 +603,9 @@
   return _lastCommand;
 }
 
-- (NSArray *) capabilities
+- (NSSet *) capabilities
 {
-  return [_capabilities array];
+  return [[NSSet alloc] initWithArray:[_capabilities array]];
 }
 
 @end
