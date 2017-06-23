@@ -670,7 +670,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
               associated service.
   @result The capabilities, as an array of NSString instances.
 */
-- (NSArray * _Nonnull) capabilities;
+- (NSArray<NSString *> * _Nonnull) capabilities;
 
 @end
 
