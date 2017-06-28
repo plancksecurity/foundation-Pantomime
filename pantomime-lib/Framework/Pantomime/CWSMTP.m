@@ -671,7 +671,10 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
   else
     {
-      AUTHENTICATION_FAILED(_delegate, @"LOGIN");
+        INFO(NSStringFromClass([self class]),
+             @"Authentification response: |%@|",
+             [aData asciiString]);
+        AUTHENTICATION_FAILED(_delegate, @"LOGIN");
     }
 }
 
