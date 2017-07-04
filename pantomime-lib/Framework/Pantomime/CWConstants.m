@@ -31,7 +31,7 @@ NSString* PantomimeDNSResolutionFailed = @"PantomimeDNSResolutionFailed";
 
 // CWFolder notifications
 NSString* PantomimeFolderAppendCompleted = @"PantomimeFolderAppendCompleted";
-NSString* PantomimeFolderAppendFailed = @"PantomimeFolderCloseFailed";
+NSString* PantomimeFolderAppendFailed = @"PantomimeFolderAppendFailed";
 NSString* PantomimeFolderCloseCompleted = @"PantomimeFolderCloseCompleted";
 NSString* PantomimeFolderCloseFailed = @"PantomimeFolderAppendFailed";
 NSString* PantomimeFolderExpungeCompleted = @"PantomimeFolderExpungeCompleted";
