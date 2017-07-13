@@ -178,9 +178,9 @@ extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 extern NSString * _Nonnull const PantomimeEnterIdle;
 
 /*!
- @const PantomimeExitIdle
+ @const PantomimeIdleNewMessages
  */
-extern NSString * _Nonnull const PantomimeExitIdle;
+extern NSString * _Nonnull const PantomimeIdleNewMessages;
 
 @class CWConnection;
 @class CWFlags;

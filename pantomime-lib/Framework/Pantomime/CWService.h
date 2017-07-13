@@ -314,6 +314,14 @@ extern NSString * _Nonnull PantomimeProtocolException;
  */
 - (void) badResponse: (NSNotification * _Nullable) theNotification;
 
+/*!
+ @method idleNewMessages:
+ @discussion Called when during IDLE the server signals at least 1 new message via EXISTS.
+ A PantomimeIdleNewMessages notification is also posted.
+ @param theNotification The notification holding the information, which in this case will be nil.
+ */
+- (void) idleNewMessages: (NSNotification * _Nullable) theNotification;
+
 @end
 
 @interface CWConnectionState : NSObject

@@ -1735,6 +1735,8 @@ static inline int has_literal(char *buf, NSUInteger c)
     INFO(NSStringFromClass([self class]), @"EXISTS %d", n);
     if (_lastCommand == IMAP_IDLE) {
         INFO(NSStringFromClass([self class]), @"should end IDLE");
+        POST_NOTIFICATION(PantomimeIdleNewMessages, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(idleNewMessages:), PantomimeIdleNewMessages);
     }
 }
 
