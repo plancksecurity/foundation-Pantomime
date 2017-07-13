@@ -255,13 +255,18 @@ static NSInteger s_numberOfConnectionThreads = 0;
             } else if (self.writeStream.streamError) {
                 self.streamError = self.writeStream.streamError;
             }
+
             // We abuse ET_EDESC for error indicication.
             [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self cancelBackgroundThead];
+
             break;
         case NSStreamEventEndEncountered:
             [self.logger infoComponent:comp message:@"NSStreamEventEndEncountered"];
-            [self close];
+
+            [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self cancelBackgroundThead];
+
             break;
     }
 }
