@@ -106,7 +106,8 @@ typedef enum {
     IMAP_UID_SEARCH_UNSEEN,
     IMAP_UID_STORE,
     IMAP_UNSUBSCRIBE,
-    IMAP_EMPTY_QUEUE
+    IMAP_EMPTY_QUEUE,
+    IMAP_IDLE
 } IMAPCommand;
 
 /*!
@@ -170,6 +171,16 @@ extern NSString * _Nonnull const PantomimeFolderStatusFailed;
  PantomimeActionFailed notifications.
  */
 extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
+
+/*!
+ @const PantomimeEnterIdle
+ */
+extern NSString * _Nonnull const PantomimeEnterIdle;
+
+/*!
+ @const PantomimeExitIdle
+ */
+extern NSString * _Nonnull const PantomimeExitIdle;
 
 @class CWConnection;
 @class CWFlags;

@@ -445,6 +445,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                     [self writeData: [self.currentQueueObject.info objectForKey: @"Password"]];
                     [self writeData: CRLF];
                     break;
+                } else if (_lastCommand == IMAP_IDLE) {
+                    INFO(NSStringFromClass([self class]), @"entering IDLE");
                 }
             }
 
@@ -1730,6 +1732,10 @@ static inline int has_literal(char *buf, NSUInteger c)
     aData = [_responsesFromServer lastObject];
     sscanf([aData cString], "* %d EXISTS", &n);
     _selectedFolder.existsCount = n;
+    INFO(NSStringFromClass([self class]), @"EXISTS %d", n);
+    if (_lastCommand == IMAP_IDLE) {
+        INFO(NSStringFromClass([self class]), @"should end IDLE");
+    }
 }
 
 
@@ -1742,16 +1748,23 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSData *aData;
     int i, msn;
 
+    aData = [_responsesFromServer lastObject];
+    sscanf([aData cString], "* %d EXPUNGE", &msn);
+
     // It looks like some servers send untagged expunge reponses
     // _after_ the selected folder has been closed.
     if (!_selectedFolder)
     {
+        INFO(NSStringFromClass([self class]), @"EXPUNGE %d on already closed folder", msn);
         return;
     }
 
-    aData = [_responsesFromServer lastObject];
+    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
 
-    sscanf([aData cString], "* %d EXPUNGE", &msn);
+    if (_lastCommand == IMAP_IDLE) {
+        INFO(NSStringFromClass([self class]), @"should end IDLE");
+        return;
+    }
 
     //
     // Messages CAN be expunged before we really had time to FETCH them.
@@ -1963,16 +1976,16 @@ static inline int has_literal(char *buf, NSUInteger c)
         theUID = [_selectedFolder uidForMSN:theMSN];
     }
 
-    //INFO(NSStringFromClass([self class]), @"*** parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
+    INFO(NSStringFromClass([self class]), @"parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
 
     // Try to retrieve the message by UID
     if (theUID > 0) {
-        INFO(NSStringFromClass([self class]), @"*** Trying existing message for UID %lu", (unsigned long)theUID);
+        INFO(NSStringFromClass([self class]), @"Trying existing message for UID %lu", (unsigned long)theUID);
         aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
     }
 
     if (aMessage == nil) {
-        INFO(NSStringFromClass([self class]), @"*** New message");
+        INFO(NSStringFromClass([self class]), @"New message");
         aMessage = [[CWIMAPMessage alloc] init];
     }
 

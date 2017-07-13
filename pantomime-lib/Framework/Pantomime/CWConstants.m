@@ -62,16 +62,18 @@ NSString* PantomimeMessageStoreCompleted = @"PantomimeMessageStoreCompleted";
 NSString* PantomimeMessageStoreFailed = @"PantomimeMessageStoreFailed";
 
 // CWIMAPStore notifications
-NSString* PantomimeFolderStatusCompleted = @"PantomimeFolderStatusCompleted";
-NSString* PantomimeFolderStatusFailed = @"PantomimeFolderStatusFailed";
-NSString* PantomimeFolderSubscribeCompleted = @"PantomimeFolderSubscribeCompleted";
-NSString* PantomimeFolderSubscribeFailed = @"PantomimeFolderSubscribeFailed";
-NSString* PantomimeFolderUnsubscribeCompleted = @"PantomimeFolderUnsubscribeCompleted";
-NSString* PantomimeFolderUnsubscribeFailed = @"PantomimeFolderUnsubscribeFailed";
-NSString* PantomimeActionFailed = @"PantomimeActionFailed";
-NSString* PantomimeBadResponseInfoKey = @"PantomimeBadResponseInfoKey";
-NSString* PantomimeErrorInfo = @"PantomimeErrorInfo";
-NSString* PantomimeBadResponse = @"PantomimeBadResponse";
+NSString *PantomimeFolderStatusCompleted = @"PantomimeFolderStatusCompleted";
+NSString *PantomimeFolderStatusFailed = @"PantomimeFolderStatusFailed";
+NSString *PantomimeFolderSubscribeCompleted = @"PantomimeFolderSubscribeCompleted";
+NSString *PantomimeFolderSubscribeFailed = @"PantomimeFolderSubscribeFailed";
+NSString *PantomimeFolderUnsubscribeCompleted = @"PantomimeFolderUnsubscribeCompleted";
+NSString *PantomimeFolderUnsubscribeFailed = @"PantomimeFolderUnsubscribeFailed";
+NSString *PantomimeActionFailed = @"PantomimeActionFailed";
+NSString *PantomimeBadResponseInfoKey = @"PantomimeBadResponseInfoKey";
+NSString *PantomimeErrorInfo = @"PantomimeErrorInfo";
+NSString *PantomimeBadResponse = @"PantomimeBadResponse";
+NSString *PantomimeEnterIdle = @"PantomimeEnterIdle";
+NSString *PantomimeExitIdle = @"PantomimeExitIdle";
 
 // CWMessage notifications
 NSString* PantomimeMessageChanged = @"PantomimeMessageChanged";
