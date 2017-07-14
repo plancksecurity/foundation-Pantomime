@@ -6,6 +6,9 @@
 //  Copyright © 2016 p≡p Security S.A. All rights reserved.
 //
 
+#import <netinet/tcp.h>
+#import <netinet/in.h>
+
 #import "CWTCPConnection.h"
 
 #import "Pantomime/CWLogger.h"
@@ -97,6 +100,38 @@ static NSInteger s_numberOfConnectionThreads = 0;
         } else if (stream == self.writeStream) {
             self.writeStream = nil;
         }
+    }
+}
+
+- (NSInteger)setSocketOption:(int)optionName optionNameString:(NSString *)optionNameString
+                 optionValue:(NSInteger)optionValue onStream:(NSStream *)stream
+{
+    CFReadStreamRef cfStream = (__bridge CFReadStreamRef) (NSInputStream *) stream;
+    CFDataRef nativeSocket = CFReadStreamCopyProperty(cfStream,
+                                                      kCFStreamPropertySocketNativeHandle);
+    CFSocketNativeHandle *cfSock = (CFSocketNativeHandle *) CFDataGetBytePtr(nativeSocket);
+
+    NSUInteger originalValue = 500;
+    NSUInteger newValue = 501;
+    socklen_t originalValueSize = sizeof(originalValue);
+    socklen_t newValueSize = sizeof(newValue);
+    getsockopt(*cfSock, SOL_SOCKET, optionName, &originalValue, &originalValueSize);
+    setsockopt(*cfSock, SOL_SOCKET, optionName, &optionValue, sizeof(optionValue));
+    getsockopt(*cfSock, SOL_SOCKET, optionName, &newValue, &newValueSize);
+    INFO(NSStringFromClass([self class]), @"%@: %lu (%d bytes) -> %lu (%d bytes)",
+         optionNameString,
+         (unsigned long) originalValue, originalValueSize,
+         (unsigned long) newValue, newValueSize);
+
+    CFRelease(nativeSocket);
+    return newValue;
+}
+
+- (void)setupSocketForStream:(NSStream *)stream
+{
+    if (stream == self.readStream) {
+        [self setSocketOption:SO_RCVLOWAT optionNameString:@"SO_RCVLOWAT" optionValue:1
+                     onStream: stream];
     }
 }
 
@@ -228,6 +263,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
             break;
         case NSStreamEventOpenCompleted:
             [self.logger infoComponent:comp message:@"NSStreamEventOpenCompleted"];
+            [self setupSocketForStream:aStream];
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
                 [self.logger infoComponent:comp message:@"connectionEstablished"];
@@ -236,7 +272,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            //[self.logger infoComponent:comp message:@"NSStreamEventHasBytesAvailable"];
+            [self.logger infoComponent:comp message:@"NSStreamEventHasBytesAvailable"];
             [self.delegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
