@@ -103,6 +103,9 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
 }
 
+/**
+ Sets a socket option (the SOL_SOCKET layer) for a given stream.
+ */
 - (NSInteger)setSocketOption:(int)optionName optionNameString:(NSString *)optionNameString
                  optionValue:(NSInteger)optionValue onStream:(NSStream *)stream
 {
@@ -127,6 +130,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     return newValue;
 }
 
+/**
+ Set SO_RCVLOWAT for the read stream socket, which is not needed because the default (1)
+ is already the desired value.
+ */
 - (void)setupSocketForStream:(NSStream *)stream
 {
     if (stream == self.readStream) {
@@ -263,7 +270,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
             break;
         case NSStreamEventOpenCompleted:
             [self.logger infoComponent:comp message:@"NSStreamEventOpenCompleted"];
-            [self setupSocketForStream:aStream];
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
                 [self.logger infoComponent:comp message:@"connectionEstablished"];
