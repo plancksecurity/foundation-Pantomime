@@ -57,6 +57,7 @@
 //
 static NSStringEncoding defaultCStringEncoding;
 static NSData *CRLF;
+static NSData *IDLE_DONE_CONTINUATION;
 
 //
 // This C function is used to verify if a line (specified in
@@ -206,6 +207,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     defaultCStringEncoding = [NSString defaultCStringEncoding];
     CRLF = [[NSData alloc] initWithBytes: "\r\n"  length: 2];
+    IDLE_DONE_CONTINUATION = [[NSData alloc] initWithBytes: "DONE\r\n"  length: 6];
 }
 
 
@@ -689,6 +691,12 @@ static inline int has_literal(char *buf, NSUInteger c)
     //INFO(NSStringFromClass([self class]), @"While loop broken!");
 }
 
+- (void)exitIDLE
+{
+    if (self.lastCommand == IMAP_IDLE) {
+        [self writeData: IDLE_DONE_CONTINUATION];
+    }
+}
 
 //
 // This method authenticates the Store to the IMAP server.

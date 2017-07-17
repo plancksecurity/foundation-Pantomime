@@ -324,6 +324,8 @@ extern NSString * _Nonnull const PantomimeIdleNewMessages;
 
 - (void)signalFolderSyncError;
 
+- (void)exitIDLE;
+
 @end
 
 @interface CWMessageUpdate : NSObject
