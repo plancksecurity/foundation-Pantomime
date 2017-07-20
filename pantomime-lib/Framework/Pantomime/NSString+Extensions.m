@@ -271,7 +271,7 @@
                 }
                 else
                 {
-                    if (!shouldConvert)
+                    if (shouldConvert)
                     {
                         return CFStringConvertNSStringEncodingToEncoding(enc);
                     }
