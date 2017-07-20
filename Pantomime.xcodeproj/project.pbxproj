@@ -441,10 +441,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43980E631CBD1B3E00A7FC3C /* Build configuration list for PBXNativeTarget "PantomimeStatic" */;
 			buildPhases = (
+				151573B51F2093160049BB0B /* Log Build Time Start Script */,
 				43980E571CBD1B3E00A7FC3C /* Sources */,
 				43980E581CBD1B3E00A7FC3C /* Frameworks */,
 				43980E591CBD1B3E00A7FC3C /* CopyFiles */,
-				4961BA0E1E7BEECC00920DF8 /* ShellScript */,
+				4961BA0E1E7BEECC00920DF8 /* Warnings for TODO++ Script */,
+				151573B61F2093420049BB0B /* Log Build Time Stop Script */,
 			);
 			buildRules = (
 			);
@@ -523,13 +525,42 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4961BA0E1E7BEECC00920DF8 /* ShellScript */ = {
+		151573B51F2093160049BB0B /* Log Build Time Start Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Log Build Time Start Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"BUILD_TIME START Pantomime: \"`date \"+%Y_%m_%d--%H:%M:%S\"`";
+		};
+		151573B61F2093420049BB0B /* Log Build Time Stop Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Log Build Time Stop Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"BUILD_TIME STOP Pantomime: \"`date \"+%Y_%m_%d--%H:%M:%S\"`";
+		};
+		4961BA0E1E7BEECC00920DF8 /* Warnings for TODO++ Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Warnings for TODO++ Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -653,6 +684,7 @@
 		43980E611CBD1B3E00A7FC3C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ONLY_ACTIVE_ARCH = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -663,6 +695,7 @@
 		43980E621CBD1B3E00A7FC3C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ONLY_ACTIVE_ARCH = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -773,6 +806,7 @@
 				DEVELOPMENT_TEAM = SBPJ2E4G5X;
 				INFOPLIST_FILE = PantomimeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.PantomimeTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -787,6 +821,7 @@
 				DEVELOPMENT_TEAM = SBPJ2E4G5X;
 				INFOPLIST_FILE = PantomimeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.pep-security.lib.PantomimeTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0.1;

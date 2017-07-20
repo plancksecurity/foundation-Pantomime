@@ -2530,7 +2530,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             NSAssert(false, @"");
             break;
     }
-    
+
     //
     // If the NO response is tagged response, we remove the current
     // queued object from the queue since it reached completion.
@@ -3058,9 +3058,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     aRange = [aData rangeOfCString: "("  options: NSBackwardsSearch];
     aFolderName = [[[aData subdataToIndex: (aRange.location-1)] subdataFromIndex: 9] asciiString];
-    
+
     sscanf([[aData subdataFromIndex: aRange.location] cString], "(MESSAGES %d UNSEEN %d)", &messages, &unseen);
-    
+
     aFolderInformation = [[CWFolderInformation alloc] init];
     [aFolderInformation setNbOfMessages: messages];
     [aFolderInformation setNbOfUnreadMessages: unseen];
@@ -3124,14 +3124,14 @@ static inline int has_literal(char *buf, NSUInteger c)
 + (instancetype _Nonnull)newComplete
 {
     CWMessageUpdate *msgUpdate = [CWMessageUpdate new];
-
+    
     msgUpdate.bodyHeader = true;
     msgUpdate.bodyText = true;
     msgUpdate.flags = true;
     msgUpdate.rfc822 = true;
     msgUpdate.rfc822Size = true;
     msgUpdate.uid = true;
-
+    
     return msgUpdate;
 }
 
