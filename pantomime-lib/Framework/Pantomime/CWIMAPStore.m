@@ -1774,12 +1774,13 @@ static inline int has_literal(char *buf, NSUInteger c)
         return;
     }
 
-    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
-
-    if (_lastCommand == IMAP_IDLE) {
-        INFO(NSStringFromClass([self class]), @"should end IDLE");
+    // The conditions for being able to react safely to expunges have to be verified.
+    // In the case of IDLE, it's probably safe.
+    if (_lastCommand != IMAP_IDLE) {
         return;
     }
+
+    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
 
     //
     // Messages CAN be expunged before we really had time to FETCH them.
