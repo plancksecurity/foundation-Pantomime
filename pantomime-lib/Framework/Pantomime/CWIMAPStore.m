@@ -1181,6 +1181,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) close
 {
+    // ignore all subsequent messages from the servers
+    self.folderBuilder = nil;
+    self.delegate = nil;
+
+    [_openFolders removeAllObjects];
+
     if (_connected) {
         [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
     }
