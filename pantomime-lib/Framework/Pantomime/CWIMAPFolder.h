@@ -185,6 +185,11 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 - (void) setSelected: (BOOL) theBOOL;
 
 /*!
+ @result The highest MSN known locally.
+ */
+- (NSUInteger) lastMSN;
+
+/*!
  @result The lowest UID of all the messages contained (locally) in that folder.
  */
 - (NSUInteger) firstUID;
