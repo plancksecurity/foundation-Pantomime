@@ -1782,13 +1782,17 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
 
+    return;
+
     //
     // Messages CAN be expunged before we really had time to FETCH them.
     // We simply proceed by skipping over MSN that are bigger than we
     // we have so far. It should be safe since the view hasn't even
     // had the chance to display them.
     //
-    if (msn > [_selectedFolder count]) return;
+    if (msn > [_selectedFolder lastMSN]) {
+        return;
+    }
 
     aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: (msn-1)];
     RETAIN_VOID(aMessage);
@@ -1801,19 +1805,13 @@ static inline int has_literal(char *buf, NSUInteger c)
     // * We sent an EXPUNGE command - we'll do the threading of the
     //   messages in _parseOK:
     //
-    [_selectedFolder removeMessage: aMessage];
+    [_selectedFolder removeMessage: aMessage]; // responsible for also shifting following MSNs
     [_selectedFolder updateCache];
 
     // We remove its entry in our cache
     if ([_selectedFolder cacheManager])
     {
         [(CWIMAPCacheManager *)[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]];
-    }
-
-    // We update all MSNs starting from the message that has been expunged.
-    for (i = (msn-1); i < [_selectedFolder count]; i++)
-    {
-        [[_selectedFolder messageAtIndex: i] setMessageNumber: (i+1)];
     }
 
     //
