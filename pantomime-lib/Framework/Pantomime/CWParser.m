@@ -641,8 +641,9 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
       aData = [theLine subdataFromIndex: 6];
     }
 
-  anInternetAddress = [[CWInternetAddress alloc] initWithString: [CWMIMEUtility decodeHeader: aData charset: [theMessage defaultCharset]]];
-
+  anInternetAddress = [[CWInternetAddress alloc] initWithString:
+                       [CWMIMEUtility decodeHeader: aData charset: [theMessage defaultCharset]]
+                       ];
   [theMessage setFrom: anInternetAddress];
   RELEASE(anInternetAddress);
 
