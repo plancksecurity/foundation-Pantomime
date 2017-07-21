@@ -1181,6 +1181,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) close
 {
+    // ignore all subsequent messages from the servers
+    self.folderBuilder = nil;
+    self.delegate = nil;
+
+    [_openFolders removeAllObjects];
+
     if (_connected) {
         [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
     }
@@ -1742,7 +1748,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     _selectedFolder.existsCount = n;
     INFO(NSStringFromClass([self class]), @"EXISTS %d", n);
     if (_lastCommand == IMAP_IDLE) {
-        INFO(NSStringFromClass([self class]), @"should end IDLE");
         POST_NOTIFICATION(PantomimeIdleNewMessages, self, nil);
         PERFORM_SELECTOR_1(_delegate, @selector(idleNewMessages:), PantomimeIdleNewMessages);
     }
@@ -1769,12 +1774,13 @@ static inline int has_literal(char *buf, NSUInteger c)
         return;
     }
 
-    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
-
-    if (_lastCommand == IMAP_IDLE) {
-        INFO(NSStringFromClass([self class]), @"should end IDLE");
+    // The conditions for being able to react safely to expunges have to be verified.
+    // In the case of IDLE, it's probably safe.
+    if (_lastCommand != IMAP_IDLE) {
         return;
     }
+
+    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
 
     //
     // Messages CAN be expunged before we really had time to FETCH them.

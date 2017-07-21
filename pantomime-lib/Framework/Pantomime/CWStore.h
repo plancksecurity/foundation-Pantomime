@@ -70,12 +70,6 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
  */
 @property (nonatomic, nullable) NSString *folderNameToIgnore;
 
-/**
- If the folder builder needs to do work in a background queue, this provides access to it,
- in order to estimate about whether a sync operation is really finshed or not.
- */
-@property (nonatomic, readonly, nullable) NSOperationQueue *backgroundQueue;
-
 - (CWFolder * _Nonnull)folderWithName:(NSString * _Nonnull)name;
 
 @end

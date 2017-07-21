@@ -435,6 +435,11 @@
   [_store sendCommand: IMAP_UID_SEARCH_ALL  info: [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]  arguments: aString];
 }
 
+- (NSUInteger) lastMSN
+{
+    return self.allMessages.count;
+}
+
 - (NSUInteger) firstUID
 {
     return [[[self allMessages] firstObject] UID];
