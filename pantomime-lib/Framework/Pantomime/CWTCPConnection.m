@@ -278,7 +278,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            [self.logger infoComponent:comp message:@"NSStreamEventHasBytesAvailable"];
+            //[self.logger infoComponent:comp message:@"NSStreamEventHasBytesAvailable"];
             [self.delegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
