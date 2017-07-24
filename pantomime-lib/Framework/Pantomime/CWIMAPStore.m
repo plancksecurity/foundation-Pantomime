@@ -1792,7 +1792,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         return;
     }
 
-    aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: (msn-1)];
+    aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: msn];
     RETAIN_VOID(aMessage);
 
     // We do NOT use  [_selectedFolder removeMessage: aMessage] since it'll
