@@ -1761,7 +1761,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     CWIMAPMessage *aMessage;
     NSData *aData;
-    int i, msn;
+    int msn;
 
     aData = [_responsesFromServer lastObject];
     sscanf([aData cString], "* %d EXPUNGE", &msn);
@@ -1781,8 +1781,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
 
     INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
-
-    return;
 
     //
     // Messages CAN be expunged before we really had time to FETCH them.
