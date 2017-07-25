@@ -2781,6 +2781,11 @@ static inline int has_literal(char *buf, NSUInteger c)
             PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeCompleted:), PantomimeFolderUnsubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
             break;
 
+        case IMAP_IDLE:
+            POST_NOTIFICATION(PantomimeIdleFinished, self, self.currentQueueObject.info);
+            PERFORM_SELECTOR_1(_delegate, @selector(idleFinished:), PantomimeIdleFinished);
+            break;
+
         default:
             break;
     }

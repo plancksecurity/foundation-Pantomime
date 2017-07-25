@@ -107,7 +107,7 @@ typedef enum {
     IMAP_UID_STORE,
     IMAP_UNSUBSCRIBE,
     IMAP_EMPTY_QUEUE,
-    IMAP_IDLE
+    IMAP_IDLE,
 } IMAPCommand;
 
 /*!
@@ -181,6 +181,11 @@ extern NSString * _Nonnull const PantomimeEnterIdle;
  @const PantomimeIdleNewMessages
  */
 extern NSString * _Nonnull const PantomimeIdleNewMessages;
+
+/*!
+ @const PantomimeIdleFinished
+ */
+extern NSString * _Nonnull const PantomimeIdleFinished;
 
 @class CWConnection;
 @class CWFlags;

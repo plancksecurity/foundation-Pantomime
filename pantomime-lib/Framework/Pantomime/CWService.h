@@ -322,6 +322,15 @@ extern NSString * _Nonnull PantomimeProtocolException;
  */
 - (void) idleNewMessages: (NSNotification * _Nullable) theNotification;
 
+/*!
+ @method idleFinished:
+ @discussion Called when during IDLE the client exits the model by doing the DONE continuation,
+ and subsequently the server responds with OK.
+ A PantomimeIdleFinished notification is also posted.
+ @param theNotification The notification holding the information, which in this case will be nil.
+ */
+- (void) idleFinished: (NSNotification * _Nullable) theNotification;
+
 @end
 
 @interface CWConnectionState : NSObject
