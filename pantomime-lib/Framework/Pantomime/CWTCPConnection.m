@@ -40,7 +40,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 }
 
 - (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
-                   transport:(ConnectionTransport)transport background:(BOOL)theBOOL
+         transport:(ConnectionTransport)transport background:(BOOL)theBOOL
 {
     if (self = [super init]) {
         _openConnections = [[NSMutableSet alloc] init];
@@ -180,10 +180,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.readStream read:buf maxLength:len];
     /*
-     [self.logger infoComponent:comp
-     message:[NSString
-     stringWithFormat:@"read %ld: \"%@\"", (long)count,
-     [self bufferToString:buf length:count]]];*/
+    [self.logger infoComponent:comp
+                       message:[NSString
+                                stringWithFormat:@"read %ld: \"%@\"", (long)count,
+                                [self bufferToString:buf length:count]]];*/
     return count;
 }
 
@@ -194,10 +194,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.writeStream write:buf maxLength:len];
     /*
-     [self.logger infoComponent:comp
-     message:[NSString
-     stringWithFormat:@"wrote %ld: \"%@\"", (long)count,
-     [self bufferToString:buf length:len]]];*/
+    [self.logger infoComponent:comp
+                       message:[NSString
+                                stringWithFormat:@"wrote %ld: \"%@\"", (long)count,
+                                [self bufferToString:buf length:len]]];*/
     return count;
 }
 

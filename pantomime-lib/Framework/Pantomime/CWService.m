@@ -1,24 +1,24 @@
 /*
- **  CWService.m
- **
- **  Copyright (c) 2001-2007
- **
- **  Author: Ludovic Marcotte <ludovic@Sophos.ca>
- **
- **  This library is free software; you can redistribute it and/or
- **  modify it under the terms of the GNU Lesser General Public
- **  License as published by the Free Software Foundation; either
- **  version 2.1 of the License, or (at your option) any later version.
- **
- **  This library is distributed in the hope that it will be useful,
- **  but WITHOUT ANY WARRANTY; without even the implied warranty of
- **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- **  Lesser General Public License for more details.
- **
- **  You should have received a copy of the GNU Lesser General Public
- **  License along with this library; if not, write to the Free Software
- **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */
+**  CWService.m
+**
+**  Copyright (c) 2001-2007
+**
+**  Author: Ludovic Marcotte <ludovic@Sophos.ca>
+**
+**  This library is free software; you can redistribute it and/or
+**  modify it under the terms of the GNU Lesser General Public
+**  License as published by the Free Software Foundation; either
+**  version 2.1 of the License, or (at your option) any later version.
+**  
+**  This library is distributed in the hope that it will be useful,
+**  but WITHOUT ANY WARRANTY; without even the implied warranty of
+**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+**  Lesser General Public License for more details.
+**  
+**  You should have received a copy of the GNU Lesser General Public
+**  License along with this library; if not, write to the Free Software
+**  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
 
 #import "Pantomime/CWService.h"
 
@@ -42,7 +42,7 @@
 // permit 1500-byte packets and few permit more, the PMTU will generally be around 1500.
 // 2k is fine, 4k accomodates FDDI (and HIPPI?) networks too.
 //
-#define NET_BUF_SIZE 4096
+#define NET_BUF_SIZE 4096 
 
 //
 // We set the size increment of blocks we will write. Under Mac OS X, we use 1024 bytes
@@ -74,27 +74,27 @@
 //
 - (id) init
 {
-    self = [super init];
+  self = [super init];
 
-    _supportedMechanisms = [[CWThreadSafeArray alloc] init];
-    _responsesFromServer = [[CWThreadSafeArray alloc] init];
-    _capabilities = [[CWThreadSafeArray alloc] init];
-    _queue = [[CWThreadSafeArray alloc] init];
-    _username = nil;
-    _password = nil;
+  _supportedMechanisms = [[CWThreadSafeArray alloc] init];
+  _responsesFromServer = [[CWThreadSafeArray alloc] init];
+  _capabilities = [[CWThreadSafeArray alloc] init];
+  _queue = [[CWThreadSafeArray alloc] init];
+  _username = nil;
+  _password = nil;
 
 
-    _rbuf = [[NSMutableData alloc] init];
-    _wbuf = [[NSMutableData alloc] init];
+  _rbuf = [[NSMutableData alloc] init];
+  _wbuf = [[NSMutableData alloc] init];
 
-    _runLoopModes = [[CWThreadSafeArray alloc] initWithArray:@[NSDefaultRunLoopMode]];
-    _connectionTimeout = _readTimeout = _writeTimeout = DEFAULT_TIMEOUT;
-    _counter = _lastCommand = 0;
+  _runLoopModes = [[CWThreadSafeArray alloc] initWithArray:@[NSDefaultRunLoopMode]];
+  _connectionTimeout = _readTimeout = _writeTimeout = DEFAULT_TIMEOUT;
+  _counter = _lastCommand = 0;
 
-    _connection_state.previous_queue = [[NSMutableArray alloc] init];
-    _connection_state.reconnecting = _connection_state.opening_mailbox = NO;
+  _connection_state.previous_queue = [[NSMutableArray alloc] init];
+  _connection_state.reconnecting = _connection_state.opening_mailbox = NO;
 
-    return self;
+  return self;
 }
 
 
@@ -119,29 +119,29 @@
 //
 - (void) dealloc
 {
-    //INFO(NSStringFromClass([self class]), @"Service: -dealloc");
-    [self setDelegate: nil];
+  //INFO(NSStringFromClass([self class]), @"Service: -dealloc");
+  [self setDelegate: nil];
 
-    RELEASE(_supportedMechanisms);
-    RELEASE(_responsesFromServer);
-    RELEASE(_capabilities);
+  RELEASE(_supportedMechanisms);
+  RELEASE(_responsesFromServer);
+  RELEASE(_capabilities);
 
-    RELEASE(_queue);
+  RELEASE(_queue);
 
-    RELEASE(_rbuf);
-    RELEASE(_wbuf);
+  RELEASE(_rbuf);
+  RELEASE(_wbuf);
 
-    TEST_RELEASE(_mechanism);
-    TEST_RELEASE(_username);
-    TEST_RELEASE(_password);
-    RELEASE(_name);
+  TEST_RELEASE(_mechanism);
+  TEST_RELEASE(_username);
+  TEST_RELEASE(_password);
+  RELEASE(_name);
+  
+  TEST_RELEASE(_connection);
+  RELEASE(_runLoopModes);
 
-    TEST_RELEASE(_connection);
-    RELEASE(_runLoopModes);
+  RELEASE(_connection_state.previous_queue);
 
-    RELEASE(_connection_state.previous_queue);
-
-    //[super dealloc];
+  //[super dealloc];
 }
 
 //
@@ -149,12 +149,12 @@
 //
 - (void) setDelegate: (id _Nullable) theDelegate
 {
-    _delegate = theDelegate;
+  _delegate = theDelegate;
 }
 
 - (id) delegate
 {
-    return _delegate;
+  return _delegate;
 }
 
 
@@ -163,12 +163,12 @@
 //
 - (NSString *) name
 {
-    return _name;
+  return _name;
 }
 
 - (void) setName: (NSString *) theName
 {
-    ASSIGN(_name, theName);
+  ASSIGN(_name, theName);
 }
 
 
@@ -177,12 +177,12 @@
 //
 - (unsigned int) port
 {
-    return _port;
+  return _port;
 }
 
 - (void) setPort: (unsigned int) thePort
 {
-    _port = thePort;
+  _port = thePort;
 }
 
 
@@ -191,7 +191,7 @@
 //
 - (id<CWConnection>) connection
 {
-    return _connection;
+  return _connection;
 }
 
 
@@ -200,7 +200,7 @@
 //
 - (NSArray *) supportedMechanisms
 {
-    return [_supportedMechanisms array];
+  return [_supportedMechanisms array];
 }
 
 
@@ -209,12 +209,12 @@
 //
 - (NSString *) username
 {
-    return _username;
+  return _username;
 }
 
 - (void) setUsername: (NSString *) theUsername
 {
-    ASSIGN(_username, theUsername);
+  ASSIGN(_username, theUsername);
 }
 
 
@@ -223,7 +223,7 @@
 //
 - (BOOL) isConnected
 {
-    return _connected;
+  return _connected;
 }
 
 
@@ -234,7 +234,7 @@
              password: (NSString *) thePassword
             mechanism: (NSString *) theMechanism
 {
-    [self subclassResponsibility: _cmd];
+  [self subclassResponsibility: _cmd];
 }
 
 
@@ -243,12 +243,12 @@
 //
 - (void) cancelRequest
 {
-    [_connection close];
-    DESTROY(_connection);
-    [_queue removeAllObjects];
+  [_connection close];
+  DESTROY(_connection);
+  [_queue removeAllObjects];
 
-    POST_NOTIFICATION(PantomimeRequestCancelled, self, nil);
-    PERFORM_SELECTOR_1(_delegate, @selector(requestCancelled:), PantomimeRequestCancelled);
+  POST_NOTIFICATION(PantomimeRequestCancelled, self, nil);
+  PERFORM_SELECTOR_1(_delegate, @selector(requestCancelled:), PantomimeRequestCancelled);
 }
 
 
@@ -257,18 +257,18 @@
 //
 - (void) close
 {
-    //
-    // If we are reconnecting, no matter what, we close and release our current connection immediately.
-    // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
-    // to return immediately since _connected will be set to NO in _removeWatchers.
-    //
-    if (_connection_state.reconnecting)
+  //
+  // If we are reconnecting, no matter what, we close and release our current connection immediately.
+  // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
+  // to return immediately since _connected will be set to NO in _removeWatchers.
+  //
+  if (_connection_state.reconnecting)
     {
-        [_connection close];
-        DESTROY(_connection);
+      [_connection close];
+      DESTROY(_connection);
     }
 
-    if (_connected)
+  if (_connected)
     {
         _connected = NO;
         [_connection close];
@@ -290,9 +290,9 @@
 - (int) connect
 {
     _connection = [[CWTCPConnection alloc] initWithName: _name
-                                                   port: _port
-                                              transport: self.connectionTransport
-                                             background: NO];
+                                                 port: _port
+                                            transport: self.connectionTransport
+                                           background: NO];
 
     if (!_connection)
     {
@@ -312,9 +312,9 @@
 - (void) connectInBackgroundAndNotify
 {
     _connection = [[CWTCPConnection alloc] initWithName: _name
-                                                   port: _port
-                                              transport: self.connectionTransport
-                                             background: YES];
+                                                 port: _port
+                                            transport: self.connectionTransport
+                                           background: YES];
 
     if (!_connection)
     {
@@ -340,7 +340,7 @@
 //
 - (void) noop
 {
-    [self subclassResponsibility: _cmd];
+  [self subclassResponsibility: _cmd];
 }
 
 
@@ -349,92 +349,92 @@
 //
 - (void) updateRead
 {
-    unsigned char buf[NET_BUF_SIZE];
-    NSInteger count;
-
-    while ((count = [_connection read: buf  length: NET_BUF_SIZE]) > 0)
+  unsigned char buf[NET_BUF_SIZE];
+  NSInteger count;
+  
+  while ((count = [_connection read: buf  length: NET_BUF_SIZE]) > 0)
     {
-        NSData *aData;
+      NSData *aData;
 
-        aData = [[NSData alloc] initWithBytes: buf  length: count];
+      aData = [[NSData alloc] initWithBytes: buf  length: count];
 
-        if (_delegate && [_delegate respondsToSelector: @selector(service:receivedData:)])
-        {
-            [_delegate performSelector: @selector(service:receivedData:)
-                            withObject: self
-                            withObject: aData];
-        }
+      if (_delegate && [_delegate respondsToSelector: @selector(service:receivedData:)])
+	{
+	  [_delegate performSelector: @selector(service:receivedData:)
+		     withObject: self
+		     withObject: aData];  
+	}
 
-        [_rbuf appendData: aData];
-        RELEASE(aData);
+      [_rbuf appendData: aData];
+      RELEASE(aData);
     }
 
-    if (count == 0)
-    {
-        //
-        // We check to see if we got disconnected.
-        //
-        if (_connection.streamError)
-        {
-            [_connection close];
-            POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
-            PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
-        }
-    }
-    else
-    {
-        // We reset our connection timeout counter. This could happen when we are performing operations
-        // that return a large amount of data. The queue might be non-empty but network I/O could be
-        // going on at the same time. This could also be problematic for lenghty IMAP search or
-        // mailbox preload.
-        _counter = 0;
-    }
+  if (count == 0)
+  {
+      //
+      // We check to see if we got disconnected.
+      //
+      if (_connection.streamError)
+      {
+          [_connection close];
+          POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
+          PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+      }
+  }
+  else
+  {
+      // We reset our connection timeout counter. This could happen when we are performing operations
+      // that return a large amount of data. The queue might be non-empty but network I/O could be
+      // going on at the same time. This could also be problematic for lenghty IMAP search or
+      // mailbox preload.
+      _counter = 0;
+  }
 }
-
-
+ 
+ 
 //
 //
 //
 - (void) updateWrite
 {
-    if ([_wbuf length] > 0)
+  if ([_wbuf length] > 0)
     {
-        unsigned char *bytes;
-        NSInteger count, len;
+      unsigned char *bytes;
+      NSInteger count, len;
 
-        bytes = [_wbuf mutableBytes];
-        len = [_wbuf length];
+      bytes = [_wbuf mutableBytes];
+      len = [_wbuf length];
 
 #ifdef MACOSX
-        count = [_connection write: bytes  length: len > WRITE_BLOCK_SIZE ? WRITE_BLOCK_SIZE : len];
+      count = [_connection write: bytes  length: len > WRITE_BLOCK_SIZE ? WRITE_BLOCK_SIZE : len];
 #else
-        count = [_connection write: bytes  length: len];
+      count = [_connection write: bytes  length: len];
 #endif
-        // If nothing was written or if an error occured, we return.
-        if (count <= 0)
-        {
-            return;
-        }
-        // Otherwise, we inform our delegate that we wrote some data...
-        else if (_delegate && [_delegate respondsToSelector: @selector(service:sentData:)])
-        {
-            [_delegate performSelector: @selector(service:sentData:)
-                            withObject: self
-                            withObject: [_wbuf subdataToIndex: (int) count]];
-        }
+      // If nothing was written or if an error occured, we return.
+      if (count <= 0)
+	{
+	  return;
+	}
+      // Otherwise, we inform our delegate that we wrote some data...
+      else if (_delegate && [_delegate respondsToSelector: @selector(service:sentData:)])
+	{
+	  [_delegate performSelector: @selector(service:sentData:)
+		     withObject: self
+		     withObject: [_wbuf subdataToIndex: (int) count]];
+	}
+      
+      //INFO(NSStringFromClass([self class]), @"count = %d, len = %d", count, len);
 
-        //INFO(NSStringFromClass([self class]), @"count = %d, len = %d", count, len);
-
-        // If we have been able to write everything...
-        if (count == len)
-        {
-            [_wbuf setLength: 0];
-        }
-        else
-        {
-            memmove(bytes, bytes+count, len-count);
-            [_wbuf setLength: len-count];
-        }
+      // If we have been able to write everything...
+      if (count == len)
+	{
+	  [_wbuf setLength: 0];
+	}
+      else
+	{
+	  memmove(bytes, bytes+count, len-count);
+	  [_wbuf setLength: len-count];
+	}
     }
 }
 
@@ -486,26 +486,26 @@
                  extra: (void *) theExtra
                forMode: (NSString *) theMode
 {
-    AUTORELEASE_VOID(RETAIN(self));    // Don't be deallocated while handling event
-    switch (theType)
+  AUTORELEASE_VOID(RETAIN(self));    // Don't be deallocated while handling event
+  switch (theType)
     {
 #ifdef __MINGW32__
-        case ET_HANDLE:
-        case ET_TRIGGER:
-            [self updateRead];
-            [self updateWrite];
-            break;
+    case ET_HANDLE:
+    case ET_TRIGGER:
+      [self updateRead];
+      [self updateWrite];
+      break;
 #else
-        case ET_RDESC:
-            [self updateRead];
-            break;
+    case ET_RDESC:
+      [self updateRead];
+      break;
 
-        case ET_WDESC:
-            [self updateWrite];
-            break;
+    case ET_WDESC:
+      [self updateWrite];
+      break;
 
-        case ET_EDESC:
-            //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+    case ET_EDESC:
+      //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
                 POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
@@ -515,11 +515,11 @@
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
                                    PantomimeConnectionTimedOut);
             }
-            break;
+      break;
 #endif
 
-        default:
-            break;
+    default:
+      break;
     }
 }
 
@@ -529,8 +529,8 @@
 //
 - (int) reconnect
 {
-    [self subclassResponsibility: _cmd];
-    return 0;
+  [self subclassResponsibility: _cmd];
+  return 0;
 }
 
 
@@ -538,11 +538,11 @@
 //
 //
 - (NSDate *) timedOutEvent: (void *) theData
-                      type: (RunLoopEventType) theType
-                   forMode: (NSString *) theMode
+		      type: (RunLoopEventType) theType
+		   forMode: (NSString *) theMode
 {
-    //INFO(NSStringFromClass([self class]), @"timed out event!");
-    return nil;
+  //INFO(NSStringFromClass([self class]), @"timed out event!");
+  return nil;
 }
 
 
@@ -552,9 +552,9 @@
 - (void) addRunLoopMode: (NSString *) theMode
 {
 #ifndef MACOSX
-    if (theMode && ![_runLoopModes containsObject: theMode])
+  if (theMode && ![_runLoopModes containsObject: theMode])
     {
-        [_runLoopModes addObject: theMode];
+      [_runLoopModes addObject: theMode];
     }
 #endif
 }
@@ -565,47 +565,47 @@
 //
 - (unsigned int) connectionTimeout
 {
-    return _connectionTimeout;
+  return _connectionTimeout;
 }
 
 - (void) setConnectionTimeout: (unsigned int) theConnectionTimeout
 {
-    _connectionTimeout = (theConnectionTimeout > 0 ? theConnectionTimeout : DEFAULT_TIMEOUT);
+  _connectionTimeout = (theConnectionTimeout > 0 ? theConnectionTimeout : DEFAULT_TIMEOUT);
 }
 
 - (unsigned int) readTimeout
 {
-    return _readTimeout;
+  return _readTimeout;
 }
 
 - (void) setReadTimeout: (unsigned int) theReadTimeout
 {
-    _readTimeout = (theReadTimeout > 0 ? theReadTimeout: DEFAULT_TIMEOUT);
+  _readTimeout = (theReadTimeout > 0 ? theReadTimeout: DEFAULT_TIMEOUT);
 }
 
 - (unsigned int) writeTimeout
 {
-    return _writeTimeout;
+  return _writeTimeout;
 }
 
 - (void) setWriteTimeout: (unsigned int) theWriteTimeout
 {
-    _writeTimeout = (theWriteTimeout > 0 ? theWriteTimeout : DEFAULT_TIMEOUT);
+  _writeTimeout = (theWriteTimeout > 0 ? theWriteTimeout : DEFAULT_TIMEOUT);
 }
 
 - (void) startTLS
 {
-    [self subclassResponsibility: _cmd];
+  [self subclassResponsibility: _cmd];
 }
 
 - (unsigned int) lastCommand
 {
-    return _lastCommand;
+  return _lastCommand;
 }
 
 - (NSSet *) capabilities
 {
-    return [[NSSet alloc] initWithArray:[_capabilities array]];
+  return [[NSSet alloc] initWithArray:[_capabilities array]];
 }
 
 @end
