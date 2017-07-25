@@ -7,24 +7,15 @@
 //
 
 #import <XCTest/XCTest.h>
-
 #import "Pantomime.h"
 
 @interface FolderTests : XCTestCase
-
 @end
 
 @implementation FolderTests
 
-- (void)setUp {
-    [super setUp];
-}
-
-- (void)tearDown {
-    [super tearDown];
-}
-
-- (void)testExample {
+- (void)testExpungedMSN
+{
     const NSUInteger numberOfMSNs = 11;
     const NSUInteger expungedMSN = 5;
 
