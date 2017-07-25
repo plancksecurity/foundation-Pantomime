@@ -1,24 +1,24 @@
 /*
-**  CWURLName.m
-**
-**  Copyright (c) 2001-2004
-**
-**  Author: Ludovic Marcotte <ludovic@Sophos.ca>
-**
-**  This library is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU Lesser General Public
-**  License as published by the Free Software Foundation; either
-**  version 2.1 of the License, or (at your option) any later version.
-**  
-**  This library is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-**  Lesser General Public License for more details.
-**  
-**  You should have received a copy of the GNU Lesser General Public
-**  License along with this library; if not, write to the Free Software
-**  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ **  CWURLName.m
+ **
+ **  Copyright (c) 2001-2004
+ **
+ **  Author: Ludovic Marcotte <ludovic@Sophos.ca>
+ **
+ **  This library is free software; you can redistribute it and/or
+ **  modify it under the terms of the GNU Lesser General Public
+ **  License as published by the Free Software Foundation; either
+ **  version 2.1 of the License, or (at your option) any later version.
+ **
+ **  This library is distributed in the hope that it will be useful,
+ **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ **  Lesser General Public License for more details.
+ **
+ **  You should have received a copy of the GNU Lesser General Public
+ **  License along with this library; if not, write to the Free Software
+ **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 #import "Pantomime/CWURLName.h"
 
@@ -45,7 +45,7 @@
 
 - (id) initWithString: (NSString *) theString
 {
-  return [self initWithString: theString  path: nil];
+    return [self initWithString: theString  path: nil];
 }
 
 
@@ -53,29 +53,29 @@
 //
 //
 - (id) initWithString: (NSString *) theString
-		 path: (NSString *) thePath
+                 path: (NSString *) thePath
 {
-  self = [super init];
+    self = [super init];
 
-  // We initialize our ivars
-  _protocol = nil;
-  _foldername = nil;
-  _host = nil;
-  _port = 0;
-  _username = nil;
-  _password = nil;
- 
-  _path = thePath;
-  
-  if (_path)
+    // We initialize our ivars
+    _protocol = nil;
+    _foldername = nil;
+    _host = nil;
+    _port = 0;
+    _username = nil;
+    _password = nil;
+
+    _path = thePath;
+
+    if (_path)
     {
-      RETAIN_VOID(_path);
+        RETAIN_VOID(_path);
     }
 
-  // We now decode our URL
-  [self _decodeURL: theString];
-  
-  return self;
+    // We now decode our URL
+    [self _decodeURL: theString];
+
+    return self;
 }
 
 
@@ -84,14 +84,14 @@
 //
 - (void) dealloc
 {
-  TEST_RELEASE(_protocol);
-  TEST_RELEASE(_foldername);
-  TEST_RELEASE(_path);
-  TEST_RELEASE(_host);
-  TEST_RELEASE(_username);
-  TEST_RELEASE(_password);
-  
-  //[super dealloc];
+    TEST_RELEASE(_protocol);
+    TEST_RELEASE(_foldername);
+    TEST_RELEASE(_path);
+    TEST_RELEASE(_host);
+    TEST_RELEASE(_username);
+    TEST_RELEASE(_password);
+
+    //[super dealloc];
 }
 
 
@@ -100,58 +100,58 @@
 //
 - (NSString *) protocol
 {
-  return _protocol;
+    return _protocol;
 }
 
 - (NSString *) foldername
 {
-  return _foldername;
+    return _foldername;
 }
 
 - (NSString *) path
 {
-  return _path;
+    return _path;
 }
 
 - (NSString *) host;
 {
-  return _host;
+    return _host;
 }
 
 - (unsigned int) port
 {
-  return _port;
+    return _port;
 }
 
 - (NSString *) username
 {
-  return _username;
+    return _username;
 }
 
 - (NSString *) password
 {
-  return _password;
+    return _password;
 }
 
 - (NSString *) description
 {
-  return [NSString stringWithFormat: @"protocol = (%@), foldername = (%@), path = (%@), host = (%@), port = (%d), username = (%@), password = (%@)",
-		   _protocol, _foldername, _path, _host, _port, _username, _password];
+    return [NSString stringWithFormat: @"protocol = (%@), foldername = (%@), path = (%@), host = (%@), port = (%d), username = (%@), password = (%@)",
+            _protocol, _foldername, _path, _host, _port, _username, _password];
 }
 
 - (NSString *) stringValue
 {
-  if ([_protocol caseInsensitiveCompare: @"LOCAL"] == NSOrderedSame)
+    if ([_protocol caseInsensitiveCompare: @"LOCAL"] == NSOrderedSame)
     {
-      return [NSString stringWithFormat: @"local://%@/%@", _path, _foldername];
+        return [NSString stringWithFormat: @"local://%@/%@", _path, _foldername];
     }
-  else if ([_protocol caseInsensitiveCompare: @"IMAP"] == NSOrderedSame)
+    else if ([_protocol caseInsensitiveCompare: @"IMAP"] == NSOrderedSame)
     {
-      return [NSString stringWithFormat: @"imap://%@@%@/%@", _username, _host, _foldername];
+        return [NSString stringWithFormat: @"imap://%@@%@/%@", _username, _host, _foldername];
     }
-  else
+    else
     {
-      return [NSString stringWithFormat: @"pop3://%@@%@", _username, _host];
+        return [NSString stringWithFormat: @"pop3://%@@%@", _username, _host];
     }
 }
 
@@ -176,39 +176,39 @@
 //
 - (void) _decodeIMAP: (NSString *) theString
 {
-  NSRange r1, r2;
+    NSRange r1, r2;
 
-  // We decode the username
-  r1 = [theString rangeOfString: @"@"
-		  options: NSBackwardsSearch];
-  
-  if (r1.length)
-    {
-      _username = [theString substringToIndex: r1.location];
-      RETAIN_VOID(_username);
-    }
-  else
-    {
-      r1.location = 0;
-    }
-  
-  r2 = [theString rangeOfString: @"/"
-		  options: 0
-		  range: NSMakeRange(r1.location, [theString length] - r1.location)];
-  
-  if (r1.length)
-    {
-      _host = [theString substringWithRange: NSMakeRange(r1.location + 1, r2.location - r1.location - 1)];
-    }
-  else
-    {
-      _host = [theString substringWithRange: NSMakeRange(r1.location, r2.location - r1.location)];
-    }
-  
-  RETAIN_VOID(_host);
+    // We decode the username
+    r1 = [theString rangeOfString: @"@"
+                          options: NSBackwardsSearch];
 
-  _foldername = [theString substringFromIndex: (r2.location + 1)];
-  RETAIN_VOID(_foldername);
+    if (r1.length)
+    {
+        _username = [theString substringToIndex: r1.location];
+        RETAIN_VOID(_username);
+    }
+    else
+    {
+        r1.location = 0;
+    }
+
+    r2 = [theString rangeOfString: @"/"
+                          options: 0
+                            range: NSMakeRange(r1.location, [theString length] - r1.location)];
+
+    if (r1.length)
+    {
+        _host = [theString substringWithRange: NSMakeRange(r1.location + 1, r2.location - r1.location - 1)];
+    }
+    else
+    {
+        _host = [theString substringWithRange: NSMakeRange(r1.location, r2.location - r1.location)];
+    }
+
+    RETAIN_VOID(_host);
+
+    _foldername = [theString substringFromIndex: (r2.location + 1)];
+    RETAIN_VOID(_foldername);
 }
 
 
@@ -219,20 +219,20 @@
 //
 - (void) _decodeLocal: (NSString *) theString
 {
-  // If localMailDirectoryPath is nil, we return the last path component
-  // of the URL as the foldername.
-  if (!_path)
+    // If localMailDirectoryPath is nil, we return the last path component
+    // of the URL as the foldername.
+    if (!_path)
     {
-      _foldername = [theString lastPathComponent];
-      RETAIN_VOID(_foldername);
-      
-      _path = [theString substringToIndex: ([theString length] - [_foldername length])];
-      RETAIN_VOID(_path);
+        _foldername = [theString lastPathComponent];
+        RETAIN_VOID(_foldername);
+
+        _path = [theString substringToIndex: ([theString length] - [_foldername length])];
+        RETAIN_VOID(_path);
     }
-  else
+    else
     {
-      _foldername = [theString substringFromIndex: ([_path length] + 1)];
-      RETAIN_VOID(_foldername);
+        _foldername = [theString substringFromIndex: ([_path length] + 1)];
+        RETAIN_VOID(_foldername);
     }
 }
 
@@ -249,17 +249,17 @@
 //
 - (void) _decodePOP3: (NSString *) theString
 {
-  NSRange aRange;
+    NSRange aRange;
 
-  _foldername = @"INBOX";
-  
-  aRange = [theString rangeOfString: @"@"];
-  
-  _username = [theString substringToIndex: aRange.location];
-  RETAIN_VOID(_username);
+    _foldername = @"INBOX";
 
-  _host = [theString substringFromIndex: (aRange.location + 1)];
-  RETAIN_VOID(_host);
+    aRange = [theString rangeOfString: @"@"];
+
+    _username = [theString substringToIndex: aRange.location];
+    RETAIN_VOID(_username);
+
+    _host = [theString substringFromIndex: (aRange.location + 1)];
+    RETAIN_VOID(_host);
 }
 
 
@@ -268,32 +268,32 @@
 //
 - (void) _decodeURL: (NSString *) theString
 {
-  NSRange aRange;
+    NSRange aRange;
 
-  // We first decode our protocol.
-  aRange = [theString rangeOfString: @"://"];
-  
-  if (aRange.length)
+    // We first decode our protocol.
+    aRange = [theString rangeOfString: @"://"];
+
+    if (aRange.length)
     {
-      NSString *aString;
+        NSString *aString;
 
-      _protocol = [theString substringToIndex: aRange.location];
-      RETAIN_VOID(_protocol);
-      
-      aString = [theString substringFromIndex: (aRange.location + aRange.length)];
+        _protocol = [theString substringToIndex: aRange.location];
+        RETAIN_VOID(_protocol);
 
-      if ([_protocol caseInsensitiveCompare: @"LOCAL"] == NSOrderedSame)
-	{
-	  [self _decodeLocal: aString];
-	}
-      else if ([_protocol caseInsensitiveCompare: @"POP3"] == NSOrderedSame)
-	{
-	  [self _decodePOP3: aString];
-	}
-      else if ([_protocol caseInsensitiveCompare: @"IMAP"] == NSOrderedSame)
-	{
-	  [self _decodeIMAP: aString];
-	}
+        aString = [theString substringFromIndex: (aRange.location + aRange.length)];
+
+        if ([_protocol caseInsensitiveCompare: @"LOCAL"] == NSOrderedSame)
+        {
+            [self _decodeLocal: aString];
+        }
+        else if ([_protocol caseInsensitiveCompare: @"POP3"] == NSOrderedSame)
+        {
+            [self _decodePOP3: aString];
+        }
+        else if ([_protocol caseInsensitiveCompare: @"IMAP"] == NSOrderedSame)
+        {
+            [self _decodeIMAP: aString];
+        }
     }
 }
 

@@ -1,24 +1,24 @@
 /*
-**  CWFlags.m
-**
-**  Copyright (c) 2001-2004
-**
-**  Author: Ludovic Marcotte <ludovic@Sophos.ca>
-**
-**  This library is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU Lesser General Public
-**  License as published by the Free Software Foundation; either
-**  version 2.1 of the License, or (at your option) any later version.
-**  
-**  This library is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-**  Lesser General Public License for more details.
-**  
-**  You should have received a copy of the GNU Lesser General Public
-**  License along with this library; if not, write to the Free Software
-**  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ **  CWFlags.m
+ **
+ **  Copyright (c) 2001-2004
+ **
+ **  Author: Ludovic Marcotte <ludovic@Sophos.ca>
+ **
+ **  This library is free software; you can redistribute it and/or
+ **  modify it under the terms of the GNU Lesser General Public
+ **  License as published by the Free Software Foundation; either
+ **  version 2.1 of the License, or (at your option) any later version.
+ **
+ **  This library is distributed in the hope that it will be useful,
+ **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ **  Lesser General Public License for more details.
+ **
+ **  You should have received a copy of the GNU Lesser General Public
+ **  License along with this library; if not, write to the Free Software
+ **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 #import "Pantomime/CWFlags.h"
 
@@ -26,8 +26,8 @@
 #import "Pantomime/NSString+Extensions.h"
 
 #define CHECK_FLAG(c, value) \
-  theRange = [theData rangeOfCString: c]; \
-  if (theRange.length) { [self add: value]; }
+theRange = [theData rangeOfCString: c]; \
+if (theRange.length) { [self add: value]; }
 
 //
 //
@@ -36,11 +36,11 @@
 
 - (id) initWithFlags: (PantomimeFlag) theFlags
 {
-  self = [super init];
+    self = [super init];
 
-  flags = theFlags;
+    flags = theFlags;
 
-  return self;
+    return self;
 }
 
 - (instancetype) initWithInt: (NSInteger) theInt
@@ -109,17 +109,17 @@
 //
 - (void) encodeWithCoder: (NSCoder *) theCoder
 {
-  [theCoder encodeObject: [NSNumber numberWithInt: flags]];
+    [theCoder encodeObject: [NSNumber numberWithInt: flags]];
 }
 
 
 - (id) initWithCoder: (NSCoder *) theCoder
 {
-  self = [super init];
+    self = [super init];
 
-  flags = [[theCoder decodeObject] intValue];
+    flags = [[theCoder decodeObject] intValue];
 
-  return self;
+    return self;
 }
 
 
@@ -128,11 +128,11 @@
 //
 - (id) copyWithZone: (NSZone *) zone
 {
-  CWFlags *theFlags;
+    CWFlags *theFlags;
 
-  theFlags = [[CWFlags alloc] initWithFlags: flags];
+    theFlags = [[CWFlags alloc] initWithFlags: flags];
 
-  return theFlags;
+    return theFlags;
 }
 
 
@@ -141,7 +141,7 @@
 //
 - (void) add: (PantomimeFlag) theFlag
 {
-  flags = flags|theFlag;
+    flags = flags|theFlag;
 }
 
 
@@ -149,27 +149,27 @@
 //
 //
 - (void) addFlagsFromData: (NSData *) theData
-		   format: (PantomimeFolderFormat) theFormat
+                   format: (PantomimeFolderFormat) theFormat
 {
-  NSRange theRange;
-  
-  if (theData)
-    {    
-      if (theFormat == PantomimeFormatMbox)
-	{
-	  CHECK_FLAG("R", PantomimeFlagSeen);
-	  CHECK_FLAG("D", PantomimeFlagDeleted);
-	  CHECK_FLAG("A", PantomimeFlagAnswered);
-	  CHECK_FLAG("F", PantomimeFlagFlagged);
-	}
-      else if (theFormat == PantomimeFormatMaildir)
-	{
-	  CHECK_FLAG("S", PantomimeFlagSeen);
-	  CHECK_FLAG("R", PantomimeFlagAnswered);
-	  CHECK_FLAG("F", PantomimeFlagFlagged);
-	  CHECK_FLAG("D", PantomimeFlagDraft);
-	  CHECK_FLAG("T", PantomimeFlagDeleted);
-	}
+    NSRange theRange;
+
+    if (theData)
+    {
+        if (theFormat == PantomimeFormatMbox)
+        {
+            CHECK_FLAG("R", PantomimeFlagSeen);
+            CHECK_FLAG("D", PantomimeFlagDeleted);
+            CHECK_FLAG("A", PantomimeFlagAnswered);
+            CHECK_FLAG("F", PantomimeFlagFlagged);
+        }
+        else if (theFormat == PantomimeFormatMaildir)
+        {
+            CHECK_FLAG("S", PantomimeFlagSeen);
+            CHECK_FLAG("R", PantomimeFlagAnswered);
+            CHECK_FLAG("F", PantomimeFlagFlagged);
+            CHECK_FLAG("D", PantomimeFlagDraft);
+            CHECK_FLAG("T", PantomimeFlagDeleted);
+        }
     }
 }
 
@@ -179,13 +179,13 @@
 //
 - (BOOL) contain: (PantomimeFlag) theFlag
 {
-  if ((flags&theFlag) == theFlag) 
+    if ((flags&theFlag) == theFlag)
     {
-      return YES;
+        return YES;
     }
-  else
+    else
     {
-      return NO;
+        return NO;
     }
 }
 
@@ -195,7 +195,7 @@
 //
 - (void) replaceWithFlags: (CWFlags *) theFlags
 {
-  flags = theFlags->flags;
+    flags = theFlags->flags;
 }
 
 //
@@ -203,7 +203,7 @@
 //
 - (void) remove: (PantomimeFlag) theFlag
 {
-  flags = flags&(flags^theFlag);
+    flags = flags&(flags^theFlag);
 }
 
 
@@ -212,7 +212,7 @@
 //
 - (void) removeAll
 {
-  flags = 0;
+    flags = 0;
 }
 
 
@@ -221,7 +221,7 @@
 //
 - (NSString *) statusString
 {
-  return [NSString stringWithFormat: @"%cO", ([self contain: PantomimeFlagSeen] ? 'R' : ' ')];
+    return [NSString stringWithFormat: @"%cO", ([self contain: PantomimeFlagSeen] ? 'R' : ' ')];
 }
 
 //
@@ -238,26 +238,26 @@
 //
 - (NSString *) xstatusString
 {
-  NSMutableString *aMutableString;
+    NSMutableString *aMutableString;
 
-  aMutableString = [[NSMutableString alloc] init];
-  
-  if ([self contain: PantomimeFlagDeleted])
+    aMutableString = [[NSMutableString alloc] init];
+
+    if ([self contain: PantomimeFlagDeleted])
     {
-      [aMutableString appendFormat: @"%c", 'D'];
+        [aMutableString appendFormat: @"%c", 'D'];
     }
 
-  if ([self contain: PantomimeFlagFlagged])
+    if ([self contain: PantomimeFlagFlagged])
     {
-      [aMutableString appendFormat: @"%c", 'F'];
+        [aMutableString appendFormat: @"%c", 'F'];
     }
 
-  if ([self contain: PantomimeFlagAnswered])
+    if ([self contain: PantomimeFlagAnswered])
     {
-      [aMutableString appendFormat: @"%c", 'A'];
+        [aMutableString appendFormat: @"%c", 'A'];
     }
 
-  return AUTORELEASE(aMutableString);
+    return AUTORELEASE(aMutableString);
 }
 
 
@@ -266,36 +266,36 @@
 //
 - (NSString *) maildirString
 {
-  NSMutableString *aMutableString;
-  
-  aMutableString = [[NSMutableString alloc] initWithString: @"2,"];
-  
-  if ([self contain: PantomimeFlagDraft])
+    NSMutableString *aMutableString;
+
+    aMutableString = [[NSMutableString alloc] initWithString: @"2,"];
+
+    if ([self contain: PantomimeFlagDraft])
     {
-      [aMutableString appendString: @"D"];
-    }
-  
-  if ([self contain: PantomimeFlagFlagged])
-    {
-      [aMutableString appendString: @"F"];
-    }
-  
-  if ([self contain: PantomimeFlagAnswered])
-    {
-      [aMutableString appendString: @"R"];
-    }
-  
-  if ([self contain: PantomimeFlagSeen])
-    {
-      [aMutableString appendString: @"S"];
-    }
-  
-  if ([self contain: PantomimeFlagDeleted])
-    {
-      [aMutableString appendString: @"T"];
+        [aMutableString appendString: @"D"];
     }
 
-  return AUTORELEASE(aMutableString);
+    if ([self contain: PantomimeFlagFlagged])
+    {
+        [aMutableString appendString: @"F"];
+    }
+
+    if ([self contain: PantomimeFlagAnswered])
+    {
+        [aMutableString appendString: @"R"];
+    }
+
+    if ([self contain: PantomimeFlagSeen])
+    {
+        [aMutableString appendString: @"S"];
+    }
+
+    if ([self contain: PantomimeFlagDeleted])
+    {
+        [aMutableString appendString: @"T"];
+    }
+    
+    return AUTORELEASE(aMutableString);
 }
 
 - (NSString *)description

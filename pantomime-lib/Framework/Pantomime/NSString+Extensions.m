@@ -64,875 +64,875 @@
 
 #ifdef MACOSX
 - (NSString *) stringByTrimmingWhiteSpaces
-    {
-        NSMutableString *aMutableString;
+{
+    NSMutableString *aMutableString;
 
-        aMutableString = [[NSMutableString alloc] initWithString: self];
-        CFStringTrimWhitespace((CFMutableStringRef)aMutableString);
+    aMutableString = [[NSMutableString alloc] initWithString: self];
+    CFStringTrimWhitespace((CFMutableStringRef)aMutableString);
 
-        return AUTORELEASE(aMutableString);
-    }
+    return AUTORELEASE(aMutableString);
+}
 #endif
 
 
-    //
-    //
-    //
+//
+//
+//
 - (NSInteger) indexOfCharacter: (unichar) theCharacter
-    {
-        return [self indexOfCharacter: theCharacter  fromIndex: 0];
-    }
+{
+    return [self indexOfCharacter: theCharacter  fromIndex: 0];
+}
 
 
-    //
-    //
-    //
+//
+//
+//
 - (NSInteger) indexOfCharacter: (unichar) theCharacter
                      fromIndex: (NSUInteger) theIndex
+{
+    NSUInteger i, len;
+
+    len = [self length];
+
+    for (i = theIndex; i < len; i++)
     {
-        NSUInteger i, len;
-
-        len = [self length];
-
-        for (i = theIndex; i < len; i++)
+        if ([self characterAtIndex: i] == theCharacter)
         {
-            if ([self characterAtIndex: i] == theCharacter)
-            {
-                return i;
-            }
+            return i;
         }
-
-        return -1;
     }
 
+    return -1;
+}
 
-    //
-    //
-    //
+
+//
+//
+//
 - (BOOL) hasCaseInsensitivePrefix: (NSString *) thePrefix
+{
+    if (thePrefix)
     {
-        if (thePrefix)
-        {
-            return [[self uppercaseString] hasPrefix: [thePrefix uppercaseString]];
-        }
-
-        return NO;
+        return [[self uppercaseString] hasPrefix: [thePrefix uppercaseString]];
     }
 
+    return NO;
+}
 
-    //
-    //
-    //
+
+//
+//
+//
 - (BOOL) hasCaseInsensitiveSuffix: (NSString *) theSuffix
+{
+    if (theSuffix)
     {
-        if (theSuffix)
-        {
-            return [[self uppercaseString] hasSuffix: [theSuffix uppercaseString]];
-        }
-
-        return NO;
+        return [[self uppercaseString] hasSuffix: [theSuffix uppercaseString]];
     }
 
+    return NO;
+}
 
-    //
-    //
-    //
+
+//
+//
+//
 - (NSString *) stringFromQuotedString
+{
+    NSUInteger len;
+
+    len = [self length];
+
+    if (len > 1 &&
+        [self characterAtIndex: 0] == '"' &&
+        [self characterAtIndex: (len-1)] == '"')
     {
-        NSUInteger len;
-
-        len = [self length];
-
-        if (len > 1 &&
-            [self characterAtIndex: 0] == '"' &&
-            [self characterAtIndex: (len-1)] == '"')
-        {
-            return [self substringWithRange: NSMakeRange(1, len-2)];
-        }
-
-        return self;
+        return [self substringWithRange: NSMakeRange(1, len-2)];
     }
 
+    return self;
+}
 
-    //
-    //
-    //
+
+//
+//
+//
 + (NSString *) stringValueOfTransferEncoding: (int) theEncoding
+{
+    switch (theEncoding)
     {
-        switch (theEncoding)
-        {
-            case PantomimeEncodingNone:
+        case PantomimeEncodingNone:
             break;
-            case PantomimeEncodingQuotedPrintable:
+        case PantomimeEncodingQuotedPrintable:
             return @"quoted-printable";
-            case PantomimeEncodingBase64:
+        case PantomimeEncodingBase64:
             return @"base64";
-            case PantomimeEncoding8bit:
+        case PantomimeEncoding8bit:
             return @"8bit";
-            case PantomimeEncodingBinary:
+        case PantomimeEncodingBinary:
             return @"binary";
-            default:
+        default:
             break;
-        }
-
-        // PantomimeEncoding7bit will also fall back here.
-        return @"7bit";
     }
 
-    //
-    //
-    //
+    // PantomimeEncoding7bit will also fall back here.
+    return @"7bit";
+}
+
+//
+//
+//
 + (NSInteger) encodingForCharset: (NSData *) theCharset
-    {
-        return [self encodingForCharset: theCharset convertToNSStringEncoding: YES];
-    }
+{
+    return [self encodingForCharset: theCharset convertToNSStringEncoding: YES];
+}
 
-    //
-    // Convenience to be able to use CoreFoundation conversion instead of NSString
-    //
+//
+// Convenience to be able to use CoreFoundation conversion instead of NSString
+//
 + (NSInteger) encodingForCharset: (NSData *) theCharset
        convertToNSStringEncoding: (BOOL) shouldConvert
-    {
-        // We define some aliases for the string encoding.
-        static struct { char *name; int encoding; BOOL fromCoreFoundation; } encodings[] = {
-            {"ascii"         ,NSASCIIStringEncoding          ,NO},
-            {"us-ascii"      ,NSASCIIStringEncoding          ,NO},
-            {"default"       ,NSASCIIStringEncoding          ,NO},  // Ah... spammers.
-            {"utf-8"         ,NSUTF8StringEncoding           ,NO},
-            {"iso-8859-1"    ,NSISOLatin1StringEncoding      ,NO},
-            {"x-user-defined",NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Outlook.
-            {"unknown"       ,NSISOLatin1StringEncoding      ,NO},  // Once more, blame Outlook.
-            {"x-unknown"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Pine 4.21.
-            {"unknown-8bit"  ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Mutt/1.3.28i
-            {"0"             ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in QUALCOMM Windows Eudora Version 6.0.1.1
-            {""              ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Ximian Evolution
-            {"iso8859_1"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Openwave WebEngine
-            {"iso-8859-2"    ,NSISOLatin2StringEncoding      ,NO},
+{
+    // We define some aliases for the string encoding.
+    static struct { char *name; int encoding; BOOL fromCoreFoundation; } encodings[] = {
+        {"ascii"         ,NSASCIIStringEncoding          ,NO},
+        {"us-ascii"      ,NSASCIIStringEncoding          ,NO},
+        {"default"       ,NSASCIIStringEncoding          ,NO},  // Ah... spammers.
+        {"utf-8"         ,NSUTF8StringEncoding           ,NO},
+        {"iso-8859-1"    ,NSISOLatin1StringEncoding      ,NO},
+        {"x-user-defined",NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Outlook.
+        {"unknown"       ,NSISOLatin1StringEncoding      ,NO},  // Once more, blame Outlook.
+        {"x-unknown"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Pine 4.21.
+        {"unknown-8bit"  ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Mutt/1.3.28i
+        {"0"             ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in QUALCOMM Windows Eudora Version 6.0.1.1
+        {""              ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Ximian Evolution
+        {"iso8859_1"     ,NSISOLatin1StringEncoding      ,NO},  // To prevent a lame bug in Openwave WebEngine
+        {"iso-8859-2"    ,NSISOLatin2StringEncoding      ,NO},
 #ifndef MACOSX
-            {"iso-8859-3"   ,NSISOLatin3StringEncoding                 ,NO},
-            {"iso-8859-4"   ,NSISOLatin4StringEncoding                 ,NO},
-            {"iso-8859-5"   ,NSISOCyrillicStringEncoding               ,NO},
-            {"iso-8859-6"   ,NSISOArabicStringEncoding                 ,NO},
-            {"iso-8859-7"   ,NSISOGreekStringEncoding                  ,NO},
-            {"iso-8859-8"   ,NSISOHebrewStringEncoding                 ,NO},
-            {"iso-8859-9"   ,NSISOLatin5StringEncoding                 ,NO},
-            {"iso-8859-10"  ,NSISOLatin6StringEncoding                 ,NO},
-            {"iso-8859-11"  ,NSISOThaiStringEncoding                   ,NO},
-            {"iso-8859-13"  ,NSISOLatin7StringEncoding                 ,NO},
-            {"iso-8859-14"  ,NSISOLatin8StringEncoding                 ,NO},
-            {"iso-8859-15"  ,NSISOLatin9StringEncoding                 ,NO},
-            {"koi8-r"       ,NSKOI8RStringEncoding                     ,NO},
-            {"big5"         ,NSBIG5StringEncoding                      ,NO},
-            {"gb2312"       ,NSGB2312StringEncoding                    ,NO},
-            {"utf-7"        ,NSUTF7StringEncoding                      ,NO},
-            {"unicode-1-1-utf-7", NSUTF7StringEncoding                 ,NO},  // To prever a bug (sort of) in MS Hotmail
+        {"iso-8859-3"   ,NSISOLatin3StringEncoding                 ,NO},
+        {"iso-8859-4"   ,NSISOLatin4StringEncoding                 ,NO},
+        {"iso-8859-5"   ,NSISOCyrillicStringEncoding               ,NO},
+        {"iso-8859-6"   ,NSISOArabicStringEncoding                 ,NO},
+        {"iso-8859-7"   ,NSISOGreekStringEncoding                  ,NO},
+        {"iso-8859-8"   ,NSISOHebrewStringEncoding                 ,NO},
+        {"iso-8859-9"   ,NSISOLatin5StringEncoding                 ,NO},
+        {"iso-8859-10"  ,NSISOLatin6StringEncoding                 ,NO},
+        {"iso-8859-11"  ,NSISOThaiStringEncoding                   ,NO},
+        {"iso-8859-13"  ,NSISOLatin7StringEncoding                 ,NO},
+        {"iso-8859-14"  ,NSISOLatin8StringEncoding                 ,NO},
+        {"iso-8859-15"  ,NSISOLatin9StringEncoding                 ,NO},
+        {"koi8-r"       ,NSKOI8RStringEncoding                     ,NO},
+        {"big5"         ,NSBIG5StringEncoding                      ,NO},
+        {"gb2312"       ,NSGB2312StringEncoding                    ,NO},
+        {"utf-7"        ,NSUTF7StringEncoding                      ,NO},
+        {"unicode-1-1-utf-7", NSUTF7StringEncoding                 ,NO},  // To prever a bug (sort of) in MS Hotmail
 #endif
-            {"windows-1250" ,NSWindowsCP1250StringEncoding             ,NO},
-            {"windows-1251" ,NSWindowsCP1251StringEncoding             ,NO},
-            {"cyrillic (windows-1251)", NSWindowsCP1251StringEncoding  ,NO},  // To prevent a bug in MS Hotmail
-            {"windows-1252" ,NSWindowsCP1252StringEncoding             ,NO},
-            {"windows-1253" ,NSWindowsCP1253StringEncoding             ,NO},
-            {"windows-1254" ,NSWindowsCP1254StringEncoding             ,NO},
-            {"iso-2022-jp"  ,NSISO2022JPStringEncoding                 ,NO},
-            {"euc-jp"       ,NSJapaneseEUCStringEncoding               ,NO},
-        };
+        {"windows-1250" ,NSWindowsCP1250StringEncoding             ,NO},
+        {"windows-1251" ,NSWindowsCP1251StringEncoding             ,NO},
+        {"cyrillic (windows-1251)", NSWindowsCP1251StringEncoding  ,NO},  // To prevent a bug in MS Hotmail
+        {"windows-1252" ,NSWindowsCP1252StringEncoding             ,NO},
+        {"windows-1253" ,NSWindowsCP1253StringEncoding             ,NO},
+        {"windows-1254" ,NSWindowsCP1254StringEncoding             ,NO},
+        {"iso-2022-jp"  ,NSISO2022JPStringEncoding                 ,NO},
+        {"euc-jp"       ,NSJapaneseEUCStringEncoding               ,NO},
+    };
 
-        NSString *name;
-        int i;
+    NSString *name;
+    int i;
 
-        name = [[[NSString alloc ] initWithBytes: [theCharset bytes] length: [theCharset length]
-                                        encoding: NSUTF8StringEncoding] lowercaseString];
-        AUTORELEASE_VOID(name);
+    name = [[[NSString alloc ] initWithBytes: [theCharset bytes] length: [theCharset length]
+                                    encoding: NSUTF8StringEncoding] lowercaseString];
+    AUTORELEASE_VOID(name);
 
-        NSMutableArray *encodingNames = [NSMutableArray array];
-        for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
-            NSString *string = [[NSString alloc] initWithCString:encodings[i].name
-                                                        encoding:NSUTF8StringEncoding];
-            [encodingNames addObject:string];
-        }
+    NSMutableArray *encodingNames = [NSMutableArray array];
+    for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++) {
+        NSString *string = [[NSString alloc] initWithCString:encodings[i].name
+                                                    encoding:NSUTF8StringEncoding];
+        [encodingNames addObject:string];
+    }
 
-        for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++)
+    for (i = 0; i < sizeof(encodings)/sizeof(encodings[0]); i++)
+    {
+        if ([name isEqualToString: encodingNames[i]])
         {
-            if ([name isEqualToString: encodingNames[i]])
-            {
-                int enc = encodings[i].encoding;
-                // Under OS X, we use CoreFoundation if necessary to convert the encoding
-                // to a NSString encoding.
+            int enc = encodings[i].encoding;
+            // Under OS X, we use CoreFoundation if necessary to convert the encoding
+            // to a NSString encoding.
 #ifdef MACOSX
-                if (encodings[i].fromCoreFoundation)
+            if (encodings[i].fromCoreFoundation)
+            {
+                if (shouldConvert)
                 {
-                    if (shouldConvert)
-                    {
-                        return CFStringConvertEncodingToNSStringEncoding(enc);
-                    }
-                    else
-                    {
-                        return enc;
-                    }
+                    return CFStringConvertEncodingToNSStringEncoding(enc);
                 }
                 else
                 {
-                    if (shouldConvert)
-                    {
-                        return CFStringConvertNSStringEncodingToEncoding(enc);
-                    }
-                    else
-                    {
-                        return enc;
-                    }
+                    return enc;
                 }
-#else
-                return enc;
-#endif
-            }
-        }
-
-#ifdef MACOSX
-        // Last resort: try using CoreFoundation...
-        CFStringEncoding enc;
-
-        enc = CFStringConvertIANACharSetNameToEncoding((CFStringRef)name);
-        if (kCFStringEncodingInvalidId != enc)
-        {
-            if (shouldConvert)
-            {
-                return CFStringConvertEncodingToNSStringEncoding(enc);
             }
             else
             {
-                return enc;
+                if (shouldConvert)
+                {
+                    return CFStringConvertNSStringEncodingToEncoding(enc);
+                }
+                else
+                {
+                    return enc;
+                }
             }
+#else
+            return enc;
+#endif
         }
+    }
+
+#ifdef MACOSX
+    // Last resort: try using CoreFoundation...
+    CFStringEncoding enc;
+
+    enc = CFStringConvertIANACharSetNameToEncoding((CFStringRef)name);
+    if (kCFStringEncodingInvalidId != enc)
+    {
+        if (shouldConvert)
+        {
+            return CFStringConvertEncodingToNSStringEncoding(enc);
+        }
+        else
+        {
+            return enc;
+        }
+    }
 #endif
 
-        return -1;
-    }
+    return -1;
+}
 
-    //
-    //
-    //
+//
+//
+//
 + (NSInteger) encodingForPart: (CWPart *) thePart
-    {
-        return [self encodingForPart: thePart convertToNSStringEncoding: YES];
-    }
+{
+    return [self encodingForPart: thePart convertToNSStringEncoding: YES];
+}
 
-    //
-    // Convenience to be able to use CoreFoundation conversion instead of NSString
-    //
+//
+// Convenience to be able to use CoreFoundation conversion instead of NSString
+//
 + (NSInteger)    encodingForPart: (CWPart *) thePart
        convertToNSStringEncoding: (BOOL) shouldConvert
+{
+    NSInteger encoding;
+
+    // We get the encoding we are gonna use. We always favor the default encoding.
+    if ([thePart defaultCharset])
     {
-        NSInteger encoding;
-
-        // We get the encoding we are gonna use. We always favor the default encoding.
-        if ([thePart defaultCharset])
-        {
-            encoding = [self encodingForCharset: [[thePart defaultCharset] dataUsingEncoding: NSASCIIStringEncoding]
-                      convertToNSStringEncoding: shouldConvert];
-        }
-        else if ([thePart charset])
-        {
-            encoding = [self encodingForCharset: [[thePart charset] dataUsingEncoding: NSASCIIStringEncoding]
-                      convertToNSStringEncoding: shouldConvert];
-        }
-        else
-        {
-            encoding = [NSString defaultCStringEncoding];
-        }
-
-        if (encoding == -1 || encoding == NSASCIIStringEncoding)
-        {
-            encoding = NSISOLatin1StringEncoding;
-        }
-
-        return encoding;
+        encoding = [self encodingForCharset: [[thePart defaultCharset] dataUsingEncoding: NSASCIIStringEncoding]
+                  convertToNSStringEncoding: shouldConvert];
+    }
+    else if ([thePart charset])
+    {
+        encoding = [self encodingForCharset: [[thePart charset] dataUsingEncoding: NSASCIIStringEncoding]
+                  convertToNSStringEncoding: shouldConvert];
+    }
+    else
+    {
+        encoding = [NSString defaultCStringEncoding];
     }
 
+    if (encoding == -1 || encoding == NSASCIIStringEncoding)
+    {
+        encoding = NSISOLatin1StringEncoding;
+    }
 
-    //
-    //
-    //
+    return encoding;
+}
+
+
+//
+//
+//
 + (NSString *) stringWithData: (NSData *) theData
                       charset: (NSData *) theCharset
-    {
-        NSInteger encoding;
+{
+    NSInteger encoding;
 
-        if (theData == nil)
-        {
-            return nil;
-        }
+    if (theData == nil)
+    {
+        return nil;
+    }
 
 #ifdef MACOSX
-        encoding = [NSString encodingForCharset: theCharset
-                      convertToNSStringEncoding: NO];
+    encoding = [NSString encodingForCharset: theCharset
+                  convertToNSStringEncoding: NO];
 #else
-        encoding = [NSString encodingForCharset: theCharset];
+    encoding = [NSString encodingForCharset: theCharset];
 #endif
 
-        if (encoding == -1)
-        {
+    if (encoding == -1)
+    {
 #ifdef HAVE_ICONV
-            NSString *aString;
+        NSString *aString;
 
-            const char *i_bytes, *from_code;
-            char *o_bytes;
+        const char *i_bytes, *from_code;
+        char *o_bytes;
 
-            size_t i_length, o_length, ret;
-            int total_length;
-            iconv_t conv;
+        size_t i_length, o_length, ret;
+        int total_length;
+        iconv_t conv;
 
-            // Instead of calling cString directly on theCharset, we first try
-            // to obtain the ASCII string of the data object.
-            from_code = [[theCharset asciiString] cString];
+        // Instead of calling cString directly on theCharset, we first try
+        // to obtain the ASCII string of the data object.
+        from_code = [[theCharset asciiString] cString];
 
-            if (!from_code)
+        if (!from_code)
+        {
+            return nil;
+        }
+
+        conv = iconv_open("UTF-8", from_code);
+
+        if (conv == (iconv_t)-1)
+        {
+            // Let's assume we got US-ASCII here.
+            return AUTORELEASE([[NSString alloc] initWithData: theData  encoding: NSASCIIStringEncoding]);
+        }
+
+        i_bytes = [theData bytes];
+        i_length = [theData length];
+
+        total_length = o_length = sizeof(unichar)*i_length;
+        o_bytes = (char *)malloc(o_length);
+
+        if (o_bytes == NULL) return nil;
+
+        while (i_length > 0)
+        {
+            ret = iconv(conv, (iconv_const_qualifier char **)&i_bytes, &i_length, &o_bytes, &o_length);
+
+            if (ret == (size_t)-1)
             {
+                iconv_close(conv);
+
+                total_length = total_length - o_length;
+                o_bytes -= total_length;
+                free(o_bytes);
                 return nil;
             }
-
-            conv = iconv_open("UTF-8", from_code);
-
-            if (conv == (iconv_t)-1)
-            {
-                // Let's assume we got US-ASCII here.
-                return AUTORELEASE([[NSString alloc] initWithData: theData  encoding: NSASCIIStringEncoding]);
-            }
-
-            i_bytes = [theData bytes];
-            i_length = [theData length];
-
-            total_length = o_length = sizeof(unichar)*i_length;
-            o_bytes = (char *)malloc(o_length);
-
-            if (o_bytes == NULL) return nil;
-
-            while (i_length > 0)
-            {
-                ret = iconv(conv, (iconv_const_qualifier char **)&i_bytes, &i_length, &o_bytes, &o_length);
-
-                if (ret == (size_t)-1)
-                {
-                    iconv_close(conv);
-
-                    total_length = total_length - o_length;
-                    o_bytes -= total_length;
-                    free(o_bytes);
-                    return nil;
-                }
-            }
-
-            total_length = total_length - o_length;
-            o_bytes -= total_length;
-
-            // If we haven't used all our allocated buffer, we shrink it.
-            if (o_length > 0 && total_length > 0)
-            {
-                if (realloc(o_bytes, total_length) == NULL)
-                {
-                    INFO(NSStringFromClass([self class]), @"stringWithData, realloc() failed, returning nil");
-                    iconv_close(conv);
-                    return nil;
-                }
-            }
-
-            aString = [[NSString alloc] initWithData: [NSData dataWithBytesNoCopy: o_bytes
-                                                                           length: total_length]
-                                            encoding: NSUTF8StringEncoding];
-            iconv_close(conv);
-
-            return AUTORELEASE(aString);
-#else
-            return nil;
-#endif
         }
 
-        //#ifdef MACOSX
-        //return AUTORELEASE((NSString *)CFStringCreateFromExternalRepresentation(NULL, (CFDataRef)theData, encoding));
-        //#else
-        return AUTORELEASE([[NSString alloc] initWithData: theData  encoding: encoding]);
-        //#endif
-    }
+        total_length = total_length - o_length;
+        o_bytes -= total_length;
 
-
-    //
-    //
-    //
-#warning return Charset instead?
-- (NSString *) charset
-    {
-        NSMutableArray *aMutableArray;
-        NSString *aString;
-        CWCharset *aCharset;
-
-        unsigned int i, j;
-
-        aMutableArray = [[NSMutableArray alloc] initWithCapacity: 21];
-
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-1"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-2"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-3"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-4"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-5"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-6"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-7"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-8"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-9"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-10"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-11"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-13"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-14"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-15"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"koi8-r"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"koi8-u"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"windows-1250"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"windows-1251"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"windows-1252"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"windows-1253"]];
-        [aMutableArray addObject: [CWCharset charsetForName: @"windows-1254"]];
-
-
-        for (i = 0; i < [self length]; i++)
+        // If we haven't used all our allocated buffer, we shrink it.
+        if (o_length > 0 && total_length > 0)
         {
-            for (j = 0; j < [aMutableArray count]; j++)
+            if (realloc(o_bytes, total_length) == NULL)
             {
-                if (![[aMutableArray objectAtIndex: j] characterIsInCharset: [self characterAtIndex: i]])
-                {
-                    // Character is not in the charset
-                    [aMutableArray removeObjectAtIndex: j];
-                    j--;
-                }
-            }
-
-            // FIXME: can't break even if there is only one left. First we have to check
-            //        whether that encoding will actually work for the entire string. If it
-            //	doesn't we'll need to fall back to utf-8 (or something else that can encode
-            //        _everything_).
-            //
-            // Intelligent string splitting would help, of course
-            //
-            if ([aMutableArray count] < 1)
-            {
-                // We have zero or one charset
-                break;
+                INFO(NSStringFromClass([self class]), @"stringWithData, realloc() failed, returning nil");
+                iconv_close(conv);
+                return nil;
             }
         }
 
-        if ([aMutableArray count])
-        {
-            aCharset = [aMutableArray objectAtIndex: 0];
-            [aMutableArray removeAllObjects];
-            aString = [aCharset name];
-        }
-        else
-        {
-            // We have no charset, we try to "guess" a default charset
-            if ([self canBeConvertedToEncoding: NSISO2022JPStringEncoding])
-            {
-                // ISO-2022-JP is the standard of Japanese character encoding
-                aString = @"iso-2022-jp";
-            }
-            else
-            {
-                // We have no charset, we return a default charset
-                aString = @"utf-8";
-            }
-        }
+        aString = [[NSString alloc] initWithData: [NSData dataWithBytesNoCopy: o_bytes
+                                                                       length: total_length]
+                                        encoding: NSUTF8StringEncoding];
+        iconv_close(conv);
 
-        RELEASE(aMutableArray);
-
-        return aString;
-    }
-
-
-    //
-    //
-    //
-- (NSString *) modifiedUTF7String
-    {
-#ifndef MACOSX
-        NSMutableData *aMutableData, *modifiedData;
-        NSString *aString;
-
-        const char *b;
-        BOOL escaped;
-        unichar ch;
-        int i, len;
-
-        //
-        // We UTF-7 encode _only_ the non-ASCII parts.
-        //
-        aMutableData = [[NSMutableData alloc] init];
-        AUTORELEASE(aMutableData);
-        len = [self length];
-
-        for (i = 0; i < len; i++)
-        {
-            ch = [self characterAtIndex: i];
-
-            if (IS_PRINTABLE(ch))
-            {
-                [aMutableData appendCFormat: @"%c", ch];
-            }
-            else
-            {
-                int j;
-
-                j = i+1;
-                // We got a non-ASCII character, let's get the substring and encode it using UTF-7.
-                while (j < len && !IS_PRINTABLE([self characterAtIndex: j]))
-                {
-                    j++;
-                }
-
-                // Get the substring.
-                [aMutableData appendData: [[self substringWithRange: NSMakeRange(i,j-i)] dataUsingEncoding: NSUTF7StringEncoding]];
-                i = j-1;
-            }
-        }
-
-        b = [aMutableData bytes];
-        len = [aMutableData length];
-        escaped = NO;
-
-        //
-        // We replace:
-        //
-        // &   ->  &-
-        // +   ->  &
-        // +-  ->  +
-        // /   ->  ,
-        //
-        // in order to produce our modified UTF-7 string.
-        //
-        modifiedData = [[NSMutableData alloc] init];
-        AUTORELEASE(modifiedData);
-
-        for (i = 0; i < len; i++, b++)
-        {
-            if (!escaped && *b == '&')
-            {
-                [modifiedData appendCString: "&-"];
-            }
-            else if (!escaped && *b == '+')
-            {
-                if (*(b+1) == '-')
-                {
-                    [modifiedData appendCString: "+"];
-                }
-                else
-                {
-                    [modifiedData appendCString: "&"];
-
-                    // We enter the escaped mode.
-                    escaped = YES;
-                }
-            }
-            else if (escaped && *b == '/')
-            {
-                [modifiedData appendCString: ","];
-            }
-            else if (escaped && *b == '-')
-            {
-                [modifiedData appendCString: "-"];
-
-                // We leave the escaped mode.
-                escaped = NO;
-            }
-            else
-            {
-                [modifiedData appendCFormat: @"%c", *b];
-            }
-        }
-
-        // If we're still in the escaped mode we haven't added our trailing -,
-        // let's add it right now.
-        if (escaped)
-        {
-            [modifiedData appendCString: "-"];
-        }
-
-        aString = AUTORELEASE([[NSString alloc] initWithData: modifiedData  encoding: NSASCIIStringEncoding]);
-
-        return (aString != nil ? aString : self);
-#else
-        return self;
-#endif
-    }
-
-    //
-    //
-    //
-- (NSString *) stringFromModifiedUTF7
-    {
-#ifndef MACOSX
-        NSMutableData *aMutableData;
-
-        BOOL escaped;
-        unichar ch;
-        int i, len;
-
-        aMutableData = [[NSMutableData alloc] init];
-        AUTORELEASE(aMutableData);
-
-        len = [self length];
-        escaped = NO;
-
-        //
-        // We replace:
-        //
-        // &   ->  +
-        // &-  ->  &
-        // ,   ->  /
-        //
-        // If we are in escaped mode. That is, between a &....-
-        //
-        for (i = 0; i < len; i++)
-        {
-            ch = [self characterAtIndex: i];
-
-            if (!escaped && ch == '&')
-            {
-                if ( (i+1) < len && [self characterAtIndex: (i+1)] != '-' )
-                {
-                    [aMutableData appendCString: "+"];
-
-                    // We enter the escaped mode.
-                    escaped = YES;
-                }
-                else
-                {
-                    // We replace &- by &
-                    [aMutableData appendCString: "&"];
-                    i++;
-                }
-            }
-            else if (escaped && ch == ',')
-            {
-                [aMutableData appendCString: "/"];
-            }
-            else if (escaped && ch == '-')
-            {
-                [aMutableData appendCString: "-"];
-
-                // We leave the escaped mode.
-                escaped = NO;
-            }
-            else
-            {
-                [aMutableData appendCFormat: @"%c", ch];
-            }
-        }
-
-        return AUTORELEASE([[NSString alloc] initWithData: aMutableData  encoding: NSUTF7StringEncoding]);
+        return AUTORELEASE(aString);
 #else
         return nil;
 #endif
     }
 
+    //#ifdef MACOSX
+    //return AUTORELEASE((NSString *)CFStringCreateFromExternalRepresentation(NULL, (CFDataRef)theData, encoding));
+    //#else
+    return AUTORELEASE([[NSString alloc] initWithData: theData  encoding: encoding]);
+    //#endif
+}
 
-    //
-    //
-    //
-- (BOOL) hasREPrefix
+
+//
+//
+//
+#warning return Charset instead?
+- (NSString *) charset
+{
+    NSMutableArray *aMutableArray;
+    NSString *aString;
+    CWCharset *aCharset;
+
+    unsigned int i, j;
+
+    aMutableArray = [[NSMutableArray alloc] initWithCapacity: 21];
+
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-1"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-2"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-3"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-4"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-5"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-6"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-7"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-8"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-9"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-10"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-11"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-13"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-14"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"iso-8859-15"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"koi8-r"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"koi8-u"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"windows-1250"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"windows-1251"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"windows-1252"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"windows-1253"]];
+    [aMutableArray addObject: [CWCharset charsetForName: @"windows-1254"]];
+
+
+    for (i = 0; i < [self length]; i++)
     {
-        if ([self hasCaseInsensitivePrefix: @"re:"] ||
-            [self hasCaseInsensitivePrefix: @"re :"] ||
-            [self hasCaseInsensitivePrefix: _(@"PantomimeReferencePrefix")] ||
-            [self hasCaseInsensitivePrefix: _(@"PantomimeResponsePrefix")])
+        for (j = 0; j < [aMutableArray count]; j++)
         {
-            return YES;
+            if (![[aMutableArray objectAtIndex: j] characterIsInCharset: [self characterAtIndex: i]])
+            {
+                // Character is not in the charset
+                [aMutableArray removeObjectAtIndex: j];
+                j--;
+            }
         }
 
-        return NO;
+        // FIXME: can't break even if there is only one left. First we have to check
+        //        whether that encoding will actually work for the entire string. If it
+        //	doesn't we'll need to fall back to utf-8 (or something else that can encode
+        //        _everything_).
+        //
+        // Intelligent string splitting would help, of course
+        //
+        if ([aMutableArray count] < 1)
+        {
+            // We have zero or one charset
+            break;
+        }
     }
 
-
-
-    //
-    //
-    //
-- (NSString *) stringByReplacingOccurrencesOfCharacter: (unichar) theTarget
-                                         withCharacter: (unichar) theReplacement
+    if ([aMutableArray count])
     {
-        NSMutableString *aMutableString;
-        NSUInteger len, i;
-        unichar c;
-
-        if (!theTarget || !theReplacement || theTarget == theReplacement)
+        aCharset = [aMutableArray objectAtIndex: 0];
+        [aMutableArray removeAllObjects];
+        aString = [aCharset name];
+    }
+    else
+    {
+        // We have no charset, we try to "guess" a default charset
+        if ([self canBeConvertedToEncoding: NSISO2022JPStringEncoding])
         {
-            return self;
+            // ISO-2022-JP is the standard of Japanese character encoding
+            aString = @"iso-2022-jp";
         }
-
-        len = [self length];
-
-        aMutableString = [NSMutableString stringWithCapacity: len];
-
-        for (i = 0; i < len; i++)
+        else
         {
-            c = [self characterAtIndex: i];
+            // We have no charset, we return a default charset
+            aString = @"utf-8";
+        }
+    }
 
-            if (c == theTarget)
+    RELEASE(aMutableArray);
+
+    return aString;
+}
+
+
+//
+//
+//
+- (NSString *) modifiedUTF7String
+{
+#ifndef MACOSX
+    NSMutableData *aMutableData, *modifiedData;
+    NSString *aString;
+
+    const char *b;
+    BOOL escaped;
+    unichar ch;
+    int i, len;
+
+    //
+    // We UTF-7 encode _only_ the non-ASCII parts.
+    //
+    aMutableData = [[NSMutableData alloc] init];
+    AUTORELEASE(aMutableData);
+    len = [self length];
+
+    for (i = 0; i < len; i++)
+    {
+        ch = [self characterAtIndex: i];
+
+        if (IS_PRINTABLE(ch))
+        {
+            [aMutableData appendCFormat: @"%c", ch];
+        }
+        else
+        {
+            int j;
+
+            j = i+1;
+            // We got a non-ASCII character, let's get the substring and encode it using UTF-7.
+            while (j < len && !IS_PRINTABLE([self characterAtIndex: j]))
             {
-                [aMutableString appendFormat: @"%c", theReplacement];
+                j++;
+            }
+
+            // Get the substring.
+            [aMutableData appendData: [[self substringWithRange: NSMakeRange(i,j-i)] dataUsingEncoding: NSUTF7StringEncoding]];
+            i = j-1;
+        }
+    }
+
+    b = [aMutableData bytes];
+    len = [aMutableData length];
+    escaped = NO;
+
+    //
+    // We replace:
+    //
+    // &   ->  &-
+    // +   ->  &
+    // +-  ->  +
+    // /   ->  ,
+    //
+    // in order to produce our modified UTF-7 string.
+    //
+    modifiedData = [[NSMutableData alloc] init];
+    AUTORELEASE(modifiedData);
+
+    for (i = 0; i < len; i++, b++)
+    {
+        if (!escaped && *b == '&')
+        {
+            [modifiedData appendCString: "&-"];
+        }
+        else if (!escaped && *b == '+')
+        {
+            if (*(b+1) == '-')
+            {
+                [modifiedData appendCString: "+"];
             }
             else
             {
-                [aMutableString appendFormat: @"%c", c];
+                [modifiedData appendCString: "&"];
+
+                // We enter the escaped mode.
+                escaped = YES;
             }
         }
+        else if (escaped && *b == '/')
+        {
+            [modifiedData appendCString: ","];
+        }
+        else if (escaped && *b == '-')
+        {
+            [modifiedData appendCString: "-"];
 
-        return aMutableString;
+            // We leave the escaped mode.
+            escaped = NO;
+        }
+        else
+        {
+            [modifiedData appendCFormat: @"%c", *b];
+        }
     }
 
-    //
-    //
-    //
-- (NSString *) stringByDeletingLastPathComponentWithSeparator: (unsigned char) theSeparator
+    // If we're still in the escaped mode we haven't added our trailing -,
+    // let's add it right now.
+    if (escaped)
     {
-        NSUInteger c;
-        NSInteger i;
+        [modifiedData appendCString: "-"];
+    }
 
-        c = [self length];
+    aString = AUTORELEASE([[NSString alloc] initWithData: modifiedData  encoding: NSASCIIStringEncoding]);
 
-        for (i = c-1; i >= 0; i--)
+    return (aString != nil ? aString : self);
+#else
+    return self;
+#endif
+}
+
+//
+//
+//
+- (NSString *) stringFromModifiedUTF7
+{
+#ifndef MACOSX
+    NSMutableData *aMutableData;
+
+    BOOL escaped;
+    unichar ch;
+    int i, len;
+
+    aMutableData = [[NSMutableData alloc] init];
+    AUTORELEASE(aMutableData);
+
+    len = [self length];
+    escaped = NO;
+
+    //
+    // We replace:
+    //
+    // &   ->  +
+    // &-  ->  &
+    // ,   ->  /
+    //
+    // If we are in escaped mode. That is, between a &....-
+    //
+    for (i = 0; i < len; i++)
+    {
+        ch = [self characterAtIndex: i];
+
+        if (!escaped && ch == '&')
         {
-            if ([self characterAtIndex: i] == theSeparator)
+            if ( (i+1) < len && [self characterAtIndex: (i+1)] != '-' )
             {
-                return [self substringToIndex: i];
+                [aMutableData appendCString: "+"];
+
+                // We enter the escaped mode.
+                escaped = YES;
             }
-        }
-
-        return @"";
-    }
-
-    //
-    //
-    //
-- (NSString *) stringByDeletingFirstPathSeparator: (unsigned char) theSeparator
-    {
-        if ([self length] && [self characterAtIndex: 0] == theSeparator)
-        {
-            return [self substringFromIndex: 1];
-        }
-
-        return self;
-    }
-
-    //
-    //
-    //
-- (BOOL) is7bitSafe
-    {
-        NSUInteger i, len;
-
-        // We search for a non-ASCII character.
-        len = [self length];
-
-        for (i = 0; i < len; i++)
-        {
-            if ([self characterAtIndex: i] > 0x007E)
+            else
             {
-                return NO;
+                // We replace &- by &
+                [aMutableData appendCString: "&"];
+                i++;
             }
         }
+        else if (escaped && ch == ',')
+        {
+            [aMutableData appendCString: "/"];
+        }
+        else if (escaped && ch == '-')
+        {
+            [aMutableData appendCString: "-"];
 
+            // We leave the escaped mode.
+            escaped = NO;
+        }
+        else
+        {
+            [aMutableData appendCFormat: @"%c", ch];
+        }
+    }
+
+    return AUTORELEASE([[NSString alloc] initWithData: aMutableData  encoding: NSUTF7StringEncoding]);
+#else
+    return nil;
+#endif
+}
+
+
+//
+//
+//
+- (BOOL) hasREPrefix
+{
+    if ([self hasCaseInsensitivePrefix: @"re:"] ||
+        [self hasCaseInsensitivePrefix: @"re :"] ||
+        [self hasCaseInsensitivePrefix: _(@"PantomimeReferencePrefix")] ||
+        [self hasCaseInsensitivePrefix: _(@"PantomimeResponsePrefix")])
+    {
         return YES;
     }
 
-    //
-    //
-    //
-- (NSData *) dataUsingEncodingFromPart: (CWPart *) thePart
+    return NO;
+}
+
+
+
+//
+//
+//
+- (NSString *) stringByReplacingOccurrencesOfCharacter: (unichar) theTarget
+                                         withCharacter: (unichar) theReplacement
+{
+    NSMutableString *aMutableString;
+    NSUInteger len, i;
+    unichar c;
+
+    if (!theTarget || !theReplacement || theTarget == theReplacement)
     {
-        return [self dataUsingEncodingFromPart: thePart  allowLossyConversion: NO];
+        return self;
     }
 
-    //
-    //
-    //
+    len = [self length];
+
+    aMutableString = [NSMutableString stringWithCapacity: len];
+
+    for (i = 0; i < len; i++)
+    {
+        c = [self characterAtIndex: i];
+
+        if (c == theTarget)
+        {
+            [aMutableString appendFormat: @"%c", theReplacement];
+        }
+        else
+        {
+            [aMutableString appendFormat: @"%c", c];
+        }
+    }
+
+    return aMutableString;
+}
+
+//
+//
+//
+- (NSString *) stringByDeletingLastPathComponentWithSeparator: (unsigned char) theSeparator
+{
+    NSUInteger c;
+    NSInteger i;
+
+    c = [self length];
+
+    for (i = c-1; i >= 0; i--)
+    {
+        if ([self characterAtIndex: i] == theSeparator)
+        {
+            return [self substringToIndex: i];
+        }
+    }
+
+    return @"";
+}
+
+//
+//
+//
+- (NSString *) stringByDeletingFirstPathSeparator: (unsigned char) theSeparator
+{
+    if ([self length] && [self characterAtIndex: 0] == theSeparator)
+    {
+        return [self substringFromIndex: 1];
+    }
+
+    return self;
+}
+
+//
+//
+//
+- (BOOL) is7bitSafe
+{
+    NSUInteger i, len;
+
+    // We search for a non-ASCII character.
+    len = [self length];
+
+    for (i = 0; i < len; i++)
+    {
+        if ([self characterAtIndex: i] > 0x007E)
+        {
+            return NO;
+        }
+    }
+
+    return YES;
+}
+
+//
+//
+//
+- (NSData *) dataUsingEncodingFromPart: (CWPart *) thePart
+{
+    return [self dataUsingEncodingFromPart: thePart  allowLossyConversion: NO];
+}
+
+//
+//
+//
 - (NSData *) dataUsingEncodingFromPart: (CWPart *) thePart
                   allowLossyConversion: (BOOL) lossy
-    {
-        /*
-         #ifdef MACOSX
-         // Use the CF decoding to get the data, bypassing Foundation...
-         CFStringEncoding enc;
-         NSData *data;
+{
+    /*
+     #ifdef MACOSX
+     // Use the CF decoding to get the data, bypassing Foundation...
+     CFStringEncoding enc;
+     NSData *data;
 
-         enc = [isa encodingForPart: thePart convertToNSStringEncoding: NO];
-         data = (NSData *)CFStringCreateExternalRepresentation(NULL, (CFStringRef)self,
-         enc, (lossy) ? '?' : 0);
-         return [data autorelease];
-         #else
-         */
-        return [self dataUsingEncoding: [object_getClass(self)
-                                         encodingForPart: thePart]
-                  allowLossyConversion: lossy];
-        //#endif
-    }
+     enc = [isa encodingForPart: thePart convertToNSStringEncoding: NO];
+     data = (NSData *)CFStringCreateExternalRepresentation(NULL, (CFStringRef)self,
+     enc, (lossy) ? '?' : 0);
+     return [data autorelease];
+     #else
+     */
+    return [self dataUsingEncoding: [object_getClass(self)
+                                     encodingForPart: thePart]
+              allowLossyConversion: lossy];
+    //#endif
+}
 
 
-    //
-    //
-    //
+//
+//
+//
 - (NSData *) dataUsingEncodingWithCharset: (NSString *) theCharset
-    {
-        return [self dataUsingEncodingWithCharset: theCharset  allowLossyConversion: NO];
-    }
+{
+    return [self dataUsingEncodingWithCharset: theCharset  allowLossyConversion: NO];
+}
 
 
-    //
-    //
-    //
+//
+//
+//
 - (NSData *) dataUsingEncodingWithCharset: (NSString *) theCharset
                      allowLossyConversion: (BOOL)lossy
-    {
-        /*
-         #ifdef MACOSX
-         // Use the CF decoding to get the data, bypassing Foundation...
-         CFStringEncoding enc;
-         NSData *data;
+{
+    /*
+     #ifdef MACOSX
+     // Use the CF decoding to get the data, bypassing Foundation...
+     CFStringEncoding enc;
+     NSData *data;
 
-         enc = [isa encodingForCharset: [theCharset dataUsingEncoding: NSASCIIStringEncoding]
-         convertToNSStringEncoding: NO];
-         data = (NSData *)CFStringCreateExternalRepresentation(NULL, (CFStringRef)self,
-         enc, (lossy) ? '?' : 0);
-         return [data autorelease];
-         #else
-         */
-        return [self dataUsingEncoding:
-                [object_getClass(self)
-                 encodingForCharset:
-                 [theCharset dataUsingEncoding: NSASCIIStringEncoding]]
-                  allowLossyConversion: lossy];
-        //#endif
-    }
+     enc = [isa encodingForCharset: [theCharset dataUsingEncoding: NSASCIIStringEncoding]
+     convertToNSStringEncoding: NO];
+     data = (NSData *)CFStringCreateExternalRepresentation(NULL, (CFStringRef)self,
+     enc, (lossy) ? '?' : 0);
+     return [data autorelease];
+     #else
+     */
+    return [self dataUsingEncoding:
+            [object_getClass(self)
+             encodingForCharset:
+             [theCharset dataUsingEncoding: NSASCIIStringEncoding]]
+              allowLossyConversion: lossy];
+    //#endif
+}
 
-    
-    //
-    //
-    //
+
+//
+//
+//
 + (NSString *) stringFromRecipients: (NSArray *) theRecipients
                                type: (PantomimeRecipientType) theRecipientType
+{
+    CWInternetAddress *anInternetAddress;
+    NSMutableString *aMutableString;
+    NSUInteger i, count;
+
+    aMutableString = [[NSMutableString alloc] init];
+    count = [theRecipients count];
+
+    for (i = 0; i < count; i++)
     {
-        CWInternetAddress *anInternetAddress;
-        NSMutableString *aMutableString;
-        NSUInteger i, count;
-        
-        aMutableString = [[NSMutableString alloc] init];
-        count = [theRecipients count];
-        
-        for (i = 0; i < count; i++)
+        anInternetAddress = [theRecipients objectAtIndex: i];
+
+        if ([anInternetAddress type] == theRecipientType)
         {
-            anInternetAddress = [theRecipients objectAtIndex: i];
-            
-            if ([anInternetAddress type] == theRecipientType)
-            {
-                [aMutableString appendFormat: @"%@, ", [anInternetAddress stringValue]];
-            }
+            [aMutableString appendFormat: @"%@, ", [anInternetAddress stringValue]];
         }
-        
-        return AUTORELEASE(aMutableString); 
     }
-    
-    @end
+
+    return AUTORELEASE(aMutableString);
+}
+
+@end
