@@ -140,6 +140,39 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 @protocol CWServiceClient
 
+@required
+
+/*!
+ @method connectionLost:
+ @discussion Invoked when the connection to the peer has been
+ lost without the "user's" intervention.
+ A PantomimeConnectionLost notification is also posted.
+ @param theNotification The notification holding the information.
+ */
+- (void) connectionLost: (NSNotification * _Nullable) theNotification;
+
+/*!
+ @method connectionTimedOut:
+ @discussion Invoked when connecting to a peer on a non-blocking
+ fashion but the associated timeout has expired. It is also
+ invoked when we try to read bytes from the peer or when
+ trying send bytes to it. The method <i>isConnected</i> can
+ be invoked in order if we got this timeout when trying to
+ connect (the value will be set to "NO") or when we are
+ connected but can't read or write anymore.
+ A PantomimeConnectionTimedOut notification is also posted.
+ @param theNotification The notification holding the information.
+ */
+- (void) connectionTimedOut: (NSNotification * _Nullable) theNotification;
+
+/*!
+ @method badResponse:
+ @discussion This is called when a response could not be parsed.
+ A PantomimeBadResponse notification is also posted.
+ @param theNotification The notification holding the information.
+ */
+- (void) badResponse: (NSNotification * _Nullable) theNotification;
+
 @optional
 
 /*!
@@ -174,15 +207,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (void) connectionEstablished: (NSNotification * _Nullable) theNotification;
 
 /*!
-  @method connectionLost:
-  @discussion Invoked when the connection to the peer has been 
-              lost without the "user's" intervention.
-              A PantomimeConnectionLost notification is also posted.
-  @param theNotification The notification holding the information.
-*/
-- (void) connectionLost: (NSNotification * _Nullable) theNotification;
-
-/*!
   @method connectionTerminated:
   @discussion Invoked when the connection has been cleanly terminated
               with the peer.
@@ -191,19 +215,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) connectionTerminated: (NSNotification * _Nullable) theNotification;
 
-/*!
-  @method connectionTimedOut:
-  @discussion Invoked when connecting to a peer on a non-blocking
-              fashion but the associated timeout has expired. It is also
-	      invoked when we try to read bytes from the peer or when
-	      trying send bytes to it. The method <i>isConnected</i> can
-	      be invoked in order if we got this timeout when trying to
-	      connect (the value will be set to "NO") or when we are
-	      connected but can't read or write anymore.
-	      A PantomimeConnectionTimedOut notification is also posted.
-  @param theNotification The notification holding the information.
-*/
-- (void) connectionTimedOut: (NSNotification * _Nullable) theNotification;
+
 
 /*!
   @method service: receivedData:
@@ -305,14 +317,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
  @param theNotification The notification holding the information.
  */
 - (void) actionFailed: (NSNotification * _Nullable) theNotification;
-
-/*!
- @method badResponse:
- @discussion This is called when a response could not be parsed.
- A PantomimeBadResponse notification is also posted.
- @param theNotification The notification holding the information.
- */
-- (void) badResponse: (NSNotification * _Nullable) theNotification;
 
 /*!
  @method idleNewMessages:
