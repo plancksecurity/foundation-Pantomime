@@ -143,7 +143,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 - (void) dealloc
 {
-    INFO(NSStringFromClass([self class]), @"CWIMAPQueueObject.dealloc %@\n", self);
+    INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
     RELEASE(arguments);
     RELEASE(info);
     RELEASE(tag);
@@ -251,8 +251,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) dealloc
 {
-    INFO(NSStringFromClass([self class]), @"CWIMAPStore.dealloc %@\n", self);
-    //INFO(NSStringFromClass([self class]), @"IMAPStore: -dealloc");
+    INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
     RELEASE(_folders);
     RELEASE(_folderStatus);
     RELEASE(_openFolders);
