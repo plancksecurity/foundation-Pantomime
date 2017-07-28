@@ -712,17 +712,19 @@ static inline int has_literal(char *buf, NSUInteger c)
     ASSIGN(_password, thePassword);
     ASSIGN(_mechanism, theMechanism);
 
+    // AUTH=CRAM-MD5
     if (theMechanism && [theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
     {
         [self sendCommand: IMAP_AUTHENTICATE_CRAM_MD5  info: nil  arguments: @"AUTHENTICATE CRAM-MD5"];
         return;
-    }
+    } // AUTH=LOGIN
     else if (theMechanism && [theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
     {
         [self sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
         return;
     }
 
+     // AUTH=PLAIN
     // We must verify if we must quote the password
     if ([thePassword rangeOfCharacterFromSet: [NSCharacterSet punctuationCharacterSet]].length ||
         [thePassword rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]].length)
@@ -1644,7 +1646,12 @@ static inline int has_literal(char *buf, NSUInteger c)
             // This can happen if we got an empty username or password.
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
-
+        case IMAP_AUTHENTICATE_CRAM_MD5:
+        case IMAP_AUTHENTICATE_LOGIN:
+            // Probably wrong credentials.
+            // Example case: 0003 BAD [AUTHENTICATIONFAILED] AUTHENTICATE Invalid credentials
+            AUTHENTICATION_FAILED(_delegate, _mechanism);
+            break;
         case IMAP_SELECT: {
             [_queue removeLastObject];
             [_responsesFromServer removeAllObjects];
