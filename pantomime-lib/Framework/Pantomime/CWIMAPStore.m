@@ -1644,7 +1644,12 @@ static inline int has_literal(char *buf, NSUInteger c)
             // This can happen if we got an empty username or password.
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
-
+        case IMAP_AUTHENTICATE_CRAM_MD5:
+        case IMAP_AUTHENTICATE_LOGIN:
+            // Probably wrong credentials.
+            // Example case: 0003 BAD [AUTHENTICATIONFAILED] AUTHENTICATE Invalid credentials
+            AUTHENTICATION_FAILED(_delegate, _mechanism);
+            break;
         case IMAP_SELECT: {
             [_queue removeLastObject];
             [_responsesFromServer removeAllObjects];
