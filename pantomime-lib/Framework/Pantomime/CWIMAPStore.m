@@ -2287,7 +2287,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     NSString *aFolderName, *aString, *theString;
     NSRange r1, r2;
-    NSUInteger flags, len;
+    NSUInteger len;
 
     theString = [[_responsesFromServer lastObject] asciiString];
 
@@ -2349,43 +2349,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     aString = [theString substringWithRange: NSMakeRange(r1.location+1, r2.location-r1.location-1)];
 
-    // We get all the supported flags, starting with the flags of RFC3348
-    flags = PantomimeHoldsMessages;
-
-    if ([aString length])
-    {
-        if ([aString rangeOfString: @"\\HasChildren" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeHoldsFolders;
-        }
-
-        if ([aString rangeOfString: @"\\NoInferiors" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeNoInferiors;
-        }
-
-        if ([aString rangeOfString: @"\\NoSelect" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeNoSelect;
-        }
-
-        if ([aString rangeOfString: @"\\Marked" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeMarked;
-        }
-
-        if ([aString rangeOfString: @"\\Unmarked" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeUnmarked;
-        }
-    }
+    // We get all the supported flags
+    PantomimeFolderType folderType = [self _folderTypeFor:aString];
 
     // Get Special-Use attributes
     PantomimeSpecialUseMailboxType specialUse = [self _specialUseTypeFor:aString];
 
     // Inform client about potential new folder, so it can be saved.
     NSDictionary *userInfo = @{PantomimeFolderNameKey: aFolderName,
-                               PantomimeFolderFlagsKey: [NSNumber numberWithInteger: flags],
+                               PantomimeFolderFlagsKey: [NSNumber numberWithInteger: folderType],
                                PantomimeFolderSeparatorKey: [NSString stringWithFormat:@"%c",
                                                              [self folderSeparator]],
                                PantomimeFolderSpecialUseKey: [NSNumber numberWithInteger: specialUse]};
@@ -2393,9 +2365,49 @@ static inline int has_literal(char *buf, NSUInteger c)
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
 
-    [_folders setObject: [NSNumber numberWithInteger: flags]  forKey: aFolderName];
+    [_folders setObject: [NSNumber numberWithInteger: folderType]  forKey: aFolderName];
 }
 
+/**
+ Parses mailbox/folder types from a \LIST response.
+ @param listResponse server response for \LIST command for one folder
+ @return folder types
+ */
+- (PantomimeFolderType)_folderTypeFor:(NSString *)listResponse
+{
+    PantomimeFolderType type = PantomimeHoldsMessages;
+
+    // We get all the supported flags, starting with the flags of RFC3348
+    if ([listResponse length])
+    {
+        if ([listResponse rangeOfString: @"\\HasChildren" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeHoldsFolders;
+        }
+
+        if ([listResponse rangeOfString: @"\\NoInferiors" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeNoInferiors;
+        }
+
+        if ([listResponse rangeOfString: @"\\NoSelect" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeNoSelect;
+        }
+
+        if ([listResponse rangeOfString: @"\\Marked" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeMarked;
+        }
+
+        if ([listResponse rangeOfString: @"\\Unmarked" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeUnmarked;
+        }
+    }
+
+    return type;
+}
 
 /**
  Parses Special-Use attributes for one mailboxe/folder from a \LIST response. RFC 6154
