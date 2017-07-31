@@ -54,6 +54,7 @@ NSString * PantomimeFolderInfo = @"PantomimeFolderInfo";
 NSString * PantomimeFolderNameKey = @"PantomimeFolderNameKey";
 NSString * PantomimeFolderFlagsKey = @"PantomimeFolderFlagsKey";
 NSString * PantomimeFolderSeparatorKey = @"PantomimeFolderSeparatorKey";
+NSString * PantomimeFolderSpecialUseKey = @"PantomimeFolderSpecialUseKey";
 
 // CWIMAPFolder notifications
 NSString* PantomimeMessagesCopyCompleted = @"PantomimeMessagesCopyCompleted";

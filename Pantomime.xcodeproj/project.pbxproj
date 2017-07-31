@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */; };
+		1519EA4C1F2F434200B269A8 /* libPantomimeStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */; };
 		1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177381F22072600C83122 /* CWMIMEUtilityTest.m */; };
 		1521773B1F22072600C83122 /* NSString+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177391F22072600C83122 /* NSString+ExtensionsTest.m */; };
 		430A6E2B1DFAAF85006273A5 /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 430A6E291DFAA795006273A5 /* CWLogger.m */; };
@@ -119,6 +121,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStoreTest.m; sourceTree = "<group>"; };
 		152177381F22072600C83122 /* CWMIMEUtilityTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEUtilityTest.m; sourceTree = "<group>"; };
 		152177391F22072600C83122 /* NSString+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ExtensionsTest.m"; sourceTree = "<group>"; };
 		430A6E281DFAA795006273A5 /* CWLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWLogger.h; sourceTree = "<group>"; };
@@ -252,6 +255,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1519EA4C1F2F434200B269A8 /* libPantomimeStatic.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +267,7 @@
 			children = (
 				152177381F22072600C83122 /* CWMIMEUtilityTest.m */,
 				152177391F22072600C83122 /* NSString+ExtensionsTest.m */,
+				1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */,
 			);
 			path = Pantomime;
 			sourceTree = "<group>";
@@ -506,6 +511,7 @@
 					43E854CE1CB7EA9B006867C0 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = SBPJ2E4G5X;
+						LastSwiftMigration = 0830;
 					};
 				};
 			};
@@ -669,6 +675,7 @@
 				433C51B81E64813D00272E19 /* CWMD5.m in Sources */,
 				433C51CB1E658CAA00272E19 /* CWKOI8_U.m in Sources */,
 				433C51B61E64812B00272E19 /* CWMIMEMultipart.m in Sources */,
+				1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */,
 				433C51BD1E658C7D00272E19 /* CWISO8859_10.m in Sources */,
 				433C51B21E6480F800272E19 /* CWPart.m in Sources */,
 				4338E37D1DF1BC050070176B /* CWFolder.m in Sources */,

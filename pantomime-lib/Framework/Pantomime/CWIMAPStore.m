@@ -2291,6 +2291,10 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     theString = [[_responsesFromServer lastObject] asciiString];
 
+    //BUFF:
+    INFO(@"BUFF:", @"theString: %@", theString);
+    //FFUB
+
     //
     // We verify if we got the number of bytes to read instead of the real mailbox name.
     // That happens if we couldn't get the ASCII string of what we read.
@@ -2376,18 +2380,67 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
     }
 
+    // Get Special-Use attributes
+    PantomimeSpecialUseMailboxType specialUse = [self _specialUseTypeFor:aString];
+
     // Inform client about potential new folder, so it can be saved.
     NSDictionary *userInfo = @{PantomimeFolderNameKey: aFolderName,
-                               PantomimeFolderFlagsKey:
-                                   [NSNumber numberWithInteger: flags],
-                               PantomimeFolderSeparatorKey:
-                                   [NSString stringWithFormat:@"%c",
-                                    [self folderSeparator]]};
+                               PantomimeFolderFlagsKey: [NSNumber numberWithInteger: flags],
+                               PantomimeFolderSeparatorKey: [NSString stringWithFormat:@"%c",
+                                                             [self folderSeparator]],
+                               PantomimeFolderSpecialUseKey: [NSNumber numberWithInteger: specialUse]};
     POST_NOTIFICATION(PantomimeFolderNameParsed, self, userInfo);
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
 
     [_folders setObject: [NSNumber numberWithInteger: flags]  forKey: aFolderName];
+}
+
+
+/**
+ Parses Special-Use attributes for one mailboxe/folder from a \LIST response. RFC 6154
+ @param listResponse server response for \LIST command for one folder
+ @return special-use attribute
+ */
+- (PantomimeSpecialUseMailboxType)_specialUseTypeFor:(NSString *)listResponse
+{
+    PantomimeSpecialUseMailboxType specialUse = PantomimeSpecialUseMailboxNormal;
+    // We get all the special-use attributes (RFC3348)
+    specialUse = PantomimeSpecialUseMailboxNormal;
+
+    if ([listResponse length])
+    {
+        if ([listResponse rangeOfString: @"\\All" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxAll;
+        }
+        else if ([listResponse rangeOfString: @"\\Archive" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxArchive;
+        }
+        else if ([listResponse rangeOfString: @"\\Drafts" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxDrafts;
+        }
+        else if ([listResponse rangeOfString: @"\\Flagged" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxFlagged;
+        }
+        else if ([listResponse rangeOfString: @"\\Junk" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxJunk;
+        }
+        else if ([listResponse rangeOfString: @"\\Sent" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxSent;
+        }
+        else if ([listResponse rangeOfString: @"\\Trash" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxTrash;
+        }
+    }
+
+    return specialUse;
 }
 
 
