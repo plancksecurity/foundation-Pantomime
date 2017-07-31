@@ -15,6 +15,7 @@
  */
 @interface CWIMAPStore (Testing)
 - (PantomimeSpecialUseMailboxType)_specialUseTypeFor:(NSString *)listResponse;
+- (PantomimeFolderType)_folderTypeFor:(NSString *)listResponse;
 @end
 
 #pragma mark - CWIMAPStoreTest
@@ -72,6 +73,63 @@
     PantomimeSpecialUseMailboxType testee = [store _specialUseTypeFor:serverResponse];
 
     XCTAssertEqual(PantomimeSpecialUseMailboxTrash, testee);
+}
+
+#pragma mark - testSpecialUseTypeFor
+
+- (void)testFolderTypeFor_HasChildren {
+    CWIMAPStore *store = [CWIMAPStore new];
+    NSString *serverResponse = @"* LIST (\\All \\HasChildren) \"/\" \"Bulk Mail\"";
+    PantomimeFolderType testee = [store _folderTypeFor:serverResponse];
+    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeHoldsFolders;
+
+    XCTAssertEqual(expected, testee);
+}
+
+- (void)testFolderTypeFor_HoldsMessages {
+    CWIMAPStore *store = [CWIMAPStore new];
+    NSString *serverResponse = @"* LIST (\\All) \"/\" \"Bulk Mail\"";
+    PantomimeFolderType testee = [store _folderTypeFor:serverResponse];
+    PantomimeFolderType expected = PantomimeHoldsMessages;
+
+    XCTAssertEqual(expected, testee);
+}
+
+- (void)testFolderTypeFor_NoInferiors {
+    CWIMAPStore *store = [CWIMAPStore new];
+    NSString *serverResponse = @"* LIST (\\All \\NoInferiors) \"/\" \"Bulk Mail\"";
+    PantomimeFolderType testee = [store _folderTypeFor:serverResponse];
+    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeNoInferiors;
+
+    XCTAssertEqual(expected, testee);
+}
+
+// The current implementation supposes that all folder potentially hold messages
+- (void)testFolderTypeFor_NoSelect {
+    CWIMAPStore *store = [CWIMAPStore new];
+    NSString *serverResponse = @"* LIST (\\All \\NoSelect) \"/\" \"Bulk Mail\"";
+    PantomimeFolderType testee = [store _folderTypeFor:serverResponse];
+    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeNoSelect;
+
+    XCTAssertEqual(expected, testee);
+}
+
+- (void)testFolderTypeFor_Marked {
+    CWIMAPStore *store = [CWIMAPStore new];
+    NSString *serverResponse = @"* LIST (\\All \\Marked) \"/\" \"Bulk Mail\"";
+    PantomimeFolderType testee = [store _folderTypeFor:serverResponse];
+    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeMarked;
+
+    XCTAssertEqual(expected, testee);
+}
+
+- (void)testFolderTypeFor_Unmarked {
+    CWIMAPStore *store = [CWIMAPStore new];
+    NSString *serverResponse = @"* LIST (\\All \\Unmarked) \"/\" \"Bulk Mail\"";
+    PantomimeFolderType testee = [store _folderTypeFor:serverResponse];
+    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeUnmarked;
+
+    XCTAssertEqual(expected, testee);
 }
 
 @end
