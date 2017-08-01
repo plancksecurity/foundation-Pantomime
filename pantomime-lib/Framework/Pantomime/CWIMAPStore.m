@@ -1026,7 +1026,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
                                            initWithCommand: theCommand  arguments: theString
                                            tag: [self nextTag]  info: theInfo];
-        RELEASE(aString);
 
         [_queue insertObject: aQueueObject  atIndex: 0];
         RELEASE(aQueueObject);
@@ -1037,7 +1036,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         // dequeue them one by one. Otherwise, we run it immediately.
         if ([_queue count] > 1)
         {
-            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", aString);
+            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
             return;
         }
 
