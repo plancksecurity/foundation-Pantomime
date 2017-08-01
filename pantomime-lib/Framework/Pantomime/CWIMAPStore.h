@@ -173,9 +173,9 @@ extern NSString * _Nonnull const PantomimeFolderStatusFailed;
 extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 
 /*!
- @const PantomimeEnterIdle
+ @const PantomimeIdleEntered
  */
-extern NSString * _Nonnull const PantomimeEnterIdle;
+extern NSString * _Nonnull const PantomimeIdleEntered;
 
 /*!
  @const PantomimeIdleNewMessages

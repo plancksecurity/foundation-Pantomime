@@ -180,12 +180,12 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.readStream read:buf maxLength:len];
 
-    /*[self.logger infoComponent:comp
+    [self.logger infoComponent:comp
                        message:[NSString
                                 stringWithFormat:@"< %@:%d %ld: \"%@\"",
                                 self.name, self.port,
                                 (long)count,
-                                [self bufferToString:buf length:count]]];*/
+                                [self bufferToString:buf length:count]]];
 
     return count;
 }
@@ -197,12 +197,12 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.writeStream write:buf maxLength:len];
 
-    /*[self.logger infoComponent:comp
+    [self.logger infoComponent:comp
                        message:[NSString
                                 stringWithFormat:@"> %@:%d %ld: \"%@\"",
                                 self.name, self.port,
                                 (long)count,
-                                [self bufferToString:buf length:len]]];*/
+                                [self bufferToString:buf length:len]]];
 
     return count;
 }

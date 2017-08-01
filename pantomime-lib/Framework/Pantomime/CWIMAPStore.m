@@ -448,6 +448,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                     break;
                 } else if (_lastCommand == IMAP_IDLE) {
                     INFO(NSStringFromClass([self class]), @"entering IDLE");
+                    POST_NOTIFICATION(PantomimeIdleEntered, self, self.currentQueueObject.info);
+                    PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
                 }
             }
 
