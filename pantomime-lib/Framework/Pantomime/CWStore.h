@@ -119,7 +119,7 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
 	      are returned, not actual CWFolder subclass instances.
   @result The list of folder names.
 */
-- (NSEnumerator * _Nullable) folderEnumerator; //BUFF: 
+- (NSEnumerator * _Nullable) folderEnumerator;
 
 /*!
   @method subscribedFolderEnumerator

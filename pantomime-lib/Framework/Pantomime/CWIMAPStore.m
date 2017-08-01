@@ -2291,19 +2291,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     theString = [[_responsesFromServer lastObject] asciiString];
 
-    //BUFF:
-    INFO(@"BUFF:", @"theString: %@", theString);
-//    if ([theString isEqualToString:@"* LIST (\\Drafts \\HasNoChildren) \"/\" \"Draft\""])
-//    {
-//        theString = @"* LIST (\\Drafts \\HasNoChildren) \"/\" \"MyPersonalDraf\"";
-//    }
-//    if ([theString isEqualToString:@"* LIST (\\Sent \\HasNoChildren) \"/\" \"Sent\""])
-//    {
-//        theString = @"* LIST (\\Sent \\HasNoChildren) \"/\" \"MyPersSent\"";
-//    }
-
-    //FFUB
-
     //
     // We verify if we got the number of bytes to read instead of the real mailbox name.
     // That happens if we couldn't get the ASCII string of what we read.
@@ -2373,7 +2360,7 @@ static inline int has_literal(char *buf, NSUInteger c)
      in the capabilities, as not all server promote this (for instance Yahoo!).
      */
     PantomimeSpecialUseMailboxType specialUse = [self _specialUseTypeForServerResponse:aString];
-    if (specialUse != PantomimeSpecialUseMailboxNormal) //BUFF: try to add PantomimeSpecialUseMailboxUnknown after up & running
+    if (specialUse != PantomimeSpecialUseMailboxNormal)
     {
         // A special-use mailbox purpose has been reported by the server.
         userInfo[PantomimeFolderSpecialUseKey] = [NSNumber numberWithInteger: specialUse];
