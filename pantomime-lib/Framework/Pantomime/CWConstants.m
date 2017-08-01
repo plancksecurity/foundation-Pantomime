@@ -73,7 +73,7 @@ NSString *PantomimeActionFailed = @"PantomimeActionFailed";
 NSString *PantomimeBadResponseInfoKey = @"PantomimeBadResponseInfoKey";
 NSString *PantomimeErrorInfo = @"PantomimeErrorInfo";
 NSString *PantomimeBadResponse = @"PantomimeBadResponse";
-NSString *PantomimeEnterIdle = @"PantomimeEnterIdle";
+NSString *PantomimeIdleEntered = @"PantomimeIdleEntered";
 NSString *PantomimeIdleNewMessages = @"PantomimeIdleNewMessages";
 NSString *PantomimeIdleFinished = @"PantomimeIdleFinished";
 

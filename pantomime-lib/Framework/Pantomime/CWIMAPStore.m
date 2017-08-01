@@ -448,6 +448,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                     break;
                 } else if (_lastCommand == IMAP_IDLE) {
                     INFO(NSStringFromClass([self class]), @"entering IDLE");
+                    POST_NOTIFICATION(PantomimeIdleEntered, self, self.currentQueueObject.info);
+                    PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
                 }
             }
 
@@ -1026,7 +1028,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
                                            initWithCommand: theCommand  arguments: theString
                                            tag: [self nextTag]  info: theInfo];
-        RELEASE(aString);
 
         [_queue insertObject: aQueueObject  atIndex: 0];
         RELEASE(aQueueObject);
@@ -1037,7 +1038,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         // dequeue them one by one. Otherwise, we run it immediately.
         if ([_queue count] > 1)
         {
-            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", aString);
+            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
             return;
         }
 

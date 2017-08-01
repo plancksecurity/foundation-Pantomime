@@ -319,6 +319,15 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (void) actionFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
+ @method idleEntered:
+ @discussion Called when IDLE (as requested by the client) has been entered,
+ that is the server has sent the continuation request and is now waiting for "DONE".
+ A PantomimeIdleEntered notification is also posted.
+ @param theNotification The notification holding the information, which in this case will be nil.
+ */
+- (void) idleEntered: (NSNotification * _Nullable) theNotification;
+
+/*!
  @method idleNewMessages:
  @discussion Called when during IDLE the server signals at least 1 new message via EXISTS.
  A PantomimeIdleNewMessages notification is also posted.
