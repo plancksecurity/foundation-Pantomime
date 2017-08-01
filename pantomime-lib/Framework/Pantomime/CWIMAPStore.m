@@ -2363,11 +2363,10 @@ static inline int has_literal(char *buf, NSUInteger c)
     if (specialUse != PantomimeSpecialUseMailboxNormal)
     {
         // A special-use mailbox purpose has been reported by the server.
-        userInfo[PantomimeFolderSpecialUseKey] = [NSNumber numberWithInteger: specialUse];
+        userInfo[PantomimeFolderSpecialUseKey] = [NSNumber numberWithInteger: specialUse];//FIXME: After creating a new Pantomime enum approach, chache this to send the enum instead of NSNumber. To avoid parsing, e.g in message model, cd folder from pantomime int
     }
-    //BUFF: make enum NSEnum to avoid parsing in message model
-    // Inform client about potential new folder, so it can be saved.
 
+    // Inform client about potential new folder, so it can be saved.
     POST_NOTIFICATION(PantomimeFolderNameParsed, self, userInfo);
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
