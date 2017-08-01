@@ -2293,6 +2293,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     //BUFF:
     INFO(@"BUFF:", @"theString: %@", theString);
+//    if ([theString isEqualToString:@"* LIST (\\Drafts \\HasNoChildren) \"/\" \"Draft\""])
+//    {
+//        theString = @"* LIST (\\Drafts \\HasNoChildren) \"/\" \"MyPersonalDraf\"";
+//    }
+//    if ([theString isEqualToString:@"* LIST (\\Sent \\HasNoChildren) \"/\" \"Sent\""])
+//    {
+//        theString = @"* LIST (\\Sent \\HasNoChildren) \"/\" \"MyPersSent\"";
+//    }
+
     //FFUB
 
     //
@@ -2350,17 +2359,28 @@ static inline int has_literal(char *buf, NSUInteger c)
     aString = [theString substringWithRange: NSMakeRange(r1.location+1, r2.location-r1.location-1)];
 
     // We get all the supported flags
-    PantomimeFolderType folderType = [self _folderTypeFor:aString];
+    PantomimeFolderType folderType = [self _folderTypeForServerResponse:aString];
 
-    // Get Special-Use attributes
-    PantomimeSpecialUseMailboxType specialUse = [self _specialUseTypeFor:aString];
-
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{PantomimeFolderNameKey: aFolderName,
+                                       PantomimeFolderFlagsKey: [NSNumber numberWithInteger: folderType],
+                                       PantomimeFolderSeparatorKey: [NSString stringWithFormat:@"%c",
+                                                                     [self folderSeparator]]}
+                                     ];
+    /* Get Special-Use attributes
+     According to RFC 6154 servers supporting spacial-use mailboxes send the CREATE-SPECIAL-USE capatibility.
+     We alway check for those attributes even the server does not mention "CREATE-SPECIAL-USE"
+     in the capabilities, as not all server promote this (for instance Yahoo!).
+     */
+    PantomimeSpecialUseMailboxType specialUse = [self _specialUseTypeForServerResponse:aString];
+    if (specialUse != PantomimeSpecialUseMailboxNormal) //BUFF: try to add PantomimeSpecialUseMailboxUnknown after up & running
+    {
+        // A special-use mailbox purpose has been reported by the server.
+        userInfo[PantomimeFolderSpecialUseKey] = [NSNumber numberWithInteger: specialUse];
+    }
+    //BUFF: make enum NSEnum to avoid parsing in message model
     // Inform client about potential new folder, so it can be saved.
-    NSDictionary *userInfo = @{PantomimeFolderNameKey: aFolderName,
-                               PantomimeFolderFlagsKey: [NSNumber numberWithInteger: folderType],
-                               PantomimeFolderSeparatorKey: [NSString stringWithFormat:@"%c",
-                                                             [self folderSeparator]],
-                               PantomimeFolderSpecialUseKey: [NSNumber numberWithInteger: specialUse]};
+
     POST_NOTIFICATION(PantomimeFolderNameParsed, self, userInfo);
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
@@ -2373,7 +2393,7 @@ static inline int has_literal(char *buf, NSUInteger c)
  @param listResponse server response for \LIST command for one folder
  @return folder types
  */
-- (PantomimeFolderType)_folderTypeFor:(NSString *)listResponse
+- (PantomimeFolderType)_folderTypeForServerResponse:(NSString *)listResponse
 {
     PantomimeFolderType type = PantomimeHoldsMessages;
 
@@ -2410,11 +2430,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 /**
- Parses Special-Use attributes for one mailboxe/folder from a \LIST response. RFC 6154
+ Parses Special-Use attributes for one mailboxe/folder from a \LIST response. RFC 6154.
+
  @param listResponse server response for \LIST command for one folder
  @return special-use attribute
  */
-- (PantomimeSpecialUseMailboxType)_specialUseTypeFor:(NSString *)listResponse
+- (PantomimeSpecialUseMailboxType)_specialUseTypeForServerResponse:(NSString *)listResponse
 {
     PantomimeSpecialUseMailboxType specialUse = PantomimeSpecialUseMailboxNormal;
     // We get all the special-use attributes (RFC3348)
