@@ -266,6 +266,57 @@ typedef enum
   PantomimeUnmarked = 32
 } PantomimeFolderType;
 
+/*!
+ @typedef PantomimeSpecialUseMailboxType
+ @abstract Special-Use attributes for mailboxes/folders. RFC 6154.
+ @discussion This enum lists the potential Special-Uses of mailbox / folder.
+ Even it is not defined in RFC 6154, common sense suggests a folder can have no or one special-use, thus the 
+ flags can not be combined using a bitwise OR.
+ 
+ @constant PantomimeSpecialUseMailboxNormal This mailbox has no special-use
+
+ @constant PantomimeSpecialUseMailboxAll This mailbox presents all messages in the user's message store.
+ Implementations MAY omit some messages, such as, perhaps, those in \Trash and \Junk.
+ When this special use is supported, it is almost certain to represent a virtual mailbox.
+
+ @constant PantomimeSpecialUseMailboxArchive This mailbox is used to archive messages.  
+ The meaning of an "archival" mailbox is server-dependent; typically, it will be used to get messages out 
+ of the inbox, or otherwise keep them out of the user's way, while still making them accessible.
+
+ @constant PantomimeSpecialUseMailboxDrafts This mailbox is used to hold draft messages
+ Typically messages that are being composed but have not yet been sent.  In some server implementations, 
+ this might be a virtual mailbox, containing messages from other mailboxes that are marked with the "\Draft" 
+ message flag.  Alternatively, this might just be advice that a client put drafts here.
+
+ @constant PantomimeSpecialUseMailboxFlagged This mailbox presents all messages marked in some way as
+ "important".  When this special use is supported, it is likely
+ to represent a virtual mailbox collecting messages (from other
+ mailboxes) that are marked with the "\Flagged" message flag.
+
+ @constant PantomimeSpecialUseMailboxJunk This mailbox is where messages deemed to be junk mail are held.
+ Some server implementations might put messages here automatically.  
+ Alternatively, this might just be advice to a client-side spam filter.
+
+ @constant PantomimeSpecialUseMailboxSent This mailbox is used to hold copies of messages that have been
+ sent.  Some server implementations might put messages here
+ automatically.  Alternatively, this might just be advice that a
+ client save sent messages here.
+
+ @constant PantomimeSpecialUseMailboxTrash This mailbox is used to hold messages that have been deleted or
+ marked for deletion.  
+ In some server implementations, this might be a virtual mailbox, containing messages from other mailboxes.
+ */
+typedef enum
+{
+    PantomimeSpecialUseMailboxNormal = 0,
+    PantomimeSpecialUseMailboxAll,
+    PantomimeSpecialUseMailboxArchive,
+    PantomimeSpecialUseMailboxDrafts,
+    PantomimeSpecialUseMailboxFlagged,
+    PantomimeSpecialUseMailboxJunk,
+    PantomimeSpecialUseMailboxSent,
+    PantomimeSpecialUseMailboxTrash
+} PantomimeSpecialUseMailboxType;
 
 /*!
   @typedef PantomimeSearchMask
@@ -412,5 +463,10 @@ extern NSString * _Nonnull const PantomimeMessagesKey;
  Dictionary key for the flags (for UID STORE commands).
  */
 extern NSString * _Nonnull const PantomimeFlagsKey;
+
+/**
+ Dictionary key for special-use attributes.
+ */
+extern NSString * _Nonnull const PantomimeFolderSpecialUseKey;
 
 #endif // _Pantomime_H_CWConstants

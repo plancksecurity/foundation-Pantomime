@@ -2288,7 +2288,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     NSString *aFolderName, *aString, *theString;
     NSRange r1, r2;
-    NSUInteger flags, len;
+    NSUInteger len;
 
     theString = [[_responsesFromServer lastObject] asciiString];
 
@@ -2346,49 +2346,121 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     aString = [theString substringWithRange: NSMakeRange(r1.location+1, r2.location-r1.location-1)];
 
-    // We get all the supported flags, starting with the flags of RFC3348
-    flags = PantomimeHoldsMessages;
+    // We get all the supported flags
+    PantomimeFolderType folderType = [self _folderTypeForServerResponse:aString];
 
-    if ([aString length])
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{PantomimeFolderNameKey: aFolderName,
+                                       PantomimeFolderFlagsKey: [NSNumber numberWithInteger: folderType],
+                                       PantomimeFolderSeparatorKey: [NSString stringWithFormat:@"%c",
+                                                                     [self folderSeparator]]}
+                                     ];
+    /* Get Special-Use attributes
+     According to RFC 6154 servers supporting spacial-use mailboxes send the CREATE-SPECIAL-USE capatibility.
+     We alway check for those attributes even the server does not mention "CREATE-SPECIAL-USE"
+     in the capabilities, as not all server promote this (for instance Yahoo!).
+     */
+    PantomimeSpecialUseMailboxType specialUse = [self _specialUseTypeForServerResponse:aString];
+    if (specialUse != PantomimeSpecialUseMailboxNormal)
     {
-        if ([aString rangeOfString: @"\\HasChildren" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeHoldsFolders;
-        }
-
-        if ([aString rangeOfString: @"\\NoInferiors" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeNoInferiors;
-        }
-
-        if ([aString rangeOfString: @"\\NoSelect" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeNoSelect;
-        }
-
-        if ([aString rangeOfString: @"\\Marked" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeMarked;
-        }
-
-        if ([aString rangeOfString: @"\\Unmarked" options: NSCaseInsensitiveSearch].length)
-        {
-            flags = flags|PantomimeUnmarked;
-        }
+        // A special-use mailbox purpose has been reported by the server.
+        userInfo[PantomimeFolderSpecialUseKey] = [NSNumber numberWithInteger: specialUse];//FIXME: After creating a new Pantomime enum approach, chache this to send the enum instead of NSNumber. To avoid parsing, e.g in message model, cd folder from pantomime int
     }
 
     // Inform client about potential new folder, so it can be saved.
-    NSDictionary *userInfo = @{PantomimeFolderNameKey: aFolderName,
-                               PantomimeFolderFlagsKey:
-                                   [NSNumber numberWithInteger: flags],
-                               PantomimeFolderSeparatorKey:
-                                   [NSString stringWithFormat:@"%c",
-                                    [self folderSeparator]]};
     POST_NOTIFICATION(PantomimeFolderNameParsed, self, userInfo);
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
 
-    [_folders setObject: [NSNumber numberWithInteger: flags]  forKey: aFolderName];
+    [_folders setObject: [NSNumber numberWithInteger: folderType]  forKey: aFolderName];
+}
+
+/**
+ Parses mailbox/folder types from a \LIST response.
+ @param listResponse server response for \LIST command for one folder
+ @return folder types
+ */
+- (PantomimeFolderType)_folderTypeForServerResponse:(NSString *)listResponse
+{
+    PantomimeFolderType type = PantomimeHoldsMessages;
+
+    // We get all the supported flags, starting with the flags of RFC3348
+    if ([listResponse length])
+    {
+        if ([listResponse rangeOfString: @"\\HasChildren" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeHoldsFolders;
+        }
+
+        if ([listResponse rangeOfString: @"\\NoInferiors" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeNoInferiors;
+        }
+
+        if ([listResponse rangeOfString: @"\\NoSelect" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeNoSelect;
+        }
+
+        if ([listResponse rangeOfString: @"\\Marked" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeMarked;
+        }
+
+        if ([listResponse rangeOfString: @"\\Unmarked" options: NSCaseInsensitiveSearch].length)
+        {
+            type = type|PantomimeUnmarked;
+        }
+    }
+
+    return type;
+}
+
+/**
+ Parses Special-Use attributes for one mailboxe/folder from a \LIST response. RFC 6154.
+
+ @param listResponse server response for \LIST command for one folder
+ @return special-use attribute
+ */
+- (PantomimeSpecialUseMailboxType)_specialUseTypeForServerResponse:(NSString *)listResponse
+{
+    PantomimeSpecialUseMailboxType specialUse = PantomimeSpecialUseMailboxNormal;
+    // We get all the special-use attributes (RFC3348)
+    specialUse = PantomimeSpecialUseMailboxNormal;
+
+    if ([listResponse length])
+    {
+        if ([listResponse rangeOfString: @"\\All" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxAll;
+        }
+        else if ([listResponse rangeOfString: @"\\Archive" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxArchive;
+        }
+        else if ([listResponse rangeOfString: @"\\Drafts" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxDrafts;
+        }
+        else if ([listResponse rangeOfString: @"\\Flagged" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxFlagged;
+        }
+        else if ([listResponse rangeOfString: @"\\Junk" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxJunk;
+        }
+        else if ([listResponse rangeOfString: @"\\Sent" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxSent;
+        }
+        else if ([listResponse rangeOfString: @"\\Trash" options: NSCaseInsensitiveSearch].length)
+        {
+            specialUse = PantomimeSpecialUseMailboxTrash;
+        }
+    }
+
+    return specialUse;
 }
 
 
