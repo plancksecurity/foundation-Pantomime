@@ -28,8 +28,22 @@
     XCTAssertFalse([[msg content] isKindOfClass:[CWMIMEMultipart class]]);
     XCTAssertTrue([[msg content] isKindOfClass:[NSData class]]);
     XCTAssertNil(msg.contentType);
-    XCTAssertTrue([msg.subject isEqualToString:@"Failure Notice"]);
     XCTAssertEqualObjects(msg.subject, @"Failure Notice");
+}
+
+/// IOS-421_messed up encoding on special characters ("â" in this specific case)
+- (void)testMessageHeapOverflowCanBeParsed
+{
+    NSMutableData *emailData = [[TestUtil loadDataWithFileName:@"IOS-421_MessageHeapOverflow.txt"]
+                                mutableCopy];
+    [emailData replaceCRLFWithLF]; // This is what pantomime does with everything it receives
+    XCTAssertNotNil(emailData);
+    CWIMAPMessage *msg = [[CWIMAPMessage alloc] initWithData:emailData];
+    XCTAssertNotNil(msg);
+    XCTAssertTrue([msg.content isKindOfClass:CWMIMEMultipart.class]);
+    XCTAssertEqualObjects(msg.contentType, @"multipart/signed");
+    XCTAssertEqualObjects(msg.subject, @"test");
+    XCTAssertEqualObjects(msg.from.address, @"Hernâni Marques (p≡p foundation)");
 }
 
 @end
