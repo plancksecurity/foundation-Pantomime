@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */; };
 		1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */; };
 		1519EA4C1F2F434200B269A8 /* libPantomimeStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */; };
 		1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177381F22072600C83122 /* CWMIMEUtilityTest.m */; };
@@ -121,6 +122,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-421_MessageHeapOverflow.txt"; sourceTree = "<group>"; };
 		1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStoreTest.m; sourceTree = "<group>"; };
 		152177381F22072600C83122 /* CWMIMEUtilityTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEUtilityTest.m; sourceTree = "<group>"; };
 		152177391F22072600C83122 /* NSString+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ExtensionsTest.m"; sourceTree = "<group>"; };
@@ -262,6 +264,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1505D6041F3CB1B100A04A0B /* validMultipartEmails */ = {
+			isa = PBXGroup;
+			children = (
+				1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */,
+			);
+			path = validMultipartEmails;
+			sourceTree = "<group>";
+		};
 		152177371F22072600C83122 /* Pantomime */ = {
 			isa = PBXGroup;
 			children = (
@@ -275,6 +285,7 @@
 		433C51A61E647EBD00272E19 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1505D6041F3CB1B100A04A0B /* validMultipartEmails */,
 				433C51A71E647EBD00272E19 /* MailParsingAttachments.txt */,
 			);
 			path = Resources;
@@ -539,6 +550,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */,
 				433C51A81E647EBD00272E19 /* MailParsingAttachments.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
