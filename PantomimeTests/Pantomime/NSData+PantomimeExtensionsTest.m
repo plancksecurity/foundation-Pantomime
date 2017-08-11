@@ -211,6 +211,43 @@
     [self assureEqualStrings:testees strings:realComponents];
 }
 
+-(void)testComponentsSeparatedByCString_emptyString
+{
+    NSString *seperator = @"ASCII_AbcdEfg12345678!";
+    NSString *wholeStr = @"";
+    NSData *wholeData = [wholeStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *realComponents = [wholeStr componentsSeparatedByString:seperator];
+    const char *cSeperator = [seperator UTF8String];
+
+    NSArray *testees = [wholeData componentsSeparatedByCString:cSeperator];
+    [self assureEqualStrings:testees strings:realComponents];
+}
+
+-(void)testComponentsSeparatedByCString_emptySearchString
+{
+    NSString *seperator = @"";
+    NSString *wholeStr = [NSString stringWithFormat:@"%@%@%@", self.nastyUtf8String, seperator,
+                          self.nastyUtf8String];
+    NSData *wholeData = [wholeStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *realComponents = [wholeStr componentsSeparatedByString:seperator];
+    const char *cSeperator = [seperator UTF8String];
+
+    NSArray *testees = [wholeData componentsSeparatedByCString:cSeperator];
+    [self assureEqualStrings:testees strings:realComponents];
+}
+
+-(void)testComponentsSeparatedByCString_emptyStringAndSearchString
+{
+    NSString *seperator = @"";
+    NSString *wholeStr = @"";
+    NSData *wholeData = [wholeStr dataUsingEncoding:NSUTF8StringEncoding];
+    NSArray *realComponents = [wholeStr componentsSeparatedByString:seperator];
+    const char *cSeperator = [seperator UTF8String];
+
+    NSArray *testees = [wholeData componentsSeparatedByCString:cSeperator];
+    [self assureEqualStrings:testees strings:realComponents];
+}
+
 #pragma mark RangeOfCString Helper
 
 - (void)assureEqualStrings:(NSArray<NSData*> *)datas strings:(NSArray<NSString*> *)strings
