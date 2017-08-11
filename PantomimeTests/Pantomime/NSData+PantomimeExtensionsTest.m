@@ -11,6 +11,7 @@
 
 @interface NSData_PantomimeExtensionsTest : XCTestCase
 @property (strong, nonatomic) NSString *nastyUtf8String;
+@property (strong, nonatomic) NSData *dataNastyUtf8String;
 @property (strong, nonatomic) NSString *emptyString;
 
 @property (strong, nonatomic) NSString *searchStr;
@@ -35,6 +36,7 @@
 {
     [super setUp];
     self.nastyUtf8String = @"Å0ä9Å0å4Å0ç0®¶®®Å0ä5®∫Å0é1Å0ç9®•®≤®π®¥Å0ã4®±®™Å0ä7®¨Å0ä6Å0ê1®©®ÆÅ0Ü2®∞Å0ã2Å0ã0Å0ã1Å0ã3Å0ì4®≠`^[+*]Å0Ö7°ß{Å0ä4Å0á5}-_®C.:°≠,;Å6•7Å0Ñ3Å0Ü7Å6•50=°Ÿ9)°±8(°∞7/°¬6&Å0Ö15%°ﬁ4$Å0Ñ43°§#2°±@1!|";
+    self.dataNastyUtf8String = [self.nastyUtf8String dataUsingEncoding:NSUTF8StringEncoding];
     self.emptyString = @"";
 
     NSString *defaultSearchString = @"defaultSearchString";
@@ -50,6 +52,8 @@
     [self assertValidSearchResultsCaseSensitive];
     [self assertValidSearchResultsCaseInsensitive];
 }
+
+#pragma mark invalid string
 
 - (void)testRangeOfCString_stringShorterSearchString
 {
@@ -71,6 +75,8 @@
     XCTAssertFalse([self hasBeenFound: [strData rangeOfCString: cSearchStr options:NSCaseInsensitiveSearch]]);
 }
 
+#pragma mark empty string
+
 - (void)testRangeOfCString_emptySearchString
 {
     NSString *searchStr = @"";
@@ -83,7 +89,6 @@
 
 - (void)testRangeOfCString_nullSearchString
 {
-    NSString *searchStr = nil;
     const char *cSearchStr = NULL;
     NSString *strg = @"asciiStr!";
     NSData *strData = [strg dataUsingEncoding:NSUTF8StringEncoding];
@@ -101,6 +106,7 @@
     XCTAssertFalse([self hasBeenFound: [strData rangeOfCString: cSearchStr options:0]]);
 }
 
+//IOS-196
 - (void)testRangeOfCString_emptyStringAndEmptySearchString
 {
     NSString *searchStr = @"";
@@ -109,6 +115,33 @@
     NSData *strData = [strg dataUsingEncoding:NSUTF8StringEncoding];
 
     XCTAssertFalse([self hasBeenFound: [strData rangeOfCString: cSearchStr options:0]]);
+}
+
+#pragma mark escapees
+//IOS-196
+- (void)testRangeOfCString_escapedChars
+{
+    NSArray *escapees = @[@"\n",
+                         @"\t",
+                         @"\"",
+                         @"\0",
+                         @"\\",
+                         @"\b",
+                         @"\f",
+                         @"\r",
+                         @"\v"];
+    for (NSString *escaped in escapees) {
+        XCTAssertTrue([self hasBeenFound:
+                       [self.dataContainingSearchStr rangeOfCString:self.cSearchStr options:0]]);
+        XCTAssertFalse([self hasBeenFound:
+                       [self.dataNastyUtf8String rangeOfCString:self.cSearchStr options:0]]);
+        XCTAssertTrue([self hasBeenFound:
+                       [self.dataContainingSearchStr rangeOfCString:self.cSearchStr
+                                                            options:NSCaseInsensitiveSearch]]);
+        XCTAssertFalse([self hasBeenFound:
+                        [self.dataNastyUtf8String rangeOfCString:self.cSearchStr
+                                                         options:NSCaseInsensitiveSearch]]);
+    }
 }
 
 #pragma mark RangeOfCString Helper
