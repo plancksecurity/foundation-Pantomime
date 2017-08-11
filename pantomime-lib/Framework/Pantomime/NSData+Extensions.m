@@ -408,18 +408,17 @@ static const char *hexDigit = "0123456789ABCDEF";
 	       range: NSMakeRange(0,[self length])];
 }
 
-
 //
 //
 //
 -(NSRange) rangeOfCString: (const char *) theCString
-		  options: (NSUInteger) theOptions
-		    range: (NSRange) theRange
+                  options: (NSUInteger) theOptions
+                    range: (NSRange) theRange
 {
   const char *b, *bytes;
   NSUInteger i, len, slen;
   
-    if (!theCString || theRange.length == 0) {
+    if (!theCString || theRange.length == 0 || strcmp(theCString, "") == 0) {
         return NSMakeRange(NSNotFound,0);
     }
 
@@ -439,7 +438,7 @@ static const char *hexDigit = "0123456789ABCDEF";
     }
 
 #warning this could be optimized
-  if (theOptions == NSCaseInsensitiveSearch)
+  if (theOptions & NSCaseInsensitiveSearch)
     {
       i = theRange.location;
       b += i;
@@ -465,7 +464,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 	    }
 	}
     }
-  
+
   return NSMakeRange(NSNotFound,0);
 }
 
@@ -793,10 +792,6 @@ static const char *hexDigit = "0123456789ABCDEF";
   return NSOrderedDescending;
 }
 
-
-//
-//
-//
 - (NSArray *) componentsSeparatedByCString: (const char *) theCString
 {
   NSMutableArray *aMutableArray;
@@ -824,6 +819,7 @@ static const char *hexDigit = "0123456789ABCDEF";
   
   return AUTORELEASE(aMutableArray);
 }
+
 
 //
 //

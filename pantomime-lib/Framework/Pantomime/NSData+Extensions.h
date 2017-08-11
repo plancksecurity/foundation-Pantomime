@@ -99,6 +99,7 @@
   @method rangeOfCString:
   @discussion Invokes rangeOfCString:options:range: with no option
               and the complete range.
+  @note Does not support UTF8 encoding for NSCaseInsensitiveSearch
   @param theCString The C string to search for.
   @result The associated range of the C string in the receiver.
 */
@@ -108,6 +109,7 @@
   @method rangeOfCString:
   @discussion Invokes rangeOfCString:options:range: with <i>theOptions</i>
               and the complete range.
+  @note Does not support UTF8 encoding for NSCaseInsensitiveSearch
   @param theCString The C string to search for.
   @param theOptions The options used during the search.
   @result The associated range of the C string in the receiver.
@@ -117,8 +119,10 @@
 
 /*!
   @method rangeOfCString:
+  @note does not support UTF8 encoding for NSCaseInsensitiveSearch
   @discussion Search for <i>theCString<i> using <i>theOptions</i>
               and <i>theRange</i> in the receiver.
+  @note Does not support UTF8 encoding for NSCaseInsensitiveSearch
   @param theCString The C string to search for.
   @param theOptions The options used during the search.
   @param theRange The range to use when performing the search.

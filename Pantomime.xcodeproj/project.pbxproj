@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */; };
+		1505D6081F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */; };
 		1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */; };
 		1519EA4C1F2F434200B269A8 /* libPantomimeStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */; };
 		1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177381F22072600C83122 /* CWMIMEUtilityTest.m */; };
@@ -123,6 +124,7 @@
 
 /* Begin PBXFileReference section */
 		1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-421_MessageHeapOverflow.txt"; sourceTree = "<group>"; };
+		1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+PantomimeExtensionsTest.m"; sourceTree = "<group>"; };
 		1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStoreTest.m; sourceTree = "<group>"; };
 		152177381F22072600C83122 /* CWMIMEUtilityTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEUtilityTest.m; sourceTree = "<group>"; };
 		152177391F22072600C83122 /* NSString+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ExtensionsTest.m"; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 				152177381F22072600C83122 /* CWMIMEUtilityTest.m */,
 				152177391F22072600C83122 /* NSString+ExtensionsTest.m */,
 				1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */,
+				1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */,
 			);
 			path = Pantomime;
 			sourceTree = "<group>";
@@ -704,6 +707,7 @@
 				433C51B11E6480F400272E19 /* CWMessage.m in Sources */,
 				4338E3861DF1BD750070176B /* CWContainer.m in Sources */,
 				4338E3871DF1BD850070176B /* CWFlags.m in Sources */,
+				1505D6081F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m in Sources */,
 				433C51C21E658C8C00272E19 /* CWISO8859_2.m in Sources */,
 				4338E3851DF1BC880070176B /* FolderTests.m in Sources */,
 				433C51B01E6480D900272E19 /* CWIMAPMessage.m in Sources */,
