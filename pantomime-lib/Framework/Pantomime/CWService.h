@@ -215,8 +215,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) connectionTerminated: (NSNotification * _Nullable) theNotification;
 
-
-
 /*!
   @method service: receivedData:
   @discussion Invoked when bytes have been received by the underlying
