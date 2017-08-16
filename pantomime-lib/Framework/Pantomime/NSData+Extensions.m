@@ -420,7 +420,8 @@ static const char *hexDigit = "0123456789ABCDEF";
 
     bytes = [self bytes];
 
-    if (!theCString || strlen(bytes) == 0 || strcmp(theCString, "") == 0 || theRange.length == 0) {
+    if (!bytes || !theCString || strlen(bytes) == 0 || strcmp(theCString, "") == 0 ||
+        theRange.length == 0) {
         return NSMakeRange(NSNotFound,0);
     }
 
