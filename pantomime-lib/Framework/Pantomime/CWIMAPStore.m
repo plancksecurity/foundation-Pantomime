@@ -1657,6 +1657,16 @@ static inline int has_literal(char *buf, NSUInteger c)
             [_queue removeLastObject];
             [_responsesFromServer removeAllObjects];
 
+            if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
+                // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
+                // without calling CLOSE.
+                // see RFC4549-4.2.5
+                _selectedFolder = nil;
+                PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
+                POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
+                return;
+            }
+
             NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
 
             POST_NOTIFICATION(PantomimeFolderOpenFailed, self, userInfo);
@@ -2543,6 +2553,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         case IMAP_SELECT:
             _connection_state.opening_mailbox = NO;
+            if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
+                // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
+                // without calling CLOSE.
+                // see RFC4549-4.2.5
+                _selectedFolder = nil;
+                PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
+                POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
+                return;
+            }
             POST_NOTIFICATION(PantomimeFolderOpenFailed, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
             PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:), PantomimeFolderOpenFailed, _selectedFolder, @"Folder");
             [_openFolders removeObjectForKey: [_selectedFolder name]];
@@ -3065,6 +3084,16 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     NSData *aData;
     NSUInteger i, count;
+
+    if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
+        // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
+        // without calling CLOSE.
+        // see RFC4549-4.2.5
+        _selectedFolder = nil;
+        PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
+        POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
+        return;
+    }
 
     // The last object in _responsesFromServer is a tagged OK response.
     // We need to parse it here.

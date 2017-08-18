@@ -22,6 +22,7 @@
 
 #import <Foundation/NSString.h>
 
+NSString * _Nonnull const PantomimeFolderNameToIgnore = @"4f2aced6-841e-11e7-bb31-be2e44b06b34-4f2ad174-4f2ad660-8c922935-d7cf-4d64-b581-98d2c3e8f231-b566909b-1f15-44a5-a2e3-53b4c5f3f58c";
 NSString * _Nonnull const PantomimeIMAPDefaultDescriptors = @"(UID FLAGS RFC822.SIZE BODY[HEADER])";
 NSString * _Nonnull const PantomimeIMAPFullBody = @"(UID BODY[TEXT])";
 

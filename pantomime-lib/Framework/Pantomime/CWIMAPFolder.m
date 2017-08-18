@@ -254,15 +254,12 @@
   // will try to access the _folder ivar in order to communicate with the IMAP server.
   [self.allMessages makeObjectsPerformSelector: @selector(setFolder:)  withObject: nil];
 
-  // We close the selected IMAP folder to _expunge_ messages marked as \Deleted
-  // if and only we are NOT showing DELETED messages. We also don't send the command
-  // if we are NOT connected since a MUA using Pantomime needs to call -close
-  // on IMAPFolder to clean-up the "open" folder.
+    // We avoid to call IMAP_CLOSE and call SELECT for a non-existing mailbox (aka. folder).
+    // See: RFC4549-4.2.5
   if ([_store isConnected] && ![self showDeleted])
     {
-      [_store sendCommand: IMAP_CLOSE
-	      info: [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]
-	      arguments: @"CLOSE"];
+      [_store sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"",
+       [PantomimeFolderNameToIgnore modifiedUTF7String]];
     }
   else
     {

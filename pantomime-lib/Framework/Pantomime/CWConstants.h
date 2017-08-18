@@ -445,6 +445,12 @@ typedef NS_ENUM(NSInteger, PantomimeRecipientType)
 };
 
 /**
+ Foldername to ignore. Used as a workaround to close a mailbox (aka. folder) without calling CLOSE.
+ @see RFC4549-4.2.5
+ */
+extern NSString * _Nonnull const PantomimeFolderNameToIgnore;
+
+/**
  The list of IMAP descriptors the IMAP sync needs.
  */
 extern NSString * _Nonnull const PantomimeIMAPDefaultDescriptors;
