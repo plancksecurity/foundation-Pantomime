@@ -58,7 +58,7 @@
 		   and nil will be returned.
   @result The CWInternetAddress instance, nil on error.
 */
-- (id) initWithString: (NSString *) theString;
+- (id _Nonnull) initWithString: (NSString * _Nonnull) theString;
 
 /*!
   @method initWithPersonal: address:
@@ -70,9 +70,9 @@
   @param theType The address type
   @result The CWInternetAddress instance, nil on error.
 */
-- (id) initWithPersonal: (NSString *) thePersonal
-                address: (NSString *) theAddress
-                   type: (PantomimeRecipientType) theType;
+- (id _Nonnull) initWithPersonal: (NSString * _Nullable) thePersonal
+                         address: (NSString * _Nonnull) theAddress
+                            type: (PantomimeRecipientType) theType;
 
 /*!
  @method initWithPersonal: address:
@@ -83,8 +83,8 @@
  @param theAddress The address part of the Internet address.
  @result The CWInternetAddress instance, nil on error.
  */
-- (id) initWithPersonal: (NSString *) thePersonal
-                address: (NSString *) theAddress;
+- (id _Nonnull) initWithPersonal: (NSString * _Nullable) thePersonal
+                         address: (NSString * _Nonnull) theAddress;
 
 /*!
   @method address
@@ -92,7 +92,7 @@
               of the receiver.
   @result The address part, as a NSString instance.
 */
-- (NSString *) address;
+- (NSString * _Nonnull) address;
 
 /*!
   @method setAddress:
@@ -101,7 +101,7 @@
 	      value, if any.
   @param theAddress The new address part.
 */
-- (void) setAddress: (NSString *) theAddress;
+- (void) setAddress: (NSString * _Nonnull) theAddress;
 
 /*!
   @method personal
@@ -110,7 +110,7 @@
 	      the name of a person, like John Doe.
   @result The personal part, as a NSString instance.
 */
-- (NSString *) personal;
+- (NSString * _Nullable) personal;
 
 /*!
   @method setPersonal:
@@ -120,7 +120,7 @@
 	      the name of a person, like John Doe.
   @param thePersonal The new personal part.
 */
-- (void) setPersonal: (NSString *) thePersonal;
+- (void) setPersonal: (NSString * _Nullable) thePersonal;
 
 /*!
   @method type
@@ -148,7 +148,7 @@
 	      will be performed on the receiver's personal part).
   @result The formatted object.
 */
-- (NSString *) stringValue;
+- (NSString * _Nonnull) stringValue;
 
 /*!
   @method dataValue
@@ -158,7 +158,7 @@
 	      will be performed on the receiver's personal part).
   @result The formatted object.
 */
-- (NSData *) dataValue;
+- (NSData * _Nonnull) dataValue;
 
 
 /*!
@@ -167,7 +167,7 @@
               (using -stringValue).
   @result The NSComparisonResult value.
 */
-- (NSComparisonResult) compare: (id) theAddress;
+- (NSComparisonResult) compare: (id _Nullable) theAddress;
 
 
 /*!
@@ -176,21 +176,21 @@
               address only.
   @result A boolean value
 */
-- (BOOL) isEqualToAddress: (CWInternetAddress *) theAddress;
+- (BOOL) isEqualToAddress: (CWInternetAddress * _Nullable) theAddress;
 
 /*!
   @method container
   @discussion This method is used to get the container for scripting.
   @result The container.
 */
-- (id) container;
+- (id _Nonnull) container;
 
 /*!
   @method setContainer:
   @discussion This method is used to set the container for scripting.
   @param theContainer The container for scripting.
 */
-- (void) setContainer: (id) theContainer;
+- (void) setContainer: (id _Nonnull) theContainer;
 
 @end
 
