@@ -1001,7 +1001,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         else
         {
             // The queue is empty, we have nothing more to do...
-            INFO(NSStringFromClass([self class]), @"sendCommend currentQueueObject = nil");
+            INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
             self.currentQueueObject = nil;
             return;
         }
