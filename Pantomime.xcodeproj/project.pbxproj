@@ -13,15 +13,15 @@
 		1519EA4C1F2F434200B269A8 /* libPantomimeStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */; };
 		1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177381F22072600C83122 /* CWMIMEUtilityTest.m */; };
 		1521773B1F22072600C83122 /* NSString+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177391F22072600C83122 /* NSString+ExtensionsTest.m */; };
-		430A6E2B1DFAAF85006273A5 /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 430A6E291DFAA795006273A5 /* CWLogger.m */; };
-		4317986D1CF8326D007DD655 /* CWThreadSafeArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 4317986B1CF83173007DD655 /* CWThreadSafeArray.m */; };
+		15B3B0FA1F5DA3B600EF9D9E /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B0F91F5DA3B600EF9D9E /* CWLogger.m */; };
+		15B3B1071F5DA52100EF9D9E /* CWThreadSafeArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B1041F5DA52100EF9D9E /* CWThreadSafeArray.m */; };
+		15B3B1081F5DA52100EF9D9E /* CWThreadSaveData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B1061F5DA52100EF9D9E /* CWThreadSaveData.m */; };
 		4338E37C1DF1BBFF0070176B /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
 		4338E37D1DF1BC050070176B /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F71CB7EBDD006867C0 /* CWFolder.m */; };
 		4338E3851DF1BC880070176B /* FolderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4338E3841DF1BC880070176B /* FolderTests.m */; };
 		4338E3861DF1BD750070176B /* CWContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F11CB7EBDD006867C0 /* CWContainer.m */; };
 		4338E3871DF1BD850070176B /* CWFlags.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F51CB7EBDD006867C0 /* CWFlags.m */; };
 		4338E3881DF1BDA00070176B /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EF1CB7EBDD006867C0 /* CWConstants.m */; };
-		433C51A11E64786A00272E19 /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 430A6E291DFAA795006273A5 /* CWLogger.m */; };
 		433C51A51E647A1300272E19 /* MailParsingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 433C51A41E647A1300272E19 /* MailParsingTests.m */; };
 		433C51A81E647EBD00272E19 /* MailParsingAttachments.txt in Resources */ = {isa = PBXBuildFile; fileRef = 433C51A71E647EBD00272E19 /* MailParsingAttachments.txt */; };
 		433C51AF1E64800800272E19 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 433C51AE1E64800800272E19 /* TestUtil.m */; };
@@ -128,10 +128,12 @@
 		1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStoreTest.m; sourceTree = "<group>"; };
 		152177381F22072600C83122 /* CWMIMEUtilityTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEUtilityTest.m; sourceTree = "<group>"; };
 		152177391F22072600C83122 /* NSString+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ExtensionsTest.m"; sourceTree = "<group>"; };
-		430A6E281DFAA795006273A5 /* CWLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWLogger.h; sourceTree = "<group>"; };
-		430A6E291DFAA795006273A5 /* CWLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWLogger.m; sourceTree = "<group>"; };
-		4317986A1CF83173007DD655 /* CWThreadSafeArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWThreadSafeArray.h; sourceTree = "<group>"; };
-		4317986B1CF83173007DD655 /* CWThreadSafeArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSafeArray.m; sourceTree = "<group>"; };
+		15B3B0F81F5DA3B600EF9D9E /* CWLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWLogger.h; sourceTree = "<group>"; };
+		15B3B0F91F5DA3B600EF9D9E /* CWLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWLogger.m; sourceTree = "<group>"; };
+		15B3B1031F5DA52100EF9D9E /* CWThreadSafeArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWThreadSafeArray.h; sourceTree = "<group>"; };
+		15B3B1041F5DA52100EF9D9E /* CWThreadSafeArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSafeArray.m; sourceTree = "<group>"; };
+		15B3B1051F5DA52100EF9D9E /* CWThreadSaveData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWThreadSaveData.h; sourceTree = "<group>"; };
+		15B3B1061F5DA52100EF9D9E /* CWThreadSaveData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSaveData.m; sourceTree = "<group>"; };
 		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
 		433149321CBCEA1100AFC030 /* CWCacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCacheRecord.m; sourceTree = "<group>"; };
 		433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
@@ -285,6 +287,18 @@
 			path = Pantomime;
 			sourceTree = "<group>";
 		};
+		15B3B1021F5DA52100EF9D9E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				15B3B1031F5DA52100EF9D9E /* CWThreadSafeArray.h */,
+				15B3B1041F5DA52100EF9D9E /* CWThreadSafeArray.m */,
+				15B3B1051F5DA52100EF9D9E /* CWThreadSaveData.h */,
+				15B3B1061F5DA52100EF9D9E /* CWThreadSaveData.m */,
+			);
+			name = Utils;
+			path = "pantomime-lib/Framework/Utils";
+			sourceTree = SOURCE_ROOT;
+		};
 		433C51A61E647EBD00272E19 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -332,6 +346,7 @@
 		43E854BD1CB7EA9A006867C0 /* Pantomime */ = {
 			isa = PBXGroup;
 			children = (
+				15B3B1021F5DA52100EF9D9E /* Utils */,
 				43E854E81CB7EBDD006867C0 /* Pantomime */,
 				43E854CA1CB7EA9A006867C0 /* Info.plist */,
 			);
@@ -354,16 +369,14 @@
 		43E854E81CB7EBDD006867C0 /* Pantomime */ = {
 			isa = PBXGroup;
 			children = (
-				4317986A1CF83173007DD655 /* CWThreadSafeArray.h */,
-				4317986B1CF83173007DD655 /* CWThreadSafeArray.m */,
 				438A29EA1CBCF037000E48F7 /* CWTCPConnection.h */,
 				438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */,
 				433149311CBCEA1100AFC030 /* CWCacheRecord.h */,
 				433149321CBCEA1100AFC030 /* CWCacheRecord.m */,
 				433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */,
 				433149351CBCECE200AFC030 /* NSDate+RFC2822.m */,
-				430A6E281DFAA795006273A5 /* CWLogger.h */,
-				430A6E291DFAA795006273A5 /* CWLogger.m */,
+				15B3B0F81F5DA3B600EF9D9E /* CWLogger.h */,
+				15B3B0F91F5DA3B600EF9D9E /* CWLogger.m */,
 				43E854EB1CB7EBDD006867C0 /* CWCharset.h */,
 				43E854EC1CB7EBDD006867C0 /* CWCharset.m */,
 				43E854ED1CB7EBDD006867C0 /* CWConnection.h */,
@@ -628,14 +641,12 @@
 				43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */,
 				43980E691CBD1B5D00A7FC3C /* NSDate+RFC2822.m in Sources */,
 				43980E6C1CBD1B5D00A7FC3C /* CWCharset.m in Sources */,
-				4317986D1CF8326D007DD655 /* CWThreadSafeArray.m in Sources */,
 				43980E6F1CBD1B5D00A7FC3C /* CWConstants.m in Sources */,
 				43980E711CBD1B5D00A7FC3C /* CWContainer.m in Sources */,
 				43980E731CBD1B5D00A7FC3C /* CWFlags.m in Sources */,
 				43980E751CBD1B5D00A7FC3C /* CWFolder.m in Sources */,
 				43980E771CBD1B5D00A7FC3C /* CWFolderInformation.m in Sources */,
 				43980E791CBD1B5D00A7FC3C /* CWIMAPFolder.m in Sources */,
-				430A6E2B1DFAAF85006273A5 /* CWLogger.m in Sources */,
 				43980E7B1CBD1B5D00A7FC3C /* CWIMAPMessage.m in Sources */,
 				43980E7D1CBD1B5D00A7FC3C /* CWIMAPStore.m in Sources */,
 				43980E7F1CBD1B5D00A7FC3C /* CWInternetAddress.m in Sources */,
@@ -649,6 +660,7 @@
 				43980E8F1CBD1B5D00A7FC3C /* CWISO8859_3.m in Sources */,
 				43980E911CBD1B5D00A7FC3C /* CWISO8859_4.m in Sources */,
 				43980E931CBD1B5D00A7FC3C /* CWISO8859_5.m in Sources */,
+				15B3B1081F5DA52100EF9D9E /* CWThreadSaveData.m in Sources */,
 				43980E951CBD1B5D00A7FC3C /* CWISO8859_6.m in Sources */,
 				43980E971CBD1B5D00A7FC3C /* CWISO8859_7.m in Sources */,
 				43980E991CBD1B5D00A7FC3C /* CWISO8859_8.m in Sources */,
@@ -658,7 +670,9 @@
 				43980EA11CBD1B5D00A7FC3C /* CWMacOSXGlue.m in Sources */,
 				43980EA31CBD1B5D00A7FC3C /* CWMD5.m in Sources */,
 				43980EA51CBD1B5D00A7FC3C /* CWMessage.m in Sources */,
+				15B3B0FA1F5DA3B600EF9D9E /* CWLogger.m in Sources */,
 				43980EA71CBD1B5D00A7FC3C /* CWMIMEMultipart.m in Sources */,
+				15B3B1071F5DA52100EF9D9E /* CWThreadSafeArray.m in Sources */,
 				43980EA91CBD1B5D00A7FC3C /* CWMIMEUtility.m in Sources */,
 				43980EAB1CBD1B5D00A7FC3C /* CWParser.m in Sources */,
 				43980EAD1CBD1B5D00A7FC3C /* CWPart.m in Sources */,
@@ -712,7 +726,6 @@
 				4338E3851DF1BC880070176B /* FolderTests.m in Sources */,
 				433C51B01E6480D900272E19 /* CWIMAPMessage.m in Sources */,
 				433C51CC1E658CC000272E19 /* CWWINDOWS_1250.m in Sources */,
-				433C51A11E64786A00272E19 /* CWLogger.m in Sources */,
 				433C51CA1E658CA700272E19 /* CWKOI8_R.m in Sources */,
 				433C51B91E64815A00272E19 /* NSData+Extensions.m in Sources */,
 				433C51CD1E658CC300272E19 /* CWWINDOWS_1251.m in Sources */,

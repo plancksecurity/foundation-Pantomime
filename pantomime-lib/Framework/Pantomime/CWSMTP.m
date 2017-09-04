@@ -34,6 +34,7 @@
 
 #import "CWConnection.h"
 #import "CWThreadSafeArray.h"
+#import "CWThreadSaveData.h"
 
 //
 // Some static variables used to enhance the performance.
@@ -374,8 +375,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
         _lastCommand = aQueueObject->command;
 
-        [self writeData: [aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding]];
-        [self writeData: CRLF];
+        [self bulkWriteData:@[[aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding],
+                                 CRLF]];
     } else {
         // TODO: Why is aQueueObject sometimes nil?
         INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
@@ -547,7 +548,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
   [super updateRead];
 
-  while ((aData = split_lines(_rbuf)))
+  while ((aData = [_rbuf dropFirstLine]))
     {
       [_responsesFromServer addObject: aData];
  
@@ -606,8 +607,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       [aMD5 computeDigest];
       
       aString = [NSString stringWithFormat: @"%@ %@", _username, [aMD5 hmacAsStringUsingPassword: _password]];
-      [self writeData: [[aString dataUsingEncoding: defaultCStringEncoding] encodeBase64WithLineLength: 0]];
-      [self writeData: CRLF];
+        [self bulkWriteData:@[[[aString dataUsingEncoding: defaultCStringEncoding] encodeBase64WithLineLength: 0],
+                                 CRLF]];
       RELEASE(aMD5);
     }
   else if ([aData hasCPrefix: "235"])
@@ -713,9 +714,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       
       [aMutableData replaceBytesInRange: NSMakeRange(2 + len_username, len_password)
 		    withBytes: [[_password dataUsingEncoding: defaultCStringEncoding] bytes]];
-      
-      [self writeData: [aMutableData encodeBase64WithLineLength: 0]];
-      [self writeData: CRLF];
+
+        [self bulkWriteData:@[[aMutableData encodeBase64WithLineLength: 0],
+                                 CRLF]];
     }
   else if ([aData hasCPrefix: "235"])
     {
@@ -803,10 +804,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	  [aMutableData replaceBytesInRange: NSMakeRange(r1.location, NSMaxRange(r2)-r1.location)
 			withBytes: "\r\n"
 			length: 2];
-	}
- 
-      [self writeData: aMutableData];
-      [self writeData: [NSData dataWithBytes: "\r\n.\r\n"  length: 5]];
+    }
+        [self bulkWriteData:@[aMutableData,
+                                 [NSData dataWithBytes: "\r\n.\r\n"  length: 5]]];
     }
   else if ([aData hasCPrefix: "250"])
     {

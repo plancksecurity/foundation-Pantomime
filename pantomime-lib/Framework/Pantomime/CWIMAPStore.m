@@ -46,6 +46,7 @@
 
 #import "CWIMAPCacheManager.h"
 #import "CWThreadSafeArray.h"
+#import "CWThreadSaveData.h"
 
 #import "NSDate+RFC2822.h"
 
@@ -291,7 +292,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     if (![_rbuf length]) return;
 
-    while ((aData = split_lines(_rbuf)))
+    while ((aData = [_rbuf dropFirstLine]))
     {
         //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
         buf = (char *)[aData bytes];
@@ -353,7 +354,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     // end of our literal response and we need to call
                     // [super updateRead] to get more bytes from the socket
                     // in order to read the rest (")" or " UID 123)" for example).
-                    while (!(aData = split_lines(_rbuf)))
+                    while (!(aData = [_rbuf dropFirstLine]))
                     {
                         //SLog(@"NOTHING TO READ! WAITING...");
                         [super updateRead];
@@ -426,8 +427,8 @@ static inline int has_literal(char *buf, NSUInteger c)
             {
                 if (self.currentQueueObject && _lastCommand == IMAP_APPEND)
                 {
-                    [self writeData: [self.currentQueueObject.info objectForKey: @"NSDataToAppend"]];
-                    [self writeData: CRLF];
+                    [self bulkWriteData:@[[self.currentQueueObject.info objectForKey: @"NSDataToAppend"],
+                                            CRLF]];
                     break;
                 }
                 else if (_lastCommand == IMAP_AUTHENTICATE_CRAM_MD5)
@@ -443,8 +444,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                 else if (self.currentQueueObject && _lastCommand == IMAP_LOGIN)
                 {
                     //INFO(NSStringFromClass([self class]), @"writing password |%s|", [[self.currentQueueObject.info objectForKey: @"Password"] cString]);
-                    [self writeData: [self.currentQueueObject.info objectForKey: @"Password"]];
-                    [self writeData: CRLF];
+                    [self bulkWriteData:@[[self.currentQueueObject.info objectForKey: @"Password"],
+                                             CRLF]];
                     break;
                 } else if (_lastCommand == IMAP_IDLE) {
                     INFO(NSStringFromClass([self class]), @"entering IDLE");
@@ -1048,10 +1049,10 @@ static inline int has_literal(char *buf, NSUInteger c)
     INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
     _lastCommand = self.currentQueueObject.command;
 
-    [self writeData: self.currentQueueObject.tag];
-    [self writeData: [NSData dataWithBytes: " "  length: 1]];
-    [self writeData: [self.currentQueueObject.arguments dataUsingEncoding: defaultCStringEncoding]];
-    [self writeData: CRLF];
+    [self bulkWriteData:@[self.currentQueueObject.tag,
+                             [NSData dataWithBytes: " "  length: 1],
+                             [self.currentQueueObject.arguments dataUsingEncoding: defaultCStringEncoding],
+                             CRLF]];
 
     POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
     PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
@@ -1278,8 +1279,8 @@ static inline int has_literal(char *buf, NSUInteger c)
     _connection_state.reconnecting = YES;
 
     // We flush our read/write buffers.
-    [_rbuf setLength: 0];
-    [_wbuf setLength: 0];
+    [_rbuf reset];
+    [_wbuf reset];
 
     //
     // We first empty our queue and set again our _lastCommand ivar to
@@ -1583,9 +1584,8 @@ static inline int has_literal(char *buf, NSUInteger c)
         aString = [[NSString alloc] initWithData: [[aString dataUsingEncoding: NSASCIIStringEncoding] encodeBase64WithLineLength: 0]
                                         encoding: NSASCIIStringEncoding];
 
-        [self writeData: [aString dataUsingEncoding: defaultCStringEncoding]];
-        [self writeData: CRLF];
-
+        [self bulkWriteData:@[[aString dataUsingEncoding: defaultCStringEncoding],
+                                 CRLF]];
         RELEASE(aMD5);
         RELEASE(aString);
     }
@@ -1626,8 +1626,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                          encodeBase64WithLineLength: 0];
         }
 
-        [self writeData: aResponse];
-        [self writeData: CRLF];
+        [self bulkWriteData:@[aResponse,
+                                 CRLF]];
     }
 }
 
