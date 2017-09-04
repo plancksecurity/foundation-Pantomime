@@ -42,38 +42,7 @@
 
 @class CWService;
 @class CWThreadSafeArray;
-
-/*!
-  @function split_lines
-  @discussion This function is used to split lines from <i>theMutableData</i> and
-              return the first one found immediately (by removing it first
-              from <i>theMutableData</i>). IMAP, POP3 and SMTP servers reponses are 
-              always ended by CRLF.
-  @param theMutableData The data from which to split lines from.
-  @result A line as a NSData instance, nil if no line was splitted.
-*/
-static inline NSData *  _Nonnull split_lines(NSMutableData * _Nonnull theMutableData)
-{
-    char *bytes, *end;
-    NSUInteger i, count;
-
-    bytes = (char *)[theMutableData mutableBytes];
-    end = bytes + 1;
-    count = [theMutableData length];
-
-    for (i = 1; i < count; i++) {
-        if (*end == '\n' && *(end-1) == '\r') {
-            NSData *aData;
-	  
-            aData = [NSData dataWithBytes: bytes  length: (i-1)];
-            memmove(bytes,end+1,count-i-1);
-            [theMutableData setLength: count-i-1];
-            return aData;
-        }
-        end++;
-    }
-    return nil;
-}
+@class CWThreadSaveData;
 
 /*!
   @const PantomimeAuthenticationCompleted
@@ -375,8 +344,8 @@ extern NSString * _Nonnull PantomimeProtocolException;
     CWThreadSafeArray *_capabilities;
     CWThreadSafeArray *_runLoopModes;
     CWThreadSafeArray *_queue;
-    NSMutableData *_wbuf;
-    NSMutableData *_rbuf;
+    CWThreadSaveData *_wbuf;
+    CWThreadSaveData *_rbuf;
     NSString *_mechanism;
     NSString *_username;
     NSString *_password;

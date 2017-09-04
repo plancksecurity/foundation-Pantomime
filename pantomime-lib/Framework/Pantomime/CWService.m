@@ -36,6 +36,8 @@
 
 #import "CWTCPConnection.h"
 #import "CWThreadSafeArray.h"
+#import "CWThreadSaveData.h"
+
 
 //
 // It's important that the read buffer be bigger than the PMTU. Since almost all networks
@@ -83,9 +85,8 @@
   _username = nil;
   _password = nil;
 
-
-  _rbuf = [[NSMutableData alloc] init];
-  _wbuf = [[NSMutableData alloc] init];
+  _rbuf = [CWThreadSaveData new];
+  _wbuf = [CWThreadSaveData new];
 
   _runLoopModes = [[CWThreadSafeArray alloc] initWithArray:@[NSDefaultRunLoopMode]];
   _connectionTimeout = _readTimeout = _writeTimeout = DEFAULT_TIMEOUT;
@@ -397,44 +398,44 @@
 //
 - (void) updateWrite
 {
-  if ([_wbuf length] > 0)
+    if ([_wbuf length] == 0)
     {
-      unsigned char *bytes;
-      NSInteger count, len;
+        return;
+    }
+    unsigned char *bytes;
+    NSInteger count, len;
 
-      bytes = [_wbuf mutableBytes];
-      len = [_wbuf length];
+    bytes = (unsigned char*)[_wbuf copyOfBytes];
+    len = [_wbuf length];
 
 #ifdef MACOSX
-      count = [_connection write: bytes  length: len > WRITE_BLOCK_SIZE ? WRITE_BLOCK_SIZE : len];
+    count = [_connection write: bytes  length: len > WRITE_BLOCK_SIZE ? WRITE_BLOCK_SIZE : len];
 #else
-      count = [_connection write: bytes  length: len];
+    count = [_connection write: bytes  length: len];
 #endif
-      // If nothing was written or if an error occured, we return.
-      if (count <= 0)
-	{
-	  return;
-	}
-      // Otherwise, we inform our delegate that we wrote some data...
-      else if (_delegate && [_delegate respondsToSelector: @selector(service:sentData:)])
-	{
-	  [_delegate performSelector: @selector(service:sentData:)
-		     withObject: self
-		     withObject: [_wbuf subdataToIndex: (int) count]];
-	}
-      
-      //INFO(NSStringFromClass([self class]), @"count = %d, len = %d", count, len);
+    // If nothing was written or if an error occured, we return.
+    if (count <= 0)
+    {
+        return;
+    }
+    // Otherwise, we inform our delegate that we wrote some data...
+    else if (_delegate && [_delegate respondsToSelector: @selector(service:sentData:)])
+    {
+        [_delegate performSelector: @selector(service:sentData:)
+                        withObject: self
+                        withObject: [_wbuf subdataToIndex: (int) count]];
+    }
 
-      // If we have been able to write everything...
-      if (count == len)
-	{
-	  [_wbuf setLength: 0];
-	}
-      else
-	{
-	  memmove(bytes, bytes+count, len-count);
-	  [_wbuf setLength: len-count];
-	}
+    //INFO(NSStringFromClass([self class]), @"count = %d, len = %d", count, len);
+
+    // If we have been able to write everything...
+    if (count == len)
+    {
+        [_wbuf reset];
+    }
+    else
+    {
+        [_wbuf truncateLeadingBytes:count];
     }
 }
 

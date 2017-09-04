@@ -34,6 +34,7 @@
 
 #import "CWConnection.h"
 #import "CWThreadSafeArray.h"
+#import "CWThreadSaveData.h"
 
 //
 // Some static variables used to enhance the performance.
@@ -547,7 +548,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
   [super updateRead];
 
-  while ((aData = split_lines(_rbuf)))
+  while ((aData = [_rbuf dropFirstLine]))
     {
       [_responsesFromServer addObject: aData];
  

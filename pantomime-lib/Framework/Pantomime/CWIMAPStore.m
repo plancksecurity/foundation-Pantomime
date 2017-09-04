@@ -46,6 +46,7 @@
 
 #import "CWIMAPCacheManager.h"
 #import "CWThreadSafeArray.h"
+#import "CWThreadSaveData.h"
 
 #import "NSDate+RFC2822.h"
 
@@ -291,7 +292,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     if (![_rbuf length]) return;
 
-    while ((aData = split_lines(_rbuf)))
+    while ((aData = [_rbuf dropFirstLine]))
     {
         //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
         buf = (char *)[aData bytes];
@@ -353,7 +354,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     // end of our literal response and we need to call
                     // [super updateRead] to get more bytes from the socket
                     // in order to read the rest (")" or " UID 123)" for example).
-                    while (!(aData = split_lines(_rbuf)))
+                    while (!(aData = [_rbuf dropFirstLine]))
                     {
                         //SLog(@"NOTHING TO READ! WAITING...");
                         [super updateRead];
@@ -1278,8 +1279,8 @@ static inline int has_literal(char *buf, NSUInteger c)
     _connection_state.reconnecting = YES;
 
     // We flush our read/write buffers.
-    [_rbuf setLength: 0];
-    [_wbuf setLength: 0];
+    [_rbuf reset];
+    [_wbuf reset];
 
     //
     // We first empty our queue and set again our _lastCommand ivar to
