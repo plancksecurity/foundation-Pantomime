@@ -63,6 +63,7 @@
 
 @property (nonatomic) ConnectionTransport connectionTransport;
 @property (nonatomic, nullable, strong) id<CWLogging> logger;
+@property (nonatomic) dispatch_queue_t writeQueue;
 
 @end
 
@@ -71,6 +72,17 @@
 //
 @implementation CWService
 
+
+/** Lazy initialized */
+- (dispatch_queue_t)writeQueue
+{
+    if (!_writeQueue) {
+        _writeQueue = dispatch_queue_create("CWService - _writeQueue", DISPATCH_QUEUE_SERIAL);
+    }
+
+    return _writeQueue;
+}
+
 //
 //
 //
@@ -78,22 +90,24 @@
 {
   self = [super init];
 
-  _supportedMechanisms = [[CWThreadSafeArray alloc] init];
-  _responsesFromServer = [[CWThreadSafeArray alloc] init];
-  _capabilities = [[CWThreadSafeArray alloc] init];
-  _queue = [[CWThreadSafeArray alloc] init];
-  _username = nil;
-  _password = nil;
+    if (self) {
+        _supportedMechanisms = [[CWThreadSafeArray alloc] init];
+        _responsesFromServer = [[CWThreadSafeArray alloc] init];
+        _capabilities = [[CWThreadSafeArray alloc] init];
+        _queue = [[CWThreadSafeArray alloc] init];
+        _username = nil;
+        _password = nil;
 
-  _rbuf = [CWThreadSaveData new];
-  _wbuf = [CWThreadSaveData new];
+        _rbuf = [CWThreadSaveData new];
+        _wbuf = [CWThreadSaveData new];
 
-  _runLoopModes = [[CWThreadSafeArray alloc] initWithArray:@[NSDefaultRunLoopMode]];
-  _connectionTimeout = _readTimeout = _writeTimeout = DEFAULT_TIMEOUT;
-  _counter = _lastCommand = 0;
+        _runLoopModes = [[CWThreadSafeArray alloc] initWithArray:@[NSDefaultRunLoopMode]];
+        _connectionTimeout = _readTimeout = _writeTimeout = DEFAULT_TIMEOUT;
+        _counter = _lastCommand = 0;
 
-  _connection_state.previous_queue = [[NSMutableArray alloc] init];
-  _connection_state.reconnecting = _connection_state.opening_mailbox = NO;
+        _connection_state.previous_queue = [[NSMutableArray alloc] init];
+        _connection_state.reconnecting = _connection_state.opening_mailbox = NO;
+    }
 
   return self;
 }
@@ -244,6 +258,7 @@
 //
 - (void) cancelRequest
 {
+    self.writeQueue = nil;
   [_connection close];
   DESTROY(_connection);
   [_queue removeAllObjects];
@@ -258,6 +273,7 @@
 //
 - (void) close
 {
+    self.writeQueue = nil;
   //
   // If we are reconnecting, no matter what, we close and release our current connection immediately.
   // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
@@ -463,11 +479,8 @@
     }
 }
 
-/**
- This can potentially be called from arbitrary threads, so acces has to be
- synchronized.
- */
-- (void) writeData: (NSData *) theData
+
+- (void) write: (NSData *) theData
 {
     NSThread *backgroundThread = ((CWTCPConnection *) self.connection).backgroundThread;
     if ([NSThread currentThread] != backgroundThread) {
@@ -476,6 +489,22 @@
     } else {
         [self writeInternalData:theData];
     }
+}
+
+
+- (void) writeData: (NSData *_Nonnull) theData;
+{
+    [self bulkWriteData:@[theData]];
+}
+
+
+- (void) bulkWriteData: (NSArray<NSData*> *_Nonnull) bulkData;
+{
+    dispatch_sync(self.writeQueue, ^{
+        for (NSData *data in bulkData) {
+            [self write:data];
+        }
+    });
 }
 
 

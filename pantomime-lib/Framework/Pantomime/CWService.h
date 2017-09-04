@@ -572,13 +572,25 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) updateWrite;
 
-/*!
-  @method writeData:
-  @discussion This method is used to buffer bytes to be written on the socket.
-              You should never have to invoke this method directly.
-  @param The bytes to buffer, as a NSData instance.
-*/
-- (void) writeData: (NSData * _Nonnull) theData;
+/**
+ Buffers the given data to be streamed to a connected server later on.
+ Also triggers the current connection to actually write the now bufferd data to the stream.
+
+ You should never have to invoke this method directly.
+
+ @param The bytes to buffer
+ */
+- (void) writeData: (NSData *_Nonnull) theData;
+
+/**
+ Buffers the given data in the given order to be streamed to a connected server later on.
+ Also triggers the current connection to atually write the, now bufferd, data to the stream.
+
+ You should never have to invoke this method directly.
+
+ @param The bytes to buffer
+ */
+- (void) bulkWriteData: (NSArray<NSData*> *_Nonnull) bulkData;
 
 /*!
   @method addRunLoopMode:
