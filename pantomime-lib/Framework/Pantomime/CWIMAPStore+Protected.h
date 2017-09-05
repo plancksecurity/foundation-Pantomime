@@ -31,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (CWIMAPFolder *)folderWithName:(NSString *)name;
 
-//BUFF: hide?
 /*!
   @method nextTag
   @discussion This method is used to obtain the next IMAP tag
@@ -41,8 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (NSData * _Nullable) nextTag;
 
-
-//BUFF: hide?
 /*!
   @method lastTag
   @discussion This method is used to obtain the last IMAP tag

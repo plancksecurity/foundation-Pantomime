@@ -323,100 +323,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 
 #ifdef MACOSX
 
-//BUFF:
-//@protocol CWServiceProtectedMethods <NSObject>
-//@required
-///*!
-//  @method name
-//  @discussion This method is used to obtain the server name.
-//  @result The server name.
-//*/
-//- (NSString * _Nonnull) name;
-//
-///*!
-//  @method setName:
-//  @discussion This method is used to set the server name to which
-//              we will eventually connect to.
-//  @param theName The name of the server.
-//*/
-//- (void) setName: (NSString * _Nonnull) theName;
-//
-///*!
-//  @method setPort:
-//  @discussion This method is used to set the server port to which
-//              we will eventually connect to.
-//  @param theName The port of the server.
-//*/
-//- (void) setPort: (unsigned int) thePort;
-//
-///*!
-//  @method connection
-//  @discussion This method is used to retrieve the associated connection
-//              object for the service (usually a CWTCPConnection instance).
-//  @result The associated connectio object.
-//*/
-//- (id<CWConnection> _Nonnull) connection;
-//
-///*!
-// @method updateRead
-// @discussion This method is invoked automatically when bytes are available
-// to be read. You should never have to invoke this method directly.
-// */
-//- (void) updateRead;
-//
-///*!
-//  @method updateWrite
-//  @discussion This method is invoked automatically when bytes are available
-//              to be written. You should never have to invoke this method directly.
-//*/
-//- (void) updateWrite;
-//
-///*!
-// @method isConnected
-// @discussion This method is used to verify if the receiver
-// is connected to the server.
-// @result YES if connected, NO otherwise.
-// */
-//- (BOOL) isConnected;
-//
-///*!
-//  @method connect
-//  @discussion This method is used to connect the receiver to the server.
-//              It will block until the connection was succefully established
-//	      (or until it fails).
-//  @result 0 on success, -1 on error.
-//*/
-//- (int) connect;
-//
-///*!
-// @method noop
-// @discussion This method is used to generate some traffic on a server
-// so the connection doesn't idle and gets terminated by
-// the server. Subclasses of CWService need to implement this method.
-// */
-//- (void) noop;
-//
-///**
-// Buffers the given data to be streamed to a connected server later on.
-// Also triggers the current connection to actually write the now bufferd data to the stream.
-//
-// You should never have to invoke this method directly.
-//
-// @param The bytes to buffer
-// */
-//- (void) writeData: (NSData *_Nonnull) theData;
-//
-///**
-// Buffers the given data in the given order to be streamed to a connected server later on.
-// Also triggers the current connection to atually write the, now bufferd, data to the stream.
-//
-// You should never have to invoke this method directly.
-//
-// @param The bytes to buffer
-// */
-//- (void) bulkWriteData: (NSArray<NSData*> *_Nonnull) bulkData;
-//@end
-
 /*!
   @class CWService
   @discussion This abstract class defines the basic behavior and implementation
@@ -479,7 +385,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
                         port: (unsigned int) thePort
                    transport: (ConnectionTransport) transport;
 
-//BUFF: used by app
 /*!
   @method setDelegate:
   @discussion This method is used to set the CWService's delegate.
@@ -490,7 +395,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) setDelegate: (id _Nullable) theDelegate;
 
-//BUFF: not used by app, but keep it (?)
 /*!
   @method delegate
   @discussion This method is used to get the delegate of the CWService's instance.
@@ -498,21 +402,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (id _Nullable) delegate;
 
-//BUFF: hide?
-        ///*!
-        //  @method name
-        //  @discussion This method is used to obtain the server name.
-        //  @result The server name.
-        //*/
-        //- (NSString * _Nonnull) name;
-        //
-        ///*!
-        //  @method setName:
-        //  @discussion This method is used to set the server name to which
-        //              we will eventually connect to.
-        //  @param theName The name of the server.
-        //*/
-        //- (void) setName: (NSString * _Nonnull) theName;
 
 /*!
   @method port
@@ -521,42 +410,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (unsigned int) port;
 
-//BUFF: hide?
-            ///*!
-            //  @method setPort:
-            //  @discussion This method is used to set the server port to which
-            //              we will eventually connect to.
-            //  @param theName The port of the server.
-            //*/
-            //- (void) setPort: (unsigned int) thePort;
 
-        //BUFF: hide?
-            ///*!
-            //  @method connection
-            //  @discussion This method is used to retrieve the associated connection
-            //              object for the service (usually a CWTCPConnection instance).
-            //  @result The associated connectio object.
-            //*/
-            //- (id<CWConnection> _Nonnull) connection;
-
-        ///*!
-        //  @method username
-        //  @discussion This method is used to get the username (if any) that will be
-        //              used to authenticate to the service.
-        //  @result The username.
-        //*/
-        //- (NSString * _Nullable) username;
-
-//BUFF: hide?
-            ///*!
-            //  @method setUsername:
-            //  @discussion This method is used to set the username that will be used
-            //              to authenticate to the service.
-            //  @param theUsername The username for authentication.
-            //*/
-            //- (void) setUsername: (NSString * _Nonnull) theUsername;
-
-//BUFF: used but does not need serialization!?
 /*!
   @method supportedMechanisms
   @discussion This method is used to return the supported SASL
@@ -566,15 +420,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (NSArray *  _Nonnull) supportedMechanisms;
 
-        ///*!
-        //  @method isConnected
-        //  @discussion This method is used to verify if the receiver
-        //              is connected to the server.
-        //  @result YES if connected, NO otherwise.
-        //*/
-        //- (BOOL) isConnected;
-
-//BUFF: used by app
 /*!
   @method authenticate: password: mechanism:
   @discussion This method is used to authentifcate the receiver
@@ -592,7 +437,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
              password: (NSString * _Nullable) thePassword
             mechanism: (NSString * _Nonnull) theMechanism;
 
-//BUFF: used by app
 /*!
   @method cancelRequest
   @discussion This method will cancel any pending requests or communications
@@ -602,7 +446,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) cancelRequest;
 
-//BUFF: used by app
 /*!
   @method close
   @discussion This method is used to close the connection to the server.
@@ -613,17 +456,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) close;
 
-//BUFF: hide?
-        ///*!
-        //  @method connect
-        //  @discussion This method is used to connect the receiver to the server.
-        //              It will block until the connection was succefully established
-        //	      (or until it fails).
-        //  @result 0 on success, -1 on error.
-        //*/
-        //- (int) connect;
-
-//BUFF: used by app
 /*!
   @method connectInBackgroundAndNotify
   @discussion This method is used  connect the receiver to the server.
@@ -635,133 +467,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) connectInBackgroundAndNotify;
 
-        ///*!
-        //  @method noop
-        //  @discussion This method is used to generate some traffic on a server
-        //              so the connection doesn't idle and gets terminated by
-        //	      the server. Subclasses of CWService need to implement this method.
-        //*/
-        //- (void) noop;
-
-//BUFF: still seen? (from connectionDelegate)
-        ///*!
-        //  @method receivedEvent: type: extra: forMode:
-        //  @discussion This method is automatically invoked when the receiver can
-        //              either read or write bytes to its underlying CWConnection
-        //	      instance. Never call this method directly.
-        //  @param theData The file descriptor.
-        //  @param theType The type of event that occured.
-        //  @param theExtra Additional information.
-        //  @param theMode The runloop modes.
-        //*/
-        //- (void) receivedEvent: (void * _Nullable) theData
-        //                  type: (RunLoopEventType) theType
-        //                 extra: (void * _Nullable) theExtra
-        //               forMode: (NSString * _Nullable) theMode;
-
-        ///*!
-        //  @method reconnect
-        //  @discussion Pending.
-        //  @result Pending.
-        //*/       
-        //- (int) reconnect;
-
-//BUFF: still super working?
-        ///*!
-        //  @method updateRead
-        //  @discussion This method is invoked automatically when bytes are available
-        //              to be read. You should never have to invoke this method directly.
-        //*/
-        //- (void) updateRead;
-
-//BUFF: hide?
-        ///*!
-        //  @method updateWrite
-        //  @discussion This method is invoked automatically when bytes are available
-        //              to be written. You should never have to invoke this method directly.
-        //*/
-        //- (void) updateWrite;
-
-        ///**
-        // Buffers the given data to be streamed to a connected server later on.
-        // Also triggers the current connection to actually write the now bufferd data to the stream.
-        //
-        // You should never have to invoke this method directly.
-        //
-        // @param The bytes to buffer
-        // */
-        //- (void) writeData: (NSData *_Nonnull) theData;
-        //
-        ///**
-        // Buffers the given data in the given order to be streamed to a connected server later on.
-        // Also triggers the current connection to atually write the, now bufferd, data to the stream.
-        //
-        // You should never have to invoke this method directly.
-        //
-        // @param The bytes to buffer
-        // */
-        //- (void) bulkWriteData: (NSArray<NSData*> *_Nonnull) bulkData;
-
-        ///*!
-        //  @method addRunLoopMode:
-        //  @discussion This method is used to add an additional mode that the run-loop
-        //              will use to listen for network events for reading and writing.
-        //              Note that this method does nothing on OS X since only the
-        //	      kCFRunLoopCommonModes mode is used.
-        //  @param The additional mode. NSDefaultRunLoopMode is always present so there
-        //         is no need to add it.
-        //*/
-        //- (void) addRunLoopMode: (NSString * _Nonnull) theMode;
-        //
-        ///*!
-        //  @method connectionTimeout
-        //  @discussion This method is used to get the timeout used when
-        //              connecting to the host.
-        //  @result The connecton timeout.
-        //*/
-        //- (unsigned int) connectionTimeout;
-        //
-        ///*!
-        //  @method setConnectionTimeout:
-        //  @discussion This method is used to set the timeout used when
-        //              connecting to the host.
-        //  @param theConnectionTimeout The timeout to use.
-        //*/
-        //- (void) setConnectionTimeout: (unsigned int) theConnectionTimeout;
-        //
-        ///*!
-        //  @method readTimeout
-        //  @discussion This method is used to get the timeout used when
-        //              reading bytes from the socket.
-        //  @result The read timeout.
-        //*/
-        //- (unsigned int) readTimeout;
-        //
-        ///*!
-        //  @method setReadTimeout
-        //  @discussion This method is used to set the timeout used when
-        //              reading bytes from the socket.
-        //  @param The timeout to use.
-        //*/
-        //- (void) setReadTimeout: (unsigned int) theReadTimeout;
-        //
-        ///*!
-        //  @method writeTimeout
-        //  @discussion This method is used to get the timeout used when
-        //              writing bytes from the socket.
-        //  @result The write timeout.
-        //*/
-        //- (unsigned int) writeTimeout;
-        //
-        ///*!
-        //  @method setWriteTimeout
-        //  @discussion This method is used to set the timeout used when
-        //              writing bytes from the socket.
-        //  @param The timeout to use.
-        //*/
-        //- (void) setWriteTimeout: (unsigned int) theWriteTimeout;
-        //
-        ////BUFF: used by app
 /*!
   @method startTLS
   @discussion This method is used to activate TLS over
@@ -772,18 +477,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) startTLS;
 
-        ///*!
-        //  @method lastCommand
-        //  @discussion This method is used to get the last command that
-        //              has been sent by CWService subclasses to the
-        //	      remote server. To know which commands can be
-        //	      sent, see the documentation of the associated
-        //	      subclasses.
-        //  @result The last command sent, 0 otherwise.
-        //*/
-        //- (unsigned int) lastCommand;
-
-//BUFF: used by app
 /*!
   @method capabilities
   @discussion This method is used to obtain the capabilities of the
