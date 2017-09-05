@@ -17,6 +17,7 @@
 		15B3B1071F5DA52100EF9D9E /* CWThreadSafeArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B1041F5DA52100EF9D9E /* CWThreadSafeArray.m */; };
 		15B3B1081F5DA52100EF9D9E /* CWThreadSaveData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B1061F5DA52100EF9D9E /* CWThreadSaveData.m */; };
 		15B3F0C61F5ED64900BF531F /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
+		15B3F0CA1F5EE35E00BF531F /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
 		4338E37C1DF1BBFF0070176B /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
 		4338E37D1DF1BC050070176B /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F71CB7EBDD006867C0 /* CWFolder.m */; };
 		4338E3851DF1BC880070176B /* FolderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4338E3841DF1BC880070176B /* FolderTests.m */; };
@@ -137,6 +138,8 @@
 		15B3B1061F5DA52100EF9D9E /* CWThreadSaveData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSaveData.m; sourceTree = "<group>"; };
 		15B3F0C41F5ED64900BF531F /* CWService+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWService+Protected.h"; sourceTree = "<group>"; };
 		15B3F0C51F5ED64900BF531F /* CWService+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWService+Protected.m"; sourceTree = "<group>"; };
+		15B3F0C81F5EE35E00BF531F /* CWIMAPStore+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWIMAPStore+Protected.h"; sourceTree = "<group>"; };
+		15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPStore+Protected.m"; sourceTree = "<group>"; };
 		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
 		433149321CBCEA1100AFC030 /* CWCacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCacheRecord.m; sourceTree = "<group>"; };
 		433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
@@ -302,6 +305,28 @@
 			path = "pantomime-lib/Framework/Utils";
 			sourceTree = SOURCE_ROOT;
 		};
+		15B3F0C71F5EE31A00BF531F /* CWService */ = {
+			isa = PBXGroup;
+			children = (
+				43E8554C1CB7EBDD006867C0 /* CWService.h */,
+				43E8554D1CB7EBDD006867C0 /* CWService.m */,
+				15B3F0C41F5ED64900BF531F /* CWService+Protected.h */,
+				15B3F0C51F5ED64900BF531F /* CWService+Protected.m */,
+			);
+			name = CWService;
+			sourceTree = "<group>";
+		};
+		15B3F0CB1F5EE3D100BF531F /* CWIMAPStore */ = {
+			isa = PBXGroup;
+			children = (
+				43E855001CB7EBDD006867C0 /* CWIMAPStore.h */,
+				43E855011CB7EBDD006867C0 /* CWIMAPStore.m */,
+				15B3F0C81F5EE35E00BF531F /* CWIMAPStore+Protected.h */,
+				15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */,
+			);
+			name = CWIMAPStore;
+			sourceTree = "<group>";
+		};
 		433C51A61E647EBD00272E19 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -397,8 +422,7 @@
 				43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */,
 				43E854FE1CB7EBDD006867C0 /* CWIMAPMessage.h */,
 				43E854FF1CB7EBDD006867C0 /* CWIMAPMessage.m */,
-				43E855001CB7EBDD006867C0 /* CWIMAPStore.h */,
-				43E855011CB7EBDD006867C0 /* CWIMAPStore.m */,
+				15B3F0CB1F5EE3D100BF531F /* CWIMAPStore */,
 				43E855021CB7EBDD006867C0 /* CWInternetAddress.h */,
 				43E855031CB7EBDD006867C0 /* CWInternetAddress.m */,
 				43E855041CB7EBDD006867C0 /* CWISO8859_1.h */,
@@ -449,10 +473,7 @@
 				43E8553D1CB7EBDD006867C0 /* CWPart.m */,
 				43E855481CB7EBDD006867C0 /* CWRegEx.h */,
 				43E855491CB7EBDD006867C0 /* CWRegEx.m */,
-				43E8554C1CB7EBDD006867C0 /* CWService.h */,
-				43E8554D1CB7EBDD006867C0 /* CWService.m */,
-				15B3F0C41F5ED64900BF531F /* CWService+Protected.h */,
-				15B3F0C51F5ED64900BF531F /* CWService+Protected.m */,
+				15B3F0C71F5EE31A00BF531F /* CWService */,
 				43E8554E1CB7EBDD006867C0 /* CWSMTP.h */,
 				43E8554F1CB7EBDD006867C0 /* CWSMTP.m */,
 				43E855501CB7EBDD006867C0 /* CWStore.h */,
@@ -685,6 +706,7 @@
 				43980EAF1CBD1B5D00A7FC3C /* CWRegEx.m in Sources */,
 				43980EB11CBD1B5D00A7FC3C /* CWService.m in Sources */,
 				43980EB31CBD1B5D00A7FC3C /* CWSMTP.m in Sources */,
+				15B3F0CA1F5EE35E00BF531F /* CWIMAPStore+Protected.m in Sources */,
 				43980EB71CBD1B5D00A7FC3C /* CWURLName.m in Sources */,
 				43980EB91CBD1B5D00A7FC3C /* CWUUFile.m in Sources */,
 				43980EBB1CBD1B5D00A7FC3C /* CWVirtualFolder.m in Sources */,
