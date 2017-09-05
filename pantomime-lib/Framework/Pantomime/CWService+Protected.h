@@ -31,9 +31,15 @@ NS_ASSUME_NONNULL_BEGIN
 //
 #define DEFAULT_TIMEOUT 60
 
+/** Lazy initialized */
 - (dispatch_queue_t _Nullable)writeQueue;
 
 - (void)setWriteQueue: (dispatch_queue_t _Nullable)writeQueue;
+
+/** Lazy initialized */
+- (dispatch_queue_t _Nullable)serviceQueue;
+
+- (void)setServiceQueue: (dispatch_queue_t _Nullable)serviceQueue;
 
 /*!
  @method name
@@ -217,6 +223,11 @@ NS_ASSUME_NONNULL_BEGIN
  @result The last command sent, 0 otherwise.
  */
 - (unsigned int) lastCommand;
+
+/**
+ Sets all internal dispatch_queues used for serialization to nil.
+ */
+- (void)nullifyQueues;
 
 NS_ASSUME_NONNULL_END
 

@@ -339,9 +339,9 @@ extern NSString * _Nonnull PantomimeProtocolException;
 @public
 
 @protected
-    CWThreadSafeArray *_supportedMechanisms;
+    __block CWThreadSafeArray *_supportedMechanisms;
     CWThreadSafeArray *_responsesFromServer;
-    CWThreadSafeArray *_capabilities;
+    __block CWThreadSafeArray *_capabilities;
     CWThreadSafeArray *_runLoopModes;
     CWThreadSafeArray *_queue;
     CWThreadSaveData *_wbuf;
@@ -349,26 +349,30 @@ extern NSString * _Nonnull PantomimeProtocolException;
     NSString *_mechanism;
     NSString *_username;
     NSString *_password;
-    NSString *_name;
+    __block NSString *_name;
 
 #ifdef MACOSX
     CFRunLoopSourceRef _runLoopSource;
     CFSocketContext *_context;
     CFSocketRef _socket;
 #endif
-    ConnectionTransport _connectionTransport;
+    __block ConnectionTransport _connectionTransport;
+    /** Used to serialize writes to the connection. As we serialize only public methods, pantomime and 
+     methods called form a client might write at the same time.*/
     dispatch_queue_t _writeQueue;
+    /** Used to serialize public methods. THey might be called from different threads concurrently. */
+    dispatch_queue_t _serviceQueue;
     unsigned int _connectionTimeout;
     unsigned int _readTimeout;
     unsigned int _writeTimeout;
     unsigned int _lastCommand;
-    unsigned int _port;
-    BOOL _connected;
-    id __weak _Nullable _delegate;
+    __block unsigned int _port;
+    __block BOOL _connected;
+    id __weak _Nullable __block _delegate;
     
-    id<CWConnection> _connection;
+    __block id<CWConnection> _connection;
     int _counter;
-    CWConnectionState *_connection_state;
+    __block CWConnectionState *_connection_state;
 }
 
 /*!

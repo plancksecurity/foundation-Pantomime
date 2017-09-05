@@ -127,12 +127,18 @@
 //
 - (void) setDelegate: (id _Nullable) theDelegate
 {
-  _delegate = theDelegate;
+    @synchronized (self) {
+        if (_delegate != theDelegate) {
+            _delegate = theDelegate;
+        }
+    }
 }
 
 - (id) delegate
 {
-  return _delegate;
+    @synchronized (self) {
+        return _delegate;
+    }
 }
 
 
@@ -141,7 +147,9 @@
 //
 - (unsigned int) port
 {
-  return _port;
+    @synchronized (self) {
+        return _port;
+    }
 }
 
 
@@ -150,7 +158,9 @@
 //
 - (NSArray *) supportedMechanisms
 {
-  return [_supportedMechanisms array];
+    @synchronized (self) {
+        return [_supportedMechanisms array];
+    }
 }
 
 
@@ -170,13 +180,15 @@
 //
 - (void) cancelRequest
 {
-    self.writeQueue = nil;
-  [_connection close];
-  DESTROY(_connection);
-  [_queue removeAllObjects];
+    dispatch_sync(self.serviceQueue, ^{
+        [self nullifyQueues];
+        [_connection close];
+        DESTROY(_connection);
+        [_queue removeAllObjects];
 
-  POST_NOTIFICATION(PantomimeRequestCancelled, self, nil);
-  PERFORM_SELECTOR_1(_delegate, @selector(requestCancelled:), PantomimeRequestCancelled);
+        POST_NOTIFICATION(PantomimeRequestCancelled, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(requestCancelled:), PantomimeRequestCancelled);
+    });
 }
 
 
@@ -185,31 +197,33 @@
 //
 - (void) close
 {
-    self.writeQueue = nil;
-  //
-  // If we are reconnecting, no matter what, we close and release our current connection immediately.
-  // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
-  // to return immediately since _connected will be set to NO in _removeWatchers.
-  //
-  if (_connection_state.reconnecting)
-    {
-      [_connection close];
-      DESTROY(_connection);
-    }
+    dispatch_sync(self.serviceQueue, ^{
+        [self nullifyQueues];
+        //
+        // If we are reconnecting, no matter what, we close and release our current connection immediately.
+        // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
+        // to return immediately since _connected will be set to NO in _removeWatchers.
+        //
+        if (_connection_state.reconnecting)
+        {
+            [_connection close];
+            DESTROY(_connection);
+        }
 
-  if (_connected)
-    {
-        _connected = NO;
-        [_connection close];
+        if (_connected)
+        {
+            _connected = NO;
+            [_connection close];
 
-        POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
-        PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
-    } else {
-        INFO(NSStringFromClass(self.class), @"CWService.close: Double invocation");
-    }
-
-    [_connection setDelegate:nil];
-    _connection = nil;
+            POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
+            PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
+        } else {
+            INFO(NSStringFromClass(self.class), @"CWService.close: Double invocation");
+        }
+        
+        [_connection setDelegate:nil];
+        _connection = nil;
+    });
 }
 
 
@@ -218,20 +232,22 @@
 //
 - (void) connectInBackgroundAndNotify
 {
-    _connection = [[CWTCPConnection alloc] initWithName: _name
-                                                 port: _port
-                                            transport: _connectionTransport
-                                           background: YES];
+    dispatch_sync(self.serviceQueue, ^{
+        _connection = [[CWTCPConnection alloc] initWithName: _name
+                                                       port: _port
+                                                  transport: _connectionTransport
+                                                 background: YES];
 
-    if (!_connection)
-    {
-        POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
-        PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
-        return;
-    }
+        if (!_connection)
+        {
+            POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
+            PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
+            return;
+        }
 
-    _connection.delegate = self;
-    [_connection connect];
+        _connection.delegate = self;
+        [_connection connect];
+    });
 }
 
 
@@ -249,13 +265,15 @@
 
 - (void) startTLS
 {
-  [self subclassResponsibility: _cmd];
+    [self subclassResponsibility: _cmd];
 }
 
 
 - (NSSet *) capabilities
 {
-  return [[NSSet alloc] initWithArray:[_capabilities array]];
+    @synchronized (self) {
+        return [[NSSet alloc] initWithArray:[_capabilities array]];
+    }
 }
 
 #pragma mark - CWConnectionDelegate
@@ -276,49 +294,53 @@
                  extra: (void *) theExtra
                forMode: (NSString *) theMode
 {
-    AUTORELEASE_VOID(RETAIN(self));    // Don't be deallocated while handling event
-    switch (theType)
-    {
+    dispatch_sync(self.serviceQueue, ^{
+        AUTORELEASE_VOID(RETAIN(self));    // Don't be deallocated while handling event
+        switch (theType)
+        {
 #ifdef __MINGW32__
-        case ET_HANDLE:
-        case ET_TRIGGER:
-            [self updateRead];
-            [self updateWrite];
-            break;
+            case ET_HANDLE:
+            case ET_TRIGGER:
+                [self updateRead];
+                [self updateWrite];
+                break;
 #else
-        case ET_RDESC:
-            [self updateRead];
-            break;
+            case ET_RDESC:
+                [self updateRead];
+                break;
 
-        case ET_WDESC:
-            [self updateWrite];
-            break;
+            case ET_WDESC:
+                [self updateWrite];
+                break;
 
-        case ET_EDESC:
-            //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
-            if (_connected) {
-                POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
-                PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
-                [self close];
-            } else {
-                POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
-                PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
-                                   PantomimeConnectionTimedOut);
-            }
-            break;
+            case ET_EDESC:
+                //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+                if (_connected) {
+                    POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
+                    PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+                    [self close];
+                } else {
+                    POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
+                    PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
+                                       PantomimeConnectionTimedOut);
+                }
+                break;
 #endif
-
-        default:
-            break;
-    }
+                
+            default:
+                break;
+        }
+    });
 }
 
 - (void)connectionEstablished
 {
-    _connected = YES;
-    POST_NOTIFICATION(PantomimeConnectionEstablished, self, nil);
-    PERFORM_SELECTOR_1(_delegate, @selector(connectionEstablished:),
-                       PantomimeConnectionEstablished);
+    dispatch_sync(self.serviceQueue, ^{
+        _connected = YES;
+        POST_NOTIFICATION(PantomimeConnectionEstablished, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(connectionEstablished:),
+                           PantomimeConnectionEstablished);
+    });
 }
 
 @end
