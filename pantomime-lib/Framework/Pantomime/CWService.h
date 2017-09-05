@@ -401,20 +401,21 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (id _Nullable) delegate;
 
-/*!
-  @method name
-  @discussion This method is used to obtain the server name.
-  @result The server name.
-*/
-- (NSString * _Nonnull) name;
-
-/*!
-  @method setName:
-  @discussion This method is used to set the server name to which
-              we will eventually connect to.
-  @param theName The name of the server.
-*/
-- (void) setName: (NSString * _Nonnull) theName;
+//BUFF: hide?
+///*!
+//  @method name
+//  @discussion This method is used to obtain the server name.
+//  @result The server name.
+//*/
+//- (NSString * _Nonnull) name;
+//
+///*!
+//  @method setName:
+//  @discussion This method is used to set the server name to which
+//              we will eventually connect to.
+//  @param theName The name of the server.
+//*/
+//- (void) setName: (NSString * _Nonnull) theName;
 
 /*!
   @method port
@@ -423,21 +424,23 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (unsigned int) port;
 
-/*!
-  @method setPort:
-  @discussion This method is used to set the server port to which
-              we will eventually connect to.
-  @param theName The port of the server.
-*/
-- (void) setPort: (unsigned int) thePort;
+//BUFF: hide?
+///*!
+//  @method setPort:
+//  @discussion This method is used to set the server port to which
+//              we will eventually connect to.
+//  @param theName The port of the server.
+//*/
+//- (void) setPort: (unsigned int) thePort;
 
-/*!
-  @method connection
-  @discussion This method is used to retrieve the associated connection
-              object for the service (usually a CWTCPConnection instance).
-  @result The associated connectio object.
-*/
-- (id<CWConnection> _Nonnull) connection;
+//BUFF: hide?
+///*!
+//  @method connection
+//  @discussion This method is used to retrieve the associated connection
+//              object for the service (usually a CWTCPConnection instance).
+//  @result The associated connectio object.
+//*/
+//- (id<CWConnection> _Nonnull) connection;
 
 /*!
   @method username
@@ -447,14 +450,16 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (NSString * _Nullable) username;
 
-/*!
-  @method setUsername:
-  @discussion This method is used to set the username that will be used
-              to authenticate to the service.
-  @param theUsername The username for authentication.
-*/
-- (void) setUsername: (NSString * _Nonnull) theUsername;
+//BUFF: hide?
+///*!
+//  @method setUsername:
+//  @discussion This method is used to set the username that will be used
+//              to authenticate to the service.
+//  @param theUsername The username for authentication.
+//*/
+//- (void) setUsername: (NSString * _Nonnull) theUsername;
 
+//BUFF: used but does not need serialization!?
 /*!
   @method supportedMechanisms
   @discussion This method is used to return the supported SASL
@@ -472,6 +477,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (BOOL) isConnected;
 
+//BUFF: used by app
 /*!
   @method authenticate: password: mechanism:
   @discussion This method is used to authentifcate the receiver
@@ -489,6 +495,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
              password: (NSString * _Nullable) thePassword
             mechanism: (NSString * _Nonnull) theMechanism;
 
+//BUFF: used by app
 /*!
   @method cancelRequest
   @discussion This method will cancel any pending requests or communications
@@ -498,6 +505,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) cancelRequest;
 
+//BUFF: used by app
 /*!
   @method close
   @discussion This method is used to close the connection to the server.
@@ -508,15 +516,17 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) close;
 
-/*!
-  @method connect
-  @discussion This method is used to connect the receiver to the server.
-              It will block until the connection was succefully established
-	      (or until it fails).
-  @result 0 on success, -1 on error.
-*/
-- (int) connect;
+//BUFF: hide?
+///*!
+//  @method connect
+//  @discussion This method is used to connect the receiver to the server.
+//              It will block until the connection was succefully established
+//	      (or until it fails).
+//  @result 0 on success, -1 on error.
+//*/
+//- (int) connect;
 
+//BUFF: used by app
 /*!
   @method connectInBackgroundAndNotify
   @discussion This method is used  connect the receiver to the server.
@@ -565,12 +575,13 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) updateRead;
 
-/*!
-  @method updateWrite
-  @discussion This method is invoked automatically when bytes are available
-              to be written. You should never have to invoke this method directly.
-*/
-- (void) updateWrite;
+//BUFF: hide?
+///*!
+//  @method updateWrite
+//  @discussion This method is invoked automatically when bytes are available
+//              to be written. You should never have to invoke this method directly.
+//*/
+//- (void) updateWrite;
 
 /**
  Buffers the given data to be streamed to a connected server later on.
@@ -651,6 +662,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (void) setWriteTimeout: (unsigned int) theWriteTimeout;
 
+//BUFF: used by app
 /*!
   @method startTLS
   @discussion This method is used to activate TLS over
@@ -672,7 +684,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (unsigned int) lastCommand;
 
-
+//BUFF: used by app
 /*!
   @method capabilities
   @discussion This method is used to obtain the capabilities of the

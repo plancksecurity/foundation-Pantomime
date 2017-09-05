@@ -23,7 +23,7 @@
 #ifndef _Pantomime_H_CWIMAPStore
 #define _Pantomime_H_CWIMAPStore
 
-#import "Pantomime/CWConnection.h"
+//#import "Pantomime/CWConnection.h" //BUFF:
 #import "Pantomime/CWConstants.h"
 #import "Pantomime/CWService.h"
 #import "Pantomime/CWStore.h"
@@ -187,7 +187,7 @@ extern NSString * _Nonnull const PantomimeIdleNewMessages;
  */
 extern NSString * _Nonnull const PantomimeIdleFinished;
 
-@class CWConnection;
+//@class CWConnection; //BUFF:
 @class CWFlags;
 @class CWIMAPCacheManager;
 @class CWIMAPFolder;
@@ -222,6 +222,7 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
  */
 @property (nonatomic) NSUInteger maxPrefetchCount;
 
+//BUFF: used by app
 /*!
   @method folderForName:mode:prefetch:
   @discussion This method is used to get the folder with
@@ -249,22 +250,24 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 - (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName
                                     select: (BOOL) aBOOL;
 
-/*!
-  @method nextTag
-  @discussion This method is used to obtain the next IMAP tag
-              that will be sent to the IMAP server. Normally
-	      you shouldn't call this method directly.
-  @result The tag as a NSData instance.
-*/
-- (NSData * _Nullable) nextTag;
+//BUFF: hide?
+///*!
+//  @method nextTag
+//  @discussion This method is used to obtain the next IMAP tag
+//              that will be sent to the IMAP server. Normally
+//	      you shouldn't call this method directly.
+//  @result The tag as a NSData instance.
+//*/
+//- (NSData * _Nullable) nextTag;
 
-/*!
-  @method lastTag
-  @discussion This method is used to obtain the last IMAP tag
-              sent to the IMAP server.
-  @result The tag as a NSData instance.
-*/
-- (NSData * _Nullable) lastTag;
+//BUFF: hide?
+///*!
+//  @method lastTag
+//  @discussion This method is used to obtain the last IMAP tag
+//              sent to the IMAP server.
+//  @result The tag as a NSData instance.
+//*/
+//- (NSData * _Nullable) lastTag;
 
 /*!
   @method subscribeToFolderWithName:
@@ -316,6 +319,7 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 */
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo  arguments: (NSString * _Nonnull) theFormat, ...;
 
+//BUFF: used by app
 /*!
  @method sendCommand:info:string: ...
  @discussion This method is used to send commands to the IMAP server.
@@ -329,6 +333,7 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 
 - (void)signalFolderSyncError;
 
+//BUFF: used by app
 - (void)exitIDLE;
 
 @end
