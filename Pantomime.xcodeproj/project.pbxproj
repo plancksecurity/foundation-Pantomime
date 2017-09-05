@@ -16,6 +16,7 @@
 		15B3B0FA1F5DA3B600EF9D9E /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B0F91F5DA3B600EF9D9E /* CWLogger.m */; };
 		15B3B1071F5DA52100EF9D9E /* CWThreadSafeArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B1041F5DA52100EF9D9E /* CWThreadSafeArray.m */; };
 		15B3B1081F5DA52100EF9D9E /* CWThreadSaveData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B1061F5DA52100EF9D9E /* CWThreadSaveData.m */; };
+		15B3F0C61F5ED64900BF531F /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
 		4338E37C1DF1BBFF0070176B /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
 		4338E37D1DF1BC050070176B /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F71CB7EBDD006867C0 /* CWFolder.m */; };
 		4338E3851DF1BC880070176B /* FolderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4338E3841DF1BC880070176B /* FolderTests.m */; };
@@ -134,6 +135,8 @@
 		15B3B1041F5DA52100EF9D9E /* CWThreadSafeArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSafeArray.m; sourceTree = "<group>"; };
 		15B3B1051F5DA52100EF9D9E /* CWThreadSaveData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWThreadSaveData.h; sourceTree = "<group>"; };
 		15B3B1061F5DA52100EF9D9E /* CWThreadSaveData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSaveData.m; sourceTree = "<group>"; };
+		15B3F0C41F5ED64900BF531F /* CWService+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWService+Protected.h"; sourceTree = "<group>"; };
+		15B3F0C51F5ED64900BF531F /* CWService+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWService+Protected.m"; sourceTree = "<group>"; };
 		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
 		433149321CBCEA1100AFC030 /* CWCacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCacheRecord.m; sourceTree = "<group>"; };
 		433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
@@ -448,6 +451,8 @@
 				43E855491CB7EBDD006867C0 /* CWRegEx.m */,
 				43E8554C1CB7EBDD006867C0 /* CWService.h */,
 				43E8554D1CB7EBDD006867C0 /* CWService.m */,
+				15B3F0C41F5ED64900BF531F /* CWService+Protected.h */,
+				15B3F0C51F5ED64900BF531F /* CWService+Protected.m */,
 				43E8554E1CB7EBDD006867C0 /* CWSMTP.h */,
 				43E8554F1CB7EBDD006867C0 /* CWSMTP.m */,
 				43E855501CB7EBDD006867C0 /* CWStore.h */,
@@ -669,6 +674,7 @@
 				43980E9F1CBD1B5D00A7FC3C /* CWKOI8_U.m in Sources */,
 				43980EA11CBD1B5D00A7FC3C /* CWMacOSXGlue.m in Sources */,
 				43980EA31CBD1B5D00A7FC3C /* CWMD5.m in Sources */,
+				15B3F0C61F5ED64900BF531F /* CWService+Protected.m in Sources */,
 				43980EA51CBD1B5D00A7FC3C /* CWMessage.m in Sources */,
 				15B3B0FA1F5DA3B600EF9D9E /* CWLogger.m in Sources */,
 				43980EA71CBD1B5D00A7FC3C /* CWMIMEMultipart.m in Sources */,

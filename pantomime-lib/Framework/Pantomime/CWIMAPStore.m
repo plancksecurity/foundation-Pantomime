@@ -53,6 +53,8 @@
 #import <ctype.h>
 #import <stdio.h>
 
+#import "CWService+Protected.h"
+
 //
 // Some static variables used to enhance the performance.
 //

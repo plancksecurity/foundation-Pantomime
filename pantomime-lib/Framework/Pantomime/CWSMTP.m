@@ -36,6 +36,8 @@
 #import "CWThreadSafeArray.h"
 #import "CWThreadSaveData.h"
 
+#import "CWService+Protected.h"
+
 //
 // Some static variables used to enhance the performance.
 //
