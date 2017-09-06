@@ -335,4 +335,67 @@
     self.serviceQueue = nil;
 }
 
+#pragma mark - CWConnectionDelegate
+
+/**
+ //  RunLoopEvents protocol's implementations.
+ //
+ //  @discussion This method is automatically invoked when the receiver can
+ //              either read or write bytes to its underlying CWConnection
+ //	      instance. Never call this method directly.
+ //  @param theData The file descriptor.
+ //  @param theType The type of event that occured.
+ //  @param theExtra Additional information.
+ //  @param theMode The runloop modes.
+ //*/
+- (void) receivedEvent: (void *) theData
+                  type: (RunLoopEventType) theType
+                 extra: (void *) theExtra
+               forMode: (NSString *) theMode
+{
+    AUTORELEASE_VOID(RETAIN(self));    // Don't be deallocated while handling event
+    switch (theType)
+    {
+#ifdef __MINGW32__
+        case ET_HANDLE:
+        case ET_TRIGGER:
+            [self updateRead];
+            [self updateWrite];
+            break;
+#else
+        case ET_RDESC:
+            [self updateRead];
+            break;
+
+        case ET_WDESC:
+            [self updateWrite];
+            break;
+
+        case ET_EDESC:
+            //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+            if (_connected) {
+                POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
+                PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+                [self close];
+            } else {
+                POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
+                PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
+                                   PantomimeConnectionTimedOut);
+            }
+            break;
+#endif
+
+        default:
+            break;
+    }
+}
+
+- (void)connectionEstablished
+{
+    _connected = YES;
+    POST_NOTIFICATION(PantomimeConnectionEstablished, self, nil);
+    PERFORM_SELECTOR_1(_delegate, @selector(connectionEstablished:),
+                       PantomimeConnectionEstablished);
+}
+
 @end

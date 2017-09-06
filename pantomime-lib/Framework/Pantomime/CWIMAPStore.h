@@ -198,8 +198,9 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
   @abstract Pantomime IMAP client code.
   @discussion This class, which extends the CWService class and implements
               the CWStore protocol, is Pantomime's IMAP client code.
+              All calls from client site are guarantied to be serialized.
 */ 
-@interface CWIMAPStore : CWService <CWStore>
+@interface CWIMAPStore : CWService  <CWStore>
 {
   @private
     NSMutableDictionary *_folders;
@@ -211,6 +212,10 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 
     unsigned char _folderSeparator;
     int _tag;
+
+    __block CWIMAPQueueObject *_currentQueueObject;
+    @protected
+     NSData *_crlf;
 }
 
 @property (nonatomic, nullable) id<CWFolderBuilding> folderBuilder;
@@ -231,8 +236,6 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 - (CWIMAPFolder *_Nullable) folderForName: (NSString * _Nonnull) theName
                                      mode: (PantomimeFolderMode) theMode;
 
-- (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName;
-
 /*!
  @method sendCommand:info:string: ...
  @discussion This method is used to send commands to the IMAP server.
@@ -245,6 +248,16 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
               string:(NSString * _Nonnull)theString;
 
 - (void)exitIDLE;
+
+#pragma mark - CWStore
+
+//
+// When this method is invoked for the first time, it sends a LIST
+// command to the IMAP server and cache the results for subsequent
+// queries. The IMAPStore notifies the delegate once it has parsed
+// all server's responses.
+//
+- (NSEnumerator *_Nullable) folderEnumerator;
 
 @end
 

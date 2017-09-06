@@ -9,9 +9,15 @@
 #import "CWIMAPStore.h"
 #import "CWService+Protected.h"
 
+#import "Pantomime/CWStore.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CWIMAPStore (Protected)
+
+- (CWIMAPQueueObject * _Nullable)currentQueueObject;
+
+- (void)setCurrentQueueObject:(CWIMAPQueueObject * _Nullable)currentQueueObject;
 
 /*!
  @method folderForName:select:
@@ -98,8 +104,80 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo  arguments: (NSString *) theFormat, ...;
 
+/*!
+ @method sendCommandInternal:info:string: ...
+ @discussion This method is used to send commands to the IMAP server.
+ Normally, you should not call this method directly.
+ @param theCommand The IMAP command to send.
+ @param theInfo The addition info to pass.
+ @param string The parameter string
+ */
+- (void) sendCommandInternal: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+                      string:(NSString * _Nonnull)theString;
+
 - (void)signalFolderSyncError;
 
 @end
+
+//
+//
+//
+@interface CWIMAPQueueObject : NSObject
+
+@property (strong, nonatomic, nullable) NSMutableDictionary *info;
+@property (strong, nonatomic, nullable) NSString *arguments;
+@property (strong, nonatomic, nullable) NSData *tag;
+@property (nonatomic) int literal;
+@property (nonatomic) IMAPCommand command;
+
+- (id) initWithCommand: (IMAPCommand) theCommand
+             arguments: (NSString *) theArguments
+                   tag: (NSData *) theTag
+                  info: (NSDictionary *) theInfo;
+@end
+
+
+//BUFF: to m
+//@implementation CWIMAPQueueObject
+//
+//- (id) initWithCommand: (IMAPCommand) theCommand
+//             arguments: (NSString *) theArguments
+//                   tag: (NSData *) theTag
+//                  info: (NSDictionary *) theInfo
+//{
+//    self = [super init];
+//    INFO(NSStringFromClass([self class]), @"CWIMAPQueueObject.init %@\n", self);
+//    _command = theCommand;
+//    _literal = 0;
+//
+//    ASSIGN(_arguments, theArguments);
+//    ASSIGN(_tag, theTag);
+//
+//    if (theInfo)
+//    {
+//        _info = [[NSMutableDictionary alloc] initWithDictionary: theInfo];
+//    }
+//    else
+//    {
+//        _info = [[NSMutableDictionary alloc] init];
+//    }
+//
+//    return self;
+//}
+//
+//- (void) dealloc
+//{
+//    INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
+//    RELEASE(arguments);
+//    RELEASE(info);
+//    RELEASE(tag);
+//    //[super dealloc];
+//}
+//
+//- (NSString *) description
+//{
+//    return [NSString stringWithFormat: @"%d %@", self.command, self.arguments];
+//}
+//@end
 
 NS_ASSUME_NONNULL_END

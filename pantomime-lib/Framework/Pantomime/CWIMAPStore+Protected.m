@@ -10,8 +10,28 @@
 
 #import "CWIMAPFolder.h"
 #import "Pantomime/NSString+Extensions.h"
+#import "CWThreadSafeArray.h"
 
 @implementation CWIMAPStore (Protected)
+
+
+- (CWIMAPQueueObject * _Nullable)currentQueueObject
+{
+    @synchronized (self) {
+        return _currentQueueObject;
+    }
+}
+
+
+- (void)setCurrentQueueObject:(CWIMAPQueueObject * _Nullable)currentQueueObject
+{
+    @synchronized (self) {
+        if (_currentQueueObject != currentQueueObject) {
+            _currentQueueObject = currentQueueObject;
+        }
+    }
+}
+
 
 //
 //
@@ -129,8 +149,150 @@
 
     va_start(args, theFormat);
     NSString *aString = [[NSString alloc] initWithFormat: theFormat  arguments: args];
-    [self sendCommand:theCommand info:theInfo string:aString];
+    //BUFF:
+    [self sendCommandInternal:theCommand info:theInfo string:aString];
+//    [self sendCommand:theCommand info:theInfo string:aString];
 }
+
+
+- (void) sendCommandInternal: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+                      string:(NSString * _Nonnull)theString
+{
+    if (theCommand == IMAP_EMPTY_QUEUE)
+    {
+        if ([_queue count])
+        {
+            // We dequeue the first inserted command from the queue.
+            self.currentQueueObject = [_queue lastObject];
+        }
+        else
+        {
+            // The queue is empty, we have nothing more to do...
+            INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
+            self.currentQueueObject = nil;
+            return;
+        }
+    }
+    else
+    {
+        //
+        // We must check in the queue if we aren't trying to add a command that is already there.
+        // This could happend if -rawSource is called in IMAPMessage multiple times before
+        // PantomimeMessageFetchCompleted is sent.
+        //
+        // We skip this verification for the IMAP_APPEND command as a messages with the same size
+        // could be quickly appended to the folder and we do NOT want to skip the second one.
+        //
+        for (CWIMAPQueueObject *aQueueObject in _queue) {
+            if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
+                [aQueueObject.arguments isEqualToString: theString])
+            {
+                //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
+                return;
+            }
+        }
+
+        CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
+                                           initWithCommand: theCommand  arguments: theString
+                                           tag: [self nextTag]  info: theInfo];
+
+        [_queue insertObject: aQueueObject  atIndex: 0];
+        RELEASE(aQueueObject);
+
+        INFO(NSStringFromClass([self class]), @"queue size = %lul", (unsigned long) [_queue count]);
+
+        // If we had queued commands, we return since we'll eventually
+        // dequeue them one by one. Otherwise, we run it immediately.
+        if ([_queue count] > 1)
+        {
+            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
+            return;
+        }
+
+        self.currentQueueObject = aQueueObject;
+    }
+
+    INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
+    _lastCommand = self.currentQueueObject.command;
+
+    [self bulkWriteData:@[self.currentQueueObject.tag,
+                          [NSData dataWithBytes: " "  length: 1],
+                          [self.currentQueueObject.arguments dataUsingEncoding: [NSString defaultCStringEncoding]],
+                          _crlf]];
+
+    POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
+    PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
+}
+
+//BUFF: is public, mac to pub
+//- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+//              string:(NSString * _Nonnull)theString
+//{
+//    if (theCommand == IMAP_EMPTY_QUEUE)
+//    {
+//        if ([_queue count])
+//        {
+//            // We dequeue the first inserted command from the queue.
+//            self.currentQueueObject = [_queue lastObject];
+//        }
+//        else
+//        {
+//            // The queue is empty, we have nothing more to do...
+//            INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
+//            self.currentQueueObject = nil;
+//            return;
+//        }
+//    }
+//    else
+//    {
+//        //
+//        // We must check in the queue if we aren't trying to add a command that is already there.
+//        // This could happend if -rawSource is called in IMAPMessage multiple times before
+//        // PantomimeMessageFetchCompleted is sent.
+//        //
+//        // We skip this verification for the IMAP_APPEND command as a messages with the same size
+//        // could be quickly appended to the folder and we do NOT want to skip the second one.
+//        //
+//        for (CWIMAPQueueObject *aQueueObject in _queue) {
+//            if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
+//                [aQueueObject.arguments isEqualToString: theString])
+//            {
+//                //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
+//                return;
+//            }
+//        }
+//
+//        CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
+//                                           initWithCommand: theCommand  arguments: theString
+//                                           tag: [self nextTag]  info: theInfo];
+//
+//        [_queue insertObject: aQueueObject  atIndex: 0];
+//        RELEASE(aQueueObject);
+//
+//        INFO(NSStringFromClass([self class]), @"queue size = %lul", (unsigned long) [_queue count]);
+//
+//        // If we had queued commands, we return since we'll eventually
+//        // dequeue them one by one. Otherwise, we run it immediately.
+//        if ([_queue count] > 1)
+//        {
+//            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
+//            return;
+//        }
+//
+//        self.currentQueueObject = aQueueObject;
+//    }
+//
+//    INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
+//    _lastCommand = self.currentQueueObject.command;
+//
+//    [self bulkWriteData:@[self.currentQueueObject.tag,
+//                          [NSData dataWithBytes: " "  length: 1],
+//                          [self.currentQueueObject.arguments dataUsingEncoding: [NSString defaultCStringEncoding]],
+//                          _crlf]];
+//
+//    POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
+//    PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
+//}
 
 - (void)signalFolderSyncError
 {
@@ -138,6 +300,49 @@
                       [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
     PERFORM_SELECTOR_2(_delegate, @selector(folderSyncFailed:),
                        PantomimeFolderSyncFailed, _selectedFolder, @"Folder");
+}
+
+@end
+
+@implementation CWIMAPQueueObject
+
+- (id) initWithCommand: (IMAPCommand) theCommand
+             arguments: (NSString *) theArguments
+                   tag: (NSData *) theTag
+                  info: (NSDictionary *) theInfo
+{
+    self = [super init];
+    INFO(NSStringFromClass([self class]), @"CWIMAPQueueObject.init %@\n", self);
+    _command = theCommand;
+    _literal = 0;
+
+    ASSIGN(_arguments, theArguments);
+    ASSIGN(_tag, theTag);
+
+    if (theInfo)
+    {
+        _info = [[NSMutableDictionary alloc] initWithDictionary: theInfo];
+    }
+    else
+    {
+        _info = [[NSMutableDictionary alloc] init];
+    }
+
+    return self;
+}
+
+- (void) dealloc
+{
+    INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
+    RELEASE(arguments);
+    RELEASE(info);
+    RELEASE(tag);
+    //[super dealloc];
+}
+
+- (NSString *) description
+{
+    return [NSString stringWithFormat: @"%d %@", self.command, self.arguments];
 }
 
 @end

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CWService (Protected)
+@interface CWService (Protected) <CWConnectionDelegate>
 
 //
 // It's important that the read buffer be bigger than the PMTU. Since almost all networks
