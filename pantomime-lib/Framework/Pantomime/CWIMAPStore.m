@@ -813,7 +813,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         returnee = _selectedFolder;
     });
 
-    return _selectedFolder;
+    return returnee;
 }
 
 
