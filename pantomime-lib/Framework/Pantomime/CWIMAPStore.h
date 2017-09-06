@@ -23,7 +23,6 @@
 #ifndef _Pantomime_H_CWIMAPStore
 #define _Pantomime_H_CWIMAPStore
 
-#import "Pantomime/CWConnection.h"
 #import "Pantomime/CWConstants.h"
 #import "Pantomime/CWService.h"
 #import "Pantomime/CWStore.h"
@@ -187,7 +186,6 @@ extern NSString * _Nonnull const PantomimeIdleNewMessages;
  */
 extern NSString * _Nonnull const PantomimeIdleFinished;
 
-@class CWConnection;
 @class CWFlags;
 @class CWIMAPCacheManager;
 @class CWIMAPFolder;
@@ -200,8 +198,9 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
   @abstract Pantomime IMAP client code.
   @discussion This class, which extends the CWService class and implements
               the CWStore protocol, is Pantomime's IMAP client code.
+              All calls from client site are guarantied to be serialized.
 */ 
-@interface CWIMAPStore : CWService <CWStore>
+@interface CWIMAPStore : CWService  <CWStore>
 {
   @private
     NSMutableDictionary *_folders;
@@ -213,6 +212,11 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 
     unsigned char _folderSeparator;
     int _tag;
+
+    __block CWIMAPQueueObject *_currentQueueObject;
+
+    @protected
+     NSData *_crlf;
 }
 
 @property (nonatomic, nullable) id<CWFolderBuilding> folderBuilder;
@@ -230,91 +234,8 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
   @param theMode The mode to use. The value is one of the PantomimeFolderMode enum.
   @result A CWIMAPFolder instance.
 */
-- (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName
-                            mode: (PantomimeFolderMode) theMode;
-
-/*!
-  @method folderForName:select:
-  @discussion This method is used to obtain the folder with
-              the specified name. If <i>aBOOL</i> is YES,
-	      the folder will be selected. Otherwise, a non-selected
-	      folder will be returned which is used to proceed with
-	      an append operation. Note that when <i>aBOOL</i> is
-	      equal to NO, the returned folder is NOT part of the
-	      list of opened folders.
-  @param theName The name of the folder to obtain.
-  @param aBOOL YES to select the folder, NO otherwise.
-  @result A CWIMAPFolder instance.
-*/
-- (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName
-                                    select: (BOOL) aBOOL;
-
-/*!
-  @method nextTag
-  @discussion This method is used to obtain the next IMAP tag
-              that will be sent to the IMAP server. Normally
-	      you shouldn't call this method directly.
-  @result The tag as a NSData instance.
-*/
-- (NSData * _Nullable) nextTag;
-
-/*!
-  @method lastTag
-  @discussion This method is used to obtain the last IMAP tag
-              sent to the IMAP server.
-  @result The tag as a NSData instance.
-*/
-- (NSData * _Nullable) lastTag;
-
-/*!
-  @method subscribeToFolderWithName:
-  @discussion This method is used to subscribe to the specified folder.
-              The method will post a PantomimeFolderSubscribeCompleted notification
-	      (and call -folderSubscribeCompleted: on the delegate, if any) if
-	      it succeeded. If not, it will post a PantomimeFolderSubscribeFailed
-	      notification (and call -folderSubscribeFailed: on the delegate, if any)
-  @param theName The name of the folder to subscribe to.
-*/
-- (void) subscribeToFolderWithName: (NSString * _Nullable) theName;
-
-/*!
-  @method unsubscribeToFolderWithName:
-  @discussion This method is used to unsubscribe to the specified folder.
-              The method will post a PantomimeFolderUnsubscribeCompleted notification
-	      (and call -folderUnsubscribeCompleted: on the delegate, if any) if
-	      it succeeded. If not, it will post a PantomimeFolderUnsubscribeFailed
-	      notification (and call -folderUnsubscribeFailed: on the delegate, if any)
-  @param theName The name of the folder to subscribe to.
-*/
-- (void) unsubscribeToFolderWithName: (NSString * _Nullable) theName;
-
-/*!
-  @method folderStatus:
-  @discussion This method is used to obtain the status of the specified
-              folder names in <i>theArray</i>. It is fully asynchronous.
-	      The first time it is invoked, it'll perform its work asynchronously
-	      and post a PantomimeFolderStatusCompleted notification (and call
-	      -folderStatusCompleted on the delegate, if any) if succeeded. If not,
-	      it will post a PantomimeFolderStatusFailed notification (and call
-	      -folderStatusFailed: on the delegate, if any). Further calls
-	      of this method on the same set of folders will immediately return
-	      the status information.
-  @param theArray The array of folder names.
-  @result A NSDictionary instance for which the keys are the folder names (NSString instance)
-          and the values are CWFolderInformation instance if the information was
-	  loaded, nil otherwise.
-*/
-- (NSDictionary * _Nullable) folderStatus: (NSArray * _Nullable) theArray;
-
-/*!
-  @method sendCommand:info:arguments: ...
-  @discussion This method is used to send commands to the IMAP server.
-              Normally, you should not call this method directly.
-  @param theCommand The IMAP command to send.
-  @param theInfo The addition info to pass.
-  @param theFormat The format defining the variable arguments list.
-*/
-- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo  arguments: (NSString * _Nonnull) theFormat, ...;
+- (CWIMAPFolder *_Nullable) folderForName: (NSString * _Nonnull) theName
+                                     mode: (PantomimeFolderMode) theMode;
 
 /*!
  @method sendCommand:info:string: ...
@@ -327,9 +248,17 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
               string:(NSString * _Nonnull)theString;
 
-- (void)signalFolderSyncError;
-
 - (void)exitIDLE;
+
+#pragma mark - CWStore
+
+//
+// When this method is invoked for the first time, it sends a LIST
+// command to the IMAP server and cache the results for subsequent
+// queries. The IMAPStore notifies the delegate once it has parsed
+// all server's responses.
+//
+- (NSEnumerator *_Nullable) folderEnumerator;
 
 @end
 
