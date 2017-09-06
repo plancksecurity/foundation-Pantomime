@@ -10,6 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Protected methods of CWService.
+ This header must not be accessable to clients.
+ */
 @interface CWService (Protected) <CWConnectionDelegate>
 
 //

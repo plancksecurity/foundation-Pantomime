@@ -147,8 +147,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 + (void) initialize
 {
-//    defaultCStringEncoding = [NSString defaultCStringEncoding];
-//    CRLF = [[NSData alloc] initWithBytes: "\r\n"  length: 2]; //BUFF:
     IDLE_DONE_CONTINUATION = [[NSData alloc] initWithBytes: "DONE\r\n"  length: 6];
 }
 
@@ -204,24 +202,24 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
-//
-// When this method is called, we are receiving bytes
-// from the _lastCommand.
-//
-// Rationale:
-//
-// This command accumulates the responses (split into lines)
-// from the server in _responsesFromServer.
-//
-// It will NOT add untagged reponses but rather process them right-away.
-//
-// If it's receiving a FETCH response, it will NOT verify for
-// tag line ('0123 OK', '0123 BAD', '0123 NO') for the duration
-// of reading the literal length. For example, if we got {400},
-// we will not consider a '0123 OK' response if we read less
-// than 400 bytes. This prevent us from reading a '0123 OK' that
-// could occur in a message.
-//
+/**
+ When this method is called, we are receiving bytes
+ from the _lastCommand.
+
+ Rationale:
+
+ This command accumulates the responses (split into lines)
+ from the server in _responsesFromServer.
+
+ It will NOT add untagged reponses but rather process them right-away.
+
+ If it's receiving a FETCH response, it will NOT verify for
+ tag line ('0123 OK', '0123 BAD', '0123 NO') for the duration
+ of reading the literal length. For example, if we got {400},
+ we will not consider a '0123 OK' response if we read less
+ than 400 bytes. This prevent us from reading a '0123 OK' that
+ could occur in a message.
+ */
 - (void) updateRead
 {
     // Not on serviceQueue to avoid deadlock. Is only called by receivedEvent:type:extra:forMode:,
@@ -639,6 +637,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//
+//
+//
 - (void)exitIDLE
 {
     dispatch_sync(self.serviceQueue, ^{
@@ -649,77 +650,14 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
-
+//
+//
+//
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
               string:(NSString * _Nonnull)theString
 {
     dispatch_sync(self.serviceQueue, ^{
         [self sendCommandInternal:theCommand info:theInfo string:theString];
-        //BUFF:
-//        if (theCommand == IMAP_EMPTY_QUEUE)
-//        {
-//            if ([_queue count])
-//            {
-//                // We dequeue the first inserted command from the queue.
-//                self.currentQueueObject = [_queue lastObject];
-//            }
-//            else
-//            {
-//                // The queue is empty, we have nothing more to do...
-//                INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
-//                self.currentQueueObject = nil;
-//                return;
-//            }
-//        }
-//        else
-//        {
-//            //
-//            // We must check in the queue if we aren't trying to add a command that is already there.
-//            // This could happend if -rawSource is called in IMAPMessage multiple times before
-//            // PantomimeMessageFetchCompleted is sent.
-//            //
-//            // We skip this verification for the IMAP_APPEND command as a messages with the same size
-//            // could be quickly appended to the folder and we do NOT want to skip the second one.
-//            //
-//            for (CWIMAPQueueObject *aQueueObject in _queue) {
-//                if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
-//                    [aQueueObject.arguments isEqualToString: theString])
-//                {
-//                    //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
-//                    return;
-//                }
-//            }
-//
-//            CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
-//                                               initWithCommand: theCommand  arguments: theString
-//                                               tag: [self nextTag]  info: theInfo];
-//
-//            [_queue insertObject: aQueueObject  atIndex: 0];
-//            RELEASE(aQueueObject);
-//
-//            INFO(NSStringFromClass([self class]), @"queue size = %lul", (unsigned long) [_queue count]);
-//
-//            // If we had queued commands, we return since we'll eventually
-//            // dequeue them one by one. Otherwise, we run it immediately.
-//            if ([_queue count] > 1)
-//            {
-//                //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
-//                return;
-//            }
-//
-//            self.currentQueueObject = aQueueObject;
-//        }
-//
-//        INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
-//        _lastCommand = self.currentQueueObject.command;
-//
-//        [self bulkWriteData:@[self.currentQueueObject.tag,
-//                              [NSData dataWithBytes: " "  length: 1],
-//                              [self.currentQueueObject.arguments dataUsingEncoding: [NSString defaultCStringEncoding]],
-//                              _crlf]];
-//
-//        POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
-//        PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
     });
 }
 
@@ -812,28 +750,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     return returnee;
 }
 
-//BUFF:
-////
-//// The default folder in IMAP is always Inbox. This method will prefetch
-//// the messages of an IMAP folder if they haven't been prefetched before.
-////
-//- (id) defaultFolder
-//{
-//    // is serialized by folderForName:
-//    return [self folderForName: @"INBOX"];
-//}
-//
-//
-////
-////
-////
-//- (id) folderForName: (NSString *) theName
-//{
-//    // is serialized by folderForName:mode:
-//    return [self folderForName: theName
-//                          mode: PantomimeReadWriteMode];
-//}
-
 
 //
 //
@@ -901,220 +817,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     return _selectedFolder;
 }
 
-//BUFF: store
-////
-////
-////
-//- (id) folderForURL: (NSString *) theURL
-//{
-//    CWURLName *theURLName;
-//    id aFolder;
-//
-//    theURLName = [[CWURLName alloc] initWithString: theURL];
-//
-//    aFolder = [self folderForName: [theURLName foldername]];
-//    RELEASE(theURLName);
-//    return aFolder;
-//}
-
-
-//BUFF: store
-////
-//// When this method is invoked for the first time, it sends a LIST
-//// command to the IMAP server and cache the results for subsequent
-//// queries. The IMAPStore notifies the delegate once it has parsed
-//// all server's responses.
-////
-//- (NSEnumerator *) folderEnumerator
-//{
-//    __block NSEnumerator *returnee = nil;
-//    dispatch_sync(self.serviceQueue, ^{
-//        if (![_folders count]) {
-//            // Only top level folders: LIST "" %
-//            [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
-//            returnee = nil;
-//
-//            return;
-//        }
-//        returnee = [_folders keyEnumerator];
-//    });
-//    
-//    return returnee;
-//}
-//
-//
-////
-//// This method works the same way as the -folderEnumerator method.
-////
-//- (NSEnumerator *) subscribedFolderEnumerator
-//{
-//    __block NSEnumerator *returnee = nil;
-//    dispatch_sync(self.serviceQueue, ^{
-//    if (![_subscribedFolders count])
-//    {
-//        [self sendCommand: IMAP_LSUB  info: nil  arguments: @"LSUB \"\" \"*\""];
-//        returnee = nil;
-//
-//        return;
-//    }
-//
-//    returnee = [_subscribedFolders objectEnumerator];
-//    });
-//
-//    return returnee;
-//}
-
-//BUFF: to protect
-//- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
-//              string:(NSString * _Nonnull)theString
-//{
-//    dispatch_sync(self.serviceQueue, ^{
-//        if (theCommand == IMAP_EMPTY_QUEUE)
-//        {
-//            if ([_queue count])
-//            {
-//                // We dequeue the first inserted command from the queue.
-//                self.currentQueueObject = [_queue lastObject];
-//            }
-//            else
-//            {
-//                // The queue is empty, we have nothing more to do...
-//                INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
-//                self.currentQueueObject = nil;
-//                return;
-//            }
-//        }
-//        else
-//        {
-//            //
-//            // We must check in the queue if we aren't trying to add a command that is already there.
-//            // This could happend if -rawSource is called in IMAPMessage multiple times before
-//            // PantomimeMessageFetchCompleted is sent.
-//            //
-//            // We skip this verification for the IMAP_APPEND command as a messages with the same size
-//            // could be quickly appended to the folder and we do NOT want to skip the second one.
-//            //
-//            for (CWIMAPQueueObject *aQueueObject in _queue) {
-//                if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
-//                    [aQueueObject.arguments isEqualToString: theString])
-//                {
-//                    //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
-//                    return;
-//                }
-//            }
-//
-//            CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
-//                                               initWithCommand: theCommand  arguments: theString
-//                                               tag: [self nextTag]  info: theInfo];
-//
-//            [_queue insertObject: aQueueObject  atIndex: 0];
-//            RELEASE(aQueueObject);
-//
-//            INFO(NSStringFromClass([self class]), @"queue size = %lul", (unsigned long) [_queue count]);
-//
-//            // If we had queued commands, we return since we'll eventually
-//            // dequeue them one by one. Otherwise, we run it immediately.
-//            if ([_queue count] > 1)
-//            {
-//                //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
-//                return;
-//            }
-//
-//            self.currentQueueObject = aQueueObject;
-//        }
-//
-//        INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
-//        _lastCommand = self.currentQueueObject.command;
-//
-//        [self bulkWriteData:@[self.currentQueueObject.tag,
-//                              [NSData dataWithBytes: " "  length: 1],
-//                              [self.currentQueueObject.arguments dataUsingEncoding: defaultCStringEncoding],
-//                              CRLF]];
-//
-//        POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
-//        PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
-//    });
-//}
-
-
-//BUFF:
-////
-////
-////
-//- (NSEnumerator *) openFoldersEnumerator
-//{
-//    return [_openFolders objectEnumerator];
-//}
-//
-////
-////
-////
-//- (void) removeFolderFromOpenFolders: (CWFolder *) theFolder
-//{
-//    if (_selectedFolder == (CWIMAPFolder *)theFolder)
-//    {
-//        _selectedFolder = nil;
-//    }
-//
-//    [_openFolders removeObjectForKey: [theFolder name]];
-//}
-//
-////
-////
-////
-//- (BOOL) folderForNameIsOpen: (NSString *) theName
-//{
-//    NSEnumerator *anEnumerator;
-//    CWIMAPFolder *aFolder;
-//
-//    anEnumerator = [self openFoldersEnumerator];
-//
-//    while ((aFolder = [anEnumerator nextObject]))
-//    {
-//        if ([[aFolder name] compare: theName
-//                            options: NSCaseInsensitiveSearch] == NSOrderedSame)
-//        {
-//            return YES;
-//        }
-//    }
-//
-//    return NO;
-//}
-//
-//
-////
-//// This method verifies in the cache if theName is present.
-//// If so, it returns the associated value.
-////
-//// If it's not present, it sends a LIST command to the server
-//// and the delegate will eventually be notified when the LIST
-//// command completed. It also returns 0 if it's not present.
-////
-//- (PantomimeFolderType) folderTypeForFolderName: (NSString *) theName
-//{
-//    id o;
-//
-//    o = [_folders objectForKey: theName];
-//
-//    if (o)
-//    {
-//        return [o intValue];
-//    }
-//
-//    [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" \"%@\"", [theName modifiedUTF7String]];
-//
-//    return 0;
-//}
-//
-//
-////
-////
-////
-//- (unsigned char) folderSeparator
-//{
-//    return _folderSeparator;
-//}
-
 
 //
 //
@@ -1134,68 +836,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
-//BUFF: store
-////
-//// Create the mailbox and subscribe to it. The full path to the mailbox must
-//// be provided.
-////
-//// The delegate will be notified when the folder has been created (or not).
-////
-//- (void) createFolderWithName: (NSString *) theName
-//                         type: (PantomimeFolderFormat) theType
-//                     contents: (NSData *) theContents
-//{
-//    [self sendCommand: IMAP_CREATE
-//                 info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
-//            arguments: @"CREATE \"%@\"", [theName modifiedUTF7String]];
-//}
-//
-//
-////
-//// Delete the mailbox. The full path to the mailbox must be provided.
-////
-//// The delegate will be notified when the folder has been deleted (or not).
-////
-//- (void) deleteFolderWithName: (NSString *) theName
-//{
-//    [self sendCommand: IMAP_DELETE
-//                 info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
-//            arguments: @"DELETE \"%@\"", [theName modifiedUTF7String]];
-//}
-//
-//
-////
-//// This method is used to rename a folder.
-////
-//// theName and theNewName MUST be the full path of those mailboxes.
-//// If they begin with the folder separator (ie., '/'), the character is
-//// automatically stripped.
-////
-//// This method supports renaming SELECT'ed mailboxes.
-////
-//// The delegate will be notified when the folder has been renamed (or not).
-////
-//- (void) renameFolderWithName: (NSString *) theName
-//                       toName: (NSString *) theNewName
-//{
-//    NSDictionary *info;
-//
-//    theName = [theName stringByDeletingFirstPathSeparator: _folderSeparator];
-//    theNewName = [theNewName stringByDeletingFirstPathSeparator: _folderSeparator];
-//    info = [NSDictionary dictionaryWithObjectsAndKeys: theName, @"Name", theNewName, @"NewName", nil];
-//
-//    if ([[theName stringByTrimmingWhiteSpaces] length] == 0 ||
-//        [[theNewName stringByTrimmingWhiteSpaces] length] == 0)
-//    {
-//        POST_NOTIFICATION(PantomimeFolderRenameFailed, self, info);
-//        PERFORM_SELECTOR_3(_delegate, @selector(folderRenameFailed:), PantomimeFolderRenameFailed, info);
-//    }
-//
-//    [self sendCommand: IMAP_RENAME
-//                 info: info
-//            arguments: @"RENAME \"%@\" \"%@\"", [theName modifiedUTF7String], [theNewName modifiedUTF7String]];
-//}
-
 #pragma mark - Overriden
 //
 // This method NOOPs the IMAP store.
@@ -1204,6 +844,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     [self sendCommand: IMAP_NOOP  info: nil  arguments: @"NOOP"];
 }
+
 
 //
 //
@@ -1310,6 +951,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//
+//
+//
 - (NSEnumerator *) folderEnumerator
 {
     __block NSEnumerator *returnee = nil;
@@ -1366,7 +1010,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
-//BUFF:
 //
 //
 //
@@ -1374,6 +1017,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     return [_openFolders objectEnumerator];
 }
+
 
 //
 //
@@ -1387,6 +1031,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     [_openFolders removeObjectForKey: [theFolder name]];
 }
+
 
 //
 //
@@ -1444,7 +1089,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     return _folderSeparator;
 }
 
-//BUFF:
+
 //
 // The default folder in IMAP is always Inbox. This method will prefetch
 // the messages of an IMAP folder if they haven't been prefetched before.
@@ -3366,7 +3011,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     [_selectedFolder setNextUID:n];
 }
 
-//BUFF: to prot?
+
 //
 //
 //

@@ -23,12 +23,17 @@
     return _writeQueue;
 }
 
+
+//
+//
+//
 - (void)setWriteQueue: (dispatch_queue_t _Nullable)writeQueue
 {
     if (_writeQueue != writeQueue) {
         _writeQueue = writeQueue;
     }
 }
+
 
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)serviceQueue;
@@ -40,12 +45,17 @@
     return _serviceQueue;
 }
 
+
+//
+//
+//
 - (void)setServiceQueue: (dispatch_queue_t _Nullable)serviceQueue
 {
     if (_serviceQueue != serviceQueue) {
         _serviceQueue = serviceQueue;
     }
 }
+
 
 //
 //
@@ -55,15 +65,24 @@
     return _name;
 }
 
+
+//
+//
+//
 - (void) setName: (NSString *) theName
 {
     ASSIGN(_name, theName);
 }
 
+
+//
+//
+//
 - (void) setPort: (unsigned int) thePort
 {
     _port = thePort;
 }
+
 
 //
 //
@@ -73,6 +92,7 @@
     return _connection;
 }
 
+
 //
 //
 //
@@ -81,6 +101,7 @@
     [self subclassResponsibility: _cmd];
     return 0;
 }
+
 
 //
 //
@@ -176,6 +197,7 @@
     }
 }
 
+
 //
 //
 //
@@ -184,10 +206,15 @@
     return _username;
 }
 
+
+//
+//
+//
 - (void) setUsername: (NSString *) theUsername
 {
     ASSIGN(_username, theUsername);
 }
+
 
 //
 //
@@ -196,6 +223,7 @@
 {
     return _connected;
 }
+
 
 //
 // If the connection or binding succeeds, zero  is  returned.
@@ -219,6 +247,7 @@
     return 0;
 }
 
+
 //
 //
 //
@@ -227,6 +256,10 @@
     [self subclassResponsibility: _cmd];
 }
 
+
+//
+//
+//
 - (void) write: (NSData *) theData
 {
     NSThread *backgroundThread = ((CWTCPConnection *) self.connection).backgroundThread;
@@ -239,12 +272,18 @@
 }
 
 
+//
+//
+//
 - (void) writeData: (NSData *_Nonnull) theData;
 {
     [self bulkWriteData:@[theData]];
 }
 
 
+//
+//
+//
 - (void) bulkWriteData: (NSArray<NSData*> *_Nonnull) bulkData;
 {
     dispatch_sync(self.writeQueue, ^{
@@ -254,6 +293,10 @@
     });
 }
 
+
+//
+//
+//
 - (void)writeInternalData:(NSData *)theData
 {
     if (theData && [theData length])
@@ -277,6 +320,7 @@
     }
 }
 
+
 //
 //
 //
@@ -299,36 +343,64 @@
     return _connectionTimeout;
 }
 
+
+//
+//
+//
 - (void) setConnectionTimeout: (unsigned int) theConnectionTimeout
 {
     _connectionTimeout = (theConnectionTimeout > 0 ? theConnectionTimeout : DEFAULT_TIMEOUT);
 }
 
+
+//
+//
+//
 - (unsigned int) readTimeout
 {
     return _readTimeout;
 }
 
+
+//
+//
+//
 - (void) setReadTimeout: (unsigned int) theReadTimeout
 {
     _readTimeout = (theReadTimeout > 0 ? theReadTimeout: DEFAULT_TIMEOUT);
 }
 
+
+//
+//
+//
 - (unsigned int) writeTimeout
 {
     return _writeTimeout;
 }
 
+
+//
+//
+//
 - (void) setWriteTimeout: (unsigned int) theWriteTimeout
 {
     _writeTimeout = (theWriteTimeout > 0 ? theWriteTimeout : DEFAULT_TIMEOUT);
 }
 
+
+//
+//
+//
 - (unsigned int) lastCommand
 {
     return _lastCommand;
 }
 
+
+//
+//
+//
 - (void)nullifyQueues
 {
     self.writeQueue = nil;
@@ -390,6 +462,10 @@
     }
 }
 
+
+//
+//
+//
 - (void)connectionEstablished
 {
     _connected = YES;

@@ -13,6 +13,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Protected methods of CWIMAPStore.
+ This header must not be accessable to clients.
+ */
 @interface CWIMAPStore (Protected)
 
 - (CWIMAPQueueObject * _Nullable)currentQueueObject;
@@ -119,6 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
 //
 //
 //
@@ -135,49 +140,5 @@ NS_ASSUME_NONNULL_BEGIN
                    tag: (NSData *) theTag
                   info: (NSDictionary *) theInfo;
 @end
-
-
-//BUFF: to m
-//@implementation CWIMAPQueueObject
-//
-//- (id) initWithCommand: (IMAPCommand) theCommand
-//             arguments: (NSString *) theArguments
-//                   tag: (NSData *) theTag
-//                  info: (NSDictionary *) theInfo
-//{
-//    self = [super init];
-//    INFO(NSStringFromClass([self class]), @"CWIMAPQueueObject.init %@\n", self);
-//    _command = theCommand;
-//    _literal = 0;
-//
-//    ASSIGN(_arguments, theArguments);
-//    ASSIGN(_tag, theTag);
-//
-//    if (theInfo)
-//    {
-//        _info = [[NSMutableDictionary alloc] initWithDictionary: theInfo];
-//    }
-//    else
-//    {
-//        _info = [[NSMutableDictionary alloc] init];
-//    }
-//
-//    return self;
-//}
-//
-//- (void) dealloc
-//{
-//    INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
-//    RELEASE(arguments);
-//    RELEASE(info);
-//    RELEASE(tag);
-//    //[super dealloc];
-//}
-//
-//- (NSString *) description
-//{
-//    return [NSString stringWithFormat: @"%d %@", self.command, self.arguments];
-//}
-//@end
 
 NS_ASSUME_NONNULL_END

@@ -406,14 +406,12 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (id _Nullable) delegate;
 
-
 /*!
   @method port
   @discussion This method is used to obtain the server port.
   @result The server port.
 */
 - (unsigned int) port;
-
 
 /*!
   @method supportedMechanisms
