@@ -184,7 +184,7 @@
 
 
 /**
- For key sync to work, we have to fetch the whole mail.
+ For key sync to work, we have to fetch the whole mail, thus the method name became mis leading.
  */
 - (void) prefetch
 {
@@ -192,15 +192,19 @@
     NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
 
     if ([self lastUID] > 0) {
+        // We already fetched mails before, so lets fetch newer ones
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
                   arguments: @"UID FETCH %u:* (FLAGS BODY.PEEK[])", [self lastUID] + 1];
+    } else if (self.existsCount == 0) {
+        // There are zero mails on server thus fetching makes no sense.
+        // Inform the client
+        [_store signalFolderFetchNothingToFetch];
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails + 1;
         if (lowestMessageNumberToFetch <= 0) {
             lowestMessageNumberToFetch = 1;
         }
-
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
                   arguments: @"FETCH %u:* (UID FLAGS BODY.PEEK[])", lowestMessageNumberToFetch];
     }

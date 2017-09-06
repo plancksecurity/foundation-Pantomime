@@ -251,6 +251,21 @@
                        PantomimeFolderSyncFailed, _selectedFolder, @"Folder");
 }
 
+
+//
+//
+//
+- (void)signalFolderFetchNothingToFetch
+{
+    //INFO(NSStringFromClass([self class]), @"DONE PREFETCHING FOLDER");
+    POST_NOTIFICATION(PantomimeFolderPrefetchCompleted,
+                      self,
+                      [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+    PERFORM_SELECTOR_2(_delegate,
+                       @selector(folderPrefetchCompleted:),
+                       PantomimeFolderPrefetchCompleted, _selectedFolder, @"Folder");
+}
+
 @end
 
 @implementation CWIMAPQueueObject
