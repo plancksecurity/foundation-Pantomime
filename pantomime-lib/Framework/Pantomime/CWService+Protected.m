@@ -7,6 +7,7 @@
 //
 
 #import "CWService+Protected.h"
+#import "CWService.h"
 
 #import "CWThreadSaveData.h"
 #import "CWTCPConnection.h"
