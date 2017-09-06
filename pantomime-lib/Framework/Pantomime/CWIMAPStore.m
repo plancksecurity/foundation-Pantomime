@@ -144,9 +144,22 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 @synthesize folderBuilder;
 
+
+//
+//
+//
 + (void) initialize
 {
     IDLE_DONE_CONTINUATION = [[NSData alloc] initWithBytes: "DONE\r\n"  length: 6];
+}
+
+
+//
+//
+//
++ (BOOL)accessInstanceVariablesDirectly
+{
+    return NO;
 }
 
 

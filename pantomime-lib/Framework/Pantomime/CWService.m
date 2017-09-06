@@ -51,6 +51,15 @@
 //
 //
 //
++ (BOOL)accessInstanceVariablesDirectly
+{
+    return NO;
+}
+
+
+//
+//
+//
 - (id) init
 {
   self = [super init];

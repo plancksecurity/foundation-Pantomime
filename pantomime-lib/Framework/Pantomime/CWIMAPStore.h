@@ -214,6 +214,7 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
     int _tag;
 
     __block CWIMAPQueueObject *_currentQueueObject;
+
     @protected
      NSData *_crlf;
 }
