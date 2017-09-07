@@ -201,21 +201,6 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
               All calls from client site are guarantied to be serialized.
 */ 
 @interface CWIMAPStore : CWService  <CWStore>
-{
-  @private
-    __block NSMutableDictionary *_folders;
-    __block NSMutableDictionary *_openFolders;
-    __block NSMutableDictionary *_folderStatus;
-    __block NSMutableArray *_subscribedFolders;
- 
-    __block CWIMAPFolder *_selectedFolder;
-
-    __block unsigned char _folderSeparator;
-    __block int _tag;
-
-    __block CWIMAPQueueObject *_currentQueueObject;
-
-}
 
 @property (nonatomic, nullable) __block id<CWFolderBuilding> folderBuilder;
 

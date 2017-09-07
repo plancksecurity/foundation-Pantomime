@@ -16,7 +16,28 @@ NS_ASSUME_NONNULL_BEGIN
  Protected methods of CWIMAPStore.
  This header must not be accessable to clients.
  */
+@interface CWIMAPStore ()
+
+{
+@private
+    __block NSMutableDictionary *_folders;
+    __block NSMutableDictionary *_openFolders;
+    __block NSMutableDictionary *_folderStatus;
+    __block NSMutableArray *_subscribedFolders;
+
+    __block CWIMAPFolder *_selectedFolder;
+
+    __block unsigned char _folderSeparator;
+    __block int _tag;
+
+    __block CWIMAPQueueObject *_currentQueueObject;
+    
+}
+
+@end
+
 @interface CWIMAPStore (Protected)
+
 
 - (CWIMAPQueueObject * _Nullable)currentQueueObject;
 
