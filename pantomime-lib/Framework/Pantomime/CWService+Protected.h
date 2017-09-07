@@ -10,6 +10,50 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface CWService ()
+
+{
+@protected
+    __block CWThreadSafeArray *_supportedMechanisms;
+    __block CWThreadSafeArray *_responsesFromServer;
+    __block CWThreadSafeArray *_capabilities;
+    __block CWThreadSafeArray *_runLoopModes;
+    __block CWThreadSafeArray *_queue;
+    __block CWThreadSafeData *_wbuf;
+    __block CWThreadSafeData *_rbuf;
+    __block NSString *_mechanism;
+    __block NSString *_username;
+    __block NSString *_password;
+    __block NSString *_name;
+    NSData *_crlf;
+    NSStringEncoding _defaultCStringEncoding;
+
+#ifdef MACOSX
+    CFRunLoopSourceRef _runLoopSource;
+    CFSocketContext *_context;
+    CFSocketRef _socket;
+#endif
+    __block ConnectionTransport _connectionTransport;
+    /** Used to serialize writes to the connection. As we serialize only public methods, pantomime and
+     methods called form a client might write at the same time.*/
+    dispatch_queue_t _writeQueue;
+    /** Used to serialize public methods. They might be called from different threads concurrently. */
+    dispatch_queue_t _serviceQueue;
+    __block unsigned int _connectionTimeout;
+    __block unsigned int _readTimeout;
+    __block unsigned int _writeTimeout;
+    __block unsigned int _lastCommand;
+    __block unsigned int _port;
+    __block BOOL _connected;
+    __block id __weak _Nullable __block _delegate;
+
+    __block id<CWConnection> _connection;
+    __block int _counter;
+    __block CWConnectionState *_connection_state;
+}
+
+@end
+
 /**
  Protected methods of CWService.
  This header must not be accessable to clients.
