@@ -147,7 +147,9 @@
 }
 
 
-
+//
+//
+//
 - (void) fail
 {
     if (_message)
@@ -164,6 +166,10 @@
 
 @implementation CWSMTPQueueObject
 
+
+//
+//
+//
 - (id) initWithCommand: (SMTPCommand) theCommand
              arguments: (NSString *) theArguments
 {
@@ -173,6 +179,10 @@
     return self;
 }
 
+
+//
+//
+//
 - (void) dealloc
 {
     RELEASE(arguments);

@@ -99,8 +99,8 @@
 {
     self = [self init];
 
-    [self setName: theName];
-    [self setPort: thePort];
+    _name = theName;
+    _port = thePort;
     _connectionTransport = transport;
 
     return self;
@@ -138,20 +138,27 @@
 //
 // access / mutation methods
 //
+// We serialize access from outside and use the underlying iVars internally to avoid deadlocks
 - (void) setDelegate: (id _Nullable) theDelegate
 {
-    @synchronized (self) {
+    dispatch_sync(self.serviceQueue, ^{
         if (_delegate != theDelegate) {
             _delegate = theDelegate;
         }
-    }
+    });
 }
 
+
+//
+//
+//
 - (id) delegate
 {
-    @synchronized (self) {
-        return _delegate;
-    }
+    __block id returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _delegate;
+    });
+    return returnee;
 }
 
 
@@ -160,9 +167,11 @@
 //
 - (unsigned int) port
 {
-    @synchronized (self) {
-        return _port;
-    }
+    __block unsigned int returnee = 0;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _port;
+    });
+    return returnee;
 }
 
 
@@ -171,9 +180,11 @@
 //
 - (NSArray *) supportedMechanisms
 {
-    @synchronized (self) {
-        return [_supportedMechanisms array];
-    }
+    __block NSArray *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = [_supportedMechanisms array];
+    });
+    return returnee;
 }
 
 

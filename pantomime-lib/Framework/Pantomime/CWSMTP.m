@@ -39,12 +39,6 @@
 
 #import "CWService+Protected.h"
 
-//
-// Some static variables used to enhance the performance.
-//
-//static NSStringEncoding defaultCStringEncoding; //BUFF:
-//static NSData *CRLF; //BUFF:
-
 // The hostname/domain used to do EHLO/HELO
 static NSString *pEpEHLOBase = @"pretty.Easy.privacy";
 
@@ -82,44 +76,12 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   return nil;
 }
 
-////
-////
-////
-//@interface CWSMTPQueueObject : NSObject
-//{
-//  @public
-//    SMTPCommand command;
-//    NSString *arguments;
-//}
-//- (id) initWithCommand: (SMTPCommand) theCommand
-//	     arguments: (NSString *) theArguments;
-//@end
-
-//@implementation CWSMTPQueueObject
-//
-//- (id) initWithCommand: (SMTPCommand) theCommand
-//	     arguments: (NSString *) theArguments
-//{
-//  self = [super init];
-//  command = theCommand;
-//  ASSIGN(arguments, theArguments);
-//  return self;
-//}
-//
-//- (void) dealloc
-//{
-//  RELEASE(arguments);
-//  //[super dealloc];
-//}
-//@end
-
 
 //
 // Private SMTP methods
 //
 @interface CWSMTP (Private)
 
-//- (void) _fail; //BUFF: prot
 - (void) _parseAUTH_CRAM_MD5;
 - (void) _parseAUTH_LOGIN;
 - (void) _parseAUTH_LOGIN_CHALLENGE;
@@ -142,13 +104,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 //
 @implementation CWSMTP
-
-+ (void) initialize
-{
-//  defaultCStringEncoding = [NSString defaultCStringEncoding]; //BUFF:
-//  CRLF = [[NSData alloc] initWithBytes: "\r\n"  length: 2]; //BUFF:
-}
-
 
 //
 // initializers
@@ -188,32 +143,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   //[super dealloc];
 }
 
-
-////
-//// This method returns the last response obtained from the SMTP
-//// server. If the last command issued a multiline response, it'll return the
-//// last text response and none of the previous ones.
-////
-//- (NSData *) lastResponse
-//{
-//  return [_responsesFromServer lastObject];
-//}
-
-
-////
-//// Same as -lastResponse except it does return only the response code.
-////
-//- (int) lastResponseCode
-//{
-//  if ([_responsesFromServer count] > 0)
-//    {
-//      return atoi([[[_responsesFromServer lastObject] subdataToIndex: 3] cString]);
-//    }
-//
-//  return 0;
-//}
-
-
 #pragma mark - Overriden
 
 //
@@ -226,6 +155,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     });
 }
 
+
 //
 //
 //
@@ -236,7 +166,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
             [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
         }
         [super close];
-    }); //BUFF:
+    });
 }
 
 
@@ -249,117 +179,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         [self sendCommand: SMTP_RSET  arguments: @"RSET"];
     });
 }
-
-
-////
-//// This method sends a SMTP command to the server.
-////
-//// It automatically adds the trailing CRLF to every command.
-////
-//// RFC2821:
-////
-////   The SMTP commands define the mail transfer or the mail system
-////   function requested by the user.  SMTP commands are character strings
-////   terminated by <CRLF>.  The commands themselves are alphabetic
-////   characters terminated by <SP> if parameters follow and <CRLF>
-////   otherwise.  (In the interest of improved interoperability, SMTP
-////   receivers are encouraged to tolerate trailing white space before the
-////   terminating <CRLF>.)  The syntax of the local part of a mailbox must
-////   conform to receiver site conventions and the syntax specified in
-////   section 4.1.2.  The SMTP commands are discussed below.  The SMTP
-////   replies are discussed in section 4.2.
-////
-//// The following list of commands is supported:
-////
-//// - EHLO / HELO
-//// - MAIL 
-//// - RCPT
-//// - DATA
-//// - RSET
-//// - QUIT
-////
-//// Unimplemented commands:
-////
-//// - VRFY
-//// - EXPN
-//// - HELP
-//// - NOOP
-////
-//- (void) sendCommand: (SMTPCommand) theCommand  arguments: (NSString *) theFormat, ...
-//{
-//  CWSMTPQueueObject *aQueueObject;
-//
-//  if (theCommand == SMTP_EMPTY_QUEUE)
-//    {
-//      if ([_queue count])
-//	{
-//	  // We dequeue the first inserted command from the queue.
-//	  aQueueObject = [_queue lastObject];
-//        if (!aQueueObject) {
-//            INFO(NSStringFromClass([self class]), @"_queue has %lu objects", (unsigned long) _queue.count);
-//            for (NSObject *obj in _queue) {
-//                INFO(NSStringFromClass([self class]), @"obj %@", obj);
-//            }
-//            INFO(NSStringFromClass([self class]), @"aQueueObject nil");
-//        }
-//	}
-//      else
-//	{
-//	  // The queue is empty, we have nothing more to do...
-//	  return;
-//	}
-//    }
-//  else
-//    {
-//      NSString *aString;
-//      va_list args;
-//      
-//      va_start(args, theFormat);
-//      
-//      aString = [[NSString alloc] initWithFormat: theFormat  arguments: args];
-//      
-//      aQueueObject = [[CWSMTPQueueObject alloc] initWithCommand: theCommand  arguments: aString];
-//      RELEASE(aString);
-//
-//      [_queue insertObject: aQueueObject  atIndex: 0];
-//      RELEASE(aQueueObject);
-//
-//      // If we had queued commands, we return since we'll eventually
-//      // dequeue them one by one. Otherwise, we run it immediately.
-//      if ([_queue count] > 1)
-//	{
-//	  return;
-//	}
-//    }
-//
-//    if (aQueueObject) {
-//        BOOL isPrivate = NO;
-//        if ((aQueueObject->command == SMTP_AUTH_CRAM_MD5 ||
-//             aQueueObject->command ==  SMTP_AUTH_LOGIN ||
-//             aQueueObject->command == SMTP_AUTH_LOGIN_CHALLENGE ||
-//             aQueueObject->command == SMTP_AUTH_PLAIN) &&
-//            ![aQueueObject->arguments hasPrefix:@"AUTH"]) {
-//            isPrivate = YES;
-//        }
-//
-//        if (isPrivate) {
-//            INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
-//        } else {
-//            INFO(NSStringFromClass([self class]), @"Sending |%@|", aQueueObject->arguments);
-//        }
-//
-//        _lastCommand = aQueueObject->command;
-//
-//        [self bulkWriteData:@[[aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding],
-//                                 CRLF]];
-//    } else {
-//        // TODO: Why is aQueueObject sometimes nil?
-//        INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
-//    }
-//}
-
-
-
 
 
 //
@@ -408,29 +227,31 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) updateRead
 {
-        NSData *aData;
-        char *buf;
-        NSUInteger count;
+    // Intentionally not serialized on serviceQueue. Must never been called directly by clients.
+    NSData *aData;
+    char *buf;
+    NSUInteger count;
 
-        //INFO(NSStringFromClass([self class]), @"IN UPDATE READ");
+    //INFO(NSStringFromClass([self class]), @"IN UPDATE READ");
 
-        [super updateRead];
+    [super updateRead];
 
-        while ((aData = [_rbuf dropFirstLine]))
+    while ((aData = [_rbuf dropFirstLine]))
+    {
+        [_responsesFromServer addObject: aData];
+
+        buf = (char *)[aData bytes];
+        count = [aData length];
+
+        // If we got only a response code OR if we're done reading
+        // a multiline reply, we parse the output!
+        if (count == 3 || (count > 3 && (*(buf+3) != '-')))
         {
-            [_responsesFromServer addObject: aData];
-
-            buf = (char *)[aData bytes];
-            count = [aData length];
-
-            // If we got only a response code OR if we're done reading
-            // a multiline reply, we parse the output!
-            if (count == 3 || (count > 3 && (*(buf+3) != '-')))
-            {
-                [self _parseServerOutput];
-            }
+            [self _parseServerOutput];
         }
+    }
 }
+
 
 //
 // This method sends a NOOP SMTP command.
@@ -592,9 +413,12 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
 - (CWMessage *) message
 {
-    @synchronized (self) {
-        return _message;
-    }
+    __block CWMessage *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _message;
+    });
+
+    return returnee;
 }
 
 
@@ -603,17 +427,20 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setMessageData: (NSData *) theData
 {
-    @synchronized (self) {
+    dispatch_sync(self.serviceQueue, ^{
         DESTROY(_message);
         ASSIGN(_data, theData);
-    }
+    });
 }
 
 - (NSData *) messageData
 {
-    @synchronized (self) {
-        return _data;
-    }
+    __block NSData *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _data;
+    });
+
+    return returnee;
 }
 
 
@@ -622,21 +449,28 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setRecipients: (NSArray *) theRecipients
 {
-    @synchronized (self) {
+    dispatch_sync(self.serviceQueue, ^{
         DESTROY(_recipients);
 
         if (theRecipients)
         {
             ASSIGN(_recipients, [NSMutableArray arrayWithArray: theRecipients]);
         }
-    }
+    });
 }
 
+
+//
+//
+//
 - (NSArray *) recipients
 {
-    @synchronized (self) {
-        return _recipients;
-    }
+    __block NSArray *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _recipients;
+    });
+
+    return returnee;
 }
 
 @end
@@ -646,18 +480,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 // Private methods
 //
 @implementation CWSMTP (Private)
-
-//BUFF: prot
-//- (void) _fail
-//{
-//  if (_message)
-//    POST_NOTIFICATION(PantomimeMessageNotSent, self,
-//                [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
-//  else
-//    POST_NOTIFICATION(PantomimeMessageNotSent, self,
-//                [NSDictionary dictionaryWithObject: AUTORELEASE([CWMessage new])  forKey: @"Message"]);
-//  PERFORM_SELECTOR_2(_delegate, @selector(messageNotSent:), PantomimeMessageNotSent, _message, @"Message");
-//}
 
 - (void) _parseAUTH_CRAM_MD5
 {
@@ -797,6 +619,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
 }
 
+
 //
 //
 //
@@ -818,6 +641,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 #warning FIXME
     }
 }
+
 
 //
 //
@@ -1098,6 +922,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
 }
 
+
 //
 //
 //
@@ -1118,6 +943,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       PERFORM_SELECTOR_1(_delegate, @selector(transactionResetFailed:), PantomimeTransactionResetFailed);
     }
 }
+
 
 //
 //
@@ -1151,6 +977,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	}
     }
 }
+
 
 //
 //

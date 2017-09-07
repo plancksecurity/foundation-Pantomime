@@ -41,8 +41,6 @@
  */
 - (void) sendCommand: (SMTPCommand) theCommand  arguments: (NSString *) theFormat, ...;
 
-
-
 - (void) fail;
 
 @end

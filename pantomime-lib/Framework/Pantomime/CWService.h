@@ -340,13 +340,13 @@ extern NSString * _Nonnull PantomimeProtocolException;
     __block CWThreadSafeArray *_supportedMechanisms;
     __block CWThreadSafeArray *_responsesFromServer;
     __block CWThreadSafeArray *_capabilities;
-    CWThreadSafeArray *_runLoopModes;
+    __block CWThreadSafeArray *_runLoopModes;
     __block CWThreadSafeArray *_queue;
-    CWThreadSafeData *_wbuf;
-    CWThreadSafeData *_rbuf;
-    NSString *_mechanism;
-    NSString *_username;
-    NSString *_password;
+    __block CWThreadSafeData *_wbuf;
+    __block CWThreadSafeData *_rbuf;
+    __block NSString *_mechanism;
+    __block NSString *_username;
+    __block NSString *_password;
     __block NSString *_name;
     NSData *_crlf;
     NSStringEncoding _defaultCStringEncoding;
@@ -362,16 +362,16 @@ extern NSString * _Nonnull PantomimeProtocolException;
     dispatch_queue_t _writeQueue;
     /** Used to serialize public methods. They might be called from different threads concurrently. */
     dispatch_queue_t _serviceQueue;
-    unsigned int _connectionTimeout;
-    unsigned int _readTimeout;
-    unsigned int _writeTimeout;
+    __block unsigned int _connectionTimeout;
+    __block unsigned int _readTimeout;
+    __block unsigned int _writeTimeout;
     __block unsigned int _lastCommand;
     __block unsigned int _port;
     __block BOOL _connected;
     __block id __weak _Nullable __block _delegate;
     
     __block id<CWConnection> _connection;
-    int _counter;
+    __block int _counter;
     __block CWConnectionState *_connection_state;
 }
 
