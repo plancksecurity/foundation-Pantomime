@@ -459,6 +459,21 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (void) close;
 
 /*!
+ @method noop
+ @discussion This method is used to generate some traffic on a server
+ so the connection doesn't idle and gets terminated by
+ the server. Subclasses of CWService need to implement this method.
+ */
+- (void) noop;
+
+/*!
+ @method reconnect
+ @discussion Pending.
+ @result Pending.
+ */
+- (int) reconnect;
+
+/*!
   @method connectInBackgroundAndNotify
   @discussion This method is used  connect the receiver to the server.
               The call to this method is non-blocking. This method will
@@ -486,6 +501,13 @@ extern NSString * _Nonnull PantomimeProtocolException;
   @result The capabilities, as a set of NSString instances.
 */
 - (NSSet<NSString *> * _Nonnull) capabilities;
+
+/*!
+ @method updateRead
+ @discussion This method is invoked automatically when bytes are available
+ to be read. You should never have to invoke this method directly.
+ */
+- (void) updateRead;
 
 @end
 
