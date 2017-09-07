@@ -142,7 +142,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 @implementation CWIMAPStore
 
-@synthesize folderBuilder;
+@synthesize folderBuilder = _folderBuilder;
 
 
 //
@@ -305,8 +305,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     dispatch_sync(self.serviceQueue, ^{
         // ignore all subsequent messages from the servers
-        self.folderBuilder = nil;
-        self.delegate = nil;
+        _folderBuilder = nil;
+        _delegate = nil;
 
         [_openFolders removeAllObjects];
 
@@ -338,8 +338,7 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
-    // Intentionally not serialized on serviceQueue as it is an overridden,
-    // protected method that can not be seen by clients.
+    // Intentionally not serialized on serviceQueue. Must never been called directly by clients.
     NSData *aData;
 
     NSUInteger i, count;

@@ -219,7 +219,7 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 //     NSData *_crlf; //BUFF:
 }
 
-@property (nonatomic, nullable) id<CWFolderBuilding> folderBuilder;
+@property (nonatomic, nullable) __block id<CWFolderBuilding> folderBuilder;
 
 /**
  Maximum count of messages to prefetch.
