@@ -205,8 +205,10 @@
         if (lowestMessageNumberToFetch <= 0) {
             lowestMessageNumberToFetch = 1;
         }
+        NSUInteger highestMessageNumberToFetch = lowestMessageNumberToFetch + fetchMaxMails;
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-                  arguments: @"FETCH %u:* (UID FLAGS BODY.PEEK[])", lowestMessageNumberToFetch];
+                  arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])", lowestMessageNumberToFetch,
+         highestMessageNumberToFetch];
     }
 }
 
