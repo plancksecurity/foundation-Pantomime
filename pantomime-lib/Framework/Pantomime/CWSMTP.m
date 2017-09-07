@@ -21,6 +21,7 @@
 */
 
 #import "Pantomime/CWSMTP.h"
+#import "CWSMTP+Protected.h"
 
 #import "Pantomime/CWConnection.h"
 #import "Pantomime/CWConstants.h"
@@ -34,15 +35,9 @@
 
 #import "CWConnection.h"
 #import "CWThreadSafeArray.h"
-#import "CWThreadSaveData.h"
+#import "CWThreadSafeData.h"
 
 #import "CWService+Protected.h"
-
-//
-// Some static variables used to enhance the performance.
-//
-static NSStringEncoding defaultCStringEncoding;
-static NSData *CRLF;
 
 // The hostname/domain used to do EHLO/HELO
 static NSString *pEpEHLOBase = @"pretty.Easy.privacy";
@@ -81,44 +76,12 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   return nil;
 }
 
-//
-//
-//
-@interface CWSMTPQueueObject : NSObject
-{
-  @public
-    SMTPCommand command;
-    NSString *arguments;
-}
-- (id) initWithCommand: (SMTPCommand) theCommand
-	     arguments: (NSString *) theArguments;
-@end
-
-@implementation CWSMTPQueueObject
-
-- (id) initWithCommand: (SMTPCommand) theCommand
-	     arguments: (NSString *) theArguments
-{
-  self = [super init];
-  command = theCommand;
-  ASSIGN(arguments, theArguments);
-  return self;
-}
-
-- (void) dealloc
-{
-  RELEASE(arguments);
-  //[super dealloc];
-}
-@end
-
 
 //
 // Private SMTP methods
 //
 @interface CWSMTP (Private)
 
-- (void) _fail;
 - (void) _parseAUTH_CRAM_MD5;
 - (void) _parseAUTH_LOGIN;
 - (void) _parseAUTH_LOGIN_CHALLENGE;
@@ -141,13 +104,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 //
 @implementation CWSMTP
-
-+ (void) initialize
-{
-  defaultCStringEncoding = [NSString defaultCStringEncoding];
-  CRLF = [[NSData alloc] initWithBytes: "\r\n"  length: 2];
-}
-
 
 //
 // initializers
@@ -187,64 +143,16 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   //[super dealloc];
 }
 
+#pragma mark - Overriden
 
 //
-// This method returns the last response obtained from the SMTP
-// server. If the last command issued a multiline response, it'll return the
-// last text response and none of the previous ones.
 //
-- (NSData *) lastResponse
+//
+- (void) cancelRequest
 {
-  return [_responsesFromServer lastObject];
-}
-
-
-//
-// Same as -lastResponse except it does return only the response code.
-//
-- (int) lastResponseCode
-{
-  if ([_responsesFromServer count] > 0)
-    {
-      return atoi([[[_responsesFromServer lastObject] subdataToIndex: 3] cString]);
-    }
-
-  return 0;
-}
-
-
-//
-// This method is used to authenticate ourself to the SMTP server.
-//
-- (void) authenticate: (NSString *) theUsername
-	     password: (NSString *) thePassword
-	    mechanism: (NSString *) theMechanism
-{
-  ASSIGN(_username, theUsername);
-  ASSIGN(_password, thePassword);
-  ASSIGN(_mechanism, theMechanism);
-
-  if (!theMechanism)
-    {
-      AUTHENTICATION_FAILED(_delegate, @"");
-    }
-  else if ([theMechanism caseInsensitiveCompare: @"PLAIN"] == NSOrderedSame)
-    {
-      [self sendCommand: SMTP_AUTH_PLAIN  arguments: @"AUTH PLAIN"];
-    }
-  else if ([theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
-    {
-      [self sendCommand: SMTP_AUTH_LOGIN  arguments: @"AUTH LOGIN"];
-    }
-  else if ([theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
-    {
-      [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
-    }
-  else
-    {
-      // Unknown / Unsupported mechanism
-      AUTHENTICATION_FAILED(_delegate, theMechanism);
-    }
+    dispatch_sync(self.serviceQueue, ^{
+        [super cancelRequest];
+    });
 }
 
 
@@ -253,19 +161,12 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) close
 {
-    if (_connected) {
-        [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
-    }
-    [super close];
-}
-
-
-//
-// This method sends a NOOP SMTP command.
-//
-- (void) noop
-{
-  [self sendCommand: SMTP_NOOP  arguments: @"NOOP"];
+    dispatch_sync(self.serviceQueue, ^{
+        if (_connected) {
+            [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
+        }
+        [super close];
+    });
 }
 
 
@@ -273,226 +174,10 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 // This method sends a RSET SMTP command.
 //
 - (void) reset
-{ 
-  [self sendCommand: SMTP_RSET  arguments: @"RSET"];
-}
-
-
-//
-// This method sends a SMTP command to the server.
-//
-// It automatically adds the trailing CRLF to every command.
-//
-// RFC2821:
-//
-//   The SMTP commands define the mail transfer or the mail system
-//   function requested by the user.  SMTP commands are character strings
-//   terminated by <CRLF>.  The commands themselves are alphabetic
-//   characters terminated by <SP> if parameters follow and <CRLF>
-//   otherwise.  (In the interest of improved interoperability, SMTP
-//   receivers are encouraged to tolerate trailing white space before the
-//   terminating <CRLF>.)  The syntax of the local part of a mailbox must
-//   conform to receiver site conventions and the syntax specified in
-//   section 4.1.2.  The SMTP commands are discussed below.  The SMTP
-//   replies are discussed in section 4.2.
-//
-// The following list of commands is supported:
-//
-// - EHLO / HELO
-// - MAIL 
-// - RCPT
-// - DATA
-// - RSET
-// - QUIT
-//
-// Unimplemented commands:
-//
-// - VRFY
-// - EXPN
-// - HELP
-// - NOOP
-//
-- (void) sendCommand: (SMTPCommand) theCommand  arguments: (NSString *) theFormat, ...
 {
-  CWSMTPQueueObject *aQueueObject;
-
-  if (theCommand == SMTP_EMPTY_QUEUE)
-    {
-      if ([_queue count])
-	{
-	  // We dequeue the first inserted command from the queue.
-	  aQueueObject = [_queue lastObject];
-        if (!aQueueObject) {
-            INFO(NSStringFromClass([self class]), @"_queue has %lu objects", (unsigned long) _queue.count);
-            for (NSObject *obj in _queue) {
-                INFO(NSStringFromClass([self class]), @"obj %@", obj);
-            }
-            INFO(NSStringFromClass([self class]), @"aQueueObject nil");
-        }
-	}
-      else
-	{
-	  // The queue is empty, we have nothing more to do...
-	  return;
-	}
-    }
-  else
-    {
-      NSString *aString;
-      va_list args;
-      
-      va_start(args, theFormat);
-      
-      aString = [[NSString alloc] initWithFormat: theFormat  arguments: args];
-      
-      aQueueObject = [[CWSMTPQueueObject alloc] initWithCommand: theCommand  arguments: aString];
-      RELEASE(aString);
-
-      [_queue insertObject: aQueueObject  atIndex: 0];
-      RELEASE(aQueueObject);
-
-      // If we had queued commands, we return since we'll eventually
-      // dequeue them one by one. Otherwise, we run it immediately.
-      if ([_queue count] > 1)
-	{
-	  return;
-	}
-    }
-
-    if (aQueueObject) {
-        BOOL isPrivate = NO;
-        if ((aQueueObject->command == SMTP_AUTH_CRAM_MD5 ||
-             aQueueObject->command ==  SMTP_AUTH_LOGIN ||
-             aQueueObject->command == SMTP_AUTH_LOGIN_CHALLENGE ||
-             aQueueObject->command == SMTP_AUTH_PLAIN) &&
-            ![aQueueObject->arguments hasPrefix:@"AUTH"]) {
-            isPrivate = YES;
-        }
-
-        if (isPrivate) {
-            INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
-        } else {
-            INFO(NSStringFromClass([self class]), @"Sending |%@|", aQueueObject->arguments);
-        }
-
-        _lastCommand = aQueueObject->command;
-
-        [self bulkWriteData:@[[aQueueObject->arguments dataUsingEncoding: defaultCStringEncoding],
-                                 CRLF]];
-    } else {
-        // TODO: Why is aQueueObject sometimes nil?
-        INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
-    }
-}
-
-
-//
-// To send a message, we need its data value and the recipients at least.
-//
-// Depending on what was specified using the "set" methods, we initialize
-// what we really want and proceed to send the mail.
-//
-- (void) sendMessage
-{
-  NSString *aString;
-
-  if (!_message && !_data)
-    {
-      [self _fail];
-      return;
-    }
-  if (!_recipients && _message)
-    {
-      ASSIGN(_recipients, [NSMutableArray arrayWithArray: [_message recipients]]);
-
-      if (!_data)
-	{
-	  ASSIGN(_data, [_message dataValue]);
-	}
-    }
-  else if (!_recipients && _data)
-    {
-      CWMessage *aMessage;
-      
-      aMessage = [[CWMessage alloc] initWithData: _data];
-      ASSIGN(_message, aMessage);
-      ASSIGN(_recipients, [NSMutableArray arrayWithArray: [aMessage recipients]]);
-
-      RELEASE(aMessage);
-    }
-
-  DESTROY(_sent_recipients);
-  _sent_recipients = [_recipients mutableCopy];
-  
-  // We first verify if it's a redirected message
-  if ([_message resentFrom])
-    {
-      _redirected = YES;
-      aString = [[_message resentFrom] address];
-    }
-  else
-    {
-      _redirected = NO;
-      aString = [[_message from] address];
-    }
-
-  if (_max_size)
-    {
-      [self sendCommand: SMTP_MAIL  arguments: @"MAIL FROM:<%@> SIZE=%d", aString, [_data length]];
-    }
-  else
-    {
-      [self sendCommand: SMTP_MAIL  arguments: @"MAIL FROM:<%@>", aString];
-    }
-}
-
-
-//
-//
-//
-- (void) setMessage: (CWMessage *) theMessage
-{
-  DESTROY(_data);
-  ASSIGN(_message, theMessage);
-}
-
-- (CWMessage *) message
-{
-  return _message;
-}
-
-
-//
-//
-//
-- (void) setMessageData: (NSData *) theData
-{
-  DESTROY(_message);
-  ASSIGN(_data, theData);
-}
-
-- (NSData *) messageData
-{
-  return _data;
-}
-
-
-//
-//
-//
-- (void) setRecipients: (NSArray *) theRecipients
-{
-  DESTROY(_recipients);
-
-  if (theRecipients)
-    {
-      ASSIGN(_recipients, [NSMutableArray arrayWithArray: theRecipients]);
-    }
-}
-
-- (NSArray *) recipients
-{
-  return _recipients;
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: SMTP_RSET  arguments: @"RSET"];
+    });
 }
 
 
@@ -542,36 +227,250 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) updateRead
 {
-  NSData *aData;
-  char *buf;
-  NSUInteger count;
+    // Intentionally not serialized on serviceQueue. Must never been called directly by clients.
+    NSData *aData;
+    char *buf;
+    NSUInteger count;
 
-  //INFO(NSStringFromClass([self class]), @"IN UPDATE READ");
+    //INFO(NSStringFromClass([self class]), @"IN UPDATE READ");
 
-  [super updateRead];
+    [super updateRead];
 
-  while ((aData = [_rbuf dropFirstLine]))
+    while ((aData = [_rbuf dropFirstLine]))
     {
-      [_responsesFromServer addObject: aData];
- 
-      buf = (char *)[aData bytes];
-      count = [aData length];
+        [_responsesFromServer addObject: aData];
 
-      // If we got only a response code OR if we're done reading
-      // a multiline reply, we parse the output!
-      if (count == 3 || (count > 3 && (*(buf+3) != '-')))
-	{
-	  [self _parseServerOutput];
-	}
+        buf = (char *)[aData bytes];
+        count = [aData length];
+
+        // If we got only a response code OR if we're done reading
+        // a multiline reply, we parse the output!
+        if (count == 3 || (count > 3 && (*(buf+3) != '-')))
+        {
+            [self _parseServerOutput];
+        }
     }
 }
+
+
+//
+// This method sends a NOOP SMTP command.
+//
+- (void) noop
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: SMTP_NOOP  arguments: @"NOOP"];
+    });
+}
+
+
+//
+//
+//
+- (int) reconnect
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [super reconnect];
+    });
+
+    return 0; // In case you wonder see reconnect doc: @result Pending.
+}
+
 
 //
 //
 //
 - (void) startTLS
 {
-  [self sendCommand: SMTP_STARTTLS  arguments: @"STARTTLS"];
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: SMTP_STARTTLS  arguments: @"STARTTLS"];
+    });
+}
+
+
+//
+//
+//
+- (void) connectInBackgroundAndNotify
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [super connectInBackgroundAndNotify];
+    });
+}
+
+
+//
+// This method is used to authenticate ourself to the SMTP server.
+//
+- (void) authenticate: (NSString *) theUsername
+             password: (NSString *) thePassword
+            mechanism: (NSString *) theMechanism
+{
+    dispatch_sync(self.serviceQueue, ^{
+        ASSIGN(_username, theUsername);
+        ASSIGN(_password, thePassword);
+        ASSIGN(_mechanism, theMechanism);
+
+        if (!theMechanism)
+        {
+            AUTHENTICATION_FAILED(_delegate, @"");
+        }
+        else if ([theMechanism caseInsensitiveCompare: @"PLAIN"] == NSOrderedSame)
+        {
+            [self sendCommand: SMTP_AUTH_PLAIN  arguments: @"AUTH PLAIN"];
+        }
+        else if ([theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
+        {
+            [self sendCommand: SMTP_AUTH_LOGIN  arguments: @"AUTH LOGIN"];
+        }
+        else if ([theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
+        {
+            [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
+        }
+        else
+        {
+            // Unknown / Unsupported mechanism
+            AUTHENTICATION_FAILED(_delegate, theMechanism);
+        }
+    });
+}
+
+#pragma mark - CWTransport
+
+//
+// To send a message, we need its data value and the recipients at least.
+//
+// Depending on what was specified using the "set" methods, we initialize
+// what we really want and proceed to send the mail.
+//
+- (void) sendMessage
+{
+    dispatch_sync(self.serviceQueue, ^{
+        NSString *aString;
+
+        if (!_message && !_data)
+        {
+            [self fail];
+            return;
+        }
+        if (!_recipients && _message)
+        {
+            ASSIGN(_recipients, [NSMutableArray arrayWithArray: [_message recipients]]);
+
+            if (!_data)
+            {
+                ASSIGN(_data, [_message dataValue]);
+            }
+        }
+        else if (!_recipients && _data)
+        {
+            CWMessage *aMessage;
+
+            aMessage = [[CWMessage alloc] initWithData: _data];
+            ASSIGN(_message, aMessage);
+            ASSIGN(_recipients, [NSMutableArray arrayWithArray: [aMessage recipients]]);
+
+            RELEASE(aMessage);
+        }
+
+        DESTROY(_sent_recipients);
+        _sent_recipients = [_recipients mutableCopy];
+
+        // We first verify if it's a redirected message
+        if ([_message resentFrom])
+        {
+            _redirected = YES;
+            aString = [[_message resentFrom] address];
+        }
+        else
+        {
+            _redirected = NO;
+            aString = [[_message from] address];
+        }
+
+        if (_max_size)
+        {
+            [self sendCommand: SMTP_MAIL  arguments: @"MAIL FROM:<%@> SIZE=%d", aString, [_data length]];
+        }
+        else
+        {
+            [self sendCommand: SMTP_MAIL  arguments: @"MAIL FROM:<%@>", aString];
+        }
+    });
+}
+
+
+//
+//
+//
+- (void) setMessage: (CWMessage *) theMessage
+{
+    dispatch_sync(self.serviceQueue, ^{
+        DESTROY(_data);
+        ASSIGN(_message, theMessage);
+    });
+}
+
+- (CWMessage *) message
+{
+    __block CWMessage *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _message;
+    });
+
+    return returnee;
+}
+
+
+//
+//
+//
+- (void) setMessageData: (NSData *) theData
+{
+    dispatch_sync(self.serviceQueue, ^{
+        DESTROY(_message);
+        ASSIGN(_data, theData);
+    });
+}
+
+- (NSData *) messageData
+{
+    __block NSData *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _data;
+    });
+
+    return returnee;
+}
+
+
+//
+//
+//
+- (void) setRecipients: (NSArray *) theRecipients
+{
+    dispatch_sync(self.serviceQueue, ^{
+        DESTROY(_recipients);
+
+        if (theRecipients)
+        {
+            ASSIGN(_recipients, [NSMutableArray arrayWithArray: theRecipients]);
+        }
+    });
+}
+
+
+//
+//
+//
+- (NSArray *) recipients
+{
+    __block NSArray *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = _recipients;
+    });
+
+    return returnee;
 }
 
 @end
@@ -581,16 +480,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 // Private methods
 //
 @implementation CWSMTP (Private)
-- (void) _fail
-{
-  if (_message)
-    POST_NOTIFICATION(PantomimeMessageNotSent, self,
-                [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
-  else
-    POST_NOTIFICATION(PantomimeMessageNotSent, self,
-                [NSDictionary dictionaryWithObject: AUTORELEASE([CWMessage new])  forKey: @"Message"]);
-  PERFORM_SELECTOR_2(_delegate, @selector(messageNotSent:), PantomimeMessageNotSent, _message, @"Message");
-}
 
 - (void) _parseAUTH_CRAM_MD5
 {
@@ -609,8 +498,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       [aMD5 computeDigest];
       
       aString = [NSString stringWithFormat: @"%@ %@", _username, [aMD5 hmacAsStringUsingPassword: _password]];
-        [self bulkWriteData:@[[[aString dataUsingEncoding: defaultCStringEncoding] encodeBase64WithLineLength: 0],
-                                 CRLF]];
+        [self bulkWriteData:@[[[aString dataUsingEncoding:  _defaultCStringEncoding] encodeBase64WithLineLength: 0],
+                                 _crlf]];
       RELEASE(aMD5);
     }
   else if ([aData hasCPrefix: "235"])
@@ -637,8 +526,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     {
       NSString *aString;
       
-      aString = [[NSString alloc] initWithData: [[_username dataUsingEncoding: defaultCStringEncoding] encodeBase64WithLineLength: 0]
-						   encoding: defaultCStringEncoding];
+      aString = [[NSString alloc] initWithData: [[_username dataUsingEncoding: _defaultCStringEncoding] encodeBase64WithLineLength: 0]
+						   encoding: _defaultCStringEncoding];
       [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
       RELEASE(aString);
     }
@@ -662,8 +551,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     {
       NSString *aString;
       
-      aString = [[NSString alloc] initWithData: [[_password dataUsingEncoding: defaultCStringEncoding] encodeBase64WithLineLength: 0]
-				  encoding: defaultCStringEncoding];
+      aString = [[NSString alloc] initWithData: [[_password dataUsingEncoding: _defaultCStringEncoding] encodeBase64WithLineLength: 0]
+				  encoding: _defaultCStringEncoding];
       
       [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
       RELEASE(aString);
@@ -711,14 +600,14 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       aMutableData = [NSMutableData dataWithLength: (len_username + len_password + 2)];
       
       [aMutableData replaceBytesInRange: NSMakeRange(1,len_username)
-		    withBytes: [[_username dataUsingEncoding: defaultCStringEncoding] bytes]];
+		    withBytes: [[_username dataUsingEncoding: _defaultCStringEncoding] bytes]];
       
       
       [aMutableData replaceBytesInRange: NSMakeRange(2 + len_username, len_password)
-		    withBytes: [[_password dataUsingEncoding: defaultCStringEncoding] bytes]];
+		    withBytes: [[_password dataUsingEncoding:  [NSString defaultCStringEncoding]] bytes]];
 
         [self bulkWriteData:@[[aMutableData encodeBase64WithLineLength: 0],
-                                 CRLF]];
+                                 _crlf]];
     }
   else if ([aData hasCPrefix: "235"])
     {
@@ -729,6 +618,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       AUTHENTICATION_FAILED(_delegate, @"PLAIN");
     }
 }
+
 
 //
 //
@@ -751,6 +641,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 #warning FIXME
     }
 }
+
 
 //
 //
@@ -819,7 +710,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
   else
     {
-      [self _fail];
+      [self fail];
     }
 }
 
@@ -845,7 +736,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	  aData = [aData subdataFromIndex: 4];
 
 	  // We add it to our capabilities
-	  [_capabilities addObject: AUTORELEASE([[NSString alloc] initWithData: aData  encoding: defaultCStringEncoding])];
+	  [_capabilities addObject: AUTORELEASE([[NSString alloc] initWithData: aData  encoding: _defaultCStringEncoding])];
 
 	  // Example of responses:
 	  //
@@ -946,7 +837,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	}
       else
 	{
-	  [self _fail];
+	  [self fail];
 	}
     }
 }
@@ -1026,10 +917,11 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	}
       else
 	{
-	  [self _fail];
+	  [self fail];
 	}
     }
 }
+
 
 //
 //
@@ -1051,6 +943,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       PERFORM_SELECTOR_1(_delegate, @selector(transactionResetFailed:), PantomimeTransactionResetFailed);
     }
 }
+
 
 //
 //
@@ -1080,10 +973,11 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	}
       else
 	{
-	  [self _fail];
+	  [self fail];
 	}
     }
 }
+
 
 //
 //

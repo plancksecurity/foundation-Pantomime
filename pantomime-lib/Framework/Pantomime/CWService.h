@@ -42,7 +42,7 @@
 
 @class CWService;
 @class CWThreadSafeArray;
-@class CWThreadSaveData;
+@class CWThreadSafeData;
 
 /*!
   @const PantomimeAuthenticationCompleted
@@ -340,14 +340,16 @@ extern NSString * _Nonnull PantomimeProtocolException;
     __block CWThreadSafeArray *_supportedMechanisms;
     __block CWThreadSafeArray *_responsesFromServer;
     __block CWThreadSafeArray *_capabilities;
-    CWThreadSafeArray *_runLoopModes;
+    __block CWThreadSafeArray *_runLoopModes;
     __block CWThreadSafeArray *_queue;
-    CWThreadSaveData *_wbuf;
-    CWThreadSaveData *_rbuf;
-    NSString *_mechanism;
-    NSString *_username;
-    NSString *_password;
+    __block CWThreadSafeData *_wbuf;
+    __block CWThreadSafeData *_rbuf;
+    __block NSString *_mechanism;
+    __block NSString *_username;
+    __block NSString *_password;
     __block NSString *_name;
+    NSData *_crlf;
+    NSStringEncoding _defaultCStringEncoding;
 
 #ifdef MACOSX
     CFRunLoopSourceRef _runLoopSource;
@@ -358,18 +360,18 @@ extern NSString * _Nonnull PantomimeProtocolException;
     /** Used to serialize writes to the connection. As we serialize only public methods, pantomime and 
      methods called form a client might write at the same time.*/
     dispatch_queue_t _writeQueue;
-    /** Used to serialize public methods. THey might be called from different threads concurrently. */
+    /** Used to serialize public methods. They might be called from different threads concurrently. */
     dispatch_queue_t _serviceQueue;
-    unsigned int _connectionTimeout;
-    unsigned int _readTimeout;
-    unsigned int _writeTimeout;
-    unsigned int _lastCommand;
+    __block unsigned int _connectionTimeout;
+    __block unsigned int _readTimeout;
+    __block unsigned int _writeTimeout;
+    __block unsigned int _lastCommand;
     __block unsigned int _port;
     __block BOOL _connected;
-    id __weak _Nullable __block _delegate;
+    __block id __weak _Nullable __block _delegate;
     
     __block id<CWConnection> _connection;
-    int _counter;
+    __block int _counter;
     __block CWConnectionState *_connection_state;
 }
 
@@ -457,6 +459,21 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (void) close;
 
 /*!
+ @method noop
+ @discussion This method is used to generate some traffic on a server
+ so the connection doesn't idle and gets terminated by
+ the server. Subclasses of CWService need to implement this method.
+ */
+- (void) noop;
+
+/*!
+ @method reconnect
+ @discussion Pending.
+ @result Pending.
+ */
+- (int) reconnect;
+
+/*!
   @method connectInBackgroundAndNotify
   @discussion This method is used  connect the receiver to the server.
               The call to this method is non-blocking. This method will
@@ -484,6 +501,13 @@ extern NSString * _Nonnull PantomimeProtocolException;
   @result The capabilities, as a set of NSString instances.
 */
 - (NSSet<NSString *> * _Nonnull) capabilities;
+
+/*!
+ @method updateRead
+ @discussion This method is invoked automatically when bytes are available
+ to be read. You should never have to invoke this method directly.
+ */
+- (void) updateRead;
 
 @end
 

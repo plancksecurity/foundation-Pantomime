@@ -118,6 +118,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) sendCommandInternal: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
                       string:(NSString * _Nonnull)theString;
 
+/*!
+ @discussion This method is used to get the folder with
+ the specified name and mode. Also selects the folder.
+ @param theName The name of the folder to obtain.
+ @param theMode The mode to use. The value is one of the PantomimeFolderMode enum.
+ @result A CWIMAPFolder instance.
+ */
+- (CWIMAPFolder *) folderForNameInternal: (NSString *) theName
+                                    mode: (PantomimeFolderMode) theMode;
+
 - (void)signalFolderSyncError;
 
 - (void)signalFolderFetchNothingToFetch;

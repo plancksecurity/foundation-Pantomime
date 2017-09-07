@@ -1,21 +1,21 @@
 //
-//  CWThreadSaveData.m
+//  CWThreadSafeData.m
 //  Pantomime
 //
 //  Created by Andreas Buff on 04.09.17.
 //  Copyright © 2017 pEp Security S.A. All rights reserved.
 //
 
-#import "CWThreadSaveData.h"
+#import "CWThreadSafeData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CWThreadSaveData ()
+@interface CWThreadSafeData ()
 @property (nonatomic) dispatch_queue_t queue;
 @property (atomic) __block NSMutableData *data;
 @end
 
-@implementation CWThreadSaveData
+@implementation CWThreadSafeData
 
 - (instancetype _Nullable)init
 {

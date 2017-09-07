@@ -38,12 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)writeQueue;
 
-- (void)setWriteQueue: (dispatch_queue_t _Nullable)writeQueue;
-
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)serviceQueue;
-
-- (void)setServiceQueue: (dispatch_queue_t _Nullable)serviceQueue;
 
 /*!
  @method name
@@ -75,20 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
  @result The associated connectio object.
  */
 - (id<CWConnection> _Nonnull) connection;
-
-/*!
- @method reconnect
- @discussion Pending.
- @result Pending.
- */
-- (int) reconnect;
-
-/*!
- @method updateRead
- @discussion This method is invoked automatically when bytes are available
- to be read. You should never have to invoke this method directly.
- */
-- (void) updateRead;
 
 /*!
  @method updateWrite
@@ -129,14 +111,6 @@ NS_ASSUME_NONNULL_BEGIN
  @result 0 on success, -1 on error.
  */
 - (int) connect;
-
-/*!
- @method noop
- @discussion This method is used to generate some traffic on a server
- so the connection doesn't idle and gets terminated by
- the server. Subclasses of CWService need to implement this method.
- */
-- (void) noop;
 
 /**
  Buffers the given data to be streamed to a connected server later on.

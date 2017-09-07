@@ -203,23 +203,21 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 @interface CWIMAPStore : CWService  <CWStore>
 {
   @private
-    NSMutableDictionary *_folders;
-    NSMutableDictionary *_openFolders;
-    NSMutableDictionary *_folderStatus;
-    NSMutableArray *_subscribedFolders;
+    __block NSMutableDictionary *_folders;
+    __block NSMutableDictionary *_openFolders;
+    __block NSMutableDictionary *_folderStatus;
+    __block NSMutableArray *_subscribedFolders;
  
-    CWIMAPFolder *_selectedFolder;
+    __block CWIMAPFolder *_selectedFolder;
 
-    unsigned char _folderSeparator;
-    int _tag;
+    __block unsigned char _folderSeparator;
+    __block int _tag;
 
     __block CWIMAPQueueObject *_currentQueueObject;
 
-    @protected
-     NSData *_crlf;
 }
 
-@property (nonatomic, nullable) id<CWFolderBuilding> folderBuilder;
+@property (nonatomic, nullable) __block id<CWFolderBuilding> folderBuilder;
 
 /**
  Maximum count of messages to prefetch.

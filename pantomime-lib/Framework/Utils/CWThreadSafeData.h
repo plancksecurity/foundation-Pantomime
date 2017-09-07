@@ -1,5 +1,5 @@
 //
-//  CWThreadSaveData.h
+//  CWThreadSafeData.h
 //  Pantomime
 //
 //  Created by Andreas Buff on 04.09.17.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CWThreadSaveData : NSObject
+@interface CWThreadSafeData : NSObject
 
 - (instancetype _Nullable)init;
 

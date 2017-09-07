@@ -9,7 +9,7 @@
 #import "CWService+Protected.h"
 #import "CWService.h"
 
-#import "CWThreadSaveData.h"
+#import "CWThreadSafeData.h"
 #import "CWTCPConnection.h"
 
 @implementation CWService (Protected)
@@ -22,17 +22,6 @@
     }
 
     return _writeQueue;
-}
-
-
-//
-//
-//
-- (void)setWriteQueue: (dispatch_queue_t _Nullable)writeQueue
-{
-    if (_writeQueue != writeQueue) {
-        _writeQueue = writeQueue;
-    }
 }
 
 
@@ -50,105 +39,9 @@
 //
 //
 //
-- (void)setServiceQueue: (dispatch_queue_t _Nullable)serviceQueue
-{
-    if (_serviceQueue != serviceQueue) {
-        _serviceQueue = serviceQueue;
-    }
-}
-
-
-//
-//
-//
-- (NSString *) name
-{
-    return _name;
-}
-
-
-//
-//
-//
-- (void) setName: (NSString *) theName
-{
-    ASSIGN(_name, theName);
-}
-
-
-//
-//
-//
-- (void) setPort: (unsigned int) thePort
-{
-    _port = thePort;
-}
-
-
-//
-//
-//
 - (id<CWConnection>) connection
 {
     return _connection;
-}
-
-
-//
-//
-//
-- (int) reconnect
-{
-    [self subclassResponsibility: _cmd];
-    return 0;
-}
-
-
-//
-//
-//
-- (void) updateRead
-{
-    unsigned char buf[NET_BUF_SIZE];
-    NSInteger count;
-
-    while ((count = [_connection read: buf  length: NET_BUF_SIZE]) > 0)
-    {
-        NSData *aData;
-
-        aData = [[NSData alloc] initWithBytes: buf  length: count];
-
-        if (_delegate && [_delegate respondsToSelector: @selector(service:receivedData:)])
-        {
-            [_delegate performSelector: @selector(service:receivedData:)
-                            withObject: self
-                            withObject: aData];
-        }
-
-        [_rbuf appendData: aData];
-        RELEASE(aData);
-    }
-
-    if (count == 0)
-    {
-        //
-        // We check to see if we got disconnected.
-        //
-        if (_connection.streamError)
-        {
-            [_connection close];
-            POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
-            PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
-        }
-    }
-    else
-    {
-        // We reset our connection timeout counter. This could happen when we are performing operations
-        // that return a large amount of data. The queue might be non-empty but network I/O could be
-        // going on at the same time. This could also be problematic for lenghty IMAP search or
-        // mailbox preload.
-        _counter = 0;
-    }
 }
 
 
@@ -252,18 +145,9 @@
 //
 //
 //
-- (void) noop
-{
-    [self subclassResponsibility: _cmd];
-}
-
-
-//
-//
-//
 - (void) write: (NSData *) theData
 {
-    NSThread *backgroundThread = ((CWTCPConnection *) self.connection).backgroundThread;
+    NSThread *backgroundThread = ((CWTCPConnection *) _connection).backgroundThread;
     if ([NSThread currentThread] != backgroundThread) {
         [self performSelector:@selector(writeInternalData:) onThread:backgroundThread
                    withObject:theData waitUntilDone:NO];
@@ -404,8 +288,8 @@
 //
 - (void)nullifyQueues
 {
-    self.writeQueue = nil;
-    self.serviceQueue = nil;
+    _writeQueue = nil;
+    _serviceQueue = nil;
 }
 
 #pragma mark - CWConnectionDelegate
