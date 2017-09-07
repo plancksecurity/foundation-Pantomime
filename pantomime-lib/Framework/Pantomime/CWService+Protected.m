@@ -25,17 +25,6 @@
 }
 
 
-//
-//
-//
-- (void)setWriteQueue: (dispatch_queue_t _Nullable)writeQueue
-{
-    if (_writeQueue != writeQueue) {
-        _writeQueue = writeQueue;
-    }
-}
-
-
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)serviceQueue;
 {
@@ -44,44 +33,6 @@
     }
 
     return _serviceQueue;
-}
-
-
-//
-//
-//
-- (void)setServiceQueue: (dispatch_queue_t _Nullable)serviceQueue
-{
-    if (_serviceQueue != serviceQueue) {
-        _serviceQueue = serviceQueue;
-    }
-}
-
-
-//
-//
-//
-- (NSString *) name
-{
-    return _name;
-}
-
-
-//
-//
-//
-- (void) setName: (NSString *) theName
-{
-    ASSIGN(_name, theName);
-}
-
-
-//
-//
-//
-- (void) setPort: (unsigned int) thePort
-{
-    _port = thePort;
 }
 
 
@@ -196,7 +147,7 @@
 //
 - (void) write: (NSData *) theData
 {
-    NSThread *backgroundThread = ((CWTCPConnection *) self.connection).backgroundThread;
+    NSThread *backgroundThread = ((CWTCPConnection *) _connection).backgroundThread;
     if ([NSThread currentThread] != backgroundThread) {
         [self performSelector:@selector(writeInternalData:) onThread:backgroundThread
                    withObject:theData waitUntilDone:NO];
@@ -337,8 +288,8 @@
 //
 - (void)nullifyQueues
 {
-    self.writeQueue = nil;
-    self.serviceQueue = nil;
+    _writeQueue = nil;
+    _serviceQueue = nil;
 }
 
 #pragma mark - CWConnectionDelegate
