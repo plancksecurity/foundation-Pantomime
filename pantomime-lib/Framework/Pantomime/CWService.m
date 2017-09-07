@@ -141,11 +141,11 @@
 // We serialize access from outside and use the underlying iVars internally to avoid deadlocks
 - (void) setDelegate: (id _Nullable) theDelegate
 {
-    dispatch_sync(self.serviceQueue, ^{
+    @synchronized (self) {
         if (_delegate != theDelegate) {
             _delegate = theDelegate;
         }
-    });
+    }
 }
 
 
@@ -154,11 +154,9 @@
 //
 - (id) delegate
 {
-    __block id returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
-        returnee = _delegate;
-    });
-    return returnee;
+    @synchronized (self) {
+        return _delegate;
+    }
 }
 
 
