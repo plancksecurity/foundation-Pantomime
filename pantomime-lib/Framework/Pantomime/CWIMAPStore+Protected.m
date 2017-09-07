@@ -243,6 +243,66 @@
 //
 //
 //
+#warning VERIFY FOR NoSelect
+- (CWIMAPFolder *) folderForNameInternal: (NSString *) theName
+                                    mode: (PantomimeFolderMode) theMode
+{
+        CWIMAPFolder *aFolder = [_openFolders objectForKey: theName];
+
+        if (aFolder) {
+            if ([_selectedFolder.name isEqualToString:theName]) {
+                return aFolder;
+            }
+        } else {
+            aFolder = [self folderWithName:theName];
+            [_openFolders setObject: aFolder  forKey: theName];
+            RELEASE(aFolder);
+        }
+
+        [aFolder setStore: self];
+        aFolder.mode = theMode;
+
+        //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
+
+        // If we are already opening a mailbox, we must interrupt the process
+        // and open the preferred one instead.
+        if (_connection_state.opening_mailbox)
+        {
+            // Safety measure - in case close (so -removeFolderFromOpenFolders)
+            // on the selected folder wasn't called.
+            if (_selectedFolder)
+            {
+                [_openFolders removeObjectForKey: [_selectedFolder name]];
+            }
+
+            [super cancelRequest];
+            [self reconnect];
+
+            _selectedFolder = aFolder;
+            return _selectedFolder;
+        }
+
+        _connection_state.opening_mailbox = YES;
+
+        if (theMode == PantomimeReadOnlyMode)
+        {
+            [self sendCommand: IMAP_EXAMINE  info: nil  arguments: @"EXAMINE \"%@\"", [theName modifiedUTF7String]];
+        }
+        else
+        {
+            [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [theName modifiedUTF7String]];
+        }
+
+        // This folder becomes the selected one. This will have to be improved in the future.
+        // No need to retain "aFolder" here. The "_openFolders" dictionary already retains it.
+        _selectedFolder = aFolder;
+        return _selectedFolder;
+}
+
+
+//
+//
+//
 - (void)signalFolderSyncError
 {
     POST_NOTIFICATION(PantomimeFolderSyncFailed, self,

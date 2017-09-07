@@ -214,65 +214,29 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //}
 
 
+#pragma mark - Overriden
+
 //
-// This method is used to authenticate ourself to the SMTP server.
 //
-- (void) authenticate: (NSString *) theUsername
-             password: (NSString *) thePassword
-            mechanism: (NSString *) theMechanism
+//
+- (void) cancelRequest
 {
     dispatch_sync(self.serviceQueue, ^{
-        ASSIGN(_username, theUsername);
-        ASSIGN(_password, thePassword);
-        ASSIGN(_mechanism, theMechanism);
-
-        if (!theMechanism)
-        {
-            AUTHENTICATION_FAILED(_delegate, @"");
-        }
-        else if ([theMechanism caseInsensitiveCompare: @"PLAIN"] == NSOrderedSame)
-        {
-            [self sendCommand: SMTP_AUTH_PLAIN  arguments: @"AUTH PLAIN"];
-        }
-        else if ([theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
-        {
-            [self sendCommand: SMTP_AUTH_LOGIN  arguments: @"AUTH LOGIN"];
-        }
-        else if ([theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
-        {
-            [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
-        }
-        else
-        {
-            // Unknown / Unsupported mechanism
-            AUTHENTICATION_FAILED(_delegate, theMechanism);
-        }
+        [super cancelRequest];
     });
 }
-
 
 //
 //
 //
 - (void) close
 {
-//    dispatch_sync(self.serviceQueue, ^{
+    dispatch_sync(self.serviceQueue, ^{
         if (_connected) {
             [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
         }
         [super close];
-//    }); //BUFF:
-}
-
-
-//
-// This method sends a NOOP SMTP command.
-//
-- (void) noop
-{
-    dispatch_sync(self.serviceQueue, ^{
-        [self sendCommand: SMTP_NOOP  arguments: @"NOOP"];
-    });
+    }); //BUFF:
 }
 
 
@@ -444,7 +408,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) updateRead
 {
-//    dispatch_sync(self.serviceQueue, ^{
         NSData *aData;
         char *buf;
         NSUInteger count;
@@ -467,17 +430,88 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
                 [self _parseServerOutput];
             }
         }
-//    }); //BUFF:
 }
+
+//
+// This method sends a NOOP SMTP command.
+//
+- (void) noop
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: SMTP_NOOP  arguments: @"NOOP"];
+    });
+}
+
+
+//
+//
+//
+- (int) reconnect
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [super reconnect];
+    });
+
+    return 0; // In case you wonder see reconnect doc: @result Pending.
+}
+
 
 //
 //
 //
 - (void) startTLS
 {
-//    dispatch_sync(self.serviceQueue, ^{
+    dispatch_sync(self.serviceQueue, ^{
         [self sendCommand: SMTP_STARTTLS  arguments: @"STARTTLS"];
-//    }); //BUFF:
+    });
+}
+
+
+//
+//
+//
+- (void) connectInBackgroundAndNotify
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [super connectInBackgroundAndNotify];
+    });
+}
+
+
+//
+// This method is used to authenticate ourself to the SMTP server.
+//
+- (void) authenticate: (NSString *) theUsername
+             password: (NSString *) thePassword
+            mechanism: (NSString *) theMechanism
+{
+    dispatch_sync(self.serviceQueue, ^{
+        ASSIGN(_username, theUsername);
+        ASSIGN(_password, thePassword);
+        ASSIGN(_mechanism, theMechanism);
+
+        if (!theMechanism)
+        {
+            AUTHENTICATION_FAILED(_delegate, @"");
+        }
+        else if ([theMechanism caseInsensitiveCompare: @"PLAIN"] == NSOrderedSame)
+        {
+            [self sendCommand: SMTP_AUTH_PLAIN  arguments: @"AUTH PLAIN"];
+        }
+        else if ([theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
+        {
+            [self sendCommand: SMTP_AUTH_LOGIN  arguments: @"AUTH LOGIN"];
+        }
+        else if ([theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
+        {
+            [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
+        }
+        else
+        {
+            // Unknown / Unsupported mechanism
+            AUTHENTICATION_FAILED(_delegate, theMechanism);
+        }
+    });
 }
 
 #pragma mark - CWTransport

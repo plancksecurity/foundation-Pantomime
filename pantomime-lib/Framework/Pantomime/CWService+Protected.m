@@ -97,64 +97,6 @@
 //
 //
 //
-- (int) reconnect
-{
-    [self subclassResponsibility: _cmd];
-    return 0;
-}
-
-
-//
-//
-//
-- (void) updateRead
-{
-    unsigned char buf[NET_BUF_SIZE];
-    NSInteger count;
-
-    while ((count = [_connection read: buf  length: NET_BUF_SIZE]) > 0)
-    {
-        NSData *aData;
-
-        aData = [[NSData alloc] initWithBytes: buf  length: count];
-
-        if (_delegate && [_delegate respondsToSelector: @selector(service:receivedData:)])
-        {
-            [_delegate performSelector: @selector(service:receivedData:)
-                            withObject: self
-                            withObject: aData];
-        }
-
-        [_rbuf appendData: aData];
-        RELEASE(aData);
-    }
-
-    if (count == 0)
-    {
-        //
-        // We check to see if we got disconnected.
-        //
-        if (_connection.streamError)
-        {
-            [_connection close];
-            POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
-            PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
-        }
-    }
-    else
-    {
-        // We reset our connection timeout counter. This could happen when we are performing operations
-        // that return a large amount of data. The queue might be non-empty but network I/O could be
-        // going on at the same time. This could also be problematic for lenghty IMAP search or
-        // mailbox preload.
-        _counter = 0;
-    }
-}
-
-
-//
-//
-//
 - (void) updateWrite
 {
     if ([_wbuf length] == 0)
@@ -246,15 +188,6 @@
     [_connection connect];
 
     return 0;
-}
-
-
-//
-//
-//
-- (void) noop
-{
-    [self subclassResponsibility: _cmd];
 }
 
 

@@ -193,15 +193,13 @@
 //
 - (void) cancelRequest
 {
-    dispatch_sync(self.serviceQueue, ^{
-        [self nullifyQueues];
-        [_connection close];
-        DESTROY(_connection);
-        [_queue removeAllObjects];
+    [self nullifyQueues];
+    [_connection close];
+    DESTROY(_connection);
+    [_queue removeAllObjects];
 
-        POST_NOTIFICATION(PantomimeRequestCancelled, self, nil);
-        PERFORM_SELECTOR_1(_delegate, @selector(requestCancelled:), PantomimeRequestCancelled);
-    });
+    POST_NOTIFICATION(PantomimeRequestCancelled, self, nil);
+    PERFORM_SELECTOR_1(_delegate, @selector(requestCancelled:), PantomimeRequestCancelled);
 }
 
 
@@ -210,33 +208,98 @@
 //
 - (void) close
 {
-    dispatch_sync(self.serviceQueue, ^{
-        [self nullifyQueues];
-        //
-        // If we are reconnecting, no matter what, we close and release our current connection immediately.
-        // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
-        // to return immediately since _connected will be set to NO in _removeWatchers.
-        //
-        if (_connection_state.reconnecting)
+    [self nullifyQueues];
+    //
+    // If we are reconnecting, no matter what, we close and release our current connection immediately.
+    // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
+    // to return immediately since _connected will be set to NO in _removeWatchers.
+    //
+    if (_connection_state.reconnecting)
+    {
+        [_connection close];
+        DESTROY(_connection);
+    }
+
+    if (_connected)
+    {
+        _connected = NO;
+        [_connection close];
+
+        POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
+    } else {
+        INFO(NSStringFromClass(self.class), @"CWService.close: Double invocation");
+    }
+
+    [_connection setDelegate:nil];
+    _connection = nil;
+}
+
+
+//
+//
+//
+- (void) updateRead
+{
+    unsigned char buf[NET_BUF_SIZE];
+    NSInteger count;
+
+    while ((count = [_connection read: buf  length: NET_BUF_SIZE]) > 0)
+    {
+        NSData *aData;
+
+        aData = [[NSData alloc] initWithBytes: buf  length: count];
+
+        if (_delegate && [_delegate respondsToSelector: @selector(service:receivedData:)])
         {
-            [_connection close];
-            DESTROY(_connection);
+            [_delegate performSelector: @selector(service:receivedData:)
+                            withObject: self
+                            withObject: aData];
         }
 
-        if (_connected)
-        {
-            _connected = NO;
-            [_connection close];
+        [_rbuf appendData: aData];
+        RELEASE(aData);
+    }
 
-            POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
-            PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
-        } else {
-            INFO(NSStringFromClass(self.class), @"CWService.close: Double invocation");
+    if (count == 0)
+    {
+        //
+        // We check to see if we got disconnected.
+        //
+        if (_connection.streamError)
+        {
+            [_connection close];
+            POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
+            PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
         }
-        
-        [_connection setDelegate:nil];
-        _connection = nil;
-    });
+    }
+    else
+    {
+        // We reset our connection timeout counter. This could happen when we are performing operations
+        // that return a large amount of data. The queue might be non-empty but network I/O could be
+        // going on at the same time. This could also be problematic for lenghty IMAP search or
+        // mailbox preload.
+        _counter = 0;
+    }
+}
+
+
+//
+//
+//
+- (void) noop
+{
+    [self subclassResponsibility: _cmd];
+}
+
+
+//
+//
+//
+- (int) reconnect
+{
+    [self subclassResponsibility: _cmd];
+    return 0;
 }
 
 
@@ -245,22 +308,20 @@
 //
 - (void) connectInBackgroundAndNotify
 {
-    dispatch_sync(self.serviceQueue, ^{
-        _connection = [[CWTCPConnection alloc] initWithName: _name
-                                                       port: _port
-                                                  transport: _connectionTransport
-                                                 background: YES];
+    _connection = [[CWTCPConnection alloc] initWithName: _name
+                                                   port: _port
+                                              transport: _connectionTransport
+                                             background: YES];
 
-        if (!_connection)
-        {
-            POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
-            PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
-            return;
-        }
+    if (!_connection)
+    {
+        POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
+        return;
+    }
 
-        _connection.delegate = self;
-        [_connection connect];
-    });
+    _connection.delegate = self;
+    [_connection connect];
 }
 
 

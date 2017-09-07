@@ -240,64 +240,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 
 //
-// This method authenticates the Store to the IMAP server.
-// In case of an error, it returns NO.
-//
-// FIXME: We MUST NOT send a login command if LOGINDISABLED is
-//        enforced by the server (6.2.3).
-//
-- (void) authenticate: (NSString*) theUsername
-             password: (NSString*) thePassword
-            mechanism: (NSString*) theMechanism
-{
-    __block NSString *blockPassword = thePassword;
-
-    dispatch_sync(self.serviceQueue, ^{
-        ASSIGN(_username, theUsername);
-        ASSIGN(_password, thePassword);
-        ASSIGN(_mechanism, theMechanism);
-
-        // AUTH=CRAM-MD5
-        if (theMechanism && [theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
-        {
-            [self sendCommand: IMAP_AUTHENTICATE_CRAM_MD5  info: nil  arguments: @"AUTHENTICATE CRAM-MD5"];
-            return;
-        } // AUTH=LOGIN
-        else if (theMechanism && [theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
-        {
-            [self sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
-            return;
-        }
-
-        // AUTH=PLAIN
-        // We must verify if we must quote the password
-        if ([thePassword rangeOfCharacterFromSet: [NSCharacterSet punctuationCharacterSet]].length ||
-            [thePassword rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]].length)
-        {
-            blockPassword = [NSString stringWithFormat: @"\"%@\"", thePassword];
-        }
-        else if (![thePassword is7bitSafe])
-        {
-            NSData *aData;
-
-            //
-            // We support non-ASCII password by using the 8-bit ISO Latin 1 encoding.
-            // FIXME: Is there any standard on which encoding to use?
-            //
-            aData = [thePassword dataUsingEncoding: NSISOLatin1StringEncoding];
-
-            [self sendCommand: IMAP_LOGIN
-                         info: [NSDictionary dictionaryWithObject: aData  forKey: @"Password"]
-                    arguments: @"LOGIN %@ {%d}", _username, [aData length]];
-            return;
-        }
-        
-        [self sendCommand: IMAP_LOGIN  info: nil  arguments: @"LOGIN %@ %@", _username, thePassword];
-    });
-}
-
-
-//
 //
 //
 - (NSArray *) supportedMechanisms
@@ -337,58 +279,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     __block CWIMAPFolder *returnee = nil;
     dispatch_sync(self.serviceQueue, ^{
-        CWIMAPFolder *aFolder = [_openFolders objectForKey: theName];
-
-        if (aFolder) {
-            if ([_selectedFolder.name isEqualToString:theName]) {
-                returnee = aFolder;
-                return;
-            }
-        } else {
-            aFolder = [self folderWithName:theName];
-            [_openFolders setObject: aFolder  forKey: theName];
-            RELEASE(aFolder);
-        }
-
-        [aFolder setStore: self];
-        aFolder.mode = theMode;
-
-        //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
-
-        // If we are already opening a mailbox, we must interrupt the process
-        // and open the preferred one instead.
-        if (_connection_state.opening_mailbox)
-        {
-            // Safety measure - in case close (so -removeFolderFromOpenFolders)
-            // on the selected folder wasn't called.
-            if (_selectedFolder)
-            {
-                [_openFolders removeObjectForKey: [_selectedFolder name]];
-            }
-
-            [super cancelRequest];
-            [self reconnect];
-
-            _selectedFolder = aFolder;
-            returnee = _selectedFolder;
-            return;
-        }
-
-        _connection_state.opening_mailbox = YES;
-
-        if (theMode == PantomimeReadOnlyMode)
-        {
-            [self sendCommand: IMAP_EXAMINE  info: nil  arguments: @"EXAMINE \"%@\"", [theName modifiedUTF7String]];
-        }
-        else
-        {
-            [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [theName modifiedUTF7String]];
-        }
-
-        // This folder becomes the selected one. This will have to be improved in the future.
-        // No need to retain "aFolder" here. The "_openFolders" dictionary already retains it.
-        _selectedFolder = aFolder;
-        returnee = _selectedFolder;
+        returnee = [self folderForNameInternal:theName mode:theMode];
     });
 
     return returnee;
@@ -396,22 +287,34 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 #pragma mark - Overriden
 
-//BUFF: serialize!
+//
+//
+//
+- (void) cancelRequest
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [super cancelRequest];
+    });
+}
+
+
 //
 //
 //
 - (void) close
 {
-    // ignore all subsequent messages from the servers
-    self.folderBuilder = nil;
-    self.delegate = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        // ignore all subsequent messages from the servers
+        self.folderBuilder = nil;
+        self.delegate = nil;
 
-    [_openFolders removeAllObjects];
+        [_openFolders removeAllObjects];
 
-    if (_connected) {
-        [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
-    }
-    [super close];
+        if (_connected) {
+            [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
+        }
+        [super close];
+    });
 }
 
 
@@ -435,10 +338,8 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
-    //BUFF: try
-//    dispatch_sync(self.serviceQueue, ^{ //BUFF:
-    // Not on serviceQueue to avoid deadlock. Is only called by receivedEvent:type:extra:forMode:,
-    // which is serialized.
+    // Intentionally not serialized on serviceQueue as it is an overridden,
+    // protected method that can not be seen by clients.
     NSData *aData;
 
     NSUInteger i, count;
@@ -849,64 +750,134 @@ static inline int has_literal(char *buf, NSUInteger c)
     } // while ((aData = split_lines...
     
     //INFO(NSStringFromClass([self class]), @"While loop broken!");
-//        });
 }
 
-//BUFF: serialize
+
 //
 // This method NOOPs the IMAP store.
 //
 - (void) noop
 {
-    [self sendCommand: IMAP_NOOP  info: nil  arguments: @"NOOP"];
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: IMAP_NOOP  info: nil  arguments: @"NOOP"];
+    });
 }
 
 
-//BUFF: serialize?
 //
 //
 //
 - (int) reconnect
 {
-    //INFO(NSStringFromClass([self class]), @"CWIMAPStore: -reconnect");
+    dispatch_sync(self.serviceQueue, ^{
+        //INFO(NSStringFromClass([self class]), @"CWIMAPStore: -reconnect");
 
-    [_connection_state.previous_queue addObjectsFromArray: [_queue array]];
-    _connection_state.reconnecting = YES;
+        [_connection_state.previous_queue addObjectsFromArray: [_queue array]];
+        _connection_state.reconnecting = YES;
 
-    // We flush our read/write buffers.
-    [_rbuf reset];
-    [_wbuf reset];
+        // We flush our read/write buffers.
+        [_rbuf reset];
+        [_wbuf reset];
 
-    //
-    // We first empty our queue and set again our _lastCommand ivar to
-    // the IMAP_AUTHORIZATION command
-    //
-    //INFO(NSStringFromClass([self class]), @"queue count = %d", [_queue count]);
-    //INFO(NSStringFromClass([self class]), @"%@", [_queue description]);
-    [_queue removeAllObjects];
-    _lastCommand = IMAP_AUTHORIZATION;
-    INFO(NSStringFromClass([self class]), @"reconnect currentQueueObject = nil");
-    self.currentQueueObject = nil;
-    _counter = 0;
+        //
+        // We first empty our queue and set again our _lastCommand ivar to
+        // the IMAP_AUTHORIZATION command
+        //
+        //INFO(NSStringFromClass([self class]), @"queue count = %d", [_queue count]);
+        //INFO(NSStringFromClass([self class]), @"%@", [_queue description]);
+        [_queue removeAllObjects];
+        _lastCommand = IMAP_AUTHORIZATION;
+        INFO(NSStringFromClass([self class]), @"reconnect currentQueueObject = nil");
+        self.currentQueueObject = nil;
+        _counter = 0;
 
-    [super close];
-    [super connectInBackgroundAndNotify];
+        [super close];
+        [super connectInBackgroundAndNotify];
+    });
 
-    return 0;
+    return 0; // In case you wonder see reconnect doc: @result Pending.
 }
 
-//BUFF: serialize!!
+
 //
 //
 //
 - (void) startTLS
 {
-    [self sendCommand: IMAP_STARTTLS  info: nil  arguments: @"STARTTLS"];
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: IMAP_STARTTLS  info: nil  arguments: @"STARTTLS"];
+    });
+}
+
+//
+//
+//
+- (void) connectInBackgroundAndNotify
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [super connectInBackgroundAndNotify];
+    });
+}
+
+//
+// This method authenticates the Store to the IMAP server.
+// In case of an error, it returns NO.
+//
+// FIXME: We MUST NOT send a login command if LOGINDISABLED is
+//        enforced by the server (6.2.3).
+//
+- (void) authenticate: (NSString*) theUsername
+             password: (NSString*) thePassword
+            mechanism: (NSString*) theMechanism
+{
+    __block NSString *blockPassword = thePassword;
+
+    dispatch_sync(self.serviceQueue, ^{
+        ASSIGN(_username, theUsername);
+        ASSIGN(_password, thePassword);
+        ASSIGN(_mechanism, theMechanism);
+
+        // AUTH=CRAM-MD5
+        if (theMechanism && [theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
+        {
+            [self sendCommand: IMAP_AUTHENTICATE_CRAM_MD5  info: nil  arguments: @"AUTHENTICATE CRAM-MD5"];
+            return;
+        } // AUTH=LOGIN
+        else if (theMechanism && [theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
+        {
+            [self sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
+            return;
+        }
+
+        // AUTH=PLAIN
+        // We must verify if we must quote the password
+        if ([thePassword rangeOfCharacterFromSet: [NSCharacterSet punctuationCharacterSet]].length ||
+            [thePassword rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]].length)
+        {
+            blockPassword = [NSString stringWithFormat: @"\"%@\"", thePassword];
+        }
+        else if (![thePassword is7bitSafe])
+        {
+            NSData *aData;
+
+            //
+            // We support non-ASCII password by using the 8-bit ISO Latin 1 encoding.
+            // FIXME: Is there any standard on which encoding to use?
+            //
+            aData = [thePassword dataUsingEncoding: NSISOLatin1StringEncoding];
+
+            [self sendCommand: IMAP_LOGIN
+                         info: [NSDictionary dictionaryWithObject: aData  forKey: @"Password"]
+                    arguments: @"LOGIN %@ {%d}", _username, [aData length]];
+            return;
+        }
+
+        [self sendCommand: IMAP_LOGIN  info: nil  arguments: @"LOGIN %@ %@", _username, thePassword];
+    });
 }
 
 #pragma mark - CWStore
 
-//BUFF: serialize?
 //
 // Create the mailbox and subscribe to it. The full path to the mailbox must
 // be provided.
@@ -917,9 +888,11 @@ static inline int has_literal(char *buf, NSUInteger c)
                          type: (PantomimeFolderFormat) theType
                      contents: (NSData *) theContents
 {
-    [self sendCommand: IMAP_CREATE
-                 info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
-            arguments: @"CREATE \"%@\"", [theName modifiedUTF7String]];
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: IMAP_CREATE
+                     info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
+                arguments: @"CREATE \"%@\"", [theName modifiedUTF7String]];
+    });
 }
 
 
@@ -931,13 +904,14 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) deleteFolderWithName: (NSString *) theName
 {
-    [self sendCommand: IMAP_DELETE
-                 info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
-            arguments: @"DELETE \"%@\"", [theName modifiedUTF7String]];
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommand: IMAP_DELETE
+                     info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
+                arguments: @"DELETE \"%@\"", [theName modifiedUTF7String]];
+    });
 }
 
 
-//BUFF: serialize?
 //
 // This method is used to rename a folder.
 //
@@ -952,22 +926,27 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) renameFolderWithName: (NSString *) theName
                        toName: (NSString *) theNewName
 {
-    NSDictionary *info;
+    __block NSString *blockName = theName;
+    __block NSString *blockNewName = theNewName;
 
-    theName = [theName stringByDeletingFirstPathSeparator: _folderSeparator];
-    theNewName = [theNewName stringByDeletingFirstPathSeparator: _folderSeparator];
-    info = [NSDictionary dictionaryWithObjectsAndKeys: theName, @"Name", theNewName, @"NewName", nil];
+    dispatch_sync(self.serviceQueue, ^{
+        NSDictionary *info;
 
-    if ([[theName stringByTrimmingWhiteSpaces] length] == 0 ||
-        [[theNewName stringByTrimmingWhiteSpaces] length] == 0)
-    {
-        POST_NOTIFICATION(PantomimeFolderRenameFailed, self, info);
-        PERFORM_SELECTOR_3(_delegate, @selector(folderRenameFailed:), PantomimeFolderRenameFailed, info);
-    }
+        blockName = [blockName stringByDeletingFirstPathSeparator: _folderSeparator];
+        blockNewName = [blockNewName stringByDeletingFirstPathSeparator: _folderSeparator];
+        info = [NSDictionary dictionaryWithObjectsAndKeys: blockName, @"Name", blockNewName, @"NewName", nil];
 
-    [self sendCommand: IMAP_RENAME
-                 info: info
-            arguments: @"RENAME \"%@\" \"%@\"", [theName modifiedUTF7String], [theNewName modifiedUTF7String]];
+        if ([[blockName stringByTrimmingWhiteSpaces] length] == 0 ||
+            [[blockNewName stringByTrimmingWhiteSpaces] length] == 0)
+        {
+            POST_NOTIFICATION(PantomimeFolderRenameFailed, self, info);
+            PERFORM_SELECTOR_3(_delegate, @selector(folderRenameFailed:), PantomimeFolderRenameFailed, info);
+        }
+
+        [self sendCommand: IMAP_RENAME
+                     info: info
+                arguments: @"RENAME \"%@\" \"%@\"", [blockName modifiedUTF7String], [blockNewName modifiedUTF7String]];
+    });
 }
 
 
@@ -1013,72 +992,87 @@ static inline int has_literal(char *buf, NSUInteger c)
     return returnee;
 }
 
-//BUFF: serialize? If: Take care!
+//BUFF: here
 //
 //
 //
 - (id) folderForURL: (NSString *) theURL
 {
-    CWURLName *theURLName;
-    id aFolder;
+    __block id returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        CWURLName *theURLName;
+        id aFolder;
 
-    theURLName = [[CWURLName alloc] initWithString: theURL];
+        theURLName = [[CWURLName alloc] initWithString: theURL];
 
-    aFolder = [self folderForName: [theURLName foldername]];
-    RELEASE(theURLName);
-    return aFolder;
+        aFolder = [self folderForNameInternal: [theURLName foldername]];
+        RELEASE(theURLName);
+        returnee = aFolder;
+    });
+
+    return returnee;
 }
 
 
-//BUFF: serialize?
 //
 //
 //
 - (NSEnumerator *) openFoldersEnumerator
 {
-    return [_openFolders objectEnumerator];
+    __block NSEnumerator *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = [_openFolders objectEnumerator];
+    });
+
+    return returnee;
 }
 
-//BUFF: serialize?
+
 //
 //
 //
 - (void) removeFolderFromOpenFolders: (CWFolder *) theFolder
 {
-    if (_selectedFolder == (CWIMAPFolder *)theFolder)
-    {
-        _selectedFolder = nil;
-    }
+    dispatch_sync(self.serviceQueue, ^{
+        if (_selectedFolder == (CWIMAPFolder *)theFolder)
+        {
+            _selectedFolder = nil;
+        }
 
-    [_openFolders removeObjectForKey: [theFolder name]];
+        [_openFolders removeObjectForKey: [theFolder name]];
+    });
 }
 
 
-//BUFF: serialize?
 //
 //
 //
 - (BOOL) folderForNameIsOpen: (NSString *) theName
 {
-    NSEnumerator *anEnumerator;
-    CWIMAPFolder *aFolder;
+    __block BOOL returnee = NO;
+    dispatch_sync(self.serviceQueue, ^{
+        NSEnumerator *anEnumerator;
+        CWIMAPFolder *aFolder;
 
-    anEnumerator = [self openFoldersEnumerator];
+        anEnumerator = [self openFoldersEnumerator];
 
-    while ((aFolder = [anEnumerator nextObject]))
-    {
-        if ([[aFolder name] compare: theName
-                            options: NSCaseInsensitiveSearch] == NSOrderedSame)
+        while ((aFolder = [anEnumerator nextObject]))
         {
-            return YES;
+            if ([[aFolder name] compare: theName
+                                options: NSCaseInsensitiveSearch] == NSOrderedSame)
+            {
+                returnee = YES;
+                return;
+            }
         }
-    }
 
-    return NO;
+        returnee = NO;
+    });
+
+    return returnee;
 }
 
 
-//BUFF: serialize?
 //
 // This method verifies in the cache if theName is present.
 // If so, it returns the associated value.
@@ -1089,28 +1083,34 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (PantomimeFolderType) folderTypeForFolderName: (NSString *) theName
 {
-    id o;
+    __block PantomimeFolderType returnee = 0;
+    dispatch_sync(self.serviceQueue, ^{
+        id o;
 
-    o = [_folders objectForKey: theName];
+        o = [_folders objectForKey: theName];
 
-    if (o)
-    {
-        return [o intValue];
-    }
+        if (o)
+        {
+            returnee = [o intValue];
+            return;
+        }
 
-    [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" \"%@\"", [theName modifiedUTF7String]];
+        [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" \"%@\"", [theName modifiedUTF7String]];
+    });
 
-    return 0;
+    return returnee;
+
 }
 
 
-//BUFF: synchronize
 //
 //
 //
 - (unsigned char) folderSeparator
 {
-    return _folderSeparator;
+    @synchronized (self) {
+        return _folderSeparator;
+    }
 }
 
 
@@ -1130,9 +1130,22 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (id) folderForName: (NSString *) theName
 {
-    // is serialized by folderForName:mode:
-    return [self folderForName: theName
-                          mode: PantomimeReadWriteMode];
+    __block id returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        returnee = [self folderForNameInternal: theName
+                                          mode: PantomimeReadWriteMode];
+    });
+
+    return returnee;
+}
+
+//
+//
+// Non-serialized helper to avoid deadlocks chaining folderForName:... methods
+- (id) folderForNameInternal: (NSString *) theName
+{
+    return [self folderForNameInternal: theName
+                                  mode: PantomimeReadWriteMode];
 }
 
 @end

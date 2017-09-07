@@ -365,10 +365,10 @@ extern NSString * _Nonnull PantomimeProtocolException;
     unsigned int _connectionTimeout;
     unsigned int _readTimeout;
     unsigned int _writeTimeout;
-    unsigned int _lastCommand;
+    __block unsigned int _lastCommand;
     __block unsigned int _port;
     __block BOOL _connected;
-    id __weak _Nullable __block _delegate;
+    __block id __weak _Nullable __block _delegate;
     
     __block id<CWConnection> _connection;
     int _counter;

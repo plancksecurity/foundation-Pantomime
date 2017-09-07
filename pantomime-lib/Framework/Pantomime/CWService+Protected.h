@@ -38,12 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)writeQueue;
 
-- (void)setWriteQueue: (dispatch_queue_t _Nullable)writeQueue;
-
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)serviceQueue;
-
-- (void)setServiceQueue: (dispatch_queue_t _Nullable)serviceQueue;
 
 /*!
  @method name
