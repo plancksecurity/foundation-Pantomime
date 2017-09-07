@@ -47,7 +47,7 @@
 
 #import "CWIMAPCacheManager.h"
 #import "CWThreadSafeArray.h"
-#import "CWThreadSaveData.h"
+#import "CWThreadSafeData.h"
 
 #import "NSDate+RFC2822.h"
 
@@ -172,7 +172,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     if (thePort == 0) thePort = 143;
 
-    _crlf = [[NSData alloc] initWithBytes: "\r\n"  length: 2];
+//    _crlf = [[NSData alloc] initWithBytes: "\r\n"  length: 2];//BUFF
 
     self = [super initWithName: theName  port: thePort transport: transport];
 
@@ -214,6 +214,207 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//
+//
+//
+- (void)exitIDLE
+{
+    dispatch_sync(self.serviceQueue, ^{
+        if (self.lastCommand == IMAP_IDLE) {
+            [self writeData: IDLE_DONE_CONTINUATION];
+        }
+    });
+}
+
+
+//
+//
+//
+- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+              string:(NSString * _Nonnull)theString
+{
+    dispatch_sync(self.serviceQueue, ^{
+        [self sendCommandInternal:theCommand info:theInfo string:theString];
+    });
+}
+
+
+//
+// This method authenticates the Store to the IMAP server.
+// In case of an error, it returns NO.
+//
+// FIXME: We MUST NOT send a login command if LOGINDISABLED is
+//        enforced by the server (6.2.3).
+//
+- (void) authenticate: (NSString*) theUsername
+             password: (NSString*) thePassword
+            mechanism: (NSString*) theMechanism
+{
+    __block NSString *blockPassword = thePassword;
+
+    dispatch_sync(self.serviceQueue, ^{
+        ASSIGN(_username, theUsername);
+        ASSIGN(_password, thePassword);
+        ASSIGN(_mechanism, theMechanism);
+
+        // AUTH=CRAM-MD5
+        if (theMechanism && [theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
+        {
+            [self sendCommand: IMAP_AUTHENTICATE_CRAM_MD5  info: nil  arguments: @"AUTHENTICATE CRAM-MD5"];
+            return;
+        } // AUTH=LOGIN
+        else if (theMechanism && [theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
+        {
+            [self sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
+            return;
+        }
+
+        // AUTH=PLAIN
+        // We must verify if we must quote the password
+        if ([thePassword rangeOfCharacterFromSet: [NSCharacterSet punctuationCharacterSet]].length ||
+            [thePassword rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]].length)
+        {
+            blockPassword = [NSString stringWithFormat: @"\"%@\"", thePassword];
+        }
+        else if (![thePassword is7bitSafe])
+        {
+            NSData *aData;
+
+            //
+            // We support non-ASCII password by using the 8-bit ISO Latin 1 encoding.
+            // FIXME: Is there any standard on which encoding to use?
+            //
+            aData = [thePassword dataUsingEncoding: NSISOLatin1StringEncoding];
+
+            [self sendCommand: IMAP_LOGIN
+                         info: [NSDictionary dictionaryWithObject: aData  forKey: @"Password"]
+                    arguments: @"LOGIN %@ {%d}", _username, [aData length]];
+            return;
+        }
+        
+        [self sendCommand: IMAP_LOGIN  info: nil  arguments: @"LOGIN %@ %@", _username, thePassword];
+    });
+}
+
+
+//
+//
+//
+- (NSArray *) supportedMechanisms
+{
+    __block NSArray *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        NSMutableArray *aMutableArray;
+        NSString *aString;
+        NSUInteger i, count;;
+
+        aMutableArray = [NSMutableArray array];
+        count = [_capabilities count];
+
+        for (i = 0; i < count; i++)
+        {
+            aString = [_capabilities objectAtIndex: i];
+
+            if ([aString hasCaseInsensitivePrefix: @"AUTH="])
+            {
+                [aMutableArray addObject: [aString substringFromIndex: 5]];
+            }
+        }
+        
+        returnee =  aMutableArray;
+    });
+    
+    return returnee;
+}
+
+
+//
+//
+//
+#warning VERIFY FOR NoSelect
+- (CWIMAPFolder *) folderForName: (NSString *) theName
+                            mode: (PantomimeFolderMode) theMode
+{
+    __block CWIMAPFolder *returnee = nil;
+    dispatch_sync(self.serviceQueue, ^{
+        CWIMAPFolder *aFolder = [_openFolders objectForKey: theName];
+
+        if (aFolder) {
+            if ([_selectedFolder.name isEqualToString:theName]) {
+                returnee = aFolder;
+                return;
+            }
+        } else {
+            aFolder = [self folderWithName:theName];
+            [_openFolders setObject: aFolder  forKey: theName];
+            RELEASE(aFolder);
+        }
+
+        [aFolder setStore: self];
+        aFolder.mode = theMode;
+
+        //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
+
+        // If we are already opening a mailbox, we must interrupt the process
+        // and open the preferred one instead.
+        if (_connection_state.opening_mailbox)
+        {
+            // Safety measure - in case close (so -removeFolderFromOpenFolders)
+            // on the selected folder wasn't called.
+            if (_selectedFolder)
+            {
+                [_openFolders removeObjectForKey: [_selectedFolder name]];
+            }
+
+            [super cancelRequest];
+            [self reconnect];
+
+            _selectedFolder = aFolder;
+            returnee = _selectedFolder;
+            return;
+        }
+
+        _connection_state.opening_mailbox = YES;
+
+        if (theMode == PantomimeReadOnlyMode)
+        {
+            [self sendCommand: IMAP_EXAMINE  info: nil  arguments: @"EXAMINE \"%@\"", [theName modifiedUTF7String]];
+        }
+        else
+        {
+            [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [theName modifiedUTF7String]];
+        }
+
+        // This folder becomes the selected one. This will have to be improved in the future.
+        // No need to retain "aFolder" here. The "_openFolders" dictionary already retains it.
+        _selectedFolder = aFolder;
+        returnee = _selectedFolder;
+    });
+
+    return returnee;
+}
+
+#pragma mark - Overriden
+
+//BUFF: serialize!
+//
+//
+//
+- (void) close
+{
+    // ignore all subsequent messages from the servers
+    self.folderBuilder = nil;
+    self.delegate = nil;
+
+    [_openFolders removeAllObjects];
+
+    if (_connected) {
+        [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
+    }
+    [super close];
+}
+
+
 /**
  When this method is called, we are receiving bytes
  from the _lastCommand.
@@ -234,6 +435,8 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
+    //BUFF: try
+//    dispatch_sync(self.serviceQueue, ^{ //BUFF:
     // Not on serviceQueue to avoid deadlock. Is only called by receivedEvent:type:extra:forMode:,
     // which is serialized.
     NSData *aData;
@@ -644,211 +847,12 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
         }
     } // while ((aData = split_lines...
-
-    //INFO(NSStringFromClass([self class]), @"While loop broken!");
-}
-
-
-//
-//
-//
-- (void)exitIDLE
-{
-    dispatch_sync(self.serviceQueue, ^{
-        if (self.lastCommand == IMAP_IDLE) {
-            [self writeData: IDLE_DONE_CONTINUATION];
-        }
-    });
-}
-
-
-//
-//
-//
-- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
-              string:(NSString * _Nonnull)theString
-{
-    dispatch_sync(self.serviceQueue, ^{
-        [self sendCommandInternal:theCommand info:theInfo string:theString];
-    });
-}
-
-
-//
-// This method authenticates the Store to the IMAP server.
-// In case of an error, it returns NO.
-//
-// FIXME: We MUST NOT send a login command if LOGINDISABLED is
-//        enforced by the server (6.2.3).
-//
-- (void) authenticate: (NSString*) theUsername
-             password: (NSString*) thePassword
-            mechanism: (NSString*) theMechanism
-{
-    __block NSString *blockPassword = thePassword;
-
-    dispatch_sync(self.serviceQueue, ^{
-        ASSIGN(_username, theUsername);
-        ASSIGN(_password, thePassword);
-        ASSIGN(_mechanism, theMechanism);
-
-        // AUTH=CRAM-MD5
-        if (theMechanism && [theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
-        {
-            [self sendCommand: IMAP_AUTHENTICATE_CRAM_MD5  info: nil  arguments: @"AUTHENTICATE CRAM-MD5"];
-            return;
-        } // AUTH=LOGIN
-        else if (theMechanism && [theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
-        {
-            [self sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
-            return;
-        }
-
-        // AUTH=PLAIN
-        // We must verify if we must quote the password
-        if ([thePassword rangeOfCharacterFromSet: [NSCharacterSet punctuationCharacterSet]].length ||
-            [thePassword rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]].length)
-        {
-            blockPassword = [NSString stringWithFormat: @"\"%@\"", thePassword];
-        }
-        else if (![thePassword is7bitSafe])
-        {
-            NSData *aData;
-
-            //
-            // We support non-ASCII password by using the 8-bit ISO Latin 1 encoding.
-            // FIXME: Is there any standard on which encoding to use?
-            //
-            aData = [thePassword dataUsingEncoding: NSISOLatin1StringEncoding];
-
-            [self sendCommand: IMAP_LOGIN
-                         info: [NSDictionary dictionaryWithObject: aData  forKey: @"Password"]
-                    arguments: @"LOGIN %@ {%d}", _username, [aData length]];
-            return;
-        }
-        
-        [self sendCommand: IMAP_LOGIN  info: nil  arguments: @"LOGIN %@ %@", _username, thePassword];
-    });
-}
-
-
-//
-//
-//
-- (NSArray *) supportedMechanisms
-{
-    __block NSArray *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
-        NSMutableArray *aMutableArray;
-        NSString *aString;
-        NSUInteger i, count;;
-
-        aMutableArray = [NSMutableArray array];
-        count = [_capabilities count];
-
-        for (i = 0; i < count; i++)
-        {
-            aString = [_capabilities objectAtIndex: i];
-
-            if ([aString hasCaseInsensitivePrefix: @"AUTH="])
-            {
-                [aMutableArray addObject: [aString substringFromIndex: 5]];
-            }
-        }
-        
-        returnee =  aMutableArray;
-    });
     
-    return returnee;
+    //INFO(NSStringFromClass([self class]), @"While loop broken!");
+//        });
 }
 
-
-//
-//
-//
-#warning VERIFY FOR NoSelect
-- (CWIMAPFolder *) folderForName: (NSString *) theName
-                            mode: (PantomimeFolderMode) theMode
-{
-    __block CWIMAPFolder *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
-        CWIMAPFolder *aFolder = [_openFolders objectForKey: theName];
-
-        if (aFolder) {
-            if ([_selectedFolder.name isEqualToString:theName]) {
-                returnee = aFolder;
-                return;
-            }
-        } else {
-            aFolder = [self folderWithName:theName];
-            [_openFolders setObject: aFolder  forKey: theName];
-            RELEASE(aFolder);
-        }
-
-        [aFolder setStore: self];
-        aFolder.mode = theMode;
-
-        //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
-
-        // If we are already opening a mailbox, we must interrupt the process
-        // and open the preferred one instead.
-        if (_connection_state.opening_mailbox)
-        {
-            // Safety measure - in case close (so -removeFolderFromOpenFolders)
-            // on the selected folder wasn't called.
-            if (_selectedFolder)
-            {
-                [_openFolders removeObjectForKey: [_selectedFolder name]];
-            }
-
-            [super cancelRequest];
-            [self reconnect];
-
-            _selectedFolder = aFolder;
-            returnee = _selectedFolder;
-            return;
-        }
-
-        _connection_state.opening_mailbox = YES;
-
-        if (theMode == PantomimeReadOnlyMode)
-        {
-            [self sendCommand: IMAP_EXAMINE  info: nil  arguments: @"EXAMINE \"%@\"", [theName modifiedUTF7String]];
-        }
-        else
-        {
-            [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [theName modifiedUTF7String]];
-        }
-
-        // This folder becomes the selected one. This will have to be improved in the future.
-        // No need to retain "aFolder" here. The "_openFolders" dictionary already retains it.
-        _selectedFolder = aFolder;
-        returnee = _selectedFolder;
-    });
-
-    return returnee;
-}
-
-
-//
-//
-//
-- (void) close
-{
-    // ignore all subsequent messages from the servers
-    self.folderBuilder = nil;
-    self.delegate = nil;
-
-    [_openFolders removeAllObjects];
-
-    if (_connected) {
-        [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
-    }
-    [super close];
-}
-
-
-#pragma mark - Overriden
+//BUFF: serialize
 //
 // This method NOOPs the IMAP store.
 //
@@ -858,6 +862,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//BUFF: serialize?
 //
 //
 //
@@ -890,7 +895,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     return 0;
 }
 
-
+//BUFF: serialize!!
 //
 //
 //
@@ -901,6 +906,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 #pragma mark - CWStore
 
+//BUFF: serialize?
 //
 // Create the mailbox and subscribe to it. The full path to the mailbox must
 // be provided.
@@ -917,6 +923,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//BUFF: serialize?
 //
 // Delete the mailbox. The full path to the mailbox must be provided.
 //
@@ -930,6 +937,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//BUFF: serialize?
 //
 // This method is used to rename a folder.
 //
@@ -1005,7 +1013,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     return returnee;
 }
 
-
+//BUFF: serialize? If: Take care!
 //
 //
 //
@@ -1022,6 +1030,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//BUFF: serialize?
 //
 //
 //
@@ -1030,7 +1039,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     return [_openFolders objectEnumerator];
 }
 
-
+//BUFF: serialize?
 //
 //
 //
@@ -1045,6 +1054,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//BUFF: serialize?
 //
 //
 //
@@ -1068,6 +1078,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//BUFF: serialize?
 //
 // This method verifies in the cache if theName is present.
 // If so, it returns the associated value.
@@ -1093,6 +1104,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
+//BUFF: synchronize
 //
 //
 //
@@ -1390,7 +1402,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         aString = [[NSString alloc] initWithData: [[aString dataUsingEncoding: NSASCIIStringEncoding] encodeBase64WithLineLength: 0]
                                         encoding: NSASCIIStringEncoding];
 
-        [self bulkWriteData:@[[aString dataUsingEncoding: [NSString defaultCStringEncoding]],
+        [self bulkWriteData:@[[aString dataUsingEncoding: _defaultCStringEncoding],
                                  _crlf]];
         RELEASE(aMD5);
         RELEASE(aString);
@@ -1536,7 +1548,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSData *aData;
 
     aData = [_responsesFromServer objectAtIndex: 0];
-    aString = [[NSString alloc] initWithData: aData  encoding: [NSString defaultCStringEncoding]];
+    aString = [[NSString alloc] initWithData: aData  encoding: _defaultCStringEncoding];
 
     [_capabilities addObjectsFromArray: [[aString substringFromIndex: 13] componentsSeparatedByString: @" "]];
     RELEASE(aString);
@@ -2288,7 +2300,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSUInteger len;
 
     aString = [[NSString alloc] initWithData: [_responsesFromServer lastObject]
-                                    encoding: [NSString defaultCStringEncoding]];
+                                    encoding: _defaultCStringEncoding];
 
     if (!aString)
     {

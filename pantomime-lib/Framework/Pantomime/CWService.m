@@ -37,7 +37,7 @@
 
 #import "CWTCPConnection.h"
 #import "CWThreadSafeArray.h"
-#import "CWThreadSaveData.h"
+#import "CWThreadSafeData.h"
 
 @interface CWService ()
 @property (nonatomic, nullable, strong) id<CWLogging> logger;
@@ -65,6 +65,9 @@
   self = [super init];
 
     if (self) {
+        _crlf = [[NSData alloc] initWithBytes: "\r\n"  length: 2];
+        _defaultCStringEncoding = [NSString defaultCStringEncoding];
+        
         _supportedMechanisms = [[CWThreadSafeArray alloc] init];
         _responsesFromServer = [[CWThreadSafeArray alloc] init];
         _capabilities = [[CWThreadSafeArray alloc] init];
@@ -72,8 +75,8 @@
         _username = nil;
         _password = nil;
 
-        _rbuf = [CWThreadSaveData new];
-        _wbuf = [CWThreadSaveData new];
+        _rbuf = [CWThreadSafeData new];
+        _wbuf = [CWThreadSafeData new];
 
         _runLoopModes = [[CWThreadSafeArray alloc] initWithArray:@[NSDefaultRunLoopMode]];
         _connectionTimeout = _readTimeout = _writeTimeout = DEFAULT_TIMEOUT;

@@ -9,7 +9,7 @@
 #import "CWService+Protected.h"
 #import "CWService.h"
 
-#import "CWThreadSaveData.h"
+#import "CWThreadSafeData.h"
 #import "CWTCPConnection.h"
 
 @implementation CWService (Protected)

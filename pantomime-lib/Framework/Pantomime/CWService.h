@@ -42,7 +42,7 @@
 
 @class CWService;
 @class CWThreadSafeArray;
-@class CWThreadSaveData;
+@class CWThreadSafeData;
 
 /*!
   @const PantomimeAuthenticationCompleted
@@ -342,12 +342,14 @@ extern NSString * _Nonnull PantomimeProtocolException;
     __block CWThreadSafeArray *_capabilities;
     CWThreadSafeArray *_runLoopModes;
     __block CWThreadSafeArray *_queue;
-    CWThreadSaveData *_wbuf;
-    CWThreadSaveData *_rbuf;
+    CWThreadSafeData *_wbuf;
+    CWThreadSafeData *_rbuf;
     NSString *_mechanism;
     NSString *_username;
     NSString *_password;
     __block NSString *_name;
+    NSData *_crlf;
+    NSStringEncoding _defaultCStringEncoding;
 
 #ifdef MACOSX
     CFRunLoopSourceRef _runLoopSource;
@@ -358,7 +360,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
     /** Used to serialize writes to the connection. As we serialize only public methods, pantomime and 
      methods called form a client might write at the same time.*/
     dispatch_queue_t _writeQueue;
-    /** Used to serialize public methods. THey might be called from different threads concurrently. */
+    /** Used to serialize public methods. They might be called from different threads concurrently. */
     dispatch_queue_t _serviceQueue;
     unsigned int _connectionTimeout;
     unsigned int _readTimeout;

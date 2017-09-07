@@ -232,7 +232,7 @@
 
     [self bulkWriteData:@[self.currentQueueObject.tag,
                           [NSData dataWithBytes: " "  length: 1],
-                          [self.currentQueueObject.arguments dataUsingEncoding: [NSString defaultCStringEncoding]],
+                          [self.currentQueueObject.arguments dataUsingEncoding: _defaultCStringEncoding],
                           _crlf]];
 
     POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
