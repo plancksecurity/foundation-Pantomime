@@ -215,8 +215,6 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 
     __block CWIMAPQueueObject *_currentQueueObject;
 
-//    @protected
-//     NSData *_crlf; //BUFF:
 }
 
 @property (nonatomic, nullable) __block id<CWFolderBuilding> folderBuilder;

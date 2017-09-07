@@ -895,7 +895,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 
-//BUFF: serialize?
 //
 // Delete the mailbox. The full path to the mailbox must be provided.
 //
@@ -991,7 +990,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     return returnee;
 }
 
-//BUFF: here
+
 //
 //
 //
