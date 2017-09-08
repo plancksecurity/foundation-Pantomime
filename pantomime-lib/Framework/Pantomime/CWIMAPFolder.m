@@ -182,6 +182,163 @@
   RELEASE(aMutableString);
 }
 
+//BUFF:
+
+#pragma mark - Fetching
+
+- (void) fetchOlder
+{
+    // Maximum number of mails to fetch
+    NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
+    NSUInteger from = [self firstUID] - 1 - fetchMaxMails;
+    NSUInteger to = [self lastUID] - 1;
+    [self fetchFrom:from to:to];
+}
+
+//BUFF: private
+// We do want to have a closed fetchedRange. In other words, we do not wnt to have multible fetchedRanges.
+// We adjust fromUid and toUid accordingly.
+// Example:
+//
+// |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
+// | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
+//                                              |<-- allready fetched -->|
+//                                              |<---- fetchedRange ---->|
+//                                                 ^                   ^
+//                                                 |                   |
+//                                              firstUid            lastUid
+//------------------------------------------------------------------------------------------------------
+// case 1:
+//                                                      |             |
+//                                                     from           to
+//          Range already fetched. Do nothing.
+//------------------------------------------------------------------------------------------------------
+// case 2:
+//          before:
+//                                                                               |             |
+//                                                                             from            to
+//          Would result in a second fetchedRange. Move "from" down.
+//          after:
+//                                                                          |<---------        |
+//                                                                        from                 to
+//------------------------------------------------------------------------------------------------------
+// case 3:
+//          before:
+//                  |             |
+//                from            to
+//          Would result in a second fetchedRange. Move "to" up.
+//          after:
+//                  |              --------->|
+//                from                       to
+//------------------------------------------------------------------------------------------------------
+// case 4:
+//          before:
+//                                                               |                         |
+//                                                             from                        to
+//          "from" is in fetchedRange. Move it up.
+//          after:
+//                                                                  ------->|              |
+//                                                                        from             to
+//------------------------------------------------------------------------------------------------------
+// case 5:
+//          before:
+//                            |                         |
+//                          from                        to
+//          "to" is in fetchedRange. Move it down.
+//          after:
+//                            |              |<---------
+//                          from             to
+//------------------------------------------------------------------------------------------------------
+// case 6:
+//          before:
+//                            |                                                            |
+//                          from                                                           to
+//          fetchedRange is included in from-to range.
+//          We ignore this fact and fetch the messaged in fetchedRange again.
+//------------------------------------------------------------------------------------------------------
+- (void) fetchFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    NSParameterAssert(fromUid <= toUid);
+
+    // case 1
+    if ([self uidRangeAllreadyFetchedWithFrom:fromUid to:toUid] || ![self messagesExistOnServer]) {
+        // No reason to fetch, inform the client
+        [_store signalFolderFetchNothingToFetch];
+
+        return;
+    }
+
+    NSUInteger from = fromUid > 0 ? fromUid : 1;
+    // case 4
+    from = [self isInFetchedRange:from] ? [self lastUID] + 1 : from;
+
+    NSUInteger to = toUid <= self.existsCount ? toUid : self.existsCount;
+    // case 5
+    to = [self isInFetchedRange:to] ? [self firstUID] - 1 : to;
+
+    if ([self wouldCreatedUpperFetchedRangeWithFrom:from to:to]) {
+        // case 2
+        from = [self lastUID] + 1;
+    } else if ([self wouldCreatedLowerFetchedRangeWithFrom:from to:to]) {
+        // case 3
+        to = [self firstUID] - 1;
+    }
+
+    [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
+              arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])", from, to];
+}
+
+//
+//
+//
+- (NSUInteger) newestUnfetchedUid
+{
+    return [self firstUID] + 1;
+}
+
+//
+//
+//
+- (BOOL) uidAlreadyFetched:(NSUInteger)uid
+{
+    return [self isInFetchedRange:uid];
+}
+
+- (BOOL) isInFetchedRange:(NSUInteger)uid
+{
+    return [self firstUID] < uid && uid < [self lastUID];
+}
+
+- (BOOL) wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    return fromUid > [self lastUID] + 1;
+}
+
+- (BOOL) wouldCreatedLowerFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    return toUid < [self firstUID] - 1;
+}
+
+
+//
+//
+//
+- (BOOL) messagesExistOnServer
+{
+    return self.existsCount > 0;
+}
+
+
+//
+//
+//
+- (BOOL) uidRangeAllreadyFetchedWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    return [self isInFetchedRange:fromUid] && [self isInFetchedRange:toUid];
+}
+
+//FFUB
+
 
 /**
  For key sync to work, we have to fetch the whole mail, thus the method name became mis leading.
@@ -211,6 +368,8 @@
          highestMessageNumberToFetch];
     }
 }
+
+#pragma mark -
 
 - (void)syncExistingFirstUID:(NSUInteger)firstUID lastUID:(NSUInteger)lastUID
 {
@@ -445,13 +604,12 @@
 
 - (NSUInteger) firstUID
 {
-    return [[[self allMessages] firstObject] UID];
+    return [[self allMessages] firstObject] ? [[[self allMessages] firstObject] UID] : 0;
 }
-
 
 - (NSUInteger) lastUID
 {
-    return [[[self allMessages] lastObject] UID];
+    return [[self allMessages] lastObject] ? [[[self allMessages] lastObject] UID] : 0;
 }
 
 - (CWIMAPMessage * _Nullable)messageByUID:(NSUInteger)uid
