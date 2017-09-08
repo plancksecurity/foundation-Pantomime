@@ -642,6 +642,38 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
     XCTAssertTrue(blockCalled);
 }
 
+- (void)testPrefetch_nothingPreveouslyFetched_maxFetchNumGreaterExistsCount
+{
+    NSInteger maxFetchNum = 100;
+    NSInteger numMessagesOnServer = 20;
+    NSInteger fetchedRangeFirstUid = 0;
+    NSInteger fetchedRangeLastUid = 0;
+    NSUInteger expectedFrom = 1;
+    NSUInteger expectedTo = 20;
+
+    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
+    testStore.maxPrefetchCount = maxFetchNum;
+    FecthTestCWIMAPFolder *testFolder = [[FecthTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
+    testFolder.store = testStore;
+    testFolder.existsCount = numMessagesOnServer;
+    testFolder.testFirstUid = fetchedRangeFirstUid;
+    testFolder.testLastUid = fetchedRangeLastUid;
+
+    __block BOOL blockCalled = NO;
+    testStore.assertionBlockFor_sendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
+                                                             NSString *arguments) {
+        blockCalled = YES;
+        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
+    };
+    testStore.assertionBlockFor_signalFolderFetchNothingToFetch = ^() {
+        XCTFail(@"Should not be called");
+    };
+
+    [testFolder prefetch];
+
+    XCTAssertTrue(blockCalled);
+}
+
 #pragma mark - Helpers
 
 /**
