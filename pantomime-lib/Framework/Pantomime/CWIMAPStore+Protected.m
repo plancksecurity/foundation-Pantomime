@@ -315,7 +315,7 @@
 //
 //
 //
-- (void)signalFolderFetchNothingToFetch
+- (void)signalFolderFetchCompleted
 {
     //INFO(NSStringFromClass([self class]), @"DONE PREFETCHING FOLDER");
     POST_NOTIFICATION(PantomimeFolderPrefetchCompleted,

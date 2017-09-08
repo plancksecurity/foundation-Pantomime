@@ -43,6 +43,22 @@
 //
 @interface CWIMAPFolder (Private)
 
+- (BOOL) _uidAlreadyFetched:(NSUInteger)uid;
+
+- (BOOL) _isInFetchedRange:(NSUInteger)uid;
+
+- (BOOL) _wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
+
+- (BOOL) _wouldCreatedLowerFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
+
+- (BOOL) _previouslyFetchedMessagesExist;
+
+- (BOOL) _messagesExistOnServer;
+
+- (BOOL) _uidRangeAllreadyFetchedWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
+
+- (BOOL) _uidRangeOutOfExistsRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
+
 - (NSData *) _removeInvalidHeadersFromMessage: (NSData *) theMessage;
 
 @end
@@ -182,22 +198,32 @@
   RELEASE(aMutableString);
 }
 
-//BUFF:
 
 #pragma mark - Fetching
 
+// |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
+// | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
+//                                              |<-- allready fetched -->|
+//                                              |<---- fetchedRange ---->|
+//                                                 ^                   ^
+//                                                 |                   |
+//                                              firstUid            lastUid
+// This is fetched:     |<--- fetchMaxMails --->|
 - (void) fetchOlder
 {
     // Maximum number of mails to fetch
     NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
-    NSUInteger from = [self firstUID] - 1 - fetchMaxMails;
-    NSUInteger to = [self lastUID] - 1;
+    NSInteger from = [self firstUID] - fetchMaxMails;
+    from = from < 1 ? 1 : from;
+    NSInteger to = [self firstUID] - 1;
+    to = to < 1 ? 1 : to;
     [self fetchFrom:from to:to];
 }
 
-//BUFF: private
-// We do want to have a closed fetchedRange. In other words, we do not wnt to have multible fetchedRanges.
-// We adjust fromUid and toUid accordingly.
+
+// We want to always have a closed fetchedRange.
+// In other words, we do not want to have multible fetchedRanges.
+// Thus we adjust fromUid and toUid accordingly, if required.
 // Example:
 //
 // |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
@@ -258,28 +284,39 @@
 //------------------------------------------------------------------------------------------------------
 - (void) fetchFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
 {
-    NSParameterAssert(fromUid <= toUid);
-
-    // case 1
-    if ([self uidRangeAllreadyFetchedWithFrom:fromUid to:toUid] || ![self messagesExistOnServer]) {
-        // No reason to fetch, inform the client
-        [_store signalFolderFetchNothingToFetch];
+    // Invalid input. Do nothing.
+    if (fromUid == 0 || toUid > self.existsCount || fromUid > toUid) {
+        WARN(NSStringFromClass([self class]), @"Invalid input.");
+        // Inform the client
+        [_store signalFolderFetchCompleted];
 
         return;
     }
 
-    NSUInteger from = fromUid > 0 ? fromUid : 1;
+    // case 1
+    if ([self _uidRangeAllreadyFetchedWithFrom:fromUid to:toUid]
+        || ![self _messagesExistOnServer]
+        || fromUid == 0
+        || toUid > self.existsCount) {
+        // No reason to fetch, inform the client
+        [_store signalFolderFetchCompleted];
+
+        return;
+    }
+
+    NSInteger from = fromUid;
+    NSInteger to = toUid;
+
     // case 4
-    from = [self isInFetchedRange:from] ? [self lastUID] + 1 : from;
+    from = [self _isInFetchedRange:from] ? [self lastUID] + 1 : from;
 
-    NSUInteger to = toUid <= self.existsCount ? toUid : self.existsCount;
     // case 5
-    to = [self isInFetchedRange:to] ? [self firstUID] - 1 : to;
+    to = [self _isInFetchedRange:to] ? [self firstUID] - 1 : to;
 
-    if ([self wouldCreatedUpperFetchedRangeWithFrom:from to:to]) {
+    if ([self _wouldCreatedUpperFetchedRangeWithFrom:from to:to]) {
         // case 2
         from = [self lastUID] + 1;
-    } else if ([self wouldCreatedLowerFetchedRangeWithFrom:from to:to]) {
+    } else if ([self _wouldCreatedLowerFetchedRangeWithFrom:from to:to]) {
         // case 3
         to = [self firstUID] - 1;
     }
@@ -287,57 +324,6 @@
     [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
               arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])", from, to];
 }
-
-//
-//
-//
-- (NSUInteger) newestUnfetchedUid
-{
-    return [self firstUID] + 1;
-}
-
-//
-//
-//
-- (BOOL) uidAlreadyFetched:(NSUInteger)uid
-{
-    return [self isInFetchedRange:uid];
-}
-
-- (BOOL) isInFetchedRange:(NSUInteger)uid
-{
-    return [self firstUID] < uid && uid < [self lastUID];
-}
-
-- (BOOL) wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
-{
-    return fromUid > [self lastUID] + 1;
-}
-
-- (BOOL) wouldCreatedLowerFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
-{
-    return toUid < [self firstUID] - 1;
-}
-
-
-//
-//
-//
-- (BOOL) messagesExistOnServer
-{
-    return self.existsCount > 0;
-}
-
-
-//
-//
-//
-- (BOOL) uidRangeAllreadyFetchedWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
-{
-    return [self isInFetchedRange:fromUid] && [self isInFetchedRange:toUid];
-}
-
-//FFUB
 
 
 /**
@@ -347,27 +333,25 @@
 {
     // Maximum number of mails to prefetch
     NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
+    NSInteger fromUid = 0;
+    NSInteger toUid = 0;
 
     if ([self lastUID] > 0) {
         // We already fetched mails before, so lets fetch newer ones
-        [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-                  arguments: @"UID FETCH %u:* (FLAGS BODY.PEEK[])", [self lastUID] + 1];
-    } else if (self.existsCount == 0) {
-        // There are zero mails on server thus fetching makes no sense.
-        // Inform the client
-        [_store signalFolderFetchNothingToFetch];
+        fromUid = [self lastUID] + 1;
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
-        NSInteger lowestMessageNumberToFetch = self.existsCount - fetchMaxMails + 1;
-        if (lowestMessageNumberToFetch <= 0) {
-            lowestMessageNumberToFetch = 1;
-        }
-        NSUInteger highestMessageNumberToFetch = lowestMessageNumberToFetch + fetchMaxMails;
-        [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-                  arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])", lowestMessageNumberToFetch,
-         highestMessageNumberToFetch];
+        fromUid = self.existsCount - fetchMaxMails + 1;
     }
+
+    fromUid = fromUid <= 0 ? 1 : fromUid;
+
+    toUid = fromUid + fetchMaxMails - 1;
+    toUid = toUid > self.existsCount ? self.existsCount : toUid;
+
+    [self fetchFrom:fromUid to:toUid];
 }
+
 
 #pragma mark -
 
@@ -682,6 +666,78 @@
 // Private methods
 // 
 @implementation CWIMAPFolder (Private)
+
+//
+//
+//
+- (BOOL) _uidAlreadyFetched:(NSUInteger)uid
+{
+    return [self _isInFetchedRange:uid];
+}
+
+
+//
+//
+//
+- (BOOL) _isInFetchedRange:(NSUInteger)uid
+{
+    return [self firstUID] <= uid && uid <= [self lastUID];
+}
+
+
+//
+//
+//
+- (BOOL) _wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    return [self _previouslyFetchedMessagesExist] && fromUid > [self lastUID] + 1;
+}
+
+
+//
+//
+//
+- (BOOL) _wouldCreatedLowerFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    return [self _previouslyFetchedMessagesExist] && toUid < [self firstUID] - 1;
+}
+
+
+//
+//
+//
+- (BOOL) _previouslyFetchedMessagesExist
+{
+    return [self firstUID] != 0 && [self lastUID] != 0;
+}
+
+
+//
+//
+//
+- (BOOL) _messagesExistOnServer
+{
+    return self.existsCount > 0;
+}
+
+
+//
+//
+//
+- (BOOL) _uidRangeAllreadyFetchedWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    return [self _isInFetchedRange:fromUid] && [self _isInFetchedRange:toUid];
+}
+
+
+//
+//
+//
+- (BOOL) _uidRangeOutOfExistsRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+{
+    return self.existsCount == 0 || fromUid == 0 || toUid > self.existsCount;
+}
+
 
 //
 //

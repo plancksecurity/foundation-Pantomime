@@ -132,6 +132,22 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 - (void) copyMessages: (NSArray * _Nonnull) theMessages
              toFolder: (NSString * _Nonnull) theFolder;
 
+
+/**
+ Fetches the fetchMaxMails number of messages with decreasing uids, starting from firstUid - 1.
+ */
+- (void) fetchOlder;
+
+
+/**
+ Fetches all messages where: fromUid <= message.uid <= toUid
+
+ @param fromUid start uid
+ @param toUid end uid
+ */
+- (void) fetchFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
+
+
 /*!
   @method prefetch
   @discussion This method is used to cache part of the message headers

@@ -151,7 +151,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)signalFolderSyncError;
 
-- (void)signalFolderFetchNothingToFetch;
+- (void)signalFolderFetchCompleted;
 
 @end
 
