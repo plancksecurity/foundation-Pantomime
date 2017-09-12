@@ -26,7 +26,7 @@
     NSString *expectedAddress =  @"igor.vojinovic@appculture.com";
     XCTAssertEqualObjects(internetAddress.address, expectedAddress);
 
-    NSString *expectedPersonal =  @"Igor Vojinović";
+    NSString *expectedPersonal =  @"\"Igor Vojinović\"";
     XCTAssertEqualObjects(internetAddress.personal, expectedPersonal);
 }
 
