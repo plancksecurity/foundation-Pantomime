@@ -328,7 +328,7 @@
     }
 
     [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-              arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])", from, to];
+              arguments: @"UID FETCH %u:%u (UID FLAGS BODY.PEEK[])", from, to];
 }
 
 
