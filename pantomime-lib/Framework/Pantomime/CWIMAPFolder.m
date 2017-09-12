@@ -293,12 +293,12 @@
         WARN(NSStringFromClass([self class]), @"Invalid input.");
         // Inform the client
         [_store signalFolderFetchCompleted];
-
         return;
     }
 
     // No messages on server (EXISTS count is 0)
     if (![self _messagesExistOnServer]) {
+        [_store signalFolderFetchCompleted];
         return;
     }
 
@@ -306,7 +306,6 @@
     if ([self _uidRangeAllreadyFetchedWithFrom:fromUid to:toUid]) {
         // No reason to fetch, inform the client
         [_store signalFolderFetchCompleted];
-
         return;
     }
 
