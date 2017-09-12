@@ -339,22 +339,23 @@
 {
     // Maximum number of mails to prefetch
     NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
-    NSInteger fromUid = 0;
-    NSInteger toUid = 0;
 
     if ([self lastUID] > 0) {
         // We already fetched mails before, so lets fetch newer ones
-        fromUid = [self lastUID] + 1;
+        NSInteger fromUid = [self lastUID] + 1;
+        fromUid = fromUid <= 0 ? 1 : fromUid;
+        NSInteger toUid = fromUid + fetchMaxMails - 1;
+        [self fetchFrom:fromUid to:toUid];
     } else {
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
-        fromUid = self.existsCount - fetchMaxMails + 1;
+        // with a simple FETCH by sequnce numbers
+        NSInteger upperMessageSequenceNumber = [self existsCount];
+        if (upperMessageSequenceNumber > fetchMaxMails) {
+            upperMessageSequenceNumber = fetchMaxMails + 1;
+        }
+        [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
+                  arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])", 1, upperMessageSequenceNumber];
     }
-
-    fromUid = fromUid <= 0 ? 1 : fromUid;
-
-    toUid = fromUid + fetchMaxMails - 1;
-
-    [self fetchFrom:fromUid to:toUid];
 }
 
 
