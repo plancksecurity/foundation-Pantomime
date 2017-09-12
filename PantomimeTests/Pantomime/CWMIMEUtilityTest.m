@@ -17,16 +17,17 @@
 
 // IOS-411 Sender coding text encoding could be wrong
 - (void)testDecodeHeader_utf8_Q {
-    NSData *data =[@"=?utf-8?Q?Igor_Vojinovi=C4=87?= <igor.vojinovic@appculture.com>" dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data =[@"=?utf-8?Q?Igor_Vojinovi=C4=87?= <igor.vojinovic@appculture.com>"
+                   dataUsingEncoding:NSUTF8StringEncoding];
     NSString *charSet = nil;
     NSString *testee = [CWMIMEUtility decodeHeader:data charset:charSet];
     CWInternetAddress *internetAddress = [[CWInternetAddress alloc] initWithString:testee];
 
     NSString *expectedAddress =  @"igor.vojinovic@appculture.com";
-    XCTAssert([internetAddress.address isEqualToString:expectedAddress]);
+    XCTAssertEqualObjects(internetAddress.address, expectedAddress);
 
     NSString *expectedPersonal =  @"Igor Vojinović";
-    XCTAssert([internetAddress.personal isEqualToString:expectedPersonal]);
+    XCTAssertEqualObjects(internetAddress.personal, expectedPersonal);
 }
 
 @end
