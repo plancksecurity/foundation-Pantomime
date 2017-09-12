@@ -688,8 +688,8 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
      wouldFetchUidsFrom:(NSUInteger)fromUid
                      to:(NSUInteger)toUid
 {
-    NSString *args = arguments; //args: FETCH 15:19 (UID FLAGS BODY.PEEK[])
-    args = [args stringByReplacingOccurrencesOfString:@"FETCH " withString:@""]; //args: 15:19 (UID FLAGS BODY.PEEK[])
+    NSString *args = arguments; //args: UID FETCH 15:19 (UID FLAGS BODY.PEEK[])
+    args = [args stringByReplacingOccurrencesOfString:@"UID FETCH " withString:@""]; //args: 15:19 (UID FLAGS BODY.PEEK[])
     args = [args componentsSeparatedByString:@" (UID FLAGS"].firstObject.mutableCopy; //args: 15:19
     NSArray<NSString*> *numbers = [args componentsSeparatedByString:@":"];
     NSString *argsFrom = numbers.firstObject;
