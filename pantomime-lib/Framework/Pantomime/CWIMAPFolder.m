@@ -224,7 +224,11 @@
 // We want to always have a closed fetchedRange.
 // In other words, we do not want to have multible fetchedRanges.
 // Thus we adjust fromUid and toUid accordingly, if required.
+//
 // Example:
+//
+// NOTE: In this diagram, UID corresponds to the messages's sequence number,
+// which in real-live is rather rare.
 //
 // |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -285,7 +289,7 @@
 - (void) fetchFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
 {
     // Invalid input. Do nothing.
-    if (fromUid == 0 || toUid > self.existsCount || fromUid > toUid) {
+    if (fromUid == 0 || fromUid > toUid) {
         WARN(NSStringFromClass([self class]), @"Invalid input.");
         // Inform the client
         [_store signalFolderFetchCompleted];
@@ -293,11 +297,13 @@
         return;
     }
 
+    // No messages on server (EXISTS count is 0)
+    if (![self _messagesExistOnServer]) {
+        return;
+    }
+
     // case 1
-    if ([self _uidRangeAllreadyFetchedWithFrom:fromUid to:toUid]
-        || ![self _messagesExistOnServer]
-        || fromUid == 0
-        || toUid > self.existsCount) {
+    if ([self _uidRangeAllreadyFetchedWithFrom:fromUid to:toUid]) {
         // No reason to fetch, inform the client
         [_store signalFolderFetchCompleted];
 
@@ -347,7 +353,6 @@
     fromUid = fromUid <= 0 ? 1 : fromUid;
 
     toUid = fromUid + fetchMaxMails - 1;
-    toUid = toUid > self.existsCount ? self.existsCount : toUid;
 
     [self fetchFrom:fromUid to:toUid];
 }
