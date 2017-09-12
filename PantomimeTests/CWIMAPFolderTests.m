@@ -701,8 +701,8 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
     NSString *fromUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)fromUid];
     NSString *toUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)toUid];
 
-    XCTAssertEqual(argsFrom, fromUidStr);
-    XCTAssertEqual(argsTo, toUidStr);
+    XCTAssertEqualObjects(argsFrom, fromUidStr);
+    XCTAssertEqualObjects(argsTo, toUidStr);
 }
 
 @end
