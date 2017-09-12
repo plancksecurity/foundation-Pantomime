@@ -215,12 +215,15 @@
 
 - (void) setPersonal: (NSString *) thePersonal
 {
-  // We verify if we need to quote the name
-  if ([thePersonal indexOfCharacter: ','] > 0 &&
-      ![thePersonal hasPrefix: @"\""] &&
-      ![thePersonal hasSuffix: @"\""])
+    // Assure the name is quoted
+    if (![thePersonal hasPrefix: @"\""])
     {
-      thePersonal = [NSString stringWithFormat: @"\"%@\"", thePersonal];
+        thePersonal = [NSString stringWithFormat: @"\"%@", thePersonal];
+    }
+
+    if (![thePersonal hasSuffix: @"\""])
+    {
+        thePersonal = [NSString stringWithFormat: @"%@\"", thePersonal];
     }
 
   ASSIGN(_personal, thePersonal);
