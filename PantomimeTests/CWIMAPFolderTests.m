@@ -688,31 +688,29 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
      wouldFetchUidsFrom:(NSUInteger)fromUid
                      to:(NSUInteger)toUid
 {
-    NSString *args = arguments; //args: "UID FETCH 15:19 (UID FLAGS BODY.PEEK[])"
+    BOOL isUIDFetch = [arguments containsString:@"UID FETCH"];
 
-    if ([args containsString:@"UID FETCH"]) {
-        // there were existing messages, and new ones fetched from the server by UID FETCH
-        args = [args stringByReplacingOccurrencesOfString:@"UID FETCH " withString:@""]; //args: 15:19 (UID FLAGS BODY.PEEK[])
-        args = [args componentsSeparatedByString:@" (UID FLAGS"].firstObject.mutableCopy; //args: 15:19
-        NSArray<NSString*> *numbers = [args componentsSeparatedByString:@":"];
-        NSString *argsFrom = numbers.firstObject;
-        NSString *argsTo = numbers.lastObject;
-
-        XCTAssertNotNil(argsFrom);
-        XCTAssertNotNil(argsTo);
-
-        NSString *fromUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)fromUid];
-        NSString *toUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)toUid];
-
-        XCTAssertEqualObjects(argsFrom, fromUidStr);
-        XCTAssertEqualObjects(argsTo, toUidStr);
+    NSError *error = nil;
+    NSString *pattern = nil;
+    if (isUIDFetch) {
+        pattern = @"UID FETCH (\\d+):(\\d+) \\([^)]+";
     } else {
-        // there were no local messages, so the fetch was by sequence number
-        NSError *error = nil;
-        NSRegularExpression *regex = [NSRegularExpression
-                                      regularExpressionWithPattern:@"FETCH (\\d+):(\\d+) \\([^)]+"
-                                      options:0 error:&error];
-        XCTAssertNil(error);
+        pattern = @"FETCH (\\d+):(\\d+) \\([^)]+";
+    }
+    NSRegularExpression *regex = [NSRegularExpression
+                                  regularExpressionWithPattern:@"FETCH (\\d+):(\\d+) \\([^)]+"
+                                  options:0 error:&error];
+    XCTAssertNil(error);
+    NSArray *matches = [regex matchesInString:arguments options:0
+                                        range:NSMakeRange(0, arguments.length - 1)];
+    XCTAssertEqual(matches.count, 1);
+    if (matches.count == 1) {
+        NSTextCheckingResult *result = [matches firstObject];
+        XCTAssertNotNil(result);
+        XCTAssertEqual(result.numberOfRanges, 3);
+    }
+
+    if (isUIDFetch) {
         NSArray *matches = [regex matchesInString:arguments options:0
                                             range:NSMakeRange(0, arguments.length - 1)];
         XCTAssertEqual(matches.count, 1);
@@ -720,6 +718,14 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
             NSTextCheckingResult *result = [matches firstObject];
             XCTAssertNotNil(result);
             XCTAssertEqual(result.numberOfRanges, 3);
+            if (result.numberOfRanges == 3 && isUIDFetch) {
+                NSString *fromUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)fromUid];
+                NSString *toUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)toUid];
+                NSString *s1 = [arguments substringWithRange:[result rangeAtIndex:1]];
+                NSString *s2 = [arguments substringWithRange:[result rangeAtIndex:2]];
+                XCTAssertEqualObjects(fromUidStr, s1);
+                XCTAssertEqualObjects(toUidStr, s2);
+            }
         }
     }
 }
