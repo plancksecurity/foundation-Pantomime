@@ -230,62 +230,70 @@
 // NOTE: In this diagram, UID corresponds to the messages's sequence number,
 // which in real-live is rather rare.
 //
-// |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
-// | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
-//                                              |<-- allready fetched -->|
-//                                              |<---- fetchedRange ---->|
-//                                                 ^                   ^
-//                                                 |                   |
-//                                              firstUid            lastUid
-//------------------------------------------------------------------------------------------------------
+// |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
+// Sequence numbers:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
+// UIDs:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  | 108 | 109 | 110 |  11 | 112 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+//                                           |<---- allready fetched ----->|
+//                                           |<------ fetchedRange ------->|
+//                                              ^                       ^
+//                                              |                       |
+//                                           firstUid                lastUid
+//---------------------------------------------------------------------------------------------------------------------------
 // case 1:
-//                                                      |             |
-//                                                     from           to
+//                                                   |                 |
+//                                                fromUid            toUid
 //          Range already fetched. Do nothing.
-//------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------
 // case 2:
 //          before:
-//                                                                               |             |
-//                                                                             from            to
-//          Would result in a second fetchedRange. Move "from" down.
+//                                                                                  |               |
+//                                                                               fromUid          toUid
+//          Would result in a second fetchedRange. Move "fromUid" down.
 //          after:
-//                                                                          |<---------        |
-//                                                                        from                 to
-//------------------------------------------------------------------------------------------------------
+//                                                                           |<---------            |
+//                                                                        fromUid                 toUid
+//---------------------------------------------------------------------------------------------------------------------------
 // case 3:
 //          before:
-//                  |             |
-//                from            to
-//          Would result in a second fetchedRange. Move "to" up.
+//                |               |
+//             fromUid          toUid
+//          Would result in a second fetchedRange. Move "toUid" up.
 //          after:
-//                  |              --------->|
-//                from                       to
-//------------------------------------------------------------------------------------------------------
+//                |           --------->|
+//             fromUid                toUid
+//---------------------------------------------------------------------------------------------------------------------------
 // case 4:
 //          before:
-//                                                               |                         |
-//                                                             from                        to
-//          "from" is in fetchedRange. Move it up.
+//                                                                    |                        |
+//                                                                 fromUid                   toUid
+//          "fromUid" is in fetchedRange. Move it up.
 //          after:
-//                                                                  ------->|              |
-//                                                                        from             to
-//------------------------------------------------------------------------------------------------------
+//                                                                 ------->|                   |
+//                                                                      fromUid              toUid
+//---------------------------------------------------------------------------------------------------------------------------
 // case 5:
 //          before:
-//                            |                         |
-//                          from                        to
-//          "to" is in fetchedRange. Move it down.
+//                     |                           |
+//                  fromUid                      toUid
+//          "toUid" is in fetchedRange. Move it down.
 //          after:
-//                            |              |<---------
-//                          from             to
-//------------------------------------------------------------------------------------------------------
+//                     |                |<---------
+//                  fromUid           toUid
+//---------------------------------------------------------------------------------------------------------------------------
 // case 6:
 //          before:
 //                            |                                                            |
-//                          from                                                           to
-//          fetchedRange is included in from-to range.
+//                         fromUid                                                       toUid
+//          fetchedRange is included in fromUid-toUid range.
 //          We ignore this fact and fetch the messaged in fetchedRange again.
-//------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------
+// case 7:
+//          Nothing has been fetched yet. We get tha last fetchMaxMails numbers of *sequence* numbers.
+//                            |                                                            |
+//                     fromSequenceNum                                               toSequenceNum
+//---------------------------------------------------------------------------------------------------------------------------
 - (void) fetchFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
 {
     // Invalid input. Do nothing.
@@ -346,6 +354,7 @@
         NSInteger toUid = fromUid + fetchMaxMails - 1;
         [self fetchFrom:fromUid to:toUid];
     } else {
+        //case 7
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
@@ -357,7 +366,6 @@
          upperMessageSequenceNumber];
     }
 }
-
 
 #pragma mark -
 
