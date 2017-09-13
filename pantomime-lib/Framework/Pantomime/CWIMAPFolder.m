@@ -350,6 +350,7 @@
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
         NSInteger lowerMessageSequenceNumber = upperMessageSequenceNumber - fetchMaxMails + 1;
+        lowerMessageSequenceNumber = MAX(1, lowerMessageSequenceNumber);
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
                   arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])",
          lowerMessageSequenceNumber,
