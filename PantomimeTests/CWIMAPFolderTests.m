@@ -616,8 +616,6 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
     NSInteger numMessagesOnServer = 20;
     NSInteger fetchedRangeFirstUid = 0;
     NSInteger fetchedRangeLastUid = 0;
-    NSUInteger expectedFrom = 19;
-    NSUInteger expectedTo = 20;
 
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
     testStore.maxPrefetchCount = maxFetchNum;
@@ -631,7 +629,7 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
     testStore.assertionBlockFor_sendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
                                                              NSString *arguments) {
         blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
+        [self assertArguments:arguments wouldFetchMSNsFrom:19 to:20];
     };
     testStore.assertionBlockFor_signalFolderFetchNothingToFetch = ^() {
         XCTFail(@"Should not be called");
@@ -648,8 +646,6 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
     NSInteger numMessagesOnServer = 20;
     NSInteger fetchedRangeFirstUid = 0;
     NSInteger fetchedRangeLastUid = 0;
-    NSUInteger expectedFrom = 1;
-    NSUInteger expectedTo = 20;
 
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
     testStore.maxPrefetchCount = maxFetchNum;
@@ -663,7 +659,7 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
     testStore.assertionBlockFor_sendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
                                                              NSString *arguments) {
         blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
+        [self assertArguments:arguments wouldFetchMSNsFrom:1 to:20];
     };
     testStore.assertionBlockFor_signalFolderFetchNothingToFetch = ^() {
         XCTFail(@"Should not be called");
@@ -677,6 +673,45 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
 #pragma mark - Helpers
 
 /**
+ Extracts exactly 2 Int-Strings from a given String.
+ */
+- (NSArray<NSString *> *)extractIntsFromString:(NSString *)string pattern:(NSString *)pattern
+{
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression
+                                  regularExpressionWithPattern:pattern
+                                  options:0 error:&error];
+    XCTAssertNil(error);
+
+    NSArray *matches = [regex matchesInString:string options:0
+                                        range:NSMakeRange(0, string.length - 1)];
+    XCTAssertEqual(matches.count, 1);
+    if (matches.count == 1) {
+        NSTextCheckingResult *result = [matches firstObject];
+        XCTAssertNotNil(result);
+        XCTAssertEqual(result.numberOfRanges, 3);
+        if (result.numberOfRanges == 3) {
+            NSString *s1 = [string substringWithRange:[result rangeAtIndex:1]];
+            NSString *s2 = [string substringWithRange:[result rangeAtIndex:2]];
+            return @[s1, s2];
+        }
+    }
+    return @[];
+}
+
+- (void)compareStringList:(NSArray<NSString *> *)extracts
+              withString1:(NSString *)s1 string2:(NSString *)s2
+{
+    XCTAssertEqual(extracts.count, 2);
+    if (extracts.count == 2) {
+        NSString *e1 = extracts[0];
+        NSString *e2 = extracts[1];
+        XCTAssertEqualObjects(e1, s1);
+        XCTAssertEqualObjects(e2, s2);
+    }
+}
+
+/**
  Used to assure f and t in "FETCH f:t" fit the given uids.
 
  @param arguments IMAP fetch command string
@@ -684,50 +719,32 @@ void (^assertionBlockFor_signalFolderFetchNothingToFetch)();
  @param toUid uid to match t with
  @return YES if the uids fit f and t, NO otherwize
  */
-- (BOOL)assertArguments:(NSString *)arguments
+- (void)assertArguments:(NSString *)arguments
      wouldFetchUidsFrom:(NSUInteger)fromUid
                      to:(NSUInteger)toUid
 {
-    BOOL isUIDFetch = [arguments containsString:@"UID FETCH"];
+    NSArray<NSString *> *extracts = [self
+                                     extractIntsFromString:arguments
+                                     pattern:@"UID FETCH (\\d+):(\\d+) \\([^)]+"];
 
-    NSError *error = nil;
-    NSString *pattern = nil;
-    if (isUIDFetch) {
-        pattern = @"UID FETCH (\\d+):(\\d+) \\([^)]+";
-    } else {
-        pattern = @"FETCH (\\d+):(\\d+) \\([^)]+";
-    }
-    NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:@"FETCH (\\d+):(\\d+) \\([^)]+"
-                                  options:0 error:&error];
-    XCTAssertNil(error);
-    NSArray *matches = [regex matchesInString:arguments options:0
-                                        range:NSMakeRange(0, arguments.length - 1)];
-    XCTAssertEqual(matches.count, 1);
-    if (matches.count == 1) {
-        NSTextCheckingResult *result = [matches firstObject];
-        XCTAssertNotNil(result);
-        XCTAssertEqual(result.numberOfRanges, 3);
-    }
+    NSString *fromUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)fromUid];
+    NSString *toUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)toUid];
 
-    if (isUIDFetch) {
-        NSArray *matches = [regex matchesInString:arguments options:0
-                                            range:NSMakeRange(0, arguments.length - 1)];
-        XCTAssertEqual(matches.count, 1);
-        if (matches.count == 1) {
-            NSTextCheckingResult *result = [matches firstObject];
-            XCTAssertNotNil(result);
-            XCTAssertEqual(result.numberOfRanges, 3);
-            if (result.numberOfRanges == 3 && isUIDFetch) {
-                NSString *fromUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)fromUid];
-                NSString *toUidStr = [NSString stringWithFormat:@"%lu", (unsigned long)toUid];
-                NSString *s1 = [arguments substringWithRange:[result rangeAtIndex:1]];
-                NSString *s2 = [arguments substringWithRange:[result rangeAtIndex:2]];
-                XCTAssertEqualObjects(fromUidStr, s1);
-                XCTAssertEqualObjects(toUidStr, s2);
-            }
-        }
-    }
+    [self compareStringList:extracts withString1:fromUidStr string2:toUidStr];
+}
+
+- (void)assertArguments:(NSString *)arguments
+     wouldFetchMSNsFrom:(NSUInteger)fromMSN
+                     to:(NSUInteger)toMSN
+{
+    NSArray<NSString *> *extracts = [self
+                                     extractIntsFromString:arguments
+                                     pattern:@"FETCH (\\d+):(\\d+) \\([^)]+"];
+
+    NSString *fromMSNStr = [NSString stringWithFormat:@"%lu", (unsigned long) fromMSN];
+    NSString *toMSNStr = [NSString stringWithFormat:@"%lu", (unsigned long) toMSN];
+
+    [self compareStringList:extracts withString1:fromMSNStr string2:toMSNStr];
 }
 
 @end
