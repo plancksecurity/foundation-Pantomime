@@ -349,11 +349,11 @@
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
-        if (upperMessageSequenceNumber > fetchMaxMails) {
-            upperMessageSequenceNumber = fetchMaxMails + 1;
-        }
+        NSInteger lowerMessageSequenceNumber = upperMessageSequenceNumber - fetchMaxMails + 1;
         [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-                  arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])", 1, upperMessageSequenceNumber];
+                  arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])",
+         lowerMessageSequenceNumber,
+         upperMessageSequenceNumber];
     }
 }
 
