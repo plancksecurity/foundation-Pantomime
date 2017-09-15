@@ -2638,9 +2638,17 @@ static inline int has_literal(char *buf, NSUInteger c)
             break;
 
         case IMAP_UID_FETCH_RFC822:
+        {
+            // fetchOlder() fetches message UIDs in batches.
+            // It might need several calls to fetch an existing UID range.
+            // See CWIMAPFolder.fetchOlder() for details.
+            if ([_selectedFolder fetchOlderNeedsReCall]) {
+                [_selectedFolder fetchOlder];
+                return;
+            }
+
             // Since we download mail all in one, we signal the
             // end of fetch when all new mails have been downloadad.
-        {
             _connection_state.opening_mailbox = NO;
 
             if ([_selectedFolder cacheManager])

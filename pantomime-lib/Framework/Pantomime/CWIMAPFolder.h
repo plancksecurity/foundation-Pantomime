@@ -63,12 +63,6 @@ extern NSString * _Nonnull PantomimeMessageStoreCompleted;
 */
 extern NSString * _Nonnull PantomimeMessageStoreFailed;
 
-//BUFF:
-typedef enum {
-    CWIMAPFolderFetchTypeFetchOlder,
-    CWIMAPFolderFetchTypeFetch
-} CWIMAPFolderFetchType;
-
 @class CWIMAPMessage;
 
 /*!
@@ -138,14 +132,21 @@ typedef enum {
 - (void) copyMessages: (NSArray * _Nonnull) theMessages
              toFolder: (NSString * _Nonnull) theFolder;
 
-
 /**
  Tries to fetch fetchMaxMails number of messages with decreasing uids, starting from firstUid - 1.
  This method might have to be called several times until messages are fetched.
+ To figure out if it has be called one more time, call fetchOlderNeedsReCall:
  */
 - (void) fetchOlder;
 
-- (BOOL)fetchedNothingOnLastFetchOlder;
+
+/**
+ Whether or not you need to call fetchOlder() again to actually get messages.
+ See fetchOlder() for details.
+
+ @return YES, if the last call to fetchOlder: did not fetch any messages, NO: otherwize
+ */
+- (BOOL)fetchOlderNeedsReCall;
 
 /**
  Fetches all messages where: fromUid <= message.uid <= toUid
@@ -156,7 +157,6 @@ typedef enum {
  @param toUid highest uid to fetch or UNLIMITED
  */
 - (void) fetchFrom:(NSUInteger)fromUid to:(NSInteger)toUid;
-
 
 /*!
   @method fetch

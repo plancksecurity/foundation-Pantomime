@@ -33,6 +33,12 @@
 
 #import "NSDate+RFC2822.h"
 
+typedef enum {
+    CWIMAPFolderFetchTypeNone = 0,
+    CWIMAPFolderFetchTypeFetchOlder,
+    CWIMAPFolderFetchTypeFetch
+} CWIMAPFolderFetchType;
+
 @interface CWIMAPFolder ()
 @property NSMutableDictionary *uidToMsnMap;
 @property NSMutableDictionary *msnToUidMap;
@@ -40,7 +46,13 @@
 /** 
  The fromUID of the last fetchOlder performed. Used to 
  figure out if we did fetch messages when fetching fecthOlder()  */
-@property NSUInteger lastFetcheOlderFromUid;//BUFF:
+
+@property NSUInteger lastFetcheOlderFromUid;
+/**
+ The type  of the last fetchOlder performed. Used to
+ figure out if we need to call fetchOlder() again to receive older messages */
+
+@property CWIMAPFolderFetchType lastFetchType;
 @end
 
 //
@@ -55,6 +67,8 @@
 - (BOOL) _isInFetchedRange:(NSUInteger)uid;
 
 - (BOOL)_fetchedOlderBefore;
+
+- (BOOL)fetchedNothingOnLastFetchOlder;
 
 - (BOOL) _wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
 
@@ -85,7 +99,8 @@
   if ((self = [super initWithName: theName]) == nil)
     return nil;
 
-    self.lastFetcheOlderFromUid = 0;
+    self.lastFetchType = CWIMAPFolderFetchTypeNone;
+    self.lastFetcheOlderFromUid = NSIntegerMax;
     self.uidToMsnMap = [NSMutableDictionary new];
     self.msnToUidMap = [NSMutableDictionary new];
   [self setSelected: NO];
@@ -254,6 +269,8 @@
         return;
     }
 
+    self.lastFetchType = CWIMAPFolderFetchTypeFetchOlder;
+
     if (![self _previouslyFetchedMessagesExist]) {
         // We did never fetch messages. fetchOlder is the wrong method to handle this case.
         self.lastFetcheOlderFromUid = 0;
@@ -285,9 +302,9 @@
 //
 //
 //
-- (BOOL)fetchedNothingOnLastFetchOlder
+- (BOOL)fetchOlderNeedsReCall
 {
-    return [self _fetchedOlderBefore] && self.lastFetcheOlderFromUid < [self firstUID];
+    return self.lastFetchType == CWIMAPFolderFetchTypeFetchOlder && [self fetchedNothingOnLastFetchOlder];
 }
 
 
@@ -422,6 +439,7 @@
 
     if ([self lastUID] > 0) {
         // We already fetched mails before, so lets fetch all newer ones
+        self.lastFetchType = CWIMAPFolderFetchTypeFetch;
         NSInteger fromUid = [self lastUID] + 1;
         fromUid = fromUid <= 0 ? 1 : fromUid;
         [self fetchFrom:fromUid to:UNLIMITED];
@@ -465,6 +483,9 @@
 - (void) close
 {
   IMAPCommand theCommand;
+
+  self.lastFetchType = CWIMAPFolderFetchTypeNone;
+  self.lastFetcheOlderFromUid = NSIntegerMax;
 
   if (![self selected])
     {
@@ -780,6 +801,15 @@
 - (BOOL)_fetchedOlderBefore
 {
     return self.lastFetcheOlderFromUid != 0;
+}
+
+
+//
+//
+//
+- (BOOL)fetchedNothingOnLastFetchOlder
+{
+    return [self _fetchedOlderBefore] && self.lastFetcheOlderFromUid < [self firstUID];
 }
 
 
