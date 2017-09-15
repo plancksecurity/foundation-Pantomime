@@ -97,9 +97,9 @@ extern NSString * _Nonnull const PantomimeFolderOpenCompleted;
 extern NSString * _Nonnull const PantomimeFolderOpenFailed;
 
 /*!
-  @const PantomimeFolderPrefetchCompleted
+  @const PantomimeFolderFetchCompleted
 */
-extern NSString * _Nonnull const PantomimeFolderPrefetchCompleted;
+extern NSString * _Nonnull const PantomimeFolderFetchCompleted;
 
 /*!
  @const PantomimeFolderSyncCompleted
@@ -112,9 +112,9 @@ extern NSString * _Nonnull const PantomimeFolderSyncCompleted;
 extern NSString * _Nonnull const PantomimeFolderSyncFailed;
 
 /*!
-  @const PantomimeFolderPrefetchFailed
+  @const PantomimeFolderFetchFailed
 */
-extern NSString * _Nonnull const PantomimeFolderPrefetchFailed;
+extern NSString * _Nonnull const PantomimeFolderFetchFailed;
 
 /*!
   @const PantomimeFolderSearchCompleted
@@ -283,13 +283,13 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
 - (void) folderOpenFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
-  @method folderPrefetchCompleted
+  @method folderFetchCompleted
   @discussion This method is automatically invoked on the store's
-              delegate in order to indicate that the prefetch
+              delegate in order to indicate that the fetch
 	      operation completed.
   @param theNotification The notification holding the information.
  */
-- (void) folderPrefetchCompleted: (NSNotification * _Nullable) theNotification;
+- (void) folderFetchCompleted: (NSNotification * _Nullable) theNotification;
 
 /*!
  @method folderSyncCompleted
@@ -310,13 +310,13 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
 - (void) folderSyncFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
-  @method folderPrefetchFailed
+  @method folderFetchFailed
   @discussion This method is automatically invoked on the store's
-              delegate in order to indicate that the prefetch
+              delegate in order to indicate that the fetch
 	      operation failed.
   @param theNotification The notification holding the information.
  */
-- (void) folderPrefetchFailed: (NSNotification * _Nullable) theNotification;
+- (void) folderFetchFailed: (NSNotification * _Nullable) theNotification;
 
 /*!
   @method folderSearchCompleted

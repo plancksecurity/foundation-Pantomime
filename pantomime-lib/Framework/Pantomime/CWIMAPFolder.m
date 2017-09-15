@@ -38,8 +38,8 @@
 @property NSMutableDictionary *msnToUidMap;
 
 /** 
- The fromUID of the last fetchOlder performed. Used to figure out if we did fetch less messages
- than we wanted to. */
+ The fromUID of the last fetchOlder performed. Used to 
+ figure out if we did fetch messages when fetching fecthOlder()  */
 @property NSUInteger lastFetcheOlderFromUid;//BUFF:
 @end
 
@@ -55,8 +55,6 @@
 - (BOOL) _isInFetchedRange:(NSUInteger)uid;
 
 - (BOOL)_fetchedOlderBefore;
-
-- (BOOL)_fetchedNothingOnLastFetchOlder;
 
 - (BOOL) _wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
 
@@ -269,7 +267,7 @@
     // Maximum number of mails to fetch
     NSInteger fetchMaxMails = [self _maximumNumberOfMessagesToFetch];
     NSInteger fromUid = 0;
-    if ([self _fetchedNothingOnLastFetchOlder]) {
+    if ([self fetchedNothingOnLastFetchOlder]) {
         //Case fetchOlder1
         // Due non-sequential UIDs we did not fetch anything.
         // Increase the UID range to fetch
@@ -281,6 +279,15 @@
 
     self.lastFetcheOlderFromUid = fromUid;
     [self fetchFrom:fromUid to:toUid];
+}
+
+
+//
+//
+//
+- (BOOL)fetchedNothingOnLastFetchOlder
+{
+    return [self _fetchedOlderBefore] && self.lastFetcheOlderFromUid < [self firstUID];
 }
 
 
@@ -405,12 +412,12 @@
 }
 
 
-/**
- For key sync to work, we have to fetch the whole mail, thus the method name became misleading.
- */
-- (void) prefetch
+//
+//
+//
+- (void) fetch
 {
-    // Maximum number of mails to prefetch
+    // Maximum number of mails to fetch
     NSInteger fetchMaxMails = [self _maximumNumberOfMessagesToFetch];
 
     if ([self lastUID] > 0) {
@@ -754,7 +761,7 @@
 
 - (NSUInteger)_maximumNumberOfMessagesToFetch
 {
-    return  [((CWIMAPStore *) [self store]) maxPrefetchCount];
+    return  [((CWIMAPStore *) [self store]) maxFetchCount];
 }
 
 
@@ -775,13 +782,6 @@
     return self.lastFetcheOlderFromUid != 0;
 }
 
-//
-//
-//
-- (BOOL)_fetchedNothingOnLastFetchOlder
-{
-    return [self _fetchedOlderBefore] && self.lastFetcheOlderFromUid < [self firstUID];
-}
 
 //
 //

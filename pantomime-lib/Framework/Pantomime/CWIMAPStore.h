@@ -205,12 +205,12 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 @property (nonatomic, nullable) __block id<CWFolderBuilding> folderBuilder;
 
 /**
- Maximum count of messages to prefetch.
+ Maximum count of messages to fetch.
  */
-@property (nonatomic) NSUInteger maxPrefetchCount;
+@property (nonatomic) NSUInteger maxFetchCount;
 
 /*!
-  @method folderForName:mode:prefetch:
+  @method folderForName:mode:
   @discussion This method is used to get the folder with
               the specified name and mode. Also selects the folder.
   @param theName The name of the folder to obtain.

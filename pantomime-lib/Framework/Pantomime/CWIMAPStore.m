@@ -1113,8 +1113,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 
 //
-// The default folder in IMAP is always Inbox. This method will prefetch
-// the messages of an IMAP folder if they haven't been prefetched before.
+// The default folder in IMAP is always Inbox. This method will fetch
+// the messages of an IMAP folder if they haven't been fetched before.
 //
 - (id) defaultFolder
 {
@@ -2536,7 +2536,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                         [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [[_selectedFolder name] modifiedUTF7String]];
                     }
 
-                    if (_connection_state.opening_mailbox) [_selectedFolder prefetch];
+                    if (_connection_state.opening_mailbox) [_selectedFolder fetch];
                 }
                 else
                 {
@@ -2639,7 +2639,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         case IMAP_UID_FETCH_RFC822:
             // Since we download mail all in one, we signal the
-            // end of prefetch when all new mails have been downloadad.
+            // end of fetch when all new mails have been downloadad.
         {
             _connection_state.opening_mailbox = NO;
 
@@ -2648,9 +2648,9 @@ static inline int has_literal(char *buf, NSUInteger c)
                 [[_selectedFolder cacheManager] synchronize];
             }
 
-            //INFO(NSStringFromClass([self class]), @"DONE PREFETCHING FOLDER");
-            POST_NOTIFICATION(PantomimeFolderPrefetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderPrefetchCompleted:), PantomimeFolderPrefetchCompleted, _selectedFolder, @"Folder");
+            //INFO(NSStringFromClass([self class]), @"DONE FETCHING FOLDER");
+            POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+            PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
         }
             break;
 

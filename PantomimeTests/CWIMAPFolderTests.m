@@ -18,6 +18,8 @@
 void (^assertionBlockForSendCommandInfoArguments)(IMAPCommand, NSDictionary *, NSString *);
 @property (nonatomic, copy, nonnull)
 void (^assertionBlockForSignalFolderFetchNothingToFetch)();
+@property (nonatomic, copy, nonnull)
+void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *);
 @property (strong, nonatomic) NSArray<NSNumber*> *uidsOnServer;
 @property (strong, nonatomic) NSArray<NSNumber*> *fetchedUids;
 @end
@@ -32,6 +34,13 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     va_end(args);
 
     self.fetchedUids = [self fetchedUidsForArguments:argsResolved];
+
+    if (self.assertionBlockForFetchedUids) {
+        self.assertionBlockForFetchedUids(self.fetchedUids,
+                                          self.fetchedUids.firstObject,
+                                          self.fetchedUids.lastObject);
+    }
+
     if (self.assertionBlockForSendCommandInfoArguments) {
         self.assertionBlockForSendCommandInfoArguments(theCommand, theInfo, argsResolved);
     }
@@ -143,10 +152,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:0
-                                   expectedTo:0
+                   expectedSendCommandFromUid:0
+                     expectedSendCommandToUid:0
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -184,10 +194,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:expectedFrom
-                                   expectedTo:expectedTo
+                   expectedSendCommandFromUid:expectedFrom
+                     expectedSendCommandToUid:expectedTo
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -224,10 +235,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:expectedFrom
-                                   expectedTo:expectedTo
+                   expectedSendCommandFromUid:expectedFrom
+                     expectedSendCommandToUid:expectedTo
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -265,10 +277,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:expectedFrom
-                                   expectedTo:expectedTo
+                   expectedSendCommandFromUid:expectedFrom
+                     expectedSendCommandToUid:expectedTo
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -305,10 +318,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:expectedFrom
-                                   expectedTo:expectedTo
+                                 expectedSendCommandFromUid:expectedFrom
+                                   expectedSendCommandToUid:expectedTo
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -343,10 +357,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:expectedFrom
-                                   expectedTo:expectedTo
+                   expectedSendCommandFromUid:expectedFrom
+                     expectedSendCommandToUid:expectedTo
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -365,10 +380,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:0
-                                   expectedTo:0
+                   expectedSendCommandFromUid:0
+                     expectedSendCommandToUid:0
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -401,10 +417,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:0
-                                   expectedTo:0
+                   expectedSendCommandFromUid:0
+                     expectedSendCommandToUid:0
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchFrom:from to:to];
     XCTAssertTrue(succeeded);
 }
@@ -435,10 +452,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:expectedFrom
-                                   expectedTo:expectedTo
+                   expectedSendCommandFromUid:expectedFrom
+                     expectedSendCommandToUid:expectedTo
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchOlder];
     XCTAssertTrue(succeeded);
 }
@@ -463,10 +481,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:0
-                                   expectedTo:0
+                   expectedSendCommandFromUid:0
+                     expectedSendCommandToUid:0
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchOlder];
     XCTAssertTrue(succeeded);
 }
@@ -493,10 +512,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:expectedFrom
-                                   expectedTo:expectedTo
+                   expectedSendCommandFromUid:expectedFrom
+                     expectedSendCommandToUid:expectedTo
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchOlder];
     XCTAssertTrue(succeeded);
 }
@@ -580,7 +600,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger fetchedRangeLastUid = 0;
     // We have not fetched messages before. in this case fetchOlder() returns without doin anything.
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    testStore.maxPrefetchCount = maxFetchNum;
+    testStore.maxFetchCount = maxFetchNum;
     FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
     testFolder.store = testStore;
     testFolder.existsCount = numMessagesOnServer;
@@ -623,10 +643,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                           numMessagesOnServer:numMessagesOnServer
                           firstFetchedRageUid:fetchedRangeFirstUid
                            lastFetchedRageUid:fetchedRangeLastUid
-                                 expectedFrom:0
-                                   expectedTo:0
+                   expectedSendCommandFromUid:0
+                     expectedSendCommandToUid:0
              shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
-                                      success:&succeeded];
+                                      success:&succeeded
+                 assertionBlockForFetchedUids:nil];
     [self.testFolder fetchOlder];
     XCTAssertTrue(succeeded);
 }
@@ -679,7 +700,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     [self.testFolder fetchOlder];
     XCTAssertTrue(blockCalled);
 }
-#pragma mark - prefetch
+#pragma mark - fetch
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
 //                                              |<-- allready fetched -->|
@@ -688,7 +709,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
 //                                                 |                   |
 //                                              firstUid            lastUid
 //------------------------------------------------------------------------------------------------------
-- (void)testPrefetch_somePreveouslyFetched
+- (void)testFetch_somePreveouslyFetched
 {
     NSInteger maxFetchNum = 2;
     NSInteger numMessagesOnServer = 20;
@@ -698,7 +719,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSString *expectedTo = @"*";
 
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    testStore.maxPrefetchCount = maxFetchNum;
+    testStore.maxFetchCount = maxFetchNum;
     FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
     testFolder.store = testStore;
     testFolder.existsCount = numMessagesOnServer;
@@ -717,7 +738,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
         XCTFail(@"Should not be called");
     };
 
-    [testFolder prefetch];
+    [testFolder fetch];
 
     XCTAssertTrue(blockCalled);
 }
@@ -726,14 +747,14 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
 //------------------------------------------------------------------------------------------------------
 // firstUid == 0
 // lastUid == 0
-- (void)testPrefetch_nothingPreveouslyFetched
+- (void)testFetch_nothingPreveouslyFetched
 {
     NSInteger maxFetchNum = 2;
     NSInteger numMessagesOnServer = 20;
     NSInteger fetchedRangeFirstUid = 0;
     NSInteger fetchedRangeLastUid = 0;
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    testStore.maxPrefetchCount = maxFetchNum;
+    testStore.maxFetchCount = maxFetchNum;
     FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
     testFolder.store = testStore;
     testFolder.existsCount = numMessagesOnServer;
@@ -748,18 +769,18 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
         XCTFail(@"Should not be called");
     };
-    [testFolder prefetch];
+    [testFolder fetch];
     XCTAssertTrue(blockCalled);
 }
 
-- (void)testPrefetch_nothingPreveouslyFetched_maxFetchNumGreaterExistsCount
+- (void)testFetch_nothingPreveouslyFetched_maxFetchNumGreaterExistsCount
 {
     NSInteger maxFetchNum = 100;
     NSInteger numMessagesOnServer = 20;
     NSInteger fetchedRangeFirstUid = 0;
     NSInteger fetchedRangeLastUid = 0;
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    testStore.maxPrefetchCount = maxFetchNum;
+    testStore.maxFetchCount = maxFetchNum;
     FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
     testFolder.store = testStore;
     testFolder.existsCount = numMessagesOnServer;
@@ -774,7 +795,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
         XCTFail(@"Should not be called");
     };
-    [testFolder prefetch];
+    [testFolder fetch];
     XCTAssertTrue(blockCalled);
 }
 
@@ -784,7 +805,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                          uidsOnServer:(NSArray<NSNumber*> *_Nullable)uidsOnServer
 {
     self.testStore = [[TestCWIMAPStore alloc] init];
-    self.testStore.maxPrefetchCount = maxFetchNum;
+    self.testStore.maxFetchCount = maxFetchNum;
     self.testStore.uidsOnServer = uidsOnServer;
 }
 
@@ -817,12 +838,15 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                         numMessagesOnServer:(NSInteger)exists
                         firstFetchedRageUid:(NSInteger)firstFetchedRangeUid
                          lastFetchedRageUid:(NSInteger)lastFetchedRangeUid
-                               expectedFrom:(NSInteger)expFrom
-                                 expectedTo:(NSInteger)expTo
+                               expectedSendCommandFromUid:(NSInteger)expSentFromUid
+                                 expectedSendCommandToUid:(NSInteger)expSentToUid
            shouldSignalFolderFetchCompleted:(BOOL)shouldSignal
                                     success:(BOOL*)success
+               assertionBlockForFetchedUids:(void (^_Nullable)(NSArray<NSNumber*>* fetchedUids, NSNumber* fetchedFromUid, NSNumber* fetchedToUid))assertionBlockForFetchedUids;
 {
     [self setupTestStoreWithMaxFetchNum:maxFetchNum uidsOnServer:uidsOnServer];
+    self.testStore.assertionBlockForFetchedUids = assertionBlockForFetchedUids;
+
     [self setupTestFolderWithTestStore:self.testStore numMessagesOnServer:exists
                    firstFetchedRageUid:firstFetchedRangeUid
                     lastFetchedRageUid:lastFetchedRangeUid];
@@ -844,7 +868,8 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
                                                                      NSString *arguments) {
             typeof(self) self = weakSelf;
             *blockSuccess = YES;
-            [self assertArguments:arguments wouldFetchUidsFrom:expFrom to:expTo];
+            // Assert UIDs sent to server
+            [self assertArguments:arguments wouldFetchUidsFrom:expSentFromUid to:expSentToUid];
         };
         self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
             typeof(self) self = weakSelf;

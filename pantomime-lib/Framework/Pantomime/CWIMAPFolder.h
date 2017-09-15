@@ -63,6 +63,12 @@ extern NSString * _Nonnull PantomimeMessageStoreCompleted;
 */
 extern NSString * _Nonnull PantomimeMessageStoreFailed;
 
+//BUFF:
+typedef enum {
+    CWIMAPFolderFetchTypeFetchOlder,
+    CWIMAPFolderFetchTypeFetch
+} CWIMAPFolderFetchType;
+
 @class CWIMAPMessage;
 
 /*!
@@ -134,15 +140,17 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 
 
 /**
- Fetches the fetchMaxMails number of messages with decreasing uids, starting from firstUid - 1.
+ Tries to fetch fetchMaxMails number of messages with decreasing uids, starting from firstUid - 1.
+ This method might have to be called several times until messages are fetched.
  */
 - (void) fetchOlder;
 
+- (BOOL)fetchedNothingOnLastFetchOlder;
 
 /**
  Fetches all messages where: fromUid <= message.uid <= toUid
  You should never call this method directly. Instead, call :
- -prefetch: or -fetchOlder:
+ -fetch: or -fetchOlder:
 
  @param fromUid lowest uid to fetch
  @param toUid highest uid to fetch or UNLIMITED
@@ -151,15 +159,15 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 
 
 /*!
-  @method prefetch
+  @method fetch
   @discussion This method fetches:
                     If nothing has been fettched before: the newest fetchMaxMails number of messages.
                     Otherwize: *All* messages newer than the last fetched one.
-              from the IMAP server. On completion, it posts the PantomimeFolderPrefetchCompleted
-	      notification (and calls -folderPrefetchCompleted: on the delegate, if any).
+              from the IMAP server. On completion, it posts the PantomimeFolderFetchCompleted
+	      notification (and calls -folderFetchCompleted: on the delegate, if any).
 	      This method is fully asynchronous.
 */
-- (void) prefetch;
+- (void) fetch;
 
 /*!
  @discussion Syncs the flags of existing mails (until the given lastUID),
