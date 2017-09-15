@@ -9,22 +9,20 @@
 #import <XCTest/XCTest.h>
 #import "Pantomime.h"
 #import "CWIMAPStore+Protected.h"
+#import "TestUtil.h"
 
 #pragma mark - Helper Classes
 
 @interface TestCWIMAPStore : CWIMAPStore
-
 @property (nonatomic, copy, nonnull)
 void (^assertionBlockForSendCommandInfoArguments)(IMAPCommand, NSDictionary *, NSString *);
-
 @property (nonatomic, copy, nonnull)
 void (^assertionBlockForSignalFolderFetchNothingToFetch)();
-
+@property (strong, nonatomic) NSArray<NSNumber*> *uidsOnServer;
+@property (strong, nonatomic) NSArray<NSNumber*> *fetchedUids;
 @end
-
 @implementation TestCWIMAPStore
-
-/// overrride methods to get test feedback
+// overrride methods to get test feedback
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary *) theInfo
            arguments: (NSString *) theFormat, ...NS_REQUIRES_NIL_TERMINATION;
 {
@@ -33,38 +31,59 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSString *argsResolved = [[NSString alloc] initWithFormat:theFormat arguments:args];
     va_end(args);
 
+    self.fetchedUids = [self fetchedUidsForArguments:argsResolved];
     if (self.assertionBlockForSendCommandInfoArguments) {
         self.assertionBlockForSendCommandInfoArguments(theCommand, theInfo, argsResolved);
     }
 }
-
 - (void)signalFolderFetchCompleted
 {
+    self.fetchedUids = 0;
     if (self.assertionBlockForSignalFolderFetchNothingToFetch) {
         self.assertionBlockForSignalFolderFetchNothingToFetch();
     }
 }
-
+// private
+- (NSArray<NSNumber*> *)fetchedUidsForArguments:(NSString *)arguments
+{
+    NSArray<NSString *> *intStrings = [TestUtil extractIntsFromString:arguments
+                                                              pattern:@"UID FETCH (\\d+):(\\d+) \\([^)]+"];
+    if (intStrings.count != 2) {
+        return @[];
+    }
+    NSNumber *fromUid = [NSNumber numberWithInteger:intStrings[0].integerValue];
+    NSNumber *toUid = [NSNumber numberWithInteger:intStrings[1].integerValue];
+    BOOL fromUidFound = NO;
+    NSMutableArray<NSNumber*> *fetchedUids = [NSMutableArray new];
+    for (NSNumber *cur in self.uidsOnServer) {
+        if (cur >= toUid) {
+            break;
+        }
+        if (cur.integerValue >= fromUid.integerValue && cur.integerValue < toUid.integerValue) {
+            fromUidFound = YES;
+        }
+        if (fromUidFound) {
+            [fetchedUids addObject:cur];
+        }
+    }
+    return [fetchedUids copy];
+}
 @end
 
 @interface FechTestCWIMAPFolder: CWIMAPFolder
-
 @property NSUInteger testFirstUID;
 @property NSUInteger testLastUID;
-
 @end
-
 @implementation FechTestCWIMAPFolder
-
 - (NSUInteger) firstUID { return self.testFirstUID; }
 - (NSUInteger)lastUID { return self.testLastUID; }
-
 @end
-
 
 #pragma mark - Test
 
 @interface FolderTests : XCTestCase
+@property (nonatomic) TestCWIMAPStore *testStore;
+@property (nonatomic) FechTestCWIMAPFolder *testFolder;
 @end
 
 @implementation FolderTests
@@ -117,27 +136,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger fetchedRangeLastUid = 14;
     NSInteger from = 11;
     NSInteger to = 14;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        XCTFail(@"Should not be called.");
-    };
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        blockCalled = YES;
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = YES;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:0
+                                   expectedTo:0
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 // |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
@@ -166,28 +177,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger to = 19;
     NSUInteger expectedFrom = 15;
     NSUInteger expectedTo = to;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        XCTFail(@"Should not be called");
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = NO;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:expectedFrom
+                                   expectedTo:expectedTo
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -215,28 +217,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger to = 7;
     NSUInteger expectedFrom = from;
     NSUInteger expectedTo = 9;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        XCTFail(@"Should not be called");
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = NO;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:expectedFrom
+                                   expectedTo:expectedTo
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 // |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
@@ -265,28 +258,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger to = 18;
     NSUInteger expectedFrom = 15;
     NSUInteger expectedTo = to;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        XCTFail(@"Should not be called");
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = NO;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:expectedFrom
+                                   expectedTo:expectedTo
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -314,28 +298,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger to = 11;
     NSUInteger expectedFrom = from;
     NSUInteger expectedTo = 9;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        XCTFail(@"Should not be called");
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = NO;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:expectedFrom
+                                   expectedTo:expectedTo
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -361,28 +336,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger to = 18;
     NSUInteger expectedFrom = from;
     NSUInteger expectedTo = to;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        XCTFail(@"Should not be called");
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = NO;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:expectedFrom
+                                   expectedTo:expectedTo
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 - (void)testFetchFromTo_noMailsOnServer
@@ -392,27 +358,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger fetchedRangeLastUid = 14;
     NSInteger from = 11;
     NSInteger to = 14;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        XCTFail(@"Should not be called.");
-    };
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        blockCalled = YES;
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = YES;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:0
+                                   expectedTo:0
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 //     | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 |
@@ -436,30 +394,24 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger fetchedRangeLastUid = 19;
     NSInteger from = 0;
     NSInteger to = 20;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        XCTFail(@"Should not be called.");
-    };
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        blockCalled = YES;
-    };
-
-    [testFolder fetchFrom:from to:to];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = YES;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:0
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:0
+                                   expectedTo:0
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchFrom:from to:to];
+    XCTAssertTrue(succeeded);
 }
 
 #pragma mark - fetchOlder
+
+#pragma mark Sequential UIDs
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
 //                                              |<-- allready fetched -->|
@@ -476,28 +428,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger fetchedRangeLastUid = 14;
     NSUInteger expectedFrom = 8;
     NSUInteger expectedTo = 9;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    testStore.maxPrefetchCount = maxFetchNum;
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
-                                                             NSString *arguments) {
-        blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        XCTFail(@"Should not be called");
-    };
-
-    [testFolder fetchOlder];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = NO;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:maxFetchNum
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:expectedFrom
+                                   expectedTo:expectedTo
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchOlder];
+    XCTAssertTrue(succeeded);
 }
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 |
@@ -513,28 +456,19 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger numMessagesOnServer = 10;
     NSInteger fetchedRangeFirstUid = 1;
     NSInteger fetchedRangeLastUid = 5;
-
-    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
-    testStore.maxPrefetchCount = maxFetchNum;
-    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
-    testFolder.store = testStore;
-    testFolder.existsCount = numMessagesOnServer;
-    testFolder.testFirstUID = fetchedRangeFirstUid;
-    testFolder.testLastUID = fetchedRangeLastUid;
-
-    __block BOOL blockCalled = NO;
-    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
-                                                             NSDictionary *info,
-                                                             NSString *arguments) {
-        XCTFail(@"Should not be called");
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-        blockCalled = YES;
-    };
-
-    [testFolder fetchOlder];
-
-    XCTAssertTrue(blockCalled);
+    BOOL shouldSignalNothingNeedsToBeFetched = YES;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:maxFetchNum
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:0
+                                   expectedTo:0
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchOlder];
+    XCTAssertTrue(succeeded);
 }
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -544,7 +478,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
 //                                                 |                   |
 //                                              firstUid            lastUid
 //------------------------------------------------------------------------------------------------------
-- (void)testFetchOlder_maxFetchBiggerExisting
+- (void)testFetchOlder_maxFetchGreaterExisting
 {
     NSInteger maxFetchNum = 100;
     NSInteger numMessagesOnServer = 20;
@@ -552,7 +486,99 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger fetchedRangeLastUid = 14;
     NSUInteger expectedFrom = 1;
     NSUInteger expectedTo = 9;
+    BOOL shouldSignalNothingNeedsToBeFetched = NO;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:maxFetchNum
+                                 uidsOnServer:nil
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:expectedFrom
+                                   expectedTo:expectedTo
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchOlder];
+    XCTAssertTrue(succeeded);
+}
 
+#pragma mark non-sequential UIDs
+
+// |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
+// Sequence numbers:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
+// UIDs:
+// |  4  |  5  |  6  |  7  |  8  |  9  | 10  | 111 | 112 | 113 | 114 | 115 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+//                                           |<---- allready fetched ----->|
+//                                           |<------ fetchedRange ------->|
+//                                              ^                       ^
+//                                              |                       |
+//                                           firstUid                lastUid
+// We want this: |<- .. - fetchedMails ----->|
+- (void)testFetchOlder_nonSequentialUids
+{
+    NSInteger maxFetchNum = 100;
+    NSInteger numMessagesOnServer = 20;
+    NSInteger fetchedRangeFirstUid = 111;
+    NSInteger fetchedRangeLastUid = 115;
+    NSArray<NSNumber*> *uidsOnServer = @[@4, @5, @6, @7, @8, @9, @10, @111, @112, @113, @114, @115, @313,
+                                         @314, @415, @416, @417, @418, @519, @520];
+    [self setupFolderFetchTestClassesWithMaxFetchNum:maxFetchNum
+                                        uidsOnServer:uidsOnServer
+                                 numMessagesOnServer:numMessagesOnServer
+                                 firstFetchedRageUid:fetchedRangeFirstUid
+                                  lastFetchedRageUid:fetchedRangeLastUid];
+    //1.) fetchOlder first time (should fetch nothing)
+    __block BOOL blockCalled = NO;
+    __weak typeof(self) weakSelf = self;
+    self.testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
+                                                                 NSString *arguments) {
+        typeof(self) self = weakSelf;
+        blockCalled = YES;
+        NSArray *fetchedUIDs = weakSelf.testStore.fetchedUids;
+        XCTAssertTrue(fetchedUIDs.count == 0);
+    };
+    self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+        typeof(self) self = weakSelf;
+        XCTFail(@"Should not be called");
+    };
+    [self.testFolder fetchOlder];
+    XCTAssertTrue(blockCalled);
+
+    //2.) fetchOlder 2nd time (should fetch somthing)
+    NSNumber *expectedTo = @10;
+    blockCalled = NO;
+    self.testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
+                                                                 NSString *arguments) {
+        typeof(self) self = weakSelf;
+        blockCalled = YES;
+        NSNumber *fetchedFromUid = self.testStore.fetchedUids.firstObject;
+        NSNumber *fetchedToUid = self.testStore.fetchedUids.lastObject;
+
+        XCTAssertTrue(fetchedFromUid <= fetchedToUid, @"We fetched somthing");
+        XCTAssertTrue([expectedTo isEqualToNumber:fetchedToUid]);
+    };
+    self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+        typeof(self) self = weakSelf;
+        XCTFail(@"Should not be called");
+    };
+    [self.testFolder fetchOlder];
+    XCTAssertTrue(blockCalled);
+}
+
+// |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
+// Sequence numbers:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
+// UIDs:
+// |  4  |  5  |  6  |  7  |  8  |  9  | 10  | 111 | 112 | 113 | 114 | 115 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+// firstUid == lastUid == 0
+// Expected: Nothing fetched.
+- (void)testFetchOlder_nonSequentialUids_neverFetchedBefore
+{
+    NSInteger maxFetchNum = 10;
+    NSInteger numMessagesOnServer = 20;
+    NSInteger fetchedRangeFirstUid = 0;
+    NSInteger fetchedRangeLastUid = 0;
+    // We have not fetched messages before. in this case fetchOlder() returns without doin anything.
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
     testStore.maxPrefetchCount = maxFetchNum;
     FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
@@ -560,22 +586,99 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     testFolder.existsCount = numMessagesOnServer;
     testFolder.testFirstUID = fetchedRangeFirstUid;
     testFolder.testLastUID = fetchedRangeLastUid;
-
     __block BOOL blockCalled = NO;
     testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
-                                                             NSString *arguments) {
-        blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
-    };
-    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+                                                            NSString *arguments) {
         XCTFail(@"Should not be called");
     };
-
+    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+        blockCalled = YES;
+    };
     [testFolder fetchOlder];
-
     XCTAssertTrue(blockCalled);
 }
 
+// |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
+// Sequence numbers:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
+// UIDs:
+// |  4  |  5  |  6  |  7  |  8  |  9  | 10  | 111 | 112 | 113 | 114 | 115 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+// |<---- allready fetched ----->|
+// |<------ fetchedRange ------->|
+//    ^                       ^
+//    |                       |
+//  firstUid                lastUid
+- (void)testFetchOlder_nonSequetialUids_noOlderExist
+{
+    NSInteger maxFetchNum = 2;
+    NSInteger numMessagesOnServer = 10;
+    NSInteger fetchedRangeFirstUid = 1;
+    NSInteger fetchedRangeLastUid = 5;
+    NSArray<NSNumber*> *uidsOnServer = @[@4, @5, @6, @7, @8, @9, @10, @111, @112, @113, @114, @115, @313,
+                                         @314, @415, @416, @417, @418, @519, @520];
+    BOOL shouldSignalNothingNeedsToBeFetched = YES;
+    BOOL succeeded = NO;
+    [self setupFolderFetchTestWithMaxFetchNum:maxFetchNum
+                                 uidsOnServer:uidsOnServer
+                          numMessagesOnServer:numMessagesOnServer
+                          firstFetchedRageUid:fetchedRangeFirstUid
+                           lastFetchedRageUid:fetchedRangeLastUid
+                                 expectedFrom:0
+                                   expectedTo:0
+             shouldSignalFolderFetchCompleted:shouldSignalNothingNeedsToBeFetched
+                                      success:&succeeded];
+    [self.testFolder fetchOlder];
+    XCTAssertTrue(succeeded);
+}
+//
+// |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
+// Sequence numbers:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
+// UIDs:
+// |  4  |  5  |  6  |  7  |  8  |  9  | 10  | 111 | 112 | 113 | 114 | 115 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+//                                           |<-- allready fetched ->|
+//                                           |<--- fetchedRange ---->|
+//                                              ^                  ^
+//                                              |                  |
+//                                           firstUid           lastUid
+// Expected fetch result:
+// |<--------------------------------------->|
+//------------------------------------------------------------------------------------------------------
+- (void)testFetchOlder_nonSequetialUids_maxFetchGreaterOlderCount
+{
+    NSInteger maxFetchNum = 500;
+    NSInteger numMessagesOnServer = 20;
+    NSInteger fetchedRangeFirstUid = 111;
+    NSInteger fetchedRangeLastUid = 114;
+    NSArray<NSNumber*> *uidsOnServer = @[@4, @5, @6, @7, @8, @9, @10, @111, @112, @113, @114, @115, @313,
+                                         @314, @415, @416, @417, @418, @519, @520];
+    NSUInteger expectedFrom = 4;
+    NSUInteger expectedTo = 10;
+    [self setupFolderFetchTestClassesWithMaxFetchNum:maxFetchNum
+                                        uidsOnServer:uidsOnServer
+                                 numMessagesOnServer:numMessagesOnServer
+                                 firstFetchedRageUid:fetchedRangeFirstUid
+                                  lastFetchedRageUid:fetchedRangeLastUid];
+    //1.) fetchOlder first time (should fetch nothing)
+    __block BOOL blockCalled = NO;
+    __weak typeof(self) weakSelf = self;
+    self.testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
+                                                                 NSString *arguments) {
+        typeof(self) self = weakSelf;
+        blockCalled = YES;
+        NSNumber *fetchedFromUid = self.testStore.fetchedUids.firstObject;
+        NSNumber *fetchedToUid = self.testStore.fetchedUids.lastObject;
+
+        XCTAssertTrue(fetchedFromUid.integerValue == expectedFrom);
+        XCTAssertTrue(fetchedToUid.integerValue == expectedTo);
+    };
+    self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+        typeof(self) self = weakSelf;
+        XCTFail(@"Should not be called");
+    };
+    [self.testFolder fetchOlder];
+    XCTAssertTrue(blockCalled);
+}
 #pragma mark - prefetch
 
 // | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -592,7 +695,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger fetchedRangeFirstUid = 10;
     NSInteger fetchedRangeLastUid = 14;
     NSUInteger expectedFrom = 15;
-    NSUInteger expectedTo = 16;
+    NSString *expectedTo = @"*";
 
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
     testStore.maxPrefetchCount = maxFetchNum;
@@ -604,9 +707,11 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
 
     __block BOOL blockCalled = NO;
     testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
-                                                             NSString *arguments) {
+                                                            NSString *arguments) {
         blockCalled = YES;
-        [self assertArguments:arguments wouldFetchUidsFrom:expectedFrom to:expectedTo];
+        NSString *expected = [NSString stringWithFormat:@"UID FETCH %lu:%@ (UID FLAGS BODY.PEEK[])",
+                              (unsigned long)expectedFrom, expectedTo];
+        XCTAssertTrue([expected isEqualToString:arguments]);
     };
     testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
         XCTFail(@"Should not be called");
@@ -627,7 +732,6 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger numMessagesOnServer = 20;
     NSInteger fetchedRangeFirstUid = 0;
     NSInteger fetchedRangeLastUid = 0;
-
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
     testStore.maxPrefetchCount = maxFetchNum;
     FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
@@ -635,19 +739,16 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     testFolder.existsCount = numMessagesOnServer;
     testFolder.testFirstUID = fetchedRangeFirstUid;
     testFolder.testLastUID = fetchedRangeLastUid;
-
     __block BOOL blockCalled = NO;
     testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
-                                                             NSString *arguments) {
+                                                            NSString *arguments) {
         blockCalled = YES;
         [self assertArguments:arguments wouldFetchMSNsFrom:19 to:20];
     };
     testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
         XCTFail(@"Should not be called");
     };
-
     [testFolder prefetch];
-
     XCTAssertTrue(blockCalled);
 }
 
@@ -657,7 +758,6 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     NSInteger numMessagesOnServer = 20;
     NSInteger fetchedRangeFirstUid = 0;
     NSInteger fetchedRangeLastUid = 0;
-
     TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
     testStore.maxPrefetchCount = maxFetchNum;
     FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
@@ -665,49 +765,92 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
     testFolder.existsCount = numMessagesOnServer;
     testFolder.testFirstUID = fetchedRangeFirstUid;
     testFolder.testLastUID = fetchedRangeLastUid;
-
     __block BOOL blockCalled = NO;
     testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
-                                                             NSString *arguments) {
+                                                            NSString *arguments) {
         blockCalled = YES;
         [self assertArguments:arguments wouldFetchMSNsFrom:1 to:20];
     };
     testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
         XCTFail(@"Should not be called");
     };
-
     [testFolder prefetch];
-
     XCTAssertTrue(blockCalled);
 }
 
 #pragma mark - Helpers
 
-/**
- Extracts exactly 2 Int-Strings from a given String.
- */
-- (NSArray<NSString *> *)extractIntsFromString:(NSString *)string pattern:(NSString *)pattern
+- (void)setupTestStoreWithMaxFetchNum:(NSInteger)maxFetchNum
+                         uidsOnServer:(NSArray<NSNumber*> *_Nullable)uidsOnServer
 {
-    NSError *error = nil;
-    NSRegularExpression *regex = [NSRegularExpression
-                                  regularExpressionWithPattern:pattern
-                                  options:0 error:&error];
-    XCTAssertNil(error);
+    self.testStore = [[TestCWIMAPStore alloc] init];
+    self.testStore.maxPrefetchCount = maxFetchNum;
+    self.testStore.uidsOnServer = uidsOnServer;
+}
 
-    NSArray *matches = [regex matchesInString:string options:0
-                                        range:NSMakeRange(0, string.length - 1)];
-    XCTAssertEqual(matches.count, 1);
-    if (matches.count == 1) {
-        NSTextCheckingResult *result = [matches firstObject];
-        XCTAssertNotNil(result);
-        XCTAssertEqual(result.numberOfRanges, 3);
-        if (result.numberOfRanges == 3) {
-            NSString *s1 = [string substringWithRange:[result rangeAtIndex:1]];
-            NSString *s2 = [string substringWithRange:[result rangeAtIndex:2]];
-            return @[s1, s2];
-        }
+- (void)setupTestFolderWithTestStore:(TestCWIMAPStore *)testStore
+                 numMessagesOnServer:(NSInteger)exists
+                 firstFetchedRageUid:(NSInteger)firstFetchedRangeUid
+                  lastFetchedRageUid:(NSInteger)lastFetchedRangeUid
+{
+    self.testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
+    self.testFolder.store = testStore;
+    self.testFolder.existsCount = exists;
+    self.testFolder.testFirstUID = firstFetchedRangeUid;
+    self.testFolder.testLastUID = lastFetchedRangeUid;
+}
+
+- (void)setupFolderFetchTestClassesWithMaxFetchNum:(NSInteger)maxFetchNum
+                               uidsOnServer:(NSArray<NSNumber*> *_Nullable)uidsOnServer
+                        numMessagesOnServer:(NSInteger)exists
+                        firstFetchedRageUid:(NSInteger)firstFetchedRangeUid
+                         lastFetchedRageUid:(NSInteger)lastFetchedRangeUid
+{
+    [self setupTestStoreWithMaxFetchNum:maxFetchNum uidsOnServer:uidsOnServer];
+    [self setupTestFolderWithTestStore:self.testStore numMessagesOnServer:exists
+                   firstFetchedRageUid:firstFetchedRangeUid
+                    lastFetchedRageUid:lastFetchedRangeUid];
+}
+
+- (void)setupFolderFetchTestWithMaxFetchNum:(NSInteger)maxFetchNum
+                               uidsOnServer:(NSArray<NSNumber*> *_Nullable)uidsOnServer
+                        numMessagesOnServer:(NSInteger)exists
+                        firstFetchedRageUid:(NSInteger)firstFetchedRangeUid
+                         lastFetchedRageUid:(NSInteger)lastFetchedRangeUid
+                               expectedFrom:(NSInteger)expFrom
+                                 expectedTo:(NSInteger)expTo
+           shouldSignalFolderFetchCompleted:(BOOL)shouldSignal
+                                    success:(BOOL*)success
+{
+    [self setupTestStoreWithMaxFetchNum:maxFetchNum uidsOnServer:uidsOnServer];
+    [self setupTestFolderWithTestStore:self.testStore numMessagesOnServer:exists
+                   firstFetchedRageUid:firstFetchedRangeUid
+                    lastFetchedRageUid:lastFetchedRangeUid];
+    __block BOOL* blockSuccess = success;
+    __weak typeof(self) weakSelf = self;
+    if (shouldSignal) {
+        self.testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
+                                                                     NSDictionary *info,
+                                                                     NSString *arguments) {
+            typeof(self) self = weakSelf;
+            XCTFail(@"Should not be called.");
+        };
+        self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+            *blockSuccess = YES;
+        };
+    } else {
+        self.testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
+                                                                     NSDictionary *info,
+                                                                     NSString *arguments) {
+            typeof(self) self = weakSelf;
+            *blockSuccess = YES;
+            [self assertArguments:arguments wouldFetchUidsFrom:expFrom to:expTo];
+        };
+        self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+            typeof(self) self = weakSelf;
+            XCTFail(@"Should not be called");
+        };
     }
-    return @[];
 }
 
 - (void)compareStringList:(NSArray<NSString *> *)extracts
@@ -734,7 +877,7 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
      wouldFetchUidsFrom:(NSUInteger)fromUid
                      to:(NSUInteger)toUid
 {
-    NSArray<NSString *> *extracts = [self
+    NSArray<NSString *> *extracts = [TestUtil
                                      extractIntsFromString:arguments
                                      pattern:@"UID FETCH (\\d+):(\\d+) \\([^)]+"];
 
@@ -748,13 +891,13 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)();
      wouldFetchMSNsFrom:(NSUInteger)fromMSN
                      to:(NSUInteger)toMSN
 {
-    NSArray<NSString *> *extracts = [self
+    NSArray<NSString *> *extracts = [TestUtil
                                      extractIntsFromString:arguments
                                      pattern:@"FETCH (\\d+):(\\d+) \\([^)]+"];
 
     NSString *fromMSNStr = [NSString stringWithFormat:@"%lu", (unsigned long) fromMSN];
     NSString *toMSNStr = [NSString stringWithFormat:@"%lu", (unsigned long) toMSN];
-
+    
     [self compareStringList:extracts withString1:fromMSNStr string2:toMSNStr];
 }
 

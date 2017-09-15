@@ -141,16 +141,20 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 
 /**
  Fetches all messages where: fromUid <= message.uid <= toUid
+ You should never call this method directly. Instead, call :
+ -prefetch: or -fetchOlder:
 
- @param fromUid start uid
- @param toUid end uid
+ @param fromUid lowest uid to fetch
+ @param toUid highest uid to fetch or UNLIMITED
  */
-- (void) fetchFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
+- (void) fetchFrom:(NSUInteger)fromUid to:(NSInteger)toUid;
 
 
 /*!
   @method prefetch
-  @discussion This method is used to cache part of the message headers
+  @discussion This method fetches:
+                    If nothing has been fettched before: the newest fetchMaxMails number of messages.
+                    Otherwize: *All* messages newer than the last fetched one.
               from the IMAP server. On completion, it posts the PantomimeFolderPrefetchCompleted
 	      notification (and calls -folderPrefetchCompleted: on the delegate, if any).
 	      This method is fully asynchronous.

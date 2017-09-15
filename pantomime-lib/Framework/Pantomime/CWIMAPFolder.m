@@ -36,6 +36,11 @@
 @interface CWIMAPFolder ()
 @property NSMutableDictionary *uidToMsnMap;
 @property NSMutableDictionary *msnToUidMap;
+
+/** 
+ The fromUID of the last fetchOlder performed. Used to figure out if we did fetch less messages
+ than we wanted to. */
+@property NSUInteger lastFetcheOlderFromUid;//BUFF:
 @end
 
 //
@@ -43,9 +48,15 @@
 //
 @interface CWIMAPFolder (Private)
 
+- (NSUInteger)_maximumNumberOfMessagesToFetch;
+
 - (BOOL) _uidAlreadyFetched:(NSUInteger)uid;
 
 - (BOOL) _isInFetchedRange:(NSUInteger)uid;
+
+- (BOOL)_fetchedOlderBefore;
+
+- (BOOL)_fetchedNothingOnLastFetchOlder;
 
 - (BOOL) _wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
 
@@ -54,6 +65,8 @@
 - (BOOL) _previouslyFetchedMessagesExist;
 
 - (BOOL) _messagesExistOnServer;
+
+- (BOOL) _isNegativeUid:(NSInteger)uid;
 
 - (BOOL) _uidRangeAllreadyFetchedWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
 
@@ -74,6 +87,7 @@
   if ((self = [super initWithName: theName]) == nil)
     return nil;
 
+    self.lastFetcheOlderFromUid = 0;
     self.uidToMsnMap = [NSMutableDictionary new];
     self.msnToUidMap = [NSMutableDictionary new];
   [self setSelected: NO];
@@ -198,26 +212,75 @@
   RELEASE(aMutableString);
 }
 
-
 #pragma mark - Fetching
 
-// |<------------------ Existing messages on server (self.existsCount == 20) ------------------------->|
-// | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
-//                                              |<-- allready fetched -->|
-//                                              |<---- fetchedRange ---->|
-//                                                 ^                   ^
-//                                                 |                   |
-//                                              firstUid            lastUid
-// This is fetched:     |<--- fetchMaxMails --->|
+// fetchOlder wants to fetch fetchMaxMails number of (yet unfetched) older messages by UID:
+// |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
+// Sequence numbers:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
+// UIDs:
+// |  4  |  5  |  6  |  7  |  8  |  9  | 10  | 108 | 109 | 110 |  11 | 112 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+//                                           |<---- allready fetched ----->|
+//                                           |<------ fetchedRange ------->|
+//                                              ^                       ^
+//                                              |                       |
+//                                           firstUid                lastUid
+// We want this:     |<--- fetchMaxMails --->|
+//
+// The Problem is that the UIDs are not sequrntial, which is why we might have to call fetchOlder multiple times.
+// Example using the numbers from the table above:
+//
+//Case fetchOlder1
+//
+// Problem: due to the non-sequecial UIDs (..., 9, 10, 108, ...), the logic "from = [self firstUID] - fetchMaxMails" might not work.
+// In the above Example:
+// 1st fetchOlder call:
+// fetchMaxMails = 20, from = [self firstUID] - fetchMaxMails == 88, to = [self firstUID] - 1 == 107
+// -> nothing fetched in UID range 88-107
+// 2nd fetchOlder call:
+// lastFetcheOlderFromUid == 88, from = 88 / 2 == 44, to = [self firstUID] - 1	 == 107
+// -> nothing fetched in UID range 44-107
+// 3rd fetchOlder call:
+// lastFetcheOlderFromUid == 44, from = 44 / 2 == 22, to = [self firstUID] - 1 == 107
+// -> nothing fetched in UID range 22-107
+// 4th fetchOlder call:
+// lastFetcheOlderFromUid == 22, from = 22 - fetchMaxMails == 2, to = [self firstUID] - 1 == 107
+// -> fetched in UID range 2-107 (7 messages. 4,5,6,7,8,9,10)
 - (void) fetchOlder
 {
+    if ([self firstUID] == 1 || ![self _messagesExistOnServer]) {
+        // No older messages exist or the server has no messages at all.
+        // Do nothing.
+        // Inform the client
+        [_store signalFolderFetchCompleted];
+        return;
+    }
+
+    if (![self _previouslyFetchedMessagesExist]) {
+        // We did never fetch messages. fetchOlder is the wrong method to handle this case.
+        self.lastFetcheOlderFromUid = 0;
+        [_store signalFolderFetchCompleted];
+        return;
+    }
+
+    NSInteger toUid = [self firstUID] - 1;
+    toUid = MAX(1, toUid);
+
     // Maximum number of mails to fetch
-    NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
-    NSInteger from = [self firstUID] - fetchMaxMails;
-    from = from < 1 ? 1 : from;
-    NSInteger to = [self firstUID] - 1;
-    to = to < 1 ? 1 : to;
-    [self fetchFrom:from to:to];
+    NSInteger fetchMaxMails = [self _maximumNumberOfMessagesToFetch];
+    NSInteger fromUid = 0;
+    if ([self _fetchedNothingOnLastFetchOlder]) {
+        //Case fetchOlder1
+        // Due non-sequential UIDs we did not fetch anything.
+        // Increase the UID range to fetch
+        fromUid = MIN(self.lastFetcheOlderFromUid - fetchMaxMails, self.lastFetcheOlderFromUid / 2);
+    } else {
+        fromUid = [self firstUID] - fetchMaxMails;
+    }
+    fromUid = MAX(1, fromUid);
+
+    self.lastFetcheOlderFromUid = fromUid;
+    [self fetchFrom:fromUid to:toUid];
 }
 
 
@@ -234,7 +297,7 @@
 // Sequence numbers:
 // |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
 // UIDs:
-// |  1  |  2  |  3  |  4  |  5  |  6  |  7  | 108 | 109 | 110 |  11 | 112 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+// |  4  |  5  |  6  |  7  |  8  |  9  | 10  | 108 | 109 | 110 |  11 | 112 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
 //                                           |<---- allready fetched ----->|
 //                                           |<------ fetchedRange ------->|
 //                                              ^                       ^
@@ -294,7 +357,8 @@
 //                            |                                                            |
 //                     fromSequenceNum                                               toSequenceNum
 //---------------------------------------------------------------------------------------------------------------------------
-- (void) fetchFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
+#define UNLIMITED NSIntegerMin
+- (void) fetchFrom:(NSUInteger)fromUid to:(NSInteger)toUid
 {
     // Invalid input. Do nothing.
     if (fromUid == 0 || fromUid > toUid) {
@@ -334,25 +398,26 @@
         to = [self firstUID] - 1;
     }
 
+    NSString *toString = (toUid == UNLIMITED) ? @"*" : [NSString stringWithFormat:@"%ld", (long)to];
+
     [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
-              arguments: @"UID FETCH %u:%u (UID FLAGS BODY.PEEK[])", from, to];
+              arguments: @"UID FETCH %u:%@ (UID FLAGS BODY.PEEK[])", from, toString];
 }
 
 
 /**
- For key sync to work, we have to fetch the whole mail, thus the method name became mis leading.
+ For key sync to work, we have to fetch the whole mail, thus the method name became misleading.
  */
 - (void) prefetch
 {
     // Maximum number of mails to prefetch
-    NSInteger fetchMaxMails = [((CWIMAPStore *) [self store]) maxPrefetchCount];
+    NSInteger fetchMaxMails = [self _maximumNumberOfMessagesToFetch];
 
     if ([self lastUID] > 0) {
-        // We already fetched mails before, so lets fetch newer ones
+        // We already fetched mails before, so lets fetch all newer ones
         NSInteger fromUid = [self lastUID] + 1;
         fromUid = fromUid <= 0 ? 1 : fromUid;
-        NSInteger toUid = fromUid + fetchMaxMails - 1;
-        [self fetchFrom:fromUid to:toUid];
+        [self fetchFrom:fromUid to:UNLIMITED];
     } else {
         //case 7
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
@@ -687,6 +752,12 @@
 // 
 @implementation CWIMAPFolder (Private)
 
+- (NSUInteger)_maximumNumberOfMessagesToFetch
+{
+    return  [((CWIMAPStore *) [self store]) maxPrefetchCount];
+}
+
+
 //
 //
 //
@@ -695,6 +766,22 @@
     return [self _isInFetchedRange:uid];
 }
 
+
+//
+//
+//
+- (BOOL)_fetchedOlderBefore
+{
+    return self.lastFetcheOlderFromUid != 0;
+}
+
+//
+//
+//
+- (BOOL)_fetchedNothingOnLastFetchOlder
+{
+    return [self _fetchedOlderBefore] && self.lastFetcheOlderFromUid < [self firstUID];
+}
 
 //
 //
@@ -738,6 +825,15 @@
 - (BOOL) _messagesExistOnServer
 {
     return self.existsCount > 0;
+}
+
+
+//
+//
+//
+- (BOOL) _isNegativeUid:(NSInteger)uid
+{
+    return (UNLIMITED < uid && uid < 0);
 }
 
 

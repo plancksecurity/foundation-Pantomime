@@ -12,4 +12,10 @@
 
 + (NSData  * _Nullable)loadDataWithFileName:(NSString * _Nonnull)fileName;
 
+/**
+ Extracts exactly 2 Int-Strings from a given String.
+ */
++ (NSArray<NSString *> *_Nonnull)extractIntsFromString:(NSString *_Nonnull)string
+                                               pattern:(NSString *_Nonnull)pattern;
+
 @end
