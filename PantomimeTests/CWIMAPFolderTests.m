@@ -536,7 +536,7 @@ void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *
 //                                              |                       |
 //                                           firstUid                lastUid
 // We want this: |<- .. - fetchedMails ----->|
-- (void)testFetchOlder_nonSequentialUids
+- (void)testFetchOlder_nonSequentialUids_oneRunRequired
 {
     NSInteger maxFetchNum = 100;
     NSInteger numMessagesOnServer = 20;
@@ -562,6 +562,72 @@ void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *
         XCTAssertTrue(fetchedFromUid <= fetchedToUid, @"We fetched somthing");
         XCTAssertTrue([expectedTo isEqualToNumber:fetchedToUid]);
     }];
+}
+
+// |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
+// Sequence numbers:
+// |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
+// UIDs:
+// |  4  |  5  |  6  |  7  |  8  | 30  | 59  | 111 | 112 | 113 | 114 | 115 | 313 | 314 | 415 | 416 | 417 | 418 | 519 | 520 |
+//                                           |<---- allready fetched ----->|
+//                                           |<------ fetchedRange ------->|
+//                                              ^                       ^
+//                                              |                       |
+//                                           firstUid                lastUid
+// Expection:                    |<--------->|
+- (void)testFetchOlder_nonSequentialUids_twoRunsRequired
+{
+    NSInteger maxFetchNum = 50;
+    NSInteger numMessagesOnServer = 20;
+    NSInteger fetchedRangeFirstUid = 111;
+    NSInteger fetchedRangeLastUid = 115;
+    NSArray<NSNumber*> *uidsOnServer = @[@4, @5, @6, @7, @8, @30, @59, @111, @112, @113, @114, @115, @313,
+                                         @314, @415, @416, @417, @418, @519, @520];
+    TestCWIMAPStore *testStore = [[TestCWIMAPStore alloc] init];
+    testStore.maxFetchCount = maxFetchNum;
+    testStore.uidsOnServer = uidsOnServer;
+    FechTestCWIMAPFolder *testFolder = [[FechTestCWIMAPFolder alloc] initWithName:@"TestFolder"];
+    testFolder.store = testStore;
+    testFolder.existsCount = numMessagesOnServer;
+    testFolder.testFirstUID = fetchedRangeFirstUid;
+    testFolder.testLastUID = fetchedRangeLastUid;
+
+    // 1st fetch
+    __block BOOL blockCalled = NO;
+    __weak TestCWIMAPStore *weakStore = testStore;
+    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
+                                                            NSString *arguments) {
+        blockCalled = YES;
+        XCTAssertEqual(weakStore.fetchedUids.count, 0);
+    };
+    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+        XCTFail(@"Should not be called");
+    };
+
+    [testFolder fetchOlder];
+    XCTAssertTrue(blockCalled);
+
+    // 2nd fetch
+    NSInteger firstUid = fetchedRangeFirstUid - 1 - testStore.maxFetchCount; // for 1st run
+    firstUid = firstUid - (firstUid / 2); //30  // for 2nd run
+    NSNumber *expectedFetchedFromUid = @(firstUid);
+    NSNumber *expectedFetchedToUid = @59;
+    blockCalled = NO;
+    testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command, NSDictionary *info,
+                                                            NSString *arguments) {
+        blockCalled = YES;
+        NSNumber *fetchedFromUid = weakStore.fetchedUids.firstObject;
+        NSNumber *fetchedToUid = weakStore.fetchedUids.lastObject;
+        XCTAssert([fetchedFromUid isEqualToNumber:expectedFetchedFromUid]);
+        XCTAssert([fetchedToUid isEqualToNumber:expectedFetchedToUid]);
+    };
+    testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
+        XCTFail(@"Should not be called");
+    };
+
+    [testFolder fetchOlder];
+    XCTAssertTrue(blockCalled);
+    //BUFF: add tests for  needsReCall
 }
 
 // |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
