@@ -191,7 +191,7 @@
     // Convenience to be able to use CoreFoundation conversion instead of NSString
     //
 + (NSInteger) encodingForCharset: (NSData *) theCharset
-       convertToNSStringEncoding: (BOOL) shouldConvert
+       convertToNSStringEncoding: (BOOL) shouldConvertToNSStringEncoding
     {
         // We define some aliases for the string encoding.
         static struct { char *name; int encoding; BOOL fromCoreFoundation; } encodings[] = {
@@ -261,7 +261,7 @@
 #ifdef MACOSX
                 if (encodings[i].fromCoreFoundation)
                 {
-                    if (shouldConvert)
+                    if (shouldConvertToNSStringEncoding)
                     {
                         return CFStringConvertEncodingToNSStringEncoding(enc);
                     }
@@ -272,14 +272,12 @@
                 }
                 else
                 {
-                    if (shouldConvert)
+                    // enc is a NSStringEncoding
+                    if (!shouldConvertToNSStringEncoding)
                     {
                         return CFStringConvertNSStringEncodingToEncoding(enc);
                     }
-                    else
-                    {
-                        return enc;
-                    }
+                    return enc;
                 }
 #else
                 return enc;
@@ -294,7 +292,7 @@
         enc = CFStringConvertIANACharSetNameToEncoding((CFStringRef)name);
         if (kCFStringEncodingInvalidId != enc)
         {
-            if (shouldConvert)
+            if (shouldConvertToNSStringEncoding)
             {
                 return CFStringConvertEncodingToNSStringEncoding(enc);
             }
@@ -364,7 +362,7 @@
 
 #ifdef MACOSX
         encoding = [NSString encodingForCharset: theCharset
-                      convertToNSStringEncoding: NO];
+                      convertToNSStringEncoding: YES];
 #else
         encoding = [NSString encodingForCharset: theCharset];
 #endif

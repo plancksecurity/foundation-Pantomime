@@ -305,7 +305,7 @@ static int seed_count = 1;
   
   aData = [theText dataUsingEncoding: [NSString encodingForCharset:
 						  [theCharset dataUsingEncoding: NSASCIIStringEncoding]]];
-  
+
   if (theEncoding == PantomimeEncodingQuotedPrintable)
     {
       return [aData encodeQuotedPrintableWithLineLength: 0  inHeader: YES];
