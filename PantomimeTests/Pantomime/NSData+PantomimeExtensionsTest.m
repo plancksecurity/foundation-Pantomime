@@ -130,7 +130,7 @@
                          @"\f",
                          @"\r",
                          @"\v"];
-    for (NSString *escaped in escapees) {
+    for (int i = 0; i < escapees.count; ++i) {
         XCTAssertTrue([self hasBeenFound:
                        [self.dataContainingSearchStr rangeOfCString:self.cSearchStr options:0]]);
         XCTAssertFalse([self hasBeenFound:

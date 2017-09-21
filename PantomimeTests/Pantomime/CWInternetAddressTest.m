@@ -63,7 +63,6 @@
 - (void)testSetPersonal
 {
     NSString *userName = @"me@some.ch";
-    NSString *address = @"unittest@some.ch";
     NSString *expectedUsername = @"\"me@some.ch\"";
     CWInternetAddress *testee = [CWInternetAddress new];
     testee.personal = userName;
@@ -73,7 +72,6 @@
 - (void)testSetPersonal_alreadyQuoted
 {
     NSString *userName = @"\"me@some.ch\"";
-    NSString *address = @"unittest@some.ch";
     NSString *expectedUsername = @"\"me@some.ch\"";
     CWInternetAddress *testee = [CWInternetAddress new];
     testee.personal = userName;
@@ -83,7 +81,6 @@
 - (void)testSetPersonal_prefixQuoted
 {
     NSString *userName = @"\"me@some.ch";
-    NSString *address = @"unittest@some.ch";
     NSString *expectedUsername = @"\"me@some.ch\"";
     CWInternetAddress *testee = [CWInternetAddress new];
     testee.personal = userName;
@@ -93,7 +90,6 @@
 - (void)testSetPersonal_postfixQuoted
 {
     NSString *userName = @"me@some.ch\"";
-    NSString *address = @"unittest@some.ch";
     NSString *expectedUsername = @"\"me@some.ch\"";
     CWInternetAddress *testee = [CWInternetAddress new];
     testee.personal = userName;

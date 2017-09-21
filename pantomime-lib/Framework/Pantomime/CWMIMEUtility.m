@@ -50,7 +50,7 @@
 //
 char ent(char **ref);
 char *striphtml(char *s, NSInteger encoding);
-NSString *unique_id();
+NSString *unique_id(void);
 
 static const char *hexDigit = "0123456789ABCDEF";
 static int seed_count = 1;

@@ -209,12 +209,14 @@ static const char *hexDigit = "0123456789ABCDEF";
     {
       if (b[0]=='=' && i+1<len && b[1]=='\n')
 	{
-	  b++,i++;
+        b++;
+        i++;
 	  continue;
 	}
       else if (*b=='=' && i+2<len)
 	{
-	  b++,i++;
+        b++;
+        i++;
 	  if (*b>='A' && *b<='F')
 	    {
 	      ch=16*(*b-'A'+10);
@@ -233,7 +235,8 @@ static const char *hexDigit = "0123456789ABCDEF";
               return nil;
             }
 
-	  b++,i++;
+        b++;
+        i++;
 
 	  if (*b>='A' && *b<='F')
 	    {

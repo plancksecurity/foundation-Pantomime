@@ -19,7 +19,7 @@
 @property (nonatomic, copy, nonnull)
 void (^assertionBlockForSendCommandInfoArguments)(IMAPCommand, NSDictionary *, NSString *);
 @property (nonatomic, copy, nonnull)
-void (^assertionBlockForSignalFolderFetchNothingToFetch)();
+void (^assertionBlockForSignalFolderFetchNothingToFetch)(void);
 @property (nonatomic, copy, nonnull)
 void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *);
 @property (strong, nonatomic) NSArray<NSNumber*> *uidsOnServer;
