@@ -161,7 +161,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
       aData = [theLine subdataFromIndex: 21];
       aRange = [aData rangeOfCString: ";"];
       
-      if (aRange.length > 0)
+      if (aRange.location != NSNotFound)
 	{
 	  NSRange filenameRange;
 	  
@@ -171,7 +171,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 	  // We now decode our filename
 	  filenameRange = [aData rangeOfCString: "filename"];
 
-	  if (filenameRange.length > 0)
+	  if (filenameRange.location != NSNotFound)
 	    {
 	      [thePart setFilename: [CWParser _parameterValueUsingLine: aData  range: filenameRange  decode: YES  charset: [thePart defaultCharset]]];
 	    }
@@ -261,7 +261,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
  */
 NSRange shrinkRange(NSRange range)
 {
-    if (range.location != NSNotFound && range.length > 0) {
+    if (range.location != NSNotFound && range.location != NSNotFound) {
         return NSMakeRange(range.location, range.length - 1);
     } else {
         return range;
@@ -357,7 +357,7 @@ NSRange shrinkRange(NSRange range)
   {
     aRange = [theLine rangeOfCString: "name="  options: NSCaseInsensitiveSearch];
 
-    if (aRange.length > 0)
+    if (aRange.location != NSNotFound)
       {
 	[thePart setFilename: [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: YES  charset: [thePart defaultCharset]]];
       }
@@ -1024,7 +1024,7 @@ NSRange shrinkRange(NSRange range)
 		options: 0
 		range: NSMakeRange(NSMaxRange(theRange), len-NSMaxRange(theRange))];
 
-  if (r1.length > 0)
+  if (r1.location != NSNotFound)
     {
       // If "=" was found, but after ";", something is very broken
       // and we just return nil. That can happen if we have a Content-Type like:
@@ -1062,7 +1062,7 @@ NSRange shrinkRange(NSRange range)
 		options: 0
 		range: NSMakeRange(NSMaxRange(theRange), len-NSMaxRange(theRange))];
 		
-  if (r1.length > 0)
+  if (r1.location != NSNotFound)
     {
       value_end = r1.location-1;
     }
@@ -1129,7 +1129,7 @@ NSRange shrinkRange(NSRange range)
 
 		  r2 = [theLine rangeOfCString: ";"  options: 0  range: NSMakeRange(NSMaxRange(r1), len-NSMaxRange(r1))];
 		  
-		  if (r2.length > 0)
+		  if (r2.location != NSNotFound)
 		    {
 		      value_end = r2.location-1;
 		    }
@@ -1152,7 +1152,7 @@ NSRange shrinkRange(NSRange range)
 	  //		options: 0
 	  //		range: NSMakeRange(end, len-end)];
 	  // 
-	  //if (r2.length > 0)
+	  //if (r2.location != NSNotFound)
 	  //  {
 	  //    value_end = r2.location-1;
 	  // }

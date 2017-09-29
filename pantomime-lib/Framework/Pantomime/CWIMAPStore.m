@@ -1230,7 +1230,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aRange = [theString rangeOfString: @"\\Seen"
                               options: NSCaseInsensitiveSearch];
 
-    if (aRange.length > 0)
+    if (aRange.location != NSNotFound)
     {
         [theFlags add: PantomimeFlagSeen];
     }
@@ -1239,7 +1239,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aRange = [theString rangeOfString: @"\\Recent"
                               options: NSCaseInsensitiveSearch];
 
-    if (aRange.length > 0)
+    if (aRange.location != NSNotFound)
     {
         [theFlags add: PantomimeFlagRecent];
     }
@@ -1248,7 +1248,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aRange = [theString rangeOfString: @"\\Deleted"
                               options: NSCaseInsensitiveSearch];
 
-    if (aRange.length > 0)
+    if (aRange.location != NSNotFound)
     {
         [theFlags add: PantomimeFlagDeleted];
     }
@@ -1257,7 +1257,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aRange = [theString rangeOfString: @"\\Answered"
                               options: NSCaseInsensitiveSearch];
 
-    if (aRange.length > 0)
+    if (aRange.location != NSNotFound)
     {
         [theFlags add: PantomimeFlagAnswered];
     }
@@ -1266,7 +1266,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aRange = [theString rangeOfString: @"\\Flagged"
                               options: NSCaseInsensitiveSearch];
 
-    if (aRange.length > 0)
+    if (aRange.location != NSNotFound)
     {
         [theFlags add: PantomimeFlagFlagged];
     }
@@ -1275,7 +1275,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aRange = [theString rangeOfString: @"\\Draft"
                               options: NSCaseInsensitiveSearch];
 
-    if (aRange.length > 0)
+    if (aRange.location != NSNotFound)
     {
         [theFlags add: PantomimeFlagDraft];
     }
@@ -2040,7 +2040,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             [aMessage setHeadersFromData: aData record: cacheRecord];
 
             NSRange aRange = [aData rangeOfCString: "\n\n"];
-            if (aRange.length != 0) {
+            if (aRange.location != NSNotFound) {
                 [CWMIMEUtility setContentFromRawSource:
                  [aData subdataWithRange: NSMakeRange(aRange.location + 2,
                                                       [aData length] - (aRange.location + 2))]
