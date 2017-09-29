@@ -44,7 +44,8 @@
     XCTAssertTrue([msg.content isKindOfClass:CWMIMEMultipart.class]);
     XCTAssertEqualObjects(msg.contentType, @"multipart/signed");
     XCTAssertEqualObjects(msg.subject, @"test");
-    XCTAssertEqualObjects(msg.from.address, @"Hernâni Marques (p≡p foundation)");
+    XCTAssertEqualObjects(msg.from.personal, @"\"Hernâni Marques (p≡p foundation)\"");
+    XCTAssertEqualObjects(msg.from.address, @"hernani.marques@pep.foundation");
 }
 
 - (void)testJpgAttached
