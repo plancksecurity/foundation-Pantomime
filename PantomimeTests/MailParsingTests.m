@@ -47,4 +47,14 @@
     XCTAssertEqualObjects(msg.from.address, @"Hernâni Marques (p≡p foundation)");
 }
 
+- (void)testJpgAttached
+{
+    CWIMAPMessage *msg = [self parseEmailFilePath:@"MailWithJpgAttached.txt"];
+    XCTAssertTrue([msg.content isKindOfClass:CWMIMEMultipart.class]);
+    XCTAssertEqualObjects(msg.contentType, @"multipart/mixed");
+    XCTAssertEqualObjects(msg.subject, @"Attachment");
+    XCTAssertEqualObjects(msg.from.address, @"iostest001@peptest.ch");
+    XCTAssertEqualObjects(msg.from.personal, @"\"Test 001\"");
+}
+
 @end
