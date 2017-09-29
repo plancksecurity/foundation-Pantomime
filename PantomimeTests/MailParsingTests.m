@@ -17,14 +17,20 @@
 
 @implementation MailParsingTests
 
-- (void)testParseFailureNotice
+- (CWIMAPMessage *)parseEmailFilePath:(NSString *)emailFilePath
 {
-    NSMutableData *emailData = [[TestUtil loadDataWithFileName:@"MailParsingAttachments.txt"]
+    NSMutableData *emailData = [[TestUtil loadDataWithFileName:emailFilePath]
                                 mutableCopy];
     [emailData replaceCRLFWithLF]; // This is what pantomime does with everything it receives
     XCTAssertNotNil(emailData);
     CWIMAPMessage *msg = [[CWIMAPMessage alloc] initWithData:emailData];
     XCTAssertNotNil(msg);
+    return msg;
+}
+
+- (void)testParseFailureNotice
+{
+    CWIMAPMessage *msg = [self parseEmailFilePath:@"MailParsingAttachments.txt"];
     XCTAssertFalse([[msg content] isKindOfClass:[CWMIMEMultipart class]]);
     XCTAssertTrue([[msg content] isKindOfClass:[NSData class]]);
     XCTAssertNil(msg.contentType);
@@ -34,12 +40,7 @@
 /// IOS-421_messed up encoding on special characters ("â" in this specific case)
 - (void)testMessageHeapOverflowCanBeParsed
 {
-    NSMutableData *emailData = [[TestUtil loadDataWithFileName:@"IOS-421_MessageHeapOverflow.txt"]
-                                mutableCopy];
-    [emailData replaceCRLFWithLF]; // This is what pantomime does with everything it receives
-    XCTAssertNotNil(emailData);
-    CWIMAPMessage *msg = [[CWIMAPMessage alloc] initWithData:emailData];
-    XCTAssertNotNil(msg);
+    CWIMAPMessage *msg = [self parseEmailFilePath:@"IOS-421_MessageHeapOverflow.txt"];
     XCTAssertTrue([msg.content isKindOfClass:CWMIMEMultipart.class]);
     XCTAssertEqualObjects(msg.contentType, @"multipart/signed");
     XCTAssertEqualObjects(msg.subject, @"test");
