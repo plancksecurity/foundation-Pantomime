@@ -21,6 +21,7 @@
 		15B3F0C61F5ED64900BF531F /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
 		15B3F0CA1F5EE35E00BF531F /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
 		431AD4391F7E479B000247A7 /* MailWithJpgAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */; };
+		431AD43B1F7E4D8F000247A7 /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */; };
 		4338E37C1DF1BBFF0070176B /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
 		4338E37D1DF1BC050070176B /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F71CB7EBDD006867C0 /* CWFolder.m */; };
 		4338E3851DF1BC880070176B /* CWIMAPFolderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4338E3841DF1BC880070176B /* CWIMAPFolderTests.m */; };
@@ -147,6 +148,7 @@
 		15B3F0C81F5EE35E00BF531F /* CWIMAPStore+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWIMAPStore+Protected.h"; sourceTree = "<group>"; };
 		15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPStore+Protected.m"; sourceTree = "<group>"; };
 		431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithJpgAttached.txt; sourceTree = "<group>"; };
+		431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
 		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
 		433149321CBCEA1100AFC030 /* CWCacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCacheRecord.m; sourceTree = "<group>"; };
 		433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 				1505D6041F3CB1B100A04A0B /* validMultipartEmails */,
 				433C51A71E647EBD00272E19 /* MailParsingAttachments.txt */,
 				431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */,
+				431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -611,6 +614,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				431AD43B1F7E4D8F000247A7 /* MailWithDocAttached.txt in Resources */,
 				431AD4391F7E479B000247A7 /* MailWithJpgAttached.txt in Resources */,
 				1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */,
 				433C51A81E647EBD00272E19 /* MailParsingAttachments.txt in Resources */,

@@ -58,4 +58,14 @@
     XCTAssertEqualObjects(msg.from.personal, @"\"Test 001\"");
 }
 
+- (void)testDocAttached
+{
+    CWIMAPMessage *msg = [self parseEmailFilePath:@"MailWithDocAttached.txt"];
+    XCTAssertTrue([msg.content isKindOfClass:CWMIMEMultipart.class]);
+    XCTAssertEqualObjects(msg.contentType, @"multipart/mixed");
+    XCTAssertEqualObjects(msg.subject, @"Some attachment :)");
+    XCTAssertEqualObjects(msg.from.address, @"iostest001@peptest.ch");
+    XCTAssertEqualObjects(msg.from.personal, @"\"Test 001\"");
+}
+
 @end

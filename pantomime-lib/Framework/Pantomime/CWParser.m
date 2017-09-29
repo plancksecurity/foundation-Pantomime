@@ -255,6 +255,18 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
     }
 }
 
+/**
+ Shrinks any valid range by one in length.
+ A valid range is one with a valid position (not NSNotFound) and a length > 0.
+ */
+NSRange shrinkRange(NSRange range)
+{
+    if (range.location != NSNotFound && range.length > 0) {
+        return NSMakeRange(range.location, range.length - 1);
+    } else {
+        return range;
+    }
+}
 
 //
 //
@@ -296,9 +308,9 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
   //
   // We decode our boundary (if we need to)
   //
-  aRange = [theLine rangeOfCString: "boundary"  options: NSCaseInsensitiveSearch];
+  aRange = shrinkRange([theLine rangeOfCString: "boundary="  options: NSCaseInsensitiveSearch]);
   
-  if (aRange.length > 0)
+  if (aRange.location != NSNotFound)
     {
       [thePart setBoundary: [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil]];
     }
@@ -306,9 +318,9 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
   //
   // We decode our charset (if we need to)
   //
-  aRange = [theLine rangeOfCString: "charset"  options: NSCaseInsensitiveSearch];
+  aRange = shrinkRange([theLine rangeOfCString: "charset="  options: NSCaseInsensitiveSearch]);
   
-  if (aRange.length > 0)
+  if (aRange.location != NSNotFound)
     {
       [thePart setCharset: [[CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil] asciiString]];
     }
@@ -316,9 +328,9 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
   //
   // We decode our format (if we need to). See RFC2646.
   //
-  aRange = [theLine rangeOfCString: "format"  options: NSCaseInsensitiveSearch];
+  aRange = shrinkRange([theLine rangeOfCString: "format="  options: NSCaseInsensitiveSearch]);
   
-  if (aRange.length > 0)
+  if (aRange.location != NSNotFound)
     {
       NSData *aFormat;
       
@@ -343,7 +355,7 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
   //
   if ([thePart isKindOfClass: [CWPart class]])
   {
-    aRange = [theLine rangeOfCString: "name"  options: NSCaseInsensitiveSearch];
+    aRange = [theLine rangeOfCString: "name="  options: NSCaseInsensitiveSearch];
 
     if (aRange.length > 0)
       {
