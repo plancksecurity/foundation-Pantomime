@@ -62,7 +62,7 @@
   @param theData The bytes to use.
   @result A CWPart instance, nil on error.
 */
-- (id _Nonnull) initWithData: (NSData * _Nonnull) theData;
+- (id _Nullable) initWithData: (NSData * _Nonnull) theData;
 
 /*!
   @method initWithData: charset:
@@ -73,7 +73,7 @@
   @param theCharset The charset to force.
   @result A CWPart instance, nil on error.
 */
-- (id _Nonnull) initWithData: (NSData * _Nonnull) theData
+- (id _Nullable) initWithData: (NSData * _Nonnull) theData
                      charset: (NSString * _Nonnull) theCharset;
 
 /*!
@@ -342,7 +342,7 @@
               enforced for usage when decoding the part.
   @result The enforced charset.
 */
-- (NSString * _Nonnull) defaultCharset;
+- (NSString * _Nullable) defaultCharset;
 
 /*!
   @method setDefaultCharset:
@@ -391,9 +391,9 @@
               of the header specified by <i>theName</i>. The search
 	      is performed in a case-insensitive way.
   @param theName The name of the header. For example, it could be "Date".
-  @result The value of the header.
+  @result The value of the header or nil if not found.
 */
-- (id _Nonnull) headerValueForName: (NSString * _Nonnull) theName;
+- (id _Nullable) headerValueForName: (NSString * _Nonnull) theName;
 
 /*!
   @method setHeaders:
