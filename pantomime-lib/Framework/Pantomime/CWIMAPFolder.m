@@ -45,7 +45,7 @@ typedef enum {
 
 /** 
  The fromUID of the last fetchOlder performed. Used to 
- figure out if we did fetch messages when fetching fecthOlder()  */
+ figure out if we did fetch messages when fetching fetchOlder()  */
 
 @property NSUInteger lastFetcheOlderFromUid;
 /**
@@ -77,6 +77,8 @@ typedef enum {
 - (BOOL) _previouslyFetchedMessagesExist;
 
 - (BOOL) _messagesExistOnServer;
+
+- (BOOL) _allMessagesHaveBeenFetched;
 
 - (BOOL) _isNegativeUid:(NSInteger)uid;
 
@@ -261,7 +263,7 @@ typedef enum {
 // -> fetched in UID range 2-107 (7 messages. 4,5,6,7,8,9,10)
 - (void) fetchOlder
 {
-    if ([self firstUID] == 1 || ![self _messagesExistOnServer]) {
+    if ([self firstUID] == 1 || ![self _messagesExistOnServer] || [self _allMessagesHaveBeenFetched]) {
         // No older messages exist or the server has no messages at all.
         // Do nothing.
         // Inform the client
@@ -288,13 +290,14 @@ typedef enum {
         //Case fetchOlder1
         // Due non-sequential UIDs we did not fetch anything.
         // Increase the UID range to fetch
-        fromUid = MIN(self.lastFetcheOlderFromUid - fetchMaxMails, self.lastFetcheOlderFromUid / 2);
+        fromUid = self.lastFetcheOlderFromUid - fetchMaxMails;
     } else {
         fromUid = [self firstUID] - fetchMaxMails;
     }
     fromUid = MAX(1, fromUid);
 
     self.lastFetcheOlderFromUid = fromUid;
+    INFO(NSStringFromClass([self class]), @"Trying to fetchOlder fromUid: %ld toUid: %ld", (long)fromUid, (long)toUid);
     [self fetchFrom:fromUid to:toUid];
 }
 
@@ -800,7 +803,7 @@ typedef enum {
 //
 - (BOOL)_fetchedOlderBefore
 {
-    return self.lastFetcheOlderFromUid != 0;
+    return self.lastFetcheOlderFromUid != 0 && self.lastFetcheOlderFromUid != NSIntegerMax;
 }
 
 
@@ -855,6 +858,17 @@ typedef enum {
 - (BOOL) _messagesExistOnServer
 {
     return self.existsCount > 0;
+}
+
+//
+//
+//
+- (BOOL) _allMessagesHaveBeenFetched //BUFF:
+{
+    NSInteger firstMsn =  [self msnForUID:[self firstUID]];
+    NSInteger lastMsn =  [self msnForUID:[self lastUID]];
+    NSInteger numFetchedMessages = lastMsn - firstMsn + 1;
+    return numFetchedMessages == self.existsCount;
 }
 
 
