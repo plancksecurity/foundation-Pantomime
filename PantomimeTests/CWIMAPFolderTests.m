@@ -627,7 +627,6 @@ void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *
 
     [testFolder fetchOlder];
     XCTAssertTrue(blockCalled);
-    //BUFF: add tests for  needsReCall
 }
 
 // |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
