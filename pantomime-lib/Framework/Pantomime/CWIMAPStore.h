@@ -262,6 +262,15 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 
 - (BOOL)isFlagsOnly;
 
+
+/**
+ Indicates nothing has been updated but the UID.
+ We might fetch the UID only to update the MSN of a message.
+
+ @return YES if nothing or only the UID changed, NO otherwize
+ */
+- (BOOL)isNoChange;
+
 @end
 
 #endif // _Pantomime_H_IMAPStore

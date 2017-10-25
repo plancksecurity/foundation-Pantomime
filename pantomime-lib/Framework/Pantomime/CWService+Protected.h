@@ -11,7 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CWService ()
-
 {
 @protected
     __block CWThreadSafeArray *_supportedMechanisms;
@@ -27,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
     __block NSString *_name;
     NSData *_crlf;
     NSStringEncoding _defaultCStringEncoding;
-
+    
 #ifdef MACOSX
     CFRunLoopSourceRef _runLoopSource;
     CFSocketContext *_context;

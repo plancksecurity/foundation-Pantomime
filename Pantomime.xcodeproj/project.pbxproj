@@ -14,6 +14,7 @@
 		1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177381F22072600C83122 /* CWMIMEUtilityTest.m */; };
 		1521773B1F22072600C83122 /* NSString+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177391F22072600C83122 /* NSString+ExtensionsTest.m */; };
 		1598B22A1F6812FC00582157 /* CWInternetAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598B2291F6812FC00582157 /* CWInternetAddressTest.m */; };
+		15ADD2C01FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
 		15B35D221F60722400EA57E2 /* CWThreadSafeArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B35D1F1F60722400EA57E2 /* CWThreadSafeArray.m */; };
 		15B35D231F60722400EA57E2 /* CWThreadSafeData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B35D211F60722400EA57E2 /* CWThreadSafeData.m */; };
 		15B35D261F60728D00EA57E2 /* CWSMTP+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B35D241F60728D00EA57E2 /* CWSMTP+Protected.m */; };
@@ -135,6 +136,8 @@
 		152177381F22072600C83122 /* CWMIMEUtilityTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEUtilityTest.m; sourceTree = "<group>"; };
 		152177391F22072600C83122 /* NSString+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ExtensionsTest.m"; sourceTree = "<group>"; };
 		1598B2291F6812FC00582157 /* CWInternetAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWInternetAddressTest.m; sourceTree = "<group>"; };
+		15ADD2BE1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CWIMAPFolder+CWProtected.h"; sourceTree = "<group>"; };
+		15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPFolder+CWProtected.m"; sourceTree = "<group>"; };
 		15B35D1E1F60722400EA57E2 /* CWThreadSafeArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWThreadSafeArray.h; sourceTree = "<group>"; };
 		15B35D1F1F60722400EA57E2 /* CWThreadSafeArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWThreadSafeArray.m; sourceTree = "<group>"; };
 		15B35D201F60722400EA57E2 /* CWThreadSafeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWThreadSafeData.h; sourceTree = "<group>"; };
@@ -304,6 +307,17 @@
 			path = Pantomime;
 			sourceTree = "<group>";
 		};
+		15ADD2BC1FA1047000BA1B9B /* CWIMAPFolder */ = {
+			isa = PBXGroup;
+			children = (
+				43E854FC1CB7EBDD006867C0 /* CWIMAPFolder.h */,
+				43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */,
+				15ADD2BE1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.h */,
+				15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */,
+			);
+			name = CWIMAPFolder;
+			sourceTree = "<group>";
+		};
 		15B35D1D1F60722400EA57E2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -441,8 +455,7 @@
 				43E854F71CB7EBDD006867C0 /* CWFolder.m */,
 				43E854F81CB7EBDD006867C0 /* CWFolderInformation.h */,
 				43E854F91CB7EBDD006867C0 /* CWFolderInformation.m */,
-				43E854FC1CB7EBDD006867C0 /* CWIMAPFolder.h */,
-				43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */,
+				15ADD2BC1FA1047000BA1B9B /* CWIMAPFolder */,
 				43E854FE1CB7EBDD006867C0 /* CWIMAPMessage.h */,
 				43E854FF1CB7EBDD006867C0 /* CWIMAPMessage.m */,
 				15B3F0CB1F5EE3D100BF531F /* CWIMAPStore */,
@@ -789,6 +802,7 @@
 				433C51BF1E658C8200272E19 /* CWISO8859_13.m in Sources */,
 				433C51C31E658C8F00272E19 /* CWISO8859_3.m in Sources */,
 				1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */,
+				15ADD2C01FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m in Sources */,
 				1598B22A1F6812FC00582157 /* CWInternetAddressTest.m in Sources */,
 				433C51B71E64813700272E19 /* CWInternetAddress.m in Sources */,
 				433C51B41E64810D00272E19 /* CWRegEx.m in Sources */,

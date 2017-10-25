@@ -133,20 +133,9 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
              toFolder: (NSString * _Nonnull) theFolder;
 
 /**
- Tries to fetch fetchMaxMails number of messages with decreasing uids, starting from firstUid - 1.
- This method might have to be called several times until messages are fetched.
- To figure out if it has be called one more time, call fetchOlderNeedsReCall:
+ Fetches  fetchMaxMails number of older messages with decreasing MSN, starting from MSN of oldest local message - 1.
  */
 - (void) fetchOlder;
-
-
-/**
- Whether or not you need to call fetchOlder() again to actually get messages.
- See fetchOlder() for details.
-
- @return YES, if the last call to fetchOlder: did not fetch any messages, NO: otherwize
- */
-- (BOOL)fetchOlderNeedsReCall;
 
 /**
  Fetches all messages where: fromUid <= message.uid <= toUid
