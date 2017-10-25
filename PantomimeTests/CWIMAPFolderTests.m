@@ -536,7 +536,7 @@ void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *
 //                                              |                       |
 //                                           firstUid                lastUid
 // We want this: |<- .. - fetchedMails ----->|
-- (void)testFetchOlder_nonSequentialUids_oneRunRequired
+- (void)testFetchOlder_nonSequentialUids_oneRunRequired_fetchedSomething
 {
     NSInteger maxFetchNum = 100;
     NSInteger numMessagesOnServer = 20;
@@ -608,8 +608,9 @@ void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *
     XCTAssertTrue(blockCalled);
 
     // 2nd fetch
-    NSInteger firstUid = fetchedRangeFirstUid - 1 - testStore.maxFetchCount; // for 1st run
-    firstUid = firstUid - (firstUid / 2); //30  // for 2nd run
+    NSInteger firstUid = fetchedRangeFirstUid - 1 - testStore.maxFetchCount; // after 1st run
+    firstUid = firstUid - maxFetchNum; // for 2nd run
+    firstUid = [self firstGreaterOrEqual:@(firstUid) in:uidsOnServer].integerValue;
     NSNumber *expectedFetchedFromUid = @(firstUid);
     NSNumber *expectedFetchedToUid = @59;
     blockCalled = NO;
@@ -837,6 +838,17 @@ void (^assertionBlockForFetchedUids)(NSArray<NSNumber*>*, NSNumber *, NSNumber *
 }
 
 #pragma mark - Helpers
+
+- (NSNumber *)firstGreaterOrEqual:(NSNumber *)num in:(NSArray<NSNumber*> *)array
+{
+    for (NSNumber *current in array) {
+        if (current.integerValue >= num.integerValue) {
+            return current;
+        }
+    }
+
+    return nil;
+}
 
 - (void)setupTestStoreWithMaxFetchNum:(NSInteger)maxFetchNum
                          uidsOnServer:(NSArray<NSNumber*> *_Nullable)uidsOnServer
