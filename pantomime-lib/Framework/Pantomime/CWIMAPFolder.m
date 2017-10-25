@@ -244,7 +244,8 @@ typedef enum {
 //                                           firstUid                lastUid
 // We want this:     |<--- fetchMaxMails --->|
 //
-// The Problem is that the UIDs are not sequrntial, which is why we might have to call fetchOlder multiple times.
+// The Problem is that the UIDs are not sequential, which is why we might have to call fetchOlder multiple times.
+// uidGap: 108 - 10 - 1 == 97
 // Example using the numbers from the table above:
 //
 //Case fetchOlder1
@@ -255,14 +256,19 @@ typedef enum {
 // fetchMaxMails = 20, from = [self firstUID] - fetchMaxMails == 88, to = [self firstUID] - 1 == 107
 // -> nothing fetched in UID range 88-107
 // 2nd fetchOlder call:
-// lastFetcheOlderFromUid == 88, from = 88 / 2 == 44, to = [self firstUID] - 1	 == 107
-// -> nothing fetched in UID range 44-107
-// 3rd fetchOlder call:
-// lastFetcheOlderFromUid == 44, from = 44 / 2 == 22, to = [self firstUID] - 1 == 107
-// -> nothing fetched in UID range 22-107
-// 4th fetchOlder call:
-// lastFetcheOlderFromUid == 22, from = 22 - fetchMaxMails == 2, to = [self firstUID] - 1 == 107
-// -> fetched in UID range 2-107 (7 messages. 4,5,6,7,8,9,10)
+// lastFetcheOlderFromUid == 88, from = 88  - fetchMaxMails == 68, to = [self firstUID] - 1	 == 107
+// -> nothing fetched in UID range 68-107
+// ...
+// 5th fetchOlder call:
+// lastFetcheOlderFromUid == 28, from = 28 - fetchMaxMails == 8, to = [self firstUID] - 1 == 107
+// -> fetched in UID range 8-107 (3 messages. 8,9,10)
+//
+// We have to see if this works out.
+// Possible Problems:
+// - fetchOlder is called uidGap / fetchMaxMails times. This can be often and might potentially even cause being punished by the provider (access denied times)
+// Possible solution:
+// - double the fetch range on every call to fetchOlder. This migh cause fetching a lot of mails in the end though.
+// - Fetch by msg numbers instead of UIDs. This might result in missing emails as msg numbers might be outdated.
 - (void) fetchOlder
 {
     if ([self _noOlderMessagesExistOnServer] ||
@@ -319,9 +325,6 @@ typedef enum {
 //
 // Example:
 //
-// NOTE: In this diagram, UID corresponds to the messages's sequence number,
-// which in real-live is rather rare.
-//
 // |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
 // Sequence numbers:
 // |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
@@ -344,8 +347,8 @@ typedef enum {
 //                                                                               fromUid          toUid
 //          Would result in a second fetchedRange. Move "fromUid" down.
 //          after:
-//                                                                           |<---------            |
-//                                                                        fromUid                 toUid
+//                                                                              |<---               |
+//                                                                           fromUid              toUid
 //---------------------------------------------------------------------------------------------------------------------------
 // case 3:
 //          before:
@@ -353,7 +356,7 @@ typedef enum {
 //             fromUid          toUid
 //          Would result in a second fetchedRange. Move "toUid" up.
 //          after:
-//                |           --------->|
+//                |                ---->|
 //             fromUid                toUid
 //---------------------------------------------------------------------------------------------------------------------------
 // case 4:
@@ -362,7 +365,7 @@ typedef enum {
 //                                                                 fromUid                   toUid
 //          "fromUid" is in fetchedRange. Move it up.
 //          after:
-//                                                                 ------->|                   |
+//                                                                     --->|                   |
 //                                                                      fromUid              toUid
 //---------------------------------------------------------------------------------------------------------------------------
 // case 5:
@@ -382,9 +385,9 @@ typedef enum {
 //          We ignore this fact and fetch the messaged in fetchedRange again.
 //---------------------------------------------------------------------------------------------------------------------------
 // case 7:
-//          Nothing has been fetched yet. We get tha last fetchMaxMails numbers of *sequence* numbers.
-//                            |                                                            |
-//                     fromSequenceNum                                               toSequenceNum
+//          Nothing has been fetched yet. We get the last fetchMaxMails numbers of *sequence* numbers.
+//                            |<----------------------------------- fetchMaxMails --------------------------------------->|
+//                     fromSequenceNum                                                                          toSequenceNum
 //---------------------------------------------------------------------------------------------------------------------------
 #define UNLIMITED NSIntegerMin
 - (void) fetchFrom:(NSUInteger)fromUid to:(NSInteger)toUid
@@ -442,9 +445,9 @@ typedef enum {
     // Maximum number of mails to fetch
     NSInteger fetchMaxMails = [self _maximumNumberOfMessagesToFetch];
 
+    self.lastFetchType = CWIMAPFolderFetchTypeFetch;
     if ([self lastUID] > 0) {
-        // We already fetched mails before, so lets fetch all newer ones
-        self.lastFetchType = CWIMAPFolderFetchTypeFetch;
+        // We already fetched mails before, so lets fetch all newer ones by UID
         NSInteger fromUid = [self lastUID] + 1;
         fromUid = fromUid <= 0 ? 1 : fromUid;
         [self fetchFrom:fromUid to:UNLIMITED];
