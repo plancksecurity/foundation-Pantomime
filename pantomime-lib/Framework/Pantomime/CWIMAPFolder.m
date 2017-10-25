@@ -243,6 +243,8 @@ typedef enum {
 //                                              |                       |
 //                                           firstUid                lastUid
 // We want this:     |<--- fetchMaxMails --->|
+//                                           |
+//                                 UID gap 11 - 107
 //
 // The Problem is that the UIDs are not sequential, which is why we might have to call fetchOlder multiple times.
 // uidGap: 108 - 10 - 1 == 97
@@ -267,7 +269,7 @@ typedef enum {
 // Possible Problems:
 // - fetchOlder is called uidGap / fetchMaxMails times. This can be often and might potentially even cause being punished by the provider (access denied times)
 // Possible solution:
-// - double the fetch range on every call to fetchOlder. This migh cause fetching a lot of mails in the end though.
+// - double the fetch range on every call to fetchOlder. This might cause fetching a lot of mails in the end though.
 // - Fetch by msg numbers instead of UIDs. This might result in missing emails as msg numbers might be outdated.
 - (void) fetchOlder
 {
