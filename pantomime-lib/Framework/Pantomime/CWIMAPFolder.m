@@ -20,7 +20,7 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import "Pantomime/CWIMAPFolder.h"
+#import "CWIMAPFolder+CWProtected.h"
 
 #import "Pantomime/CWConnection.h"
 #import "Pantomime/CWConstants.h"
@@ -33,26 +33,12 @@
 
 #import "NSDate+RFC2822.h"
 
-typedef enum {
-    CWIMAPFolderFetchTypeNone = 0,
-    CWIMAPFolderFetchTypeFetchOlder,
-    CWIMAPFolderFetchTypeFetch
-} CWIMAPFolderFetchType;
+
 
 @interface CWIMAPFolder ()
 @property NSMutableDictionary *uidToMsnMap;
 @property NSMutableDictionary *msnToUidMap;
-
-/** 
- The fromUID of the last fetchOlder performed. Used to 
- figure out if we did fetch messages when fetching fecthOlder()  */
-
-@property NSUInteger lastFetcheOlderFromUid;
-/**
- The type  of the last fetchOlder performed. Used to
- figure out if we need to call fetchOlder() again to receive older messages */
-
-@property CWIMAPFolderFetchType lastFetchType;
+@property BOOL isUpdatingMessageNumber;
 @end
 
 //
@@ -60,23 +46,11 @@ typedef enum {
 //
 @interface CWIMAPFolder (Private)
 
-- (NSUInteger)_maximumNumberOfMessagesToFetch;
-
-- (BOOL) _uidAlreadyFetched:(NSUInteger)uid;
-
 - (BOOL) _isInFetchedRange:(NSUInteger)uid;
-
-- (BOOL)_fetchedOlderBefore;
-
-- (BOOL)fetchedNothingOnLastFetchOlder;
 
 - (BOOL) _wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
 
 - (BOOL) _wouldCreatedLowerFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid;
-
-- (BOOL) _previouslyFetchedMessagesExist;
-
-- (BOOL) _messagesExistOnServer;
 
 - (BOOL) _isNegativeUid:(NSInteger)uid;
 
@@ -96,15 +70,13 @@ typedef enum {
 
 - (id) initWithName: (NSString *) theName
 {
-  if ((self = [super initWithName: theName]) == nil)
-    return nil;
-
-    self.lastFetchType = CWIMAPFolderFetchTypeNone;
-    self.lastFetcheOlderFromUid = NSIntegerMax;
-    self.uidToMsnMap = [NSMutableDictionary new];
-    self.msnToUidMap = [NSMutableDictionary new];
-  [self setSelected: NO];
-  return self;
+    self = [super initWithName: theName];
+    if (self) {
+        self.uidToMsnMap = [NSMutableDictionary new];
+        self.msnToUidMap = [NSMutableDictionary new];
+        [self setSelected: NO];
+    }
+    return self;
 }
 
 
@@ -114,11 +86,11 @@ typedef enum {
 - (id) initWithName: (NSString *) theName
                mode: (PantomimeFolderMode) theMode
 {
-  if ((self = [self initWithName: theName]) == nil)
-    return nil; 
-
-  _mode = theMode;
-  return self;
+    self = [self initWithName: theName];
+    if (self) {
+        _mode = theMode;
+    }
+    return self;
 }
 
 
@@ -227,7 +199,9 @@ typedef enum {
 
 #pragma mark - Fetching
 
-// fetchOlder wants to fetch fetchMaxMails number of (yet unfetched) older messages by UID:
+// Fetches fetchMaxMails number of (yet unfetched) older messages by MSN.
+// Fetching by UID did not work. Here is why:
+//
 // |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
 // Sequence numbers:
 // |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  16 |  17 |  18 |  19 |  20 |
@@ -239,72 +213,19 @@ typedef enum {
 //                                              |                       |
 //                                           firstUid                lastUid
 // We want this:     |<--- fetchMaxMails --->|
+//                                           |
+//                                 UID gap 11 - 107
 //
-// The Problem is that the UIDs are not sequrntial, which is why we might have to call fetchOlder multiple times.
-// Example using the numbers from the table above:
-//
-//Case fetchOlder1
-//
-// Problem: due to the non-sequecial UIDs (..., 9, 10, 108, ...), the logic "from = [self firstUID] - fetchMaxMails" might not work.
-// In the above Example:
-// 1st fetchOlder call:
-// fetchMaxMails = 20, from = [self firstUID] - fetchMaxMails == 88, to = [self firstUID] - 1 == 107
-// -> nothing fetched in UID range 88-107
-// 2nd fetchOlder call:
-// lastFetcheOlderFromUid == 88, from = 88 / 2 == 44, to = [self firstUID] - 1	 == 107
-// -> nothing fetched in UID range 44-107
-// 3rd fetchOlder call:
-// lastFetcheOlderFromUid == 44, from = 44 / 2 == 22, to = [self firstUID] - 1 == 107
-// -> nothing fetched in UID range 22-107
-// 4th fetchOlder call:
-// lastFetcheOlderFromUid == 22, from = 22 - fetchMaxMails == 2, to = [self firstUID] - 1 == 107
-// -> fetched in UID range 2-107 (7 messages. 4,5,6,7,8,9,10)
+// The Problem is that the UIDs are not sequential.
+// uidGap: 108 - 10 - 1 == 97
+// Handling the UID gap by making multiple calls can cause many, many calls (num calls ~= uidGap / fetchMaxMails)
+// which might even be punished by the provider by denying access. Temporarly or forever.
+// Thus we are fetching by MSNs.
 - (void) fetchOlder
 {
-    if ([self firstUID] == 1 || ![self _messagesExistOnServer]) {
-        // No older messages exist or the server has no messages at all.
-        // Do nothing.
-        // Inform the client
-        [_store signalFolderFetchCompleted];
-        return;
+    if ([self isFirstCallToFetchOlder]) {
+        [self fetchOlderProtected];
     }
-
-    self.lastFetchType = CWIMAPFolderFetchTypeFetchOlder;
-
-    if (![self _previouslyFetchedMessagesExist]) {
-        // We did never fetch messages. fetchOlder is the wrong method to handle this case.
-        self.lastFetcheOlderFromUid = 0;
-        [_store signalFolderFetchCompleted];
-        return;
-    }
-
-    NSInteger toUid = [self firstUID] - 1;
-    toUid = MAX(1, toUid);
-
-    // Maximum number of mails to fetch
-    NSInteger fetchMaxMails = [self _maximumNumberOfMessagesToFetch];
-    NSInteger fromUid = 0;
-    if ([self fetchedNothingOnLastFetchOlder]) {
-        //Case fetchOlder1
-        // Due non-sequential UIDs we did not fetch anything.
-        // Increase the UID range to fetch
-        fromUid = MIN(self.lastFetcheOlderFromUid - fetchMaxMails, self.lastFetcheOlderFromUid / 2);
-    } else {
-        fromUid = [self firstUID] - fetchMaxMails;
-    }
-    fromUid = MAX(1, fromUid);
-
-    self.lastFetcheOlderFromUid = fromUid;
-    [self fetchFrom:fromUid to:toUid];
-}
-
-
-//
-//
-//
-- (BOOL)fetchOlderNeedsReCall
-{
-    return self.lastFetchType == CWIMAPFolderFetchTypeFetchOlder && [self fetchedNothingOnLastFetchOlder];
 }
 
 
@@ -313,9 +234,6 @@ typedef enum {
 // Thus we adjust fromUid and toUid accordingly, if required.
 //
 // Example:
-//
-// NOTE: In this diagram, UID corresponds to the messages's sequence number,
-// which in real-live is rather rare.
 //
 // |<----------------------------- Existing messages on server (self.existsCount == 20) ---------------------------------->|
 // Sequence numbers:
@@ -339,8 +257,8 @@ typedef enum {
 //                                                                               fromUid          toUid
 //          Would result in a second fetchedRange. Move "fromUid" down.
 //          after:
-//                                                                           |<---------            |
-//                                                                        fromUid                 toUid
+//                                                                              |<---               |
+//                                                                           fromUid              toUid
 //---------------------------------------------------------------------------------------------------------------------------
 // case 3:
 //          before:
@@ -348,7 +266,7 @@ typedef enum {
 //             fromUid          toUid
 //          Would result in a second fetchedRange. Move "toUid" up.
 //          after:
-//                |           --------->|
+//                |                ---->|
 //             fromUid                toUid
 //---------------------------------------------------------------------------------------------------------------------------
 // case 4:
@@ -357,7 +275,7 @@ typedef enum {
 //                                                                 fromUid                   toUid
 //          "fromUid" is in fetchedRange. Move it up.
 //          after:
-//                                                                 ------->|                   |
+//                                                                     --->|                   |
 //                                                                      fromUid              toUid
 //---------------------------------------------------------------------------------------------------------------------------
 // case 5:
@@ -377,9 +295,9 @@ typedef enum {
 //          We ignore this fact and fetch the messaged in fetchedRange again.
 //---------------------------------------------------------------------------------------------------------------------------
 // case 7:
-//          Nothing has been fetched yet. We get tha last fetchMaxMails numbers of *sequence* numbers.
-//                            |                                                            |
-//                     fromSequenceNum                                               toSequenceNum
+//          Nothing has been fetched yet. We get the last fetchMaxMails numbers of *sequence* numbers.
+//                            |<----------------------------------- fetchMaxMails --------------------------------------->|
+//                     fromSequenceNum                                                                          toSequenceNum
 //---------------------------------------------------------------------------------------------------------------------------
 #define UNLIMITED NSIntegerMin
 - (void) fetchFrom:(NSUInteger)fromUid to:(NSInteger)toUid
@@ -393,7 +311,7 @@ typedef enum {
     }
 
     // No messages on server (EXISTS count is 0)
-    if (![self _messagesExistOnServer]) {
+    if (![self messagesExistOnServer]) {
         [_store signalFolderFetchCompleted];
         return;
     }
@@ -435,11 +353,10 @@ typedef enum {
 - (void) fetch
 {
     // Maximum number of mails to fetch
-    NSInteger fetchMaxMails = [self _maximumNumberOfMessagesToFetch];
+    NSInteger fetchMaxMails = [self maximumNumberOfMessagesToFetch];
 
     if ([self lastUID] > 0) {
-        // We already fetched mails before, so lets fetch all newer ones
-        self.lastFetchType = CWIMAPFolderFetchTypeFetch;
+        // We already fetched mails before, so lets fetch all newer ones by UID
         NSInteger fromUid = [self lastUID] + 1;
         fromUid = fromUid <= 0 ? 1 : fromUid;
         [self fetchFrom:fromUid to:UNLIMITED];
@@ -483,9 +400,6 @@ typedef enum {
 - (void) close
 {
   IMAPCommand theCommand;
-
-  self.lastFetchType = CWIMAPFolderFetchTypeNone;
-  self.lastFetcheOlderFromUid = NSIntegerMax;
 
   if (![self selected])
     {
@@ -780,39 +694,6 @@ typedef enum {
 // 
 @implementation CWIMAPFolder (Private)
 
-- (NSUInteger)_maximumNumberOfMessagesToFetch
-{
-    return  [((CWIMAPStore *) [self store]) maxFetchCount];
-}
-
-
-//
-//
-//
-- (BOOL) _uidAlreadyFetched:(NSUInteger)uid
-{
-    return [self _isInFetchedRange:uid];
-}
-
-
-//
-//
-//
-- (BOOL)_fetchedOlderBefore
-{
-    return self.lastFetcheOlderFromUid != 0;
-}
-
-
-//
-//
-//
-- (BOOL)fetchedNothingOnLastFetchOlder
-{
-    return [self _fetchedOlderBefore] && self.lastFetcheOlderFromUid < [self firstUID];
-}
-
-
 //
 //
 //
@@ -827,7 +708,7 @@ typedef enum {
 //
 - (BOOL) _wouldCreatedUpperFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
 {
-    return [self _previouslyFetchedMessagesExist] && fromUid > [self lastUID] + 1;
+    return [self previouslyFetchedMessagesExist] && fromUid > [self lastUID] + 1;
 }
 
 
@@ -836,25 +717,7 @@ typedef enum {
 //
 - (BOOL) _wouldCreatedLowerFetchedRangeWithFrom:(NSUInteger)fromUid to:(NSUInteger)toUid
 {
-    return [self _previouslyFetchedMessagesExist] && toUid < [self firstUID] - 1;
-}
-
-
-//
-//
-//
-- (BOOL) _previouslyFetchedMessagesExist
-{
-    return [self firstUID] != 0 && [self lastUID] != 0;
-}
-
-
-//
-//
-//
-- (BOOL) _messagesExistOnServer
-{
-    return self.existsCount > 0;
+    return [self previouslyFetchedMessagesExist] && toUid < [self firstUID] - 1;
 }
 
 

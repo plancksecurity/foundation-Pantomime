@@ -55,6 +55,7 @@
 #import <stdio.h>
 
 #import "CWService+Protected.h"
+#import "CWIMAPFolder+CWProtected.h"
 
 //
 // Some static variables used to enhance the performance.
@@ -171,8 +172,6 @@ static inline int has_literal(char *buf, NSUInteger c)
           transport: (ConnectionTransport)transport
 {
     if (thePort == 0) thePort = 143;
-
-//    _crlf = [[NSData alloc] initWithBytes: "\r\n"  length: 2];//BUFF
 
     self = [super initWithName: theName  port: thePort transport: transport];
 
@@ -2638,28 +2637,23 @@ static inline int has_literal(char *buf, NSUInteger c)
             break;
 
         case IMAP_UID_FETCH_RFC822:
-        {
             // fetchOlder() fetches message UIDs in batches.
             // It might need several calls to fetch an existing UID range.
             // See CWIMAPFolder.fetchOlder() for details.
             if ([_selectedFolder fetchOlderNeedsReCall]) {
-                [_selectedFolder fetchOlder];
-                return;
+                [_selectedFolder fetchOlderProtected];
+                break;
             }
-
             // Since we download mail all in one, we signal the
             // end of fetch when all new mails have been downloadad.
             _connection_state.opening_mailbox = NO;
-
             if ([_selectedFolder cacheManager])
             {
                 [[_selectedFolder cacheManager] synchronize];
             }
-
             //INFO(NSStringFromClass([self class]), @"DONE FETCHING FOLDER");
             POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
             PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
-        }
             break;
 
         case IMAP_UID_FETCH_FLAGS: {
@@ -3092,6 +3086,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (BOOL)isFlagsOnly
 {
     return self.flags && !self.bodyHeader && !self.bodyText &&
+    !self.rfc822 && !self.rfc822Size;
+}
+
+- (BOOL)isNoChange
+{
+    return !self.flags && !self.bodyHeader && !self.bodyText &&
     !self.rfc822 && !self.rfc822Size;
 }
 
