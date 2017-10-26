@@ -46,7 +46,7 @@
         return;
     }
 
-    NSUInteger uidOfOldestLocalMesssage = [self firstUID];
+    NSInteger uidOfOldestLocalMesssage = [self firstUID];
 
     // First fetch again the oldest message we have to update its sequence number (MSN)
     if ([self isFirstCallToFetchOlder]) {
@@ -60,7 +60,7 @@
     self.isUpdatingMessageNumber = NO;
 
 
-    NSUInteger msnOfOldestLocalMessage = [self msnForUID:uidOfOldestLocalMesssage];
+    NSInteger msnOfOldestLocalMessage = [self msnForUID:uidOfOldestLocalMesssage];
     if (!msnOfOldestLocalMessage || msnOfOldestLocalMessage == 1) {
         // We either do not know the MSN for some reason (and thus can not fetch older)
         // or we already fetched all old mails.
@@ -68,9 +68,9 @@
         [_store signalFolderFetchCompleted];
         return;
     }
-    NSUInteger fromMSN = msnOfOldestLocalMessage - [self maximumNumberOfMessagesToFetch];
+    NSInteger fromMSN = msnOfOldestLocalMessage - [self maximumNumberOfMessagesToFetch];
     fromMSN = MAX(1, fromMSN);
-    NSUInteger toMSN = msnOfOldestLocalMessage - 1;
+    NSInteger toMSN = msnOfOldestLocalMessage - 1;
 
     [_store sendCommand: IMAP_UID_FETCH_RFC822
                    info: nil
