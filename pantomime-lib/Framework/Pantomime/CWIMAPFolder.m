@@ -218,7 +218,8 @@
 //
 // The Problem is that the UIDs are not sequential.
 // uidGap: 108 - 10 - 1 == 97
-// Handling the UID gap by making multiple calls can cause many, many calls which might even be punished by the provider by denying access. Temporarly or forever.
+// Handling the UID gap by making multiple calls can cause many, many calls (num calls ~= uidGap / fetchMaxMails)
+// which might even be punished by the provider by denying access. Temporarly or forever.
 // Thus we are fetching by MSNs.
 - (void) fetchOlder
 {
