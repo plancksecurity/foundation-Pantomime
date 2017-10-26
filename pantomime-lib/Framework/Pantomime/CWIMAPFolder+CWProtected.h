@@ -23,19 +23,19 @@
 
  @return YES, if the last call to fetchOlder: did not fetch any messages, NO: otherwize
  */
-- (BOOL)fetchOlderNeedsReCall;
+- (BOOL) fetchOlderNeedsReCall;
 
 - (BOOL) messagesExistOnServer;
 
 - (BOOL) previouslyFetchedMessagesExist;
 
-- (BOOL)isFirstCallToFetchOlder;
+- (BOOL) isFirstCallToFetchOlder;
 
 /**
  The max number of mails that must be fetched.
 
  @return max number of mails to fetch
  */
-- (NSUInteger)maximumNumberOfMessagesToFetch;
+- (NSUInteger) maximumNumberOfMessagesToFetch;
 
 @end
