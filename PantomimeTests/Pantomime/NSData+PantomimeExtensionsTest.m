@@ -248,20 +248,36 @@
     [self assureEqualStrings:testees strings:realComponents];
 }
 
-#pragma mark RangeOfCString Helper
+#pragma mark - imapUtf7String
 
-- (void)assureEqualStrings:(NSArray<NSData*> *)datas strings:(NSArray<NSString*> *)strings
+// IOS-734
+-(void)testImapUtf7String
 {
-    if (datas.count != strings.count) {
-        XCTFail("Not equal");
-        return;
-    }
+    NSDictionary *utf7ImapEncodedStringForString = @{@"ä":@"&AOQ-",
+                                                     @"ö":@"&APY-",
+                                                     @"ü":@"&APw-",
+                                                     @"Ä":@"&AMQ-",
+                                                     @"Ö":@"&ANY-",
+                                                     @"Ü":@"&ANw-",
+                                                     @"ß":@"&AN8-",
+                                                     @"&":@"&-",
+                                                     @"a":@"a",
+                                                     @"A":@"A",
+                                                     @"Entwürfe":@"Entw&APw-rfe",
+                                                     @"Gelöscht":@"Gel&APY-scht"
+                                                     };
 
-    for (int i = 0; i < datas.count; ++i) {
-        NSString *testee = [[NSString alloc] initWithData:datas[i] encoding:NSUTF8StringEncoding];
-        XCTAssertEqualObjects(testee, strings[i]);
+    for (NSString *key in utf7ImapEncodedStringForString.allKeys) {
+        NSString *uft7ImapEncodedString = utf7ImapEncodedStringForString[key];
+        NSData *utf7ImapEncodedData = [uft7ImapEncodedString dataUsingEncoding:NSUTF8StringEncoding];
+
+        NSString *expected = key;
+        NSString *testee = [utf7ImapEncodedData imapUtf7String];
+        NSLog(@"expected:\t%@\ttestee:\t%@", expected, testee);
+        XCTAssertTrue([expected isEqualToString:testee]);
     }
 }
+
 #pragma mark - HELPER
 
 - (BOOL)equalsNotFound: (NSRange)range
@@ -294,6 +310,21 @@
     self.dataContainingSearchStr = [self.stringContainingSearchStr dataUsingEncoding:NSUTF8StringEncoding];
     self.dataLeadingSearchStr = [self.stringLeadingSearchStr dataUsingEncoding:NSUTF8StringEncoding];
     self.dataTrailingSearchStr = [self.stringTrailingSearchStr dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+#pragma mark RangeOfCString Helper
+
+- (void)assureEqualStrings:(NSArray<NSData*> *)datas strings:(NSArray<NSString*> *)strings
+{
+    if (datas.count != strings.count) {
+        XCTFail("Not equal");
+        return;
+    }
+
+    for (int i = 0; i < datas.count; ++i) {
+        NSString *testee = [[NSString alloc] initWithData:datas[i] encoding:NSUTF8StringEncoding];
+        XCTAssertEqualObjects(testee, strings[i]);
+    }
 }
 
 @end
