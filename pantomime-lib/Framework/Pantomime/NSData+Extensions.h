@@ -261,6 +261,14 @@
 -(NSString *) asciiString;
 
 /*!
+ @discussion This method turns the receiver into a NSString object.
+ The receiver's bytes must conform to the UTF-7_IMAP encoding, a UTF-7 variant for IMAP folders.
+ @see RFC3501-5.1.3 for details.
+ @result A NSString instance, nil if the conversion failed.
+ */
+- (NSString *) imapUtf7String;
+
+/*!
   @method cString
   @discussion This method returns the receiver's byte as a NULL terminated
               C string.

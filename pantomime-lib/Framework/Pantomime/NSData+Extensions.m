@@ -839,6 +839,16 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 //
 //
+- (NSString *) imapUtf7String
+{
+    NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF7_IMAP);
+    return AUTORELEASE([[NSString alloc] initWithData: self  encoding: encoding]);
+}
+
+
+//
+//
+//
 - (const char *) cString
 {
   NSMutableData *aMutableData;

@@ -2127,7 +2127,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSRange r1, r2;
     NSUInteger len;
 
-    theString = [[_responsesFromServer lastObject] asciiString];
+    theString = [[_responsesFromServer lastObject] imapUtf7String];
 
     //
     // We verify if we got the number of bytes to read instead of the real mailbox name.
