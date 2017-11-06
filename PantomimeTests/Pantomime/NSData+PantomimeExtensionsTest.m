@@ -273,7 +273,7 @@
 
         NSString *expected = key;
         NSString *testee = [utf7ImapEncodedData imapUtf7String];
-        NSLog(@"expected:\t%@\ttestee:\t%@", expected, testee);
+        
         XCTAssertTrue([expected isEqualToString:testee]);
     }
 }

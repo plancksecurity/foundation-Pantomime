@@ -717,15 +717,18 @@ NSRange shrinkRange(NSRange range)
 		      quick: (BOOL) theBOOL
 {
   NSData *aData;
-  
-  if (!theBOOL && !([theLine length] > 12))
+
+    if (!theBOOL && !([theLine length] > 12))
     {
       return [NSData data];
     }
-  
+
   if (theBOOL) aData = theLine;
   else aData = [theLine subdataFromIndex: 12];
-  
+
+
+  aData =  [aData unwrap];
+
   [theMessage setMessageID: [[aData dataByTrimmingWhiteSpaces] asciiString]];
   return aData;
 }

@@ -289,6 +289,12 @@
 - (NSData *) quoteWithLevel: (NSUInteger) theLevel
              wrappingLimit: (NSUInteger) theLimit;
 
+/**
+ This method is used to unwrap the string which is wrapped with "<" and ">".
+ @return If wrapped, the unwrapped string as a NSData instance, otherwize the unmodified data.
+ */
+- (NSData *) unwrap;
+
 /*!
   @method unwrapWithLimit:
   @discussion This method is used to unwrap the string using a quote limit.
