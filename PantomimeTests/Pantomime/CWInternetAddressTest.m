@@ -96,4 +96,12 @@
     XCTAssertTrue([testee.personal isEqualToString:expectedUsername]);
 }
 
+- (void)testNilPersonal
+{
+    CWInternetAddress *testee = [CWInternetAddress new];
+    [testee setAddress:@"blah@bah"];
+    [testee setPersonal:nil];
+    XCTAssertNil(testee.personal);
+}
+
 @end
