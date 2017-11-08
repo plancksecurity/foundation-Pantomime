@@ -365,6 +365,7 @@
 - (void) dealloc
 {
     INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
+    INFO(NSStringFromClass([self class]), @"dealloc done");
     RELEASE(arguments);
     RELEASE(info);
     RELEASE(tag);
