@@ -1794,6 +1794,8 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSRange aRange;
 
     BOOL done, seen_fetch, must_flush_record;
+    // Indicates whether we are creating a new mail or are updating an existing one
+    BOOL isMessageUpdate = NO;
     NSInteger i, j, count, len;
     CWCacheRecord *cacheRecord = [[CWCacheRecord alloc] init];
 
@@ -1843,9 +1845,14 @@ static inline int has_literal(char *buf, NSUInteger c)
     if (aMessage == nil) {
         INFO(NSStringFromClass([self class]), @"New message");
         aMessage = [[CWIMAPMessage alloc] init];
+    } else {
+        isMessageUpdate = YES;
     }
 
-    [aMessage setUID:theUID];
+    if (!isMessageUpdate) {
+        // A UID must never change for an existing mail
+         [aMessage setUID:theUID];
+    }
 
     // We set some initial properties to our message;
     [aMessage setInitialized: NO];
@@ -1944,11 +1951,10 @@ static inline int has_literal(char *buf, NSUInteger c)
             {
                 [aMessage setUID: uid];
                 cacheRecord.imap_uid = uid;
+                messageUpdate.uid = YES;
             }
 
             j = [aScanner scanLocation];
-
-            messageUpdate.uid = YES;
         }
         //
         // We read our flags. We usually get something like FLAGS (\Seen)
@@ -1957,19 +1963,23 @@ static inline int has_literal(char *buf, NSUInteger c)
             // We get the substring inside our ( )
             aRange = [aMutableString rangeOfString: @")"  options: 0  range: NSMakeRange(j,len-j)];
             //INFO(NSStringFromClass([self class]), @"Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
+            CWFlags *flagsBefore = aMessage.flags.copy;
             [self _parseFlags: [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]
                       message: aMessage
                        record: cacheRecord];
-
             j = aRange.location + 1;
             [aScanner setScanLocation: j];
-
-            messageUpdate.flags = YES;
+            if (!isMessageUpdate) {
+                messageUpdate.flags = YES;
+            } else if (aMessage.flags.rawFlagsAsShort != flagsBefore.rawFlagsAsShort) {
+                // For an existing message: trigger update only if the flags did actually change
+                messageUpdate.flags = YES;
+            }
         }
         //
         // We read the RFC822 message size
         //
-        else if ([aWord caseInsensitiveCompare: @"RFC822.SIZE"] == NSOrderedSame) {
+        else if ([aWord caseInsensitiveCompare: @"RFC822.SIZE"] == NSOrderedSame&& !isMessageUpdate) {
             int size;
 
             [aScanner scanInt: &size];
@@ -1989,7 +1999,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         // If we break right away, we'll skip the size and more importantly, the UID.
         //
-        else if ([aWord caseInsensitiveCompare: @"BODY[HEADER]"] == NSOrderedSame) {
+        else if ([aWord caseInsensitiveCompare: @"BODY[HEADER]"] == NSOrderedSame && !isMessageUpdate) {
             [[self.currentQueueObject.info objectForKey: @"NSData"] replaceCRLFWithLF];
             [aMessage setHeadersFromData: [self.currentQueueObject.info objectForKey: @"NSData"]  record: cacheRecord];
             messageUpdate.bodyHeader = YES;
@@ -1997,7 +2007,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         //
         //
-        else if ([aWord caseInsensitiveCompare: @"BODY[TEXT]"] == NSOrderedSame) {
+        else if ([aWord caseInsensitiveCompare: @"BODY[TEXT]"] == NSOrderedSame && !isMessageUpdate) {
             [[self.currentQueueObject.info objectForKey: @"NSData"] replaceCRLFWithLF];
             if (![aMessage content]) {
                 NSData *aData;
@@ -2029,8 +2039,9 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         //
         //
-        else if ([aWord caseInsensitiveCompare: @"RFC822"] == NSOrderedSame ||
-                 [aWord caseInsensitiveCompare: @"BODY[]"] == NSOrderedSame) {
+        else if (([aWord caseInsensitiveCompare: @"RFC822"] == NSOrderedSame ||
+                 [aWord caseInsensitiveCompare: @"BODY[]"] == NSOrderedSame)
+                 && !isMessageUpdate) {
             [[self.currentQueueObject.info objectForKey: @"NSData"] replaceCRLFWithLF];
 
             NSData *aData = [self.currentQueueObject.info objectForKey: @"NSData"];
