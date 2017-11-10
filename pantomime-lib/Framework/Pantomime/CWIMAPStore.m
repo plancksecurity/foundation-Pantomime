@@ -2024,12 +2024,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                 [self.currentQueueObject.info setObject: aMessage  forKey: @"Message"];
 
-                POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
-                PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
-
                 messageUpdate.bodyText = YES;
                 [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
                                               messageUpdate: messageUpdate];
+                
+                POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
+                PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
             }
             break;
         }
@@ -2060,15 +2060,14 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             [self.currentQueueObject.info setObject: aMessage  forKey: @"Message"];
 
-            //BUFF: check if we do not want to write *before* informing the delegate. Everywhere!
+            messageUpdate.rfc822 = YES;
+            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+                                          messageUpdate: messageUpdate];
+            
             POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self,
                               [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
             PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:),
                                PantomimeMessagePrefetchCompleted, aMessage, @"Message");
-
-            messageUpdate.rfc822 = YES;
-            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
-                                          messageUpdate: messageUpdate];
 
             break;
         }
@@ -2653,9 +2652,9 @@ static inline int has_literal(char *buf, NSUInteger c)
             break;
 
         case IMAP_UID_FETCH_RFC822:
-            // fetchOlder() fetches message UIDs in batches.
-            // It might need several calls to fetch an existing UID range.
-            // See CWIMAPFolder.fetchOlder() for details.
+            // fetchOlder() fetches the message for the oldest local UID to update its
+            // MSN before it actually fetches older messages.
+            // Thus it has to be called again after sucessfully updating the MSN.
             if ([_selectedFolder fetchOlderNeedsReCall]) {
                 [_selectedFolder fetchOlderProtected];
                 break;
