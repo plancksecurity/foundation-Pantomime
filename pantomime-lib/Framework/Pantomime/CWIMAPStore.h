@@ -253,6 +253,7 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 @property (nonatomic) BOOL bodyHeader;
 @property (nonatomic) BOOL bodyText;
 @property (nonatomic) BOOL uid;
+@property (nonatomic) BOOL msn;
 
 /*!
  @method newComplete
@@ -260,14 +261,26 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
  */
 + (instancetype _Nonnull)newComplete;
 
-- (BOOL)isFlagsOnly;
-
+/**
+ Indicates nothing has been updated but the message number.
+ We might fetch the UID only to update the MSN of a message.
+ 
+ @return YES if nothing or only the UID changed, NO otherwize
+ */
+- (BOOL)isMsnOnly;
 
 /**
- Indicates nothing has been updated but the UID.
+ Indicates nothing has been updated but the flags.
  We might fetch the UID only to update the MSN of a message.
+ 
+ @return YES if only flags or flags and UID changed, NO otherwize
+ */
+- (BOOL)isFlagsOnly;
 
- @return YES if nothing or only the UID changed, NO otherwize
+/**
+ Indicates nothing has been updated.
+
+ @return YES if nothing but UID and/or MSN changed, NO otherwize
  */
 - (BOOL)isNoChange;
 

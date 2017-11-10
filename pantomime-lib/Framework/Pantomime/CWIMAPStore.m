@@ -1845,19 +1845,21 @@ static inline int has_literal(char *buf, NSUInteger c)
     if (aMessage == nil) {
         INFO(NSStringFromClass([self class]), @"New message");
         aMessage = [[CWIMAPMessage alloc] init];
+        // We set some initial properties to our message;
+        [aMessage setInitialized: NO];
+        [aMessage setFolder: _selectedFolder];
+        [_selectedFolder appendMessage: aMessage];
     } else {
         isMessageUpdate = YES;
     }
+    
+    CWMessageUpdate *messageUpdate = [CWMessageUpdate new];
 
     if (!isMessageUpdate) {
         // A UID must never change for an existing mail
-         [aMessage setUID:theUID];
+        [aMessage setUID:theUID];
+        messageUpdate.uid = YES;
     }
-
-    // We set some initial properties to our message;
-    [aMessage setInitialized: NO];
-    [aMessage setFolder: _selectedFolder];
-    [_selectedFolder appendMessage: aMessage];
 
     // We add the new message to our cache.
     if ([_selectedFolder cacheManager]) {
@@ -1901,8 +1903,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     done = ![aScanner scanUpToCharactersFromSet: aCharacterSet  intoString: NULL];
 
-    CWMessageUpdate *messageUpdate = [CWMessageUpdate new];
-
     //
     // We tokenize our string into words
     //
@@ -1924,19 +1924,16 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             [aScanner scanInt: &msn];
             //INFO(NSStringFromClass([self class]), @"*** msn = %d", msn);
-            [aMessage setMessageNumber: msn];
+            if (aMessage.messageNumber != msn) {
+                [aMessage setMessageNumber: msn];
+                messageUpdate.msn = YES;
+            }
 
             // Store any mapping MSN -> UID that came from the server
             [_selectedFolder matchUID:theUID withMSN:theMSN];
         }
         // end of reading MSN
 
-        if (!aMessage) {
-            RELEASE(aMutableString);
-            RELEASE(aMutableArray);
-            RELEASE(aScanner);
-            return;
-        }
         //
         // We read our UID
         //
@@ -2063,6 +2060,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             [self.currentQueueObject.info setObject: aMessage  forKey: @"Message"];
 
+            //BUFF: check if we do not want to write *before* informing the delegate. Everywhere!
             POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self,
                               [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
             PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:),
@@ -2080,11 +2078,18 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         if (done && must_flush_record)
         {
-            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
-                                          messageUpdate: messageUpdate];
+            if (isMessageUpdate && !messageUpdate.isNoChange) {
+                // If the message existed locally before (is update), bother the cache manager only
+                // if something has changed on server.
+                [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+                                              messageUpdate: messageUpdate];
+            } else if (!isMessageUpdate) {
+                // Its a new mail, the cache manager has to be informed.
+                [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+                                              messageUpdate: messageUpdate];
+            }
         }
     }
-
 
     RELEASE(aScanner);
     RELEASE(aMutableString);
@@ -3090,18 +3095,28 @@ static inline int has_literal(char *buf, NSUInteger c)
     msgUpdate.rfc822 = true;
     msgUpdate.rfc822Size = true;
     msgUpdate.uid = true;
+    msgUpdate.msn = true;
     
     return msgUpdate;
 }
 
+- (BOOL)isMsnOnly
+{
+    // intentionally ignores UID changes
+    return self.msn && !self.flags && !self.bodyHeader && !self.bodyText &&
+    !self.rfc822 && !self.rfc822Size;
+}
+
 - (BOOL)isFlagsOnly
 {
+    // intentionally ignores UID changes
     return self.flags && !self.bodyHeader && !self.bodyText &&
-    !self.rfc822 && !self.rfc822Size;
+    !self.rfc822 && !self.rfc822Size && !self.msn;
 }
 
 - (BOOL)isNoChange
 {
+    // intentionally ignores UID and MSN changes
     return !self.flags && !self.bodyHeader && !self.bodyText &&
     !self.rfc822 && !self.rfc822Size;
 }
@@ -3109,9 +3124,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSString *)description
 {
     return [NSString stringWithFormat:
-            @"<CWMessageUpdate: 0x%x flags %d bodyHeader %d bodyText %d rfc822 %d rfc822Size %d uid %d>",
+            @"<CWMessageUpdate: 0x%x flags %d bodyHeader %d bodyText %d rfc822 %d rfc822Size %d uid %d msn %d>",
             (uint) self, self.flags, self.bodyHeader, self.bodyText, self.rfc822, self.rfc822Size,
-            self.uid];
+            self.uid, self.msn];
 }
 
 @end
