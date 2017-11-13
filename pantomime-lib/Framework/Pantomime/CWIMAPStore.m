@@ -3108,16 +3108,16 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 - (BOOL)isFlagsOnly
 {
-    // intentionally ignores UID changes
+    // intentionally ignores UID and MSN changes
     return self.flags && !self.bodyHeader && !self.bodyText &&
-    !self.rfc822 && !self.rfc822Size && !self.msn;
+    !self.rfc822 && !self.rfc822Size;
 }
 
 - (BOOL)isNoChange
 {
-    // intentionally ignores UID and MSN changes
+    // intentionally ignores UID
     return !self.flags && !self.bodyHeader && !self.bodyText &&
-    !self.rfc822 && !self.rfc822Size;
+    !self.rfc822 && !self.rfc822Size && !self.msn;
 }
 
 - (NSString *)description
