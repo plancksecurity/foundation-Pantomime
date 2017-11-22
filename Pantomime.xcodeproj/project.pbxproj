@@ -11,6 +11,7 @@
 		1505D6081F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */; };
 		1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */; };
 		1519EA4C1F2F434200B269A8 /* libPantomimeStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */; };
+		151DE7DD1FC586D700CDC273 /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
 		1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177381F22072600C83122 /* CWMIMEUtilityTest.m */; };
 		1521773B1F22072600C83122 /* NSString+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177391F22072600C83122 /* NSString+ExtensionsTest.m */; };
 		1568FEA31FB11C5000993EA3 /* NSData+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */; };
@@ -300,13 +301,13 @@
 		152177371F22072600C83122 /* Pantomime */ = {
 			isa = PBXGroup;
 			children = (
-				4338E3841DF1BC880070176B /* CWIMAPFolderTests.m */,
-				152177381F22072600C83122 /* CWMIMEUtilityTest.m */,
-				152177391F22072600C83122 /* NSString+ExtensionsTest.m */,
-				1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */,
-				1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */,
 				1598B2291F6812FC00582157 /* CWInternetAddressTest.m */,
+				4338E3841DF1BC880070176B /* CWIMAPFolderTests.m */,
+				1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */,
+				152177381F22072600C83122 /* CWMIMEUtilityTest.m */,
 				1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */,
+				1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */,
+				152177391F22072600C83122 /* NSString+ExtensionsTest.m */,
 			);
 			path = Pantomime;
 			sourceTree = "<group>";
@@ -779,6 +780,7 @@
 				433C51BD1E658C7D00272E19 /* CWISO8859_10.m in Sources */,
 				433C51B21E6480F800272E19 /* CWPart.m in Sources */,
 				4338E37D1DF1BC050070176B /* CWFolder.m in Sources */,
+				151DE7DD1FC586D700CDC273 /* CWIMAPStore+Protected.m in Sources */,
 				433C51BE1E658C7F00272E19 /* CWISO8859_11.m in Sources */,
 				433C51B31E64810400272E19 /* CWMIMEUtility.m in Sources */,
 				433C51BC1E658C6300272E19 /* CWISO8859_1.m in Sources */,

@@ -10,12 +10,62 @@
 #import "CWIMAPStore.h"
 
 #pragma mark - HELPER
-/**
- Make methods accessable
- */
+
+#pragma mark CRLF
+
+static NSString *CRLF = @"\r\n";
+
+@interface NSString(SWIMAPStoreTest)
+@end
+@implementation NSString(SWIMAPStoreTest)
+- (NSString *)crLfTerminated
+{
+    return [NSString stringWithFormat:@"%@%@", self, CRLF];
+}
+@end
+
+#pragma mark Publish Methos
+
 @interface CWIMAPStore (Testing)
 - (PantomimeSpecialUseMailboxType)_specialUseTypeForServerResponse:(NSString *)listResponse;
 - (PantomimeFolderType)_folderTypeForServerResponse:(NSString *)listResponse;
+@end
+
+#pragma mark Test Store
+
+#import "CWIMAPStore+Protected.h"
+#import "CWThreadSafeData.h"
+@class TestableImapStore;
+
+@protocol TestableImapStoreDelegate
+- (void)testableImapStoreDidCallParseBad:(TestableImapStore *)store;
+@end
+
+@interface TestableImapStore:CWIMAPStore
+@property (weak, nonatomic) id<TestableImapStoreDelegate> testDelegate;
+@property (weak, nonatomic) CWIMAPQueueObject *currentQueueObject;
+- (void)setReadBufferData:(NSData *)data;
+@end
+@implementation TestableImapStore
+@dynamic currentQueueObject;
+- (void)setReadBufferData:(NSData *)data
+{
+    _rbuf = [[CWThreadSafeData alloc] initWithData:data];
+}
+- (void) _parseBAD
+{
+    [self.testDelegate testableImapStoreDidCallParseBad:self];
+}
+@end
+
+@interface StoreTestDelegate:NSObject<TestableImapStoreDelegate>
+@property BOOL parseBadCalled;
+@end
+@implementation StoreTestDelegate
+- (void)testableImapStoreDidCallParseBad:(TestableImapStore *)store
+{
+    self.parseBadCalled = YES;
+}
 @end
 
 #pragma mark - CWIMAPStoreTest
@@ -130,6 +180,32 @@
     PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeUnmarked;
 
     XCTAssertEqual(expected, testee);
+}
+
+#pragma mark - updateRead
+
+//IOS-292: server responce without sequence number ignored
+- (void)testUpdateRead_BadWithoutSequenceNumber {
+    NSString *serverResponseString = [@"* BAD internal server error" crLfTerminated];
+    StoreTestDelegate *delegate = [StoreTestDelegate new];
+    TestableImapStore *store = [TestableImapStore new];
+    store.testDelegate = delegate;
+    NSData *serverResponseData = [serverResponseString dataUsingEncoding:NSUTF8StringEncoding];
+    [store setReadBufferData:serverResponseData];
+    [store updateRead];
+    XCTAssertTrue(delegate.parseBadCalled);
+}
+
+- (void)testUpdateRead_BadWithSequenceNumber {
+    NSString *serverResponseString =
+    [@"A00000009 BAD Error in IMAP command FETCH: Invalid messageset (0.000 + 0.040 + 0.039 secs)" crLfTerminated];
+    StoreTestDelegate *delegate = [StoreTestDelegate new];
+    TestableImapStore *store = [TestableImapStore new];
+    store.testDelegate = delegate;
+    NSData *serverResponseData = [serverResponseString dataUsingEncoding:NSUTF8StringEncoding];
+    [store setReadBufferData:serverResponseData];
+    [store updateRead];
+    XCTAssertTrue(delegate.parseBadCalled);
 }
 
 @end

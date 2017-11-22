@@ -588,6 +588,15 @@ static inline int has_literal(char *buf, NSUInteger c)
                 [self _parseOK];
             }
             //
+            // We got a BAD response without sequence number.
+            // Example: "* BAD internal server error"
+            // Stop parsing. _parseBAD is responsable for handling it.
+            //
+            else if (len && strncasecmp("BAD", buf, 3) == 0)
+            {
+                [self _parseBAD];
+            }
+            //
             // We check if we got disconnected from the IMAP server.
             // If it's the case, we invoke -reconnect.
             //
