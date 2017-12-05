@@ -351,7 +351,7 @@ NSRange shrinkRange(NSRange range)
     }
 
   //
-  // We decode the parameter "name" iif the thePart is an instance of Part
+  // We decode the parameter "name" if the thePart is an instance of Part
   //
   if ([thePart isKindOfClass: [CWPart class]])
   {
