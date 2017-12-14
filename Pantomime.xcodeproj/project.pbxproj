@@ -24,6 +24,8 @@
 		15B3B0FA1F5DA3B600EF9D9E /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B0F91F5DA3B600EF9D9E /* CWLogger.m */; };
 		15B3F0C61F5ED64900BF531F /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
 		15B3F0CA1F5EE35E00BF531F /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
+		15E019A01FE2B65300DA2973 /* CWParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E0199F1FE2B65300DA2973 /* CWParserTest.m */; };
+		15E019A31FE2C57D00DA2973 /* NSString+PantomimeTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E019A21FE2C57D00DA2973 /* NSString+PantomimeTestHelper.m */; };
 		431AD4391F7E479B000247A7 /* MailWithJpgAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */; };
 		431AD43B1F7E4D8F000247A7 /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */; };
 		4338E37C1DF1BBFF0070176B /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
@@ -154,6 +156,9 @@
 		15B3F0C51F5ED64900BF531F /* CWService+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWService+Protected.m"; sourceTree = "<group>"; };
 		15B3F0C81F5EE35E00BF531F /* CWIMAPStore+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWIMAPStore+Protected.h"; sourceTree = "<group>"; };
 		15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPStore+Protected.m"; sourceTree = "<group>"; };
+		15E0199F1FE2B65300DA2973 /* CWParserTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWParserTest.m; sourceTree = "<group>"; };
+		15E019A11FE2C57D00DA2973 /* NSString+PantomimeTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+PantomimeTestHelper.h"; sourceTree = "<group>"; };
+		15E019A21FE2C57D00DA2973 /* NSString+PantomimeTestHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+PantomimeTestHelper.m"; sourceTree = "<group>"; };
 		431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithJpgAttached.txt; sourceTree = "<group>"; };
 		431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
 		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
@@ -305,6 +310,7 @@
 				4338E3841DF1BC880070176B /* CWIMAPFolderTests.m */,
 				1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */,
 				152177381F22072600C83122 /* CWMIMEUtilityTest.m */,
+				15E0199F1FE2B65300DA2973 /* CWParserTest.m */,
 				1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */,
 				1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */,
 				152177391F22072600C83122 /* NSString+ExtensionsTest.m */,
@@ -384,6 +390,8 @@
 			children = (
 				433C51AD1E64800800272E19 /* TestUtil.h */,
 				433C51AE1E64800800272E19 /* TestUtil.m */,
+				15E019A11FE2C57D00DA2973 /* NSString+PantomimeTestHelper.h */,
+				15E019A21FE2C57D00DA2973 /* NSString+PantomimeTestHelper.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -791,6 +799,7 @@
 				433C51CF1E658CC800272E19 /* CWWINDOWS_1253.m in Sources */,
 				4338E3881DF1BDA00070176B /* CWConstants.m in Sources */,
 				433C51CE1E658CC500272E19 /* CWWINDOWS_1252.m in Sources */,
+				15E019A01FE2B65300DA2973 /* CWParserTest.m in Sources */,
 				433C51B11E6480F400272E19 /* CWMessage.m in Sources */,
 				4338E3861DF1BD750070176B /* CWContainer.m in Sources */,
 				4338E3871DF1BD850070176B /* CWFlags.m in Sources */,
@@ -818,6 +827,7 @@
 				433C51C51E658C9600272E19 /* CWISO8859_5.m in Sources */,
 				433C51A51E647A1300272E19 /* MailParsingTests.m in Sources */,
 				433C51BB1E658C4E00272E19 /* CWCharset.m in Sources */,
+				15E019A31FE2C57D00DA2973 /* NSString+PantomimeTestHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

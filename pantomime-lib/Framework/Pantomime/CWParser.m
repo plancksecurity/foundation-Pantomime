@@ -1020,12 +1020,14 @@ NSRange shrinkRange(NSRange range)
   
   //
   // Look for the first occurrence of '=' before the end of the line within
-  // our range. That marke the beginning of the value. If we don't find one,
+  // our range. That marks the beginning of the value. If we don't find one,
   // we set the beggining right after the end of the key tag
   //
-  r1 = [theLine rangeOfCString: "="
+    NSUInteger searchStart = NSMaxRange(theRange) - 1; // - 1 because we need to start the search *before* the "=" in "name=" to be able to find the "="
+    NSUInteger endOfLine = len-NSMaxRange(theRange);
+    r1 = [theLine rangeOfCString: "="
 		options: 0
-		range: NSMakeRange(NSMaxRange(theRange), len-NSMaxRange(theRange))];
+		range: NSMakeRange(searchStart, endOfLine)];
 
   if (r1.location != NSNotFound)
     {
