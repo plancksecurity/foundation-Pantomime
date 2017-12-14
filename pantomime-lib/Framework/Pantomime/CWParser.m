@@ -1031,21 +1031,6 @@ NSRange shrinkRange(NSRange range)
 
   if (r1.location != NSNotFound)
     {
-      // If "=" was found, but after ";", something is very broken
-      // and we just return nil. That can happen if we have a Content-Type like:
-      //
-      // Content-Type: text/x-patch; name=mpg321-format-string.diff; charset=ISO-8859-1
-      //
-      // "format" is part of the _name_ parameter. It has nothing to do with format=flowed.
-      //
-#warning FIXME - consider format= when passing the parameter range
-#if 0
-      if (r1.location > value_end)
-	{
-	  return nil;
-	}
-#endif
-      
       value_start = r1.location+r1.length;
     }
   else
