@@ -361,7 +361,7 @@
         fromUid = fromUid <= 0 ? 1 : fromUid;
         [self fetchFrom:fromUid to:UNLIMITED];
     } else {
-        //case 7
+        // case 7
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
@@ -378,6 +378,16 @@
              upperMessageSequenceNumber];
         }
     }
+}
+
+
+//
+//
+//
+- (void) fetchUidsForNewMails
+{
+    NSInteger from = [self lastUID] + 1;
+    [_store sendCommand:IMAP_UID_FETCH_UIDS  info:nil arguments:@"UID FETCH %u:* (UID)", from];
 }
 
 #pragma mark -

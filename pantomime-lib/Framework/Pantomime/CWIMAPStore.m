@@ -121,6 +121,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseCAPABILITY;
 - (void) _parseEXISTS;
 - (void) _parseEXPUNGE;
+- (void) _parseFETCH_UIDS;
 - (void) _parseFETCH: (NSInteger) theMSN;
 - (void) _parseLIST;
 - (void) _parseLSUB;
@@ -639,7 +640,14 @@ static inline int has_literal(char *buf, NSUInteger c)
             else if (len && strncasecmp("FETCH", buf, 5) == 0 &&
                      (!self.currentQueueObject || (self.currentQueueObject && self.currentQueueObject.literal == 0)))
             {
-                [self _parseFETCH: msn];
+                switch (_lastCommand)
+                {
+                    case IMAP_UID_FETCH_UIDS:
+                        [self _parseFETCH_UIDS];
+                        break;
+                    default:
+                        [self _parseFETCH: msn];
+                }
             }
             //
             //
@@ -1720,6 +1728,23 @@ static inline int has_literal(char *buf, NSUInteger c)
     return 0;
 }
 
+
+/**
+ Example: "* 5 FETCH (UID 905)"
+ */
+- (void) _parseFETCH_UIDS
+{
+    NSArray *uidFromResponse = [self _uniqueIdentifiersFromData: [_responsesFromServer lastObject]];
+    NSArray *alreadyFetchedUids = self.currentQueueObject.info[@"Uids"];
+    if (!alreadyFetchedUids) {
+        alreadyFetchedUids = uidFromResponse;
+    } else {
+        alreadyFetchedUids = [alreadyFetchedUids arrayByAddingObjectsFromArray:uidFromResponse];
+    }
+    // Store/update the results in our command queue.
+    [self.currentQueueObject.info setObject: alreadyFetchedUids  forKey: @"Uids"];
+}
+
 //
 //
 // Examples of FETCH responses:
@@ -2679,11 +2704,20 @@ static inline int has_literal(char *buf, NSUInteger c)
             POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
             PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
             break;
-
         case IMAP_UID_FETCH_FLAGS: {
             _connection_state.opening_mailbox = NO;
             POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
             PERFORM_SELECTOR_2(_delegate, @selector(folderSyncCompleted:), PantomimeFolderSyncCompleted, _selectedFolder, @"Folder");
+            //BUFF: is here a break; missing?
+        }
+
+        case IMAP_UID_FETCH_UIDS: {
+            _connection_state.opening_mailbox = NO;
+            NSDictionary *info = @{@"Folder":_selectedFolder,
+                                   @"Uids":self.currentQueueObject.info[@"Uids"]};
+            POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, info);//[NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+            PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderSyncCompleted, info);
+            break;
         }
 
         case IMAP_UID_SEARCH_ALL:

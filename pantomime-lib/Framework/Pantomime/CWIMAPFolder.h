@@ -158,6 +158,11 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 */
 - (void) fetch;
 
+/**
+ Fetches the UIDs of all unknown (to us) messages.
+ */
+- (void) fetchUidsForNewMails;
+
 /*!
  @discussion Syncs the flags of existing mails (until the given lastUID),
  thereby finding out flag changes and deleted messages.
