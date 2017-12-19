@@ -1735,14 +1735,14 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseFETCH_UIDS
 {
     NSArray *uidFromResponse = [self _uniqueIdentifiersFromData: [_responsesFromServer lastObject]];
-    NSArray *alreadyFetchedUids = self.currentQueueObject.info[@"Uids"];
-    if (!alreadyFetchedUids) {
-        alreadyFetchedUids = uidFromResponse;
+    NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
+    if (!alreadyParsedUids) {
+        alreadyParsedUids = uidFromResponse;
     } else {
-        alreadyFetchedUids = [alreadyFetchedUids arrayByAddingObjectsFromArray:uidFromResponse];
+        alreadyParsedUids = [alreadyParsedUids arrayByAddingObjectsFromArray:uidFromResponse];
     }
     // Store/update the results in our command queue.
-    [self.currentQueueObject.info setObject: alreadyFetchedUids  forKey: @"Uids"];
+    [self.currentQueueObject.info setObject: alreadyParsedUids  forKey: @"Uids"];
 }
 
 //
