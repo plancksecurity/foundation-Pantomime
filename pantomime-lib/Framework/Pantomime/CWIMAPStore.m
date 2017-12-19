@@ -2708,7 +2708,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             _connection_state.opening_mailbox = NO;
             POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
             PERFORM_SELECTOR_2(_delegate, @selector(folderSyncCompleted:), PantomimeFolderSyncCompleted, _selectedFolder, @"Folder");
-            //BUFF: is here a break; missing?
+            break;
         }
 
         case IMAP_UID_FETCH_UIDS: {
