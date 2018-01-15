@@ -54,6 +54,7 @@
 #import <ctype.h>
 #import <stdio.h>
 
+#import "CWOAuthUtils.h"
 #import "CWService+Protected.h"
 #import "CWIMAPFolder+CWProtected.h"
 
@@ -494,7 +495,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     [self _parseAUTHENTICATE_CRAM_MD5];
                     break;
                 }
-                else if (_lastCommand == IMAP_AUTHENTICATE_LOGIN)
+                else if (_lastCommand == IMAP_AUTHENTICATE_LOGIN) //BUFF: do we need tohandle IMAP_AUTHENTICATE_XOAUTH2? Should simply answer with OK response afaics: "S: A01 OK Success"
                 {
                     [self _parseAUTHENTICATE_LOGIN];
                     break;
@@ -782,7 +783,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 //
 //
-- (int) reconnect
+- (int) reconnect //BUFF: reconnect - Nope.
 {
     dispatch_sync(self.serviceQueue, ^{
         //INFO(NSStringFromClass([self class]), @"CWIMAPStore: -reconnect");
@@ -861,6 +862,17 @@ static inline int has_literal(char *buf, NSUInteger c)
         else if (theMechanism && [theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
         {
             [self sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
+            return;
+        }
+        // AUTH=XOAUTH2
+        else if (theMechanism && [theMechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame)
+        {
+            //BUFF: untested impl!
+            NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:theUsername
+                                                                            accessToken:thePassword];
+            [self sendCommand: IMAP_AUTHENTICATE_XOAUTH2
+                         info: nil
+                    arguments: @"AUTHENTICATE XOAUTH2 %@", clientResponse];
             return;
         }
 
@@ -1496,6 +1508,9 @@ static inline int has_literal(char *buf, NSUInteger c)
             // Probably wrong credentials.
             // Example case: 0003 BAD [AUTHENTICATIONFAILED] AUTHENTICATE Invalid credentials
             AUTHENTICATION_FAILED(_delegate, _mechanism);
+            break;
+        case IMAP_AUTHENTICATE_XOAUTH2:
+            AUTHENTICATION_FAILED(_delegate, _mechanism); //BUFF: untested impl!
             break;
         case IMAP_SELECT: {
             [_queue removeLastObject];
@@ -2405,6 +2420,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         case IMAP_AUTHENTICATE_CRAM_MD5:
         case IMAP_AUTHENTICATE_LOGIN:
+        case IMAP_AUTHENTICATE_XOAUTH2:
+            //BUFF: more todo? untested impl!
         case IMAP_LOGIN:
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
@@ -2570,6 +2587,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         case IMAP_AUTHENTICATE_CRAM_MD5:
         case IMAP_AUTHENTICATE_LOGIN:
+        case IMAP_AUTHENTICATE_XOAUTH2:
+            //BUFF: more todo? untested impl!
         case IMAP_LOGIN:
             if (_connection_state.reconnecting)
             {

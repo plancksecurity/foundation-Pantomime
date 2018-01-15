@@ -37,6 +37,7 @@
 #import "CWThreadSafeArray.h"
 #import "CWThreadSafeData.h"
 
+#import "CWOAuthUtils.h"
 #import "CWService+Protected.h"
 
 // The hostname/domain used to do EHLO/HELO
@@ -86,6 +87,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 - (void) _parseAUTH_LOGIN;
 - (void) _parseAUTH_LOGIN_CHALLENGE;
 - (void) _parseAUTH_PLAIN;
+- (void) _parseAUTH_OAUTH2;
 - (void) _parseAUTHORIZATION;
 - (void) _parseDATA;
 - (void) _parseEHLO;
@@ -326,6 +328,14 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         else if ([theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
         {
             [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
+        }
+        else if ([theMechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame) //BUFF:
+        {
+            //BUFF: untested impl!
+            NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:_username
+                                                                            accessToken:_password];
+            NSString *args = [NSString stringWithFormat:@"AUTH XOAUTH2 %@", clientResponse];
+            [self sendCommand: SMTP_AUTH_XOAUTH2  arguments: args];
         }
         else
         {
@@ -616,6 +626,31 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   else
     {
       AUTHENTICATION_FAILED(_delegate, @"PLAIN");
+    }
+}
+
+
+//
+//
+//
+- (void) _parseAUTH_OAUTH2
+{
+    //BUFF: untested impl!
+    /*
+     Example:
+     C: AUTH XOAUTH2 dXNlcj1zb21ldXNlckBleGFtcGxlLmNvbQFhdXRoPUJlYXJl
+     ciB2RjlkZnQ0cW1UYzJOdmIzUmxja0JoZEhSaGRtbHpkR0V1WTI5dENnPT0BAQ==
+     S: 235 2.7.0 Accepted
+     */
+    NSData *aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "235"])
+    {
+        AUTHENTICATION_COMPLETED(_delegate, @"XOAUTH2");
+    }
+    else
+    {
+        AUTHENTICATION_FAILED(_delegate, @"XOAUTH2");
     }
 }
 
@@ -1020,6 +1055,10 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	case SMTP_AUTH_PLAIN:
 	  [self _parseAUTH_PLAIN];
 	  break;
+
+    case SMTP_AUTH_XOAUTH2: //BUFF: untested impl!
+        [self _parseAUTH_OAUTH2];
+        break;
 
 	case SMTP_DATA:
 	  [self _parseDATA];
