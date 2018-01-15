@@ -783,7 +783,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 //
 //
-- (int) reconnect //BUFF: reconnect - Nope.
+- (int) reconnect
 {
     dispatch_sync(self.serviceQueue, ^{
         //INFO(NSStringFromClass([self class]), @"CWIMAPStore: -reconnect");
@@ -1496,6 +1496,8 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSData *aData;
 
     aData = [_responsesFromServer lastObject];
+
+    INFO(NSStringFromClass([self class]), @"IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
 
     switch (_lastCommand)
     {
@@ -2409,7 +2411,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     aData = [_responsesFromServer lastObject];
 
-    //INFO(NSStringFromClass([self class]), @"IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
+    INFO(NSStringFromClass([self class]), @"IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
 
     switch (_lastCommand)
     {
