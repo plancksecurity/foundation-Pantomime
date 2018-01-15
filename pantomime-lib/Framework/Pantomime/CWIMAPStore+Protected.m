@@ -227,7 +227,17 @@
         self.currentQueueObject = aQueueObject;
     }
 
-    INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
+    BOOL isPrivate = NO;
+    if (self.currentQueueObject.command == IMAP_LOGIN) {
+        isPrivate = YES;
+    }
+
+    if (isPrivate) {
+        INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
+    } else {
+        INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
+    }
+
     _lastCommand = self.currentQueueObject.command;
 
     [self bulkWriteData:@[self.currentQueueObject.tag,
