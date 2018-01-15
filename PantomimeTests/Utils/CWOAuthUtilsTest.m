@@ -17,7 +17,6 @@
 
 //- (void)testBase64EncodedClientResponseForUser {
 //    /*
-//     //BUFF: move to tet, delete
 //     base64("user=" {User} "^Aauth=Bearer " {Access Token} "^A^A")
 //     using the base64 encoding mechanism defined in RFC 4648. ^A represents a Control+A (\001).
 //

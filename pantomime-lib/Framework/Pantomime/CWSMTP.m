@@ -329,7 +329,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         {
             [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
         }
-        else if ([theMechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame) //BUFF:
+        else if ([theMechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame)
         {
             //BUFF: untested impl!
             NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:_username
