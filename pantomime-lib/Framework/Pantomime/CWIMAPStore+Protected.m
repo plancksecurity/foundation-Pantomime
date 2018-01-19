@@ -238,6 +238,11 @@
         INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
     }
 
+    if (self.currentQueueObject == nil || self.currentQueueObject.arguments == nil) {
+        // For IOS-390, set a breakpoint here, the app will soon crash.
+        INFO(NSStringFromClass([self class]), @"IOS-390, why sending nil?");
+    }
+
     _lastCommand = self.currentQueueObject.command;
 
     [self bulkWriteData:@[self.currentQueueObject.tag,
