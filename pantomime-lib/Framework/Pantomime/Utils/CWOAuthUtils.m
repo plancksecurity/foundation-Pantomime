@@ -38,7 +38,7 @@
  */
 + (NSString *)clientResponseForUser:(NSString *)user accessToken:(NSString *)accessToken
 {
-        return [NSString stringWithFormat: @"user=%@^Aauth=Bearer %@^A^A", user, accessToken];
+    return [NSString stringWithFormat: @"user=%@\001auth=Bearer %@\001\001", user, accessToken];
 }
 
 @end
