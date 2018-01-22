@@ -17,7 +17,7 @@
 {
     NSString *response = [self clientResponseForUser:user accessToken:accessToken];
     NSData *data = [response dataUsingEncoding:NSASCIIStringEncoding];
-    return [data base64EncodedStringWithOptions:0]; //BUFF: correct base64 according to RFC 4648?
+    return [data base64EncodedStringWithOptions:0];
 }
 
 // MARK: - INTERNAL

@@ -495,11 +495,17 @@ static inline int has_literal(char *buf, NSUInteger c)
                     [self _parseAUTHENTICATE_CRAM_MD5];
                     break;
                 }
-                else if (_lastCommand == IMAP_AUTHENTICATE_LOGIN) //BUFF: do we need tohandle IMAP_AUTHENTICATE_XOAUTH2? Should simply answer with OK response afaics: "S: A01 OK Success"
+                else if (_lastCommand == IMAP_AUTHENTICATE_LOGIN)
                 {
                     [self _parseAUTHENTICATE_LOGIN];
                     break;
                 }
+
+                //IMAP_AUTHENTICATE_XOAUTH2 answers with OK response, therefore it is intentionally
+                // not nahdled here.
+                // Example response from gmail IMAP_AUTHENTICATE_XOAUTH2:
+                // "0002 OK Thats all she wrote! o3mb34104947ljc"
+
                 else if (self.currentQueueObject && _lastCommand == IMAP_LOGIN)
                 {
                     //INFO(NSStringFromClass([self class]), @"writing password |%s|", [[self.currentQueueObject.info objectForKey: @"Password"] cString]);
@@ -867,7 +873,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         // AUTH=XOAUTH2
         else if (theMechanism && [theMechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame)
         {
-            //BUFF: untested impl!
             NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:theUsername
                                                                             accessToken:thePassword];
             [self sendCommand: IMAP_AUTHENTICATE_XOAUTH2
@@ -1506,13 +1511,11 @@ static inline int has_literal(char *buf, NSUInteger c)
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
         case IMAP_AUTHENTICATE_CRAM_MD5:
+        case IMAP_AUTHENTICATE_XOAUTH2:
         case IMAP_AUTHENTICATE_LOGIN:
             // Probably wrong credentials.
             // Example case: 0003 BAD [AUTHENTICATIONFAILED] AUTHENTICATE Invalid credentials
             AUTHENTICATION_FAILED(_delegate, _mechanism);
-            break;
-        case IMAP_AUTHENTICATE_XOAUTH2:
-            AUTHENTICATION_FAILED(_delegate, _mechanism); //BUFF: untested impl!
             break;
         case IMAP_SELECT: {
             [_queue removeLastObject];
@@ -2423,7 +2426,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         case IMAP_AUTHENTICATE_CRAM_MD5:
         case IMAP_AUTHENTICATE_LOGIN:
         case IMAP_AUTHENTICATE_XOAUTH2:
-            //BUFF: more todo? untested impl!
         case IMAP_LOGIN:
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
@@ -2590,7 +2592,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         case IMAP_AUTHENTICATE_CRAM_MD5:
         case IMAP_AUTHENTICATE_LOGIN:
         case IMAP_AUTHENTICATE_XOAUTH2:
-            //BUFF: more todo? untested impl!
         case IMAP_LOGIN:
             if (_connection_state.reconnecting)
             {

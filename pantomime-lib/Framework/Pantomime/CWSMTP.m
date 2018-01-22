@@ -331,7 +331,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         }
         else if ([theMechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame)
         {
-            //BUFF: untested impl!
             NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:_username
                                                                             accessToken:_password];
             NSString *args = [NSString stringWithFormat:@"AUTH XOAUTH2 %@", clientResponse];
@@ -635,9 +634,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseAUTH_OAUTH2
 {
-    //BUFF: untested impl!
     /*
-     Example:
+     Example gmail (linebreak not included):
      C: AUTH XOAUTH2 dXNlcj1zb21ldXNlckBleGFtcGxlLmNvbQFhdXRoPUJlYXJl
      ciB2RjlkZnQ0cW1UYzJOdmIzUmxja0JoZEhSaGRtbHpkR0V1WTI5dENnPT0BAQ==
      S: 235 2.7.0 Accepted
@@ -1056,7 +1054,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	  [self _parseAUTH_PLAIN];
 	  break;
 
-    case SMTP_AUTH_XOAUTH2: //BUFF: untested impl!
+    case SMTP_AUTH_XOAUTH2:
         [self _parseAUTH_OAUTH2];
         break;
 
