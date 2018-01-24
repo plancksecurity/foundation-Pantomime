@@ -653,7 +653,10 @@
 
         return (aString != nil ? aString : self);
 #else
-        return self;
+        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF7_IMAP);
+        NSData *data = [self dataUsingEncoding: encoding];
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+        return result;
 #endif
     }
 

@@ -10,9 +10,32 @@
 #import "NSString+Extensions.h"
 
 @interface NSString_ExtensionsTest : XCTestCase
+@property NSDictionary *imapUtf7ForUtf8;
 @end
 
 @implementation NSString_ExtensionsTest
+
+- (void)setUp
+{
+    self.imapUtf7ForUtf8 = @{@"[Gmail]/Entwürfe":@"[Gmail]/Entw&APw-rfe",
+                             @"äöüÄÖÜ":@"&AOQA9gD8AMQA1gDc-",
+                             @"AäAöAüAÄAÖAÜA":@"A&AOQ-A&APY-A&APw-A&AMQ-A&ANY-A&ANw-A"};
+}
+
+#pragma mark - modifiedUTF7String
+
+- (void)testModifiedUTF7String
+{
+    for (int i = 0; i < self.imapUtf7ForUtf8.count; ++i) {
+
+        NSString *testUtf8 = self.imapUtf7ForUtf8.allKeys[i];
+        NSString *expected = self.imapUtf7ForUtf8[testUtf8];
+        NSString *testeeImapUtf7 = [testUtf8 modifiedUTF7String];
+        XCTAssertEqualObjects(testeeImapUtf7, expected);
+    }
+}
+
+#pragma mark - stringWithData:charset:
 
 - (void)testStringWithData_utf8 {
     NSString *nameEncoding = @"utf-8";
