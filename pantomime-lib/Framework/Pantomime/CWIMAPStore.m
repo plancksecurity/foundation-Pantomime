@@ -502,7 +502,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 }
 
                 //IMAP_AUTHENTICATE_XOAUTH2 answers with OK response, therefore it is intentionally
-                // not nahdled here.
+                // not handled here.
                 // Example response from gmail IMAP_AUTHENTICATE_XOAUTH2:
                 // "0002 OK Thats all she wrote! o3mb34104947ljc"
 
