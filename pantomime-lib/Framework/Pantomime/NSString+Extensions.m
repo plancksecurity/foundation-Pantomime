@@ -654,8 +654,7 @@
 #else
         NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF7_IMAP);
         NSData *data = [self dataUsingEncoding: encoding];
-        NSString *result = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-        return result;
+        return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 #endif
     }
 
