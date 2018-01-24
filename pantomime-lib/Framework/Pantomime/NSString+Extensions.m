@@ -455,7 +455,6 @@
     //
     //
     //
-#warning return Charset instead?
 - (NSString *) charset
     {
         NSMutableArray *aMutableArray;
@@ -665,16 +664,16 @@
     //
 - (NSString *) stringFromModifiedUTF7
     {
-#ifndef MACOSX
         NSMutableData *aMutableData;
 
         BOOL escaped;
         unichar ch;
-        int i, len;
+        unsigned long i, len;
 
         aMutableData = [[NSMutableData alloc] init];
+#ifndef MACOSX
         AUTORELEASE(aMutableData);
-
+#endif
         len = [self length];
         escaped = NO;
 
@@ -724,10 +723,12 @@
             }
         }
 
-        return AUTORELEASE([[NSString alloc] initWithData: aMutableData  encoding: NSUTF7StringEncoding]);
+#ifndef MACOSX
+        NSStringEncoding encoding = NSUTF7StringEncoding;
 #else
-        return nil;
+        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF7);
 #endif
+        return AUTORELEASE([[NSString alloc] initWithData: aMutableData  encoding: encoding]);
     }
 
 
