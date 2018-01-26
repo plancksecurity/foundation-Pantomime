@@ -35,18 +35,6 @@
     }
 }
 
-#pragma mark - stringFromModifiedUTF7
-
-- (void)testStringFromModifiedUTF7
-{
-    for (int i = 0; i < self.imapUtf7ForUtf8.count; ++i) {
-        NSString *expected = self.imapUtf7ForUtf8.allKeys[i];
-        NSString *testImapUtf7 = self.imapUtf7ForUtf8[expected];
-        NSString *testeeUtf8 = [testImapUtf7 stringFromModifiedUTF7];
-        XCTAssertEqualObjects(testeeUtf8, expected);
-    }
-}
-
 #pragma mark - stringWithData:charset:
 
 - (void)testStringWithData_utf8 {

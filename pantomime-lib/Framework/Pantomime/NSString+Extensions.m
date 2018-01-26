@@ -663,6 +663,12 @@
     //
 - (NSString *) stringFromModifiedUTF7
     {
+#ifdef MACOSX
+        // This implementation is clearly wrong.
+        // Fixing it causes all kinds of wrong foldername issue thought.
+        return self;
+#else
+        
         NSMutableData *aMutableData;
 
         BOOL escaped;
@@ -670,9 +676,8 @@
         unsigned long i, len;
 
         aMutableData = [[NSMutableData alloc] init];
-#ifndef MACOSX
         AUTORELEASE(aMutableData);
-#endif
+
         len = [self length];
         escaped = NO;
 
@@ -722,12 +727,10 @@
             }
         }
 
-#ifndef MACOSX
         NSStringEncoding encoding = NSUTF7StringEncoding;
-#else
-        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF7);
-#endif
+
         return AUTORELEASE([[NSString alloc] initWithData: aMutableData  encoding: encoding]);
+#endif
     }
 
 
