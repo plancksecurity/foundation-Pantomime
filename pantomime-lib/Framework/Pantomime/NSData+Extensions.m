@@ -423,13 +423,13 @@ static const char *hexDigit = "0123456789ABCDEF";
 
     bytes = [self bytes];
 
-    if (!bytes || !theCString || strlen(bytes) == 0 || strcmp(theCString, "") == 0 ||
+    len = [self length];
+    if (!bytes || !theCString || len == 0 || strcmp(theCString, "") == 0 ||
         theRange.length == 0) {
         return NSMakeRange(NSNotFound,0);
     }
 
 
-  len = [self length];
   slen = strlen(theCString);
 
     if (theRange.length < slen) {
