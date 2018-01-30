@@ -28,7 +28,7 @@ static NSString *CRLF = @"\r\n";
 
 @interface CWIMAPStore (Testing)
 - (PantomimeSpecialUseMailboxType)_specialUseTypeForServerResponse:(NSString *)listResponse;
-- (PantomimeFolderType)_folderTypeForServerResponse:(NSString *)listResponse;
+- (PantomimeFolderAttribute)_folderAttributesForServerResponse:(NSString *)listResponse;
 @end
 
 #pragma mark Test Store
@@ -130,8 +130,8 @@ static NSString *CRLF = @"\r\n";
 - (void)testFolderTypeFor_HasChildren {
     CWIMAPStore *store = [CWIMAPStore new];
     NSString *serverResponse = @"* LIST (\\All \\HasChildren) \"/\" \"Bulk Mail\"";
-    PantomimeFolderType testee = [store _folderTypeForServerResponse:serverResponse];
-    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeHoldsFolders;
+    PantomimeFolderAttribute testee = [store _folderAttributesForServerResponse:serverResponse];
+    PantomimeFolderAttribute expected = PantomimeHoldsMessages | PantomimeHoldsFolders;
 
     XCTAssertEqual(expected, testee);
 }
@@ -139,8 +139,8 @@ static NSString *CRLF = @"\r\n";
 - (void)testFolderTypeFor_HoldsMessages {
     CWIMAPStore *store = [CWIMAPStore new];
     NSString *serverResponse = @"* LIST (\\All) \"/\" \"Bulk Mail\"";
-    PantomimeFolderType testee = [store _folderTypeForServerResponse:serverResponse];
-    PantomimeFolderType expected = PantomimeHoldsMessages;
+    PantomimeFolderAttribute testee = [store _folderAttributesForServerResponse:serverResponse];
+    PantomimeFolderAttribute expected = PantomimeHoldsMessages;
 
     XCTAssertEqual(expected, testee);
 }
@@ -148,8 +148,8 @@ static NSString *CRLF = @"\r\n";
 - (void)testFolderTypeFor_NoInferiors {
     CWIMAPStore *store = [CWIMAPStore new];
     NSString *serverResponse = @"* LIST (\\All \\NoInferiors) \"/\" \"Bulk Mail\"";
-    PantomimeFolderType testee = [store _folderTypeForServerResponse:serverResponse];
-    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeNoInferiors;
+    PantomimeFolderAttribute testee = [store _folderAttributesForServerResponse:serverResponse];
+    PantomimeFolderAttribute expected = PantomimeHoldsMessages | PantomimeNoInferiors;
 
     XCTAssertEqual(expected, testee);
 }
@@ -158,8 +158,8 @@ static NSString *CRLF = @"\r\n";
 - (void)testFolderTypeFor_NoSelect {
     CWIMAPStore *store = [CWIMAPStore new];
     NSString *serverResponse = @"* LIST (\\All \\NoSelect) \"/\" \"Bulk Mail\"";
-    PantomimeFolderType testee = [store _folderTypeForServerResponse:serverResponse];
-    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeNoSelect;
+    PantomimeFolderAttribute testee = [store _folderAttributesForServerResponse:serverResponse];
+    PantomimeFolderAttribute expected = PantomimeHoldsMessages | PantomimeNoSelect;
 
     XCTAssertEqual(expected, testee);
 }
@@ -167,8 +167,8 @@ static NSString *CRLF = @"\r\n";
 - (void)testFolderTypeFor_Marked {
     CWIMAPStore *store = [CWIMAPStore new];
     NSString *serverResponse = @"* LIST (\\All \\Marked) \"/\" \"Bulk Mail\"";
-    PantomimeFolderType testee = [store _folderTypeForServerResponse:serverResponse];
-    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeMarked;
+    PantomimeFolderAttribute testee = [store _folderAttributesForServerResponse:serverResponse];
+    PantomimeFolderAttribute expected = PantomimeHoldsMessages | PantomimeMarked;
 
     XCTAssertEqual(expected, testee);
 }
@@ -176,8 +176,8 @@ static NSString *CRLF = @"\r\n";
 - (void)testFolderTypeFor_Unmarked {
     CWIMAPStore *store = [CWIMAPStore new];
     NSString *serverResponse = @"* LIST (\\All \\Unmarked) \"/\" \"Bulk Mail\"";
-    PantomimeFolderType testee = [store _folderTypeForServerResponse:serverResponse];
-    PantomimeFolderType expected = PantomimeHoldsMessages | PantomimeUnmarked;
+    PantomimeFolderAttribute testee = [store _folderAttributesForServerResponse:serverResponse];
+    PantomimeFolderAttribute expected = PantomimeHoldsMessages | PantomimeUnmarked;
 
     XCTAssertEqual(expected, testee);
 }

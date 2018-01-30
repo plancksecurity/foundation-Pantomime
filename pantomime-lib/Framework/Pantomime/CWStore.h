@@ -167,7 +167,7 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
   @param theName The name of the folder.
   @result The type of the folder.
 */
-- (PantomimeFolderType) folderTypeForFolderName: (NSString * _Nullable) theName;
+- (PantomimeFolderAttribute) folderTypeForFolderName: (NSString * _Nullable) theName;
 
 /*!
   @method folderSeparator

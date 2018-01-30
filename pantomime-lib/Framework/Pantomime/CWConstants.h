@@ -264,7 +264,7 @@ typedef enum
   PantomimeNoSelect = 8,
   PantomimeMarked = 16,
   PantomimeUnmarked = 32
-} PantomimeFolderType;
+} PantomimeFolderAttribute;
 
 /*!
  @typedef PantomimeSpecialUseMailboxType

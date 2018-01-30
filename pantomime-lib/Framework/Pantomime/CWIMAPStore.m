@@ -1112,9 +1112,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 // and the delegate will eventually be notified when the LIST
 // command completed. It also returns 0 if it's not present.
 //
-- (PantomimeFolderType) folderTypeForFolderName: (NSString *) theName
+- (PantomimeFolderAttribute) folderTypeForFolderName: (NSString *) theName
 {
-    __block PantomimeFolderType returnee = 0;
+    __block PantomimeFolderAttribute returnee = 0;
     dispatch_sync(self.serviceQueue, ^{
         id o;
 
@@ -2253,11 +2253,11 @@ static inline int has_literal(char *buf, NSUInteger c)
     aString = [theString substringWithRange: NSMakeRange(r1.location+1, r2.location-r1.location-1)];
 
     // We get all the supported flags
-    PantomimeFolderType folderType = [self _folderTypeForServerResponse:aString];
+    PantomimeFolderAttribute folderAttributes = [self _folderAttributesForServerResponse:aString];
 
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:
                                      @{PantomimeFolderNameKey: aFolderName,
-                                       PantomimeFolderFlagsKey: [NSNumber numberWithInteger: folderType],
+                                       PantomimeFolderFlagsKey: [NSNumber numberWithInteger: folderAttributes],
                                        PantomimeFolderSeparatorKey: [NSString stringWithFormat:@"%c",
                                                                      [self folderSeparator]]}
                                      ];
@@ -2278,17 +2278,17 @@ static inline int has_literal(char *buf, NSUInteger c)
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
 
-    [_folders setObject: [NSNumber numberWithInteger: folderType]  forKey: aFolderName];
+    [_folders setObject: [NSNumber numberWithInteger: folderAttributes]  forKey: aFolderName];
 }
 
 /**
- Parses mailbox/folder types from a \LIST response.
+ Parses mailbox/folder attributes from a \LIST response.
  @param listResponse server response for \LIST command for one folder
  @return folder types
  */
-- (PantomimeFolderType)_folderTypeForServerResponse:(NSString *)listResponse
+- (PantomimeFolderAttribute)_folderAttributesForServerResponse:(NSString *)listResponse
 {
-    PantomimeFolderType type = PantomimeHoldsMessages;
+    PantomimeFolderAttribute type = PantomimeHoldsMessages;
 
     // We get all the supported flags, starting with the flags of RFC3348
     if ([listResponse length])
