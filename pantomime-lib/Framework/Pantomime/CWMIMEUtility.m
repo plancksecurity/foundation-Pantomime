@@ -221,28 +221,29 @@ static int seed_count = 1;
   
   i = length;
   
-  if (i != start && !ignore_span)
+    if (i != start && !ignore_span)
     {
-      aString = nil;
-
-      if (theCharset)
-      	{  
-	  aString = [NSString stringWithData: [NSData dataWithBytes: bytes+start  length: i-start]
-			      charset: [theCharset dataUsingEncoding: NSASCIIStringEncoding]];
-	  RETAIN_VOID(aString);
-      	}
-      
-      if (!aString)
-	{
-	  aString = [[NSString alloc] initWithBytes: bytes+start  length: i-start
-                                       encoding: NSUTF8StringEncoding];
-      	}
-      
-      [aMutableString appendString: aString];
-      DESTROY(aString);
+        aString = nil;
+        if (theCharset)
+        {
+            aString = [NSString stringWithData: [NSData dataWithBytes: bytes+start  length: i-start]
+                                       charset: [theCharset dataUsingEncoding: NSASCIIStringEncoding]];
+            RETAIN_VOID(aString);
+        }
+        if (!aString)
+        {
+            aString = [[NSString alloc] initWithBytes: bytes+start  length: i-start
+                                             encoding: NSUTF8StringEncoding];
+        }
+        // Fallback for rare cases where "... encoding: NSUTF8StringEncoding" fails and returns nil.
+        if (!aString) {
+            aString = [[NSString alloc] initWithBytes: bytes+start  length: i-start
+                                             encoding: NSASCIIStringEncoding];
+        }
+        [aMutableString appendString: aString];
+        DESTROY(aString);
     }
-  
-  return AUTORELEASE(aMutableString);
+    return AUTORELEASE(aMutableString);
 }
 
 
