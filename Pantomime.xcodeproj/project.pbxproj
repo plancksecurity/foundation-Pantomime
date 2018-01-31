@@ -23,6 +23,8 @@
 		15208D66200CB28300455F70 /* CWThreadSafeData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5B2009187600455F70 /* CWThreadSafeData.m */; };
 		1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177381F22072600C83122 /* CWMIMEUtilityTest.m */; };
 		1521773B1F22072600C83122 /* NSString+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 152177391F22072600C83122 /* NSString+ExtensionsTest.m */; };
+		155C96AB2021CB4000F5EB6F /* NSString+PEPDataUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C96AA2021CB4000F5EB6F /* NSString+PEPDataUtils.m */; };
+		155C96AD2021CDB100F5EB6F /* CWMessageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 155C96AC2021CDB100F5EB6F /* CWMessageTest.m */; };
 		1568FEA31FB11C5000993EA3 /* NSData+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */; };
 		156926E31FA1E02A00D5F396 /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
 		156926E41FA1E03200D5F396 /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
@@ -156,6 +158,9 @@
 		15208D622009190500455F70 /* CWOAuthUtilsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWOAuthUtilsTest.m; sourceTree = "<group>"; };
 		152177381F22072600C83122 /* CWMIMEUtilityTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEUtilityTest.m; sourceTree = "<group>"; };
 		152177391F22072600C83122 /* NSString+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ExtensionsTest.m"; sourceTree = "<group>"; };
+		155C96A92021CB4000F5EB6F /* NSString+PEPDataUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+PEPDataUtils.h"; sourceTree = "<group>"; };
+		155C96AA2021CB4000F5EB6F /* NSString+PEPDataUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+PEPDataUtils.m"; sourceTree = "<group>"; };
+		155C96AC2021CDB100F5EB6F /* CWMessageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWMessageTest.m; sourceTree = "<group>"; };
 		1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+ExtensionsTest.m"; sourceTree = "<group>"; };
 		1598B2291F6812FC00582157 /* CWInternetAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWInternetAddressTest.m; sourceTree = "<group>"; };
 		15ADD2BE1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CWIMAPFolder+CWProtected.h"; sourceTree = "<group>"; };
@@ -318,6 +323,8 @@
 				15208D51200917CB00455F70 /* TestUtil.m */,
 				15208D52200917CB00455F70 /* TestUtil.h */,
 				15208D53200917CB00455F70 /* NSString+PantomimeTestHelper.h */,
+				155C96A92021CB4000F5EB6F /* NSString+PEPDataUtils.h */,
+				155C96AA2021CB4000F5EB6F /* NSString+PEPDataUtils.m */,
 			);
 			path = TestUtils;
 			sourceTree = "<group>";
@@ -349,6 +356,7 @@
 				1598B2291F6812FC00582157 /* CWInternetAddressTest.m */,
 				4338E3841DF1BC880070176B /* CWIMAPFolderTests.m */,
 				1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */,
+				155C96AC2021CDB100F5EB6F /* CWMessageTest.m */,
 				152177381F22072600C83122 /* CWMIMEUtilityTest.m */,
 				15E0199F1FE2B65300DA2973 /* CWParserTest.m */,
 				1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */,
@@ -805,6 +813,7 @@
 				433C51CB1E658CAA00272E19 /* CWKOI8_U.m in Sources */,
 				433C51B61E64812B00272E19 /* CWMIMEMultipart.m in Sources */,
 				1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */,
+				155C96AD2021CDB100F5EB6F /* CWMessageTest.m in Sources */,
 				433C51BD1E658C7D00272E19 /* CWISO8859_10.m in Sources */,
 				433C51B21E6480F800272E19 /* CWPart.m in Sources */,
 				4338E37D1DF1BC050070176B /* CWFolder.m in Sources */,
@@ -849,6 +858,7 @@
 				433C51C51E658C9600272E19 /* CWISO8859_5.m in Sources */,
 				433C51A51E647A1300272E19 /* MailParsingTests.m in Sources */,
 				433C51BB1E658C4E00272E19 /* CWCharset.m in Sources */,
+				155C96AB2021CB4000F5EB6F /* NSString+PEPDataUtils.m in Sources */,
 				15208D54200917CB00455F70 /* NSString+PantomimeTestHelper.m in Sources */,
 				15208D55200917CB00455F70 /* TestUtil.m in Sources */,
 			);

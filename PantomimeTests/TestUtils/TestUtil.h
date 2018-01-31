@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "NSString+PEPDataUtils.h"
+
 @interface TestUtil : NSObject
 
 + (NSData  * _Nullable)loadDataWithFileName:(NSString * _Nonnull)fileName;
