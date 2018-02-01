@@ -501,10 +501,25 @@ static inline int has_literal(char *buf, NSUInteger c)
                     break;
                 }
 
-                //IMAP_AUTHENTICATE_XOAUTH2 answers with OK response, therefore it is intentionally
+                // IMAP_AUTHENTICATE_XOAUTH2 answers with OK response in case of success.
+                // In case case of failure a JSON containing the status is returned, no BAD or NO
+                // response.
                 // not handled here.
-                // Example response from gmail IMAP_AUTHENTICATE_XOAUTH2:
+                //
+                // Example success response from gmail:
                 // "0002 OK Thats all she wrote! o3mb34104947ljc"
+                //
+                // Example failure response from gmail:
+                // + eyJzdGF0dXMiOiI0MDAiLCJzY2hlbWVzIjoiQmVhcmVyIiwic2NvcGUiOiJodHRwczovL21haWwuZ29vZ2xlLmNvbS8ifQ==
+                // decoded:
+                // {"status":"400","schemes":"Bearer","scope":"https://mail.google.com/"}
+                else if (_lastCommand == IMAP_AUTHENTICATE_XOAUTH2)
+                {
+                    // We ignore the status contained in the response.
+                    // This if clause is reached only in failure case.
+                    AUTHENTICATION_FAILED(_delegate, _mechanism);
+                    break;
+                }
 
                 else if (self.currentQueueObject && _lastCommand == IMAP_LOGIN)
                 {
@@ -1511,7 +1526,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
         case IMAP_AUTHENTICATE_CRAM_MD5:
-        case IMAP_AUTHENTICATE_XOAUTH2:
+        case IMAP_AUTHENTICATE_XOAUTH2: // Only added for completenes. In reality XOAuth2 never responds with BAD (only Gmail tested so far)
         case IMAP_AUTHENTICATE_LOGIN:
             // Probably wrong credentials.
             // Example case: 0003 BAD [AUTHENTICATIONFAILED] AUTHENTICATE Invalid credentials
@@ -2425,7 +2440,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         case IMAP_AUTHENTICATE_CRAM_MD5:
         case IMAP_AUTHENTICATE_LOGIN:
-        case IMAP_AUTHENTICATE_XOAUTH2:
+        case IMAP_AUTHENTICATE_XOAUTH2:  // Only added for completenes. In reality XOAuth2 never responds with NO (only Gmail tested so far)
         case IMAP_LOGIN:
             AUTHENTICATION_FAILED(_delegate, _mechanism);
             break;
