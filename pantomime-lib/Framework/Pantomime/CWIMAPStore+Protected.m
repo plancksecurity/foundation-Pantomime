@@ -202,7 +202,7 @@
             if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
                 [aQueueObject.arguments isEqualToString: theString])
             {
-                INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
+                //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
                 return;
             }
         }
