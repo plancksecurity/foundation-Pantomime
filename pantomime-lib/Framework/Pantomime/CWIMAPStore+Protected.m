@@ -220,7 +220,7 @@
         // dequeue them one by one. Otherwise, we run it immediately.
         if ([_queue count] > 1)
         {
-            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
+            INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
             return;
         }
 
