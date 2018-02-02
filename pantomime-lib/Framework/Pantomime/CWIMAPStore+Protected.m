@@ -32,6 +32,11 @@
 {
     @synchronized (self) {
         if (_currentQueueObject != currentQueueObject) {
+            if (currentQueueObject == nil) {
+                // The cause for IOS-390 might be nil setting during sendCommand.
+                // Set a breakpoint here.
+                INFO(NSStringFromClass([self class]), @"IOS-390 setting nil currentQueueObject");
+            }
             _currentQueueObject = currentQueueObject;
         }
     }
