@@ -243,6 +243,10 @@
         INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
     }
 
+    //IOS-390:
+    // In the line above, self.currentQueueObject.arguments is |LIST "" *|
+    // but in the line below it is nil :-O
+    
     if (self.currentQueueObject == nil || self.currentQueueObject.arguments == nil) {
         // For IOS-390, set a breakpoint here, the app will soon crash.
         INFO(NSStringFromClass([self class]), @"IOS-390, why sending nil?");
