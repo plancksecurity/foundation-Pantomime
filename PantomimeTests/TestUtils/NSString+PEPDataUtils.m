@@ -27,7 +27,7 @@
         whole_byte = strtol(byte_chars, NULL, 16);
         [result appendBytes:&whole_byte length:1];
     }
-    NSLog(@"%@", result); //BUFF:
+
     return result;
 }
 
