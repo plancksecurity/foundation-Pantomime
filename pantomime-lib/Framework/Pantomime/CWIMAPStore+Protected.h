@@ -8,7 +8,6 @@
 
 #import "CWIMAPStore.h"
 #import "CWService+Protected.h"
-#import "CWIMAPStore.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
