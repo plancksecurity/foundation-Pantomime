@@ -2286,7 +2286,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     if (specialUse != PantomimeSpecialUseMailboxNormal)
     {
         // A special-use mailbox purpose has been reported by the server.
-        userInfo[PantomimeFolderSpecialUseKey] = [NSNumber numberWithInteger: specialUse];//FIXME: After creating a new Pantomime enum approach, chache this to send the enum instead of NSNumber. To avoid parsing, e.g in message model, cd folder from pantomime int
+        userInfo[PantomimeFolderSpecialUseKey] = [NSNumber numberWithInteger: specialUse];//FIXME: After creating a new Pantomime enum approach, change this to send the enum instead of NSNumber. To avoid parsing, e.g in message model, cd folder from pantomime int
     }
 
     // Inform client about potential new folder, so it can be saved.
@@ -2311,27 +2311,27 @@ static inline int has_literal(char *buf, NSUInteger c)
     {
         if ([listResponse rangeOfString: @"\\HasChildren" options: NSCaseInsensitiveSearch].length)
         {
-            type = type|PantomimeHoldsFolders;
+            type |= PantomimeHoldsFolders;
         }
 
         if ([listResponse rangeOfString: @"\\NoInferiors" options: NSCaseInsensitiveSearch].length)
         {
-            type = type|PantomimeNoInferiors;
+            type |= PantomimeNoInferiors;
         }
 
         if ([listResponse rangeOfString: @"\\NoSelect" options: NSCaseInsensitiveSearch].length)
         {
-            type = type|PantomimeNoSelect;
+            type |= PantomimeNoSelect;
         }
 
         if ([listResponse rangeOfString: @"\\Marked" options: NSCaseInsensitiveSearch].length)
         {
-            type = type|PantomimeMarked;
+            type |= PantomimeMarked;
         }
 
         if ([listResponse rangeOfString: @"\\Unmarked" options: NSCaseInsensitiveSearch].length)
         {
-            type = type|PantomimeUnmarked;
+            type |= PantomimeUnmarked;
         }
     }
 
@@ -2354,31 +2354,31 @@ static inline int has_literal(char *buf, NSUInteger c)
     {
         if ([listResponse rangeOfString: @"\\All" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse = PantomimeSpecialUseMailboxAll;
+            specialUse |= PantomimeSpecialUseMailboxAll;
         }
-        else if ([listResponse rangeOfString: @"\\Archive" options: NSCaseInsensitiveSearch].length)
+        if ([listResponse rangeOfString: @"\\Archive" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse = PantomimeSpecialUseMailboxArchive;
+            specialUse |= PantomimeSpecialUseMailboxArchive;
         }
-        else if ([listResponse rangeOfString: @"\\Drafts" options: NSCaseInsensitiveSearch].length)
+        if ([listResponse rangeOfString: @"\\Drafts" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse = PantomimeSpecialUseMailboxDrafts;
+            specialUse |= PantomimeSpecialUseMailboxDrafts;
         }
-        else if ([listResponse rangeOfString: @"\\Flagged" options: NSCaseInsensitiveSearch].length)
+        if ([listResponse rangeOfString: @"\\Flagged" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse = PantomimeSpecialUseMailboxFlagged;
+            specialUse |= PantomimeSpecialUseMailboxFlagged;
         }
-        else if ([listResponse rangeOfString: @"\\Junk" options: NSCaseInsensitiveSearch].length)
+        if ([listResponse rangeOfString: @"\\Junk" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse = PantomimeSpecialUseMailboxJunk;
+            specialUse |= PantomimeSpecialUseMailboxJunk;
         }
-        else if ([listResponse rangeOfString: @"\\Sent" options: NSCaseInsensitiveSearch].length)
+        if ([listResponse rangeOfString: @"\\Sent" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse = PantomimeSpecialUseMailboxSent;
+            specialUse |= PantomimeSpecialUseMailboxSent;
         }
-        else if ([listResponse rangeOfString: @"\\Trash" options: NSCaseInsensitiveSearch].length)
+        if ([listResponse rangeOfString: @"\\Trash" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse = PantomimeSpecialUseMailboxTrash;
+            specialUse |= PantomimeSpecialUseMailboxTrash;
         }
     }
 

@@ -309,13 +309,13 @@ typedef enum
 typedef enum
 {
     PantomimeSpecialUseMailboxNormal = 0,
-    PantomimeSpecialUseMailboxAll,
-    PantomimeSpecialUseMailboxArchive,
-    PantomimeSpecialUseMailboxDrafts,
-    PantomimeSpecialUseMailboxFlagged,
-    PantomimeSpecialUseMailboxJunk,
-    PantomimeSpecialUseMailboxSent,
-    PantomimeSpecialUseMailboxTrash
+    PantomimeSpecialUseMailboxAll = 1,
+    PantomimeSpecialUseMailboxArchive = 2,
+    PantomimeSpecialUseMailboxDrafts = 4,
+    PantomimeSpecialUseMailboxFlagged = 8,
+    PantomimeSpecialUseMailboxJunk = 16,
+    PantomimeSpecialUseMailboxSent = 32,
+    PantomimeSpecialUseMailboxTrash = 64
 } PantomimeSpecialUseMailboxType;
 
 /*!
