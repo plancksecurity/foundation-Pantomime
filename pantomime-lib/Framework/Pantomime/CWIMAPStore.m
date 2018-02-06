@@ -339,454 +339,455 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
-    // Intentionally not serialized on serviceQueue. Must never been called directly by clients.
-    NSData *aData;
+    dispatch_sync(self.readQueue, ^{
+        NSData *aData;
 
-    NSUInteger i, count;
-    char *buf;
+        NSUInteger i, count;
+        char *buf;
 
-    [super updateRead];
+        [super updateRead];
 
-    //INFO(NSStringFromClass([self class]), @"_rbul len == %d |%@|", [_rbuf length], [_rbuf asciiString]);
+        //INFO(NSStringFromClass([self class]), @"_rbul len == %d |%@|", [_rbuf length], [_rbuf asciiString]);
 
-    if (![_rbuf length]) return;
+        if (![_rbuf length]) return;
 
-    while ((aData = [_rbuf dropFirstLine]))
-    {
-        //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
-        buf = (char *)[aData bytes];
-        count = [aData length];
-
-        // If we are reading a literal, do so.
-        if (self.currentQueueObject && self.currentQueueObject.literal)
+        while ((aData = [_rbuf dropFirstLine]))
         {
-            self.currentQueueObject.literal -= (int) (count+2);
-            //INFO(NSStringFromClass([self class]), @"literal = %d, count = %d", self.currentQueueObject.literal, count);
+            //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
+            buf = (char *)[aData bytes];
+            count = [aData length];
 
-            if (self.currentQueueObject.literal < 0)
+            // If we are reading a literal, do so.
+            if (self.currentQueueObject && self.currentQueueObject.literal)
             {
-                int x;
+                self.currentQueueObject.literal -= (int) (count+2);
+                //INFO(NSStringFromClass([self class]), @"literal = %d, count = %d", self.currentQueueObject.literal, count);
 
-                x = -2-self.currentQueueObject.literal;
-                [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: [aData subdataToIndex: x]];
-                [_responsesFromServer addObject: [aData subdataFromIndex: x]];
-                //INFO(NSStringFromClass([self class]), @"orig = |%@|, chooped = |%@|   |%@|", [aData asciiString], [[aData subdataToIndex: x] asciiString], [[aData subdataFromIndex: x] asciiString]);
-            }
-            else
-            {
-                [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: aData];
-            }
-
-            // We are done reading a literal. Let's read again
-            // to see if we got a full response.
-            if (self.currentQueueObject.literal <= 0)
-            {
-                //INFO(NSStringFromClass([self class]), @"DONE ACCUMULATING LITTERAL!\nread = |%@|", [[self.currentQueueObject.info objectForKey: @"NSData"] asciiString]);
-                //
-                // Let's see, if we can, what does the next line contain. If we got
-                // something, we add this to the remaining _responsesFromServer
-                // and we are ready to parse that response (_responsesFromServer + bytes of literal).
-                //
-                // If it's nil, that's because we have nothing to read. In that case, just loop
-                // and call -updateRead in order to read the rest of the response.
-                //
-                // We must also be careful about what we read. Microsoft Exchange sometimes send us
-                // stuff like this:
-                //
-                // * 5 FETCH (BODY[TEXT] {1175}
-                // <!DOCTYPE HTML ...
-                // ...
-                // </HTML> UID 5)
-                // 0010 OK FETCH completed.
-                //
-                // The "</HTML> UID 5)" line will result in a _negative_ literal. Which we
-                // handle well here and just a couple of lines above this one.
-                //
                 if (self.currentQueueObject.literal < 0)
                 {
-                    self.currentQueueObject.literal = 0;
+                    int x;
+
+                    x = -2-self.currentQueueObject.literal;
+                    [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: [aData subdataToIndex: x]];
+                    [_responsesFromServer addObject: [aData subdataFromIndex: x]];
+                    //INFO(NSStringFromClass([self class]), @"orig = |%@|, chooped = |%@|   |%@|", [aData asciiString], [[aData subdataToIndex: x] asciiString], [[aData subdataFromIndex: x] asciiString]);
                 }
                 else
                 {
-                    // We MUST wait until we are done reading our full
-                    // FETCH response. _rbuf could end immediately at the
-                    // end of our literal response and we need to call
-                    // [super updateRead] to get more bytes from the socket
-                    // in order to read the rest (")" or " UID 123)" for example).
-                    while (!(aData = [_rbuf dropFirstLine]))
+                    [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: aData];
+                }
+
+                // We are done reading a literal. Let's read again
+                // to see if we got a full response.
+                if (self.currentQueueObject.literal <= 0)
+                {
+                    //INFO(NSStringFromClass([self class]), @"DONE ACCUMULATING LITTERAL!\nread = |%@|", [[self.currentQueueObject.info objectForKey: @"NSData"] asciiString]);
+                    //
+                    // Let's see, if we can, what does the next line contain. If we got
+                    // something, we add this to the remaining _responsesFromServer
+                    // and we are ready to parse that response (_responsesFromServer + bytes of literal).
+                    //
+                    // If it's nil, that's because we have nothing to read. In that case, just loop
+                    // and call -updateRead in order to read the rest of the response.
+                    //
+                    // We must also be careful about what we read. Microsoft Exchange sometimes send us
+                    // stuff like this:
+                    //
+                    // * 5 FETCH (BODY[TEXT] {1175}
+                    // <!DOCTYPE HTML ...
+                    // ...
+                    // </HTML> UID 5)
+                    // 0010 OK FETCH completed.
+                    //
+                    // The "</HTML> UID 5)" line will result in a _negative_ literal. Which we
+                    // handle well here and just a couple of lines above this one.
+                    //
+                    if (self.currentQueueObject.literal < 0)
                     {
-                        //SLog(@"NOTHING TO READ! WAITING...");
-                        [super updateRead];
+                        self.currentQueueObject.literal = 0;
                     }
-                    [_responsesFromServer addObject: aData];
-                }
+                    else
+                    {
+                        // We MUST wait until we are done reading our full
+                        // FETCH response. _rbuf could end immediately at the
+                        // end of our literal response and we need to call
+                        // [super updateRead] to get more bytes from the socket
+                        // in order to read the rest (")" or " UID 123)" for example).
+                        while (!(aData = [_rbuf dropFirstLine]))
+                        {
+                            //SLog(@"NOTHING TO READ! WAITING...");
+                            [super updateRead];
+                        }
+                        [_responsesFromServer addObject: aData];
+                    }
 
-                //
-                // Let's rollback in what are processing/read in order to
-                // reparse our initial response. It's if it's FETCH response,
-                // the literal will now be 0 so the parsing of this response
-                // will occur.
-                //
-                aData = [_responsesFromServer objectAtIndex: 0];
-                buf = (char *)[aData bytes];
-                count = [aData length];
+                    //
+                    // Let's rollback in what are processing/read in order to
+                    // reparse our initial response. It's if it's FETCH response,
+                    // the literal will now be 0 so the parsing of this response
+                    // will occur.
+                    //
+                    aData = [_responsesFromServer objectAtIndex: 0];
+                    buf = (char *)[aData bytes];
+                    count = [aData length];
+                }
+                else
+                {
+                    //INFO(NSStringFromClass([self class]), @"Accumulating... %d remaining...", self.currentQueueObject.literal);
+                    //
+                    // We are still accumulating bytes of the literal. Once we have appended
+                    // our CRLF, we just continue the loop since there's no need to try to
+                    // parse anything, as we don't have the complete response yet.
+                    //
+                    [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: _crlf];
+                    continue;
+                }
             }
             else
             {
-                //INFO(NSStringFromClass([self class]), @"Accumulating... %d remaining...", self.currentQueueObject.literal);
-                //
-                // We are still accumulating bytes of the literal. Once we have appended
-                // our CRLF, we just continue the loop since there's no need to try to
-                // parse anything, as we don't have the complete response yet.
-                //
-                [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: _crlf];
-                continue;
-            }
-        }
-        else
-        {
-            //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
-            [_responsesFromServer addObject: aData];
+                //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
+                [_responsesFromServer addObject: aData];
 
-            if (self.currentQueueObject && (self.currentQueueObject.literal = has_literal(buf, count)))
+                if (self.currentQueueObject && (self.currentQueueObject.literal = has_literal(buf, count)))
+                {
+                    //INFO(NSStringFromClass([self class]), @"literal = %d", self.currentQueueObject.literal);
+                    [self.currentQueueObject.info setObject: [NSMutableData dataWithCapacity: self.currentQueueObject.literal]
+                                                     forKey: @"NSData"];
+                }
+            }
+
+            // Now search for the position of the first space in our response.
+            i = 0;
+            while (i < count && *buf != ' ')
             {
-                //INFO(NSStringFromClass([self class]), @"literal = %d", self.currentQueueObject.literal);
-                [self.currentQueueObject.info setObject: [NSMutableData dataWithCapacity: self.currentQueueObject.literal]
-                                                 forKey: @"NSData"];
+                buf++; i++;
             }
-        }
 
-        // Now search for the position of the first space in our response.
-        i = 0;
-        while (i < count && *buf != ' ')
-        {
-            buf++; i++;
-        }
-
-        //INFO(NSStringFromClass([self class]), @"i = %d  count = %d", i, count);
-
-        //
-        // We got an untagged response or a command continuation request.
-        //
-        if (i == 1)
-        {
-            NSInteger d, j, msn, len;
-            BOOL b;
+            //INFO(NSStringFromClass([self class]), @"i = %d  count = %d", i, count);
 
             //
-            // We verify if we received a command continuation request.
-            // This response is used in the AUTHENTICATE command or
-            // in any argument to the command is a literal. In the current
-            // code, the only command which has a literal argument is
-            // the APPEND command. We must NOT use "break;" at the very
-            // end of this block since we could read a line in a mail
-            // that begins with a '+'.
+            // We got an untagged response or a command continuation request.
             //
-            if (*(buf-i) == '+')
+            if (i == 1)
             {
-                if (self.currentQueueObject && _lastCommand == IMAP_APPEND)
-                {
-                    [self bulkWriteData:@[[self.currentQueueObject.info objectForKey: @"NSDataToAppend"],
-                                          _crlf]];
-                    break;
-                }
-                else if (_lastCommand == IMAP_AUTHENTICATE_CRAM_MD5)
-                {
-                    [self _parseAUTHENTICATE_CRAM_MD5];
-                    break;
-                }
-                else if (_lastCommand == IMAP_AUTHENTICATE_LOGIN)
-                {
-                    [self _parseAUTHENTICATE_LOGIN];
-                    break;
-                }
+                NSInteger d, j, msn, len;
+                BOOL b;
 
-                // IMAP_AUTHENTICATE_XOAUTH2 answers with OK response in case of success.
-                // In case case of failure a JSON containing the status is returned, no BAD or NO
-                // response.
-                // not handled here.
                 //
-                // Example success response from gmail:
-                // "0002 OK Thats all she wrote! o3mb34104947ljc"
+                // We verify if we received a command continuation request.
+                // This response is used in the AUTHENTICATE command or
+                // in any argument to the command is a literal. In the current
+                // code, the only command which has a literal argument is
+                // the APPEND command. We must NOT use "break;" at the very
+                // end of this block since we could read a line in a mail
+                // that begins with a '+'.
                 //
-                // Example failure response from gmail:
-                // + eyJzdGF0dXMiOiI0MDAiLCJzY2hlbWVzIjoiQmVhcmVyIiwic2NvcGUiOiJodHRwczovL21haWwuZ29vZ2xlLmNvbS8ifQ==
-                // decoded:
-                // {"status":"400","schemes":"Bearer","scope":"https://mail.google.com/"}
-                else if (_lastCommand == IMAP_AUTHENTICATE_XOAUTH2)
+                if (*(buf-i) == '+')
                 {
-                    // We ignore the status contained in the response.
-                    // This if clause is reached only in failure case.
-                    AUTHENTICATION_FAILED(_delegate, _mechanism);
-                    break;
+                    if (self.currentQueueObject && _lastCommand == IMAP_APPEND)
+                    {
+                        [self bulkWriteData:@[[self.currentQueueObject.info objectForKey: @"NSDataToAppend"],
+                                              _crlf]];
+                        break;
+                    }
+                    else if (_lastCommand == IMAP_AUTHENTICATE_CRAM_MD5)
+                    {
+                        [self _parseAUTHENTICATE_CRAM_MD5];
+                        break;
+                    }
+                    else if (_lastCommand == IMAP_AUTHENTICATE_LOGIN)
+                    {
+                        [self _parseAUTHENTICATE_LOGIN];
+                        break;
+                    }
+
+                    // IMAP_AUTHENTICATE_XOAUTH2 answers with OK response in case of success.
+                    // In case case of failure a JSON containing the status is returned, no BAD or NO
+                    // response.
+                    // not handled here.
+                    //
+                    // Example success response from gmail:
+                    // "0002 OK Thats all she wrote! o3mb34104947ljc"
+                    //
+                    // Example failure response from gmail:
+                    // + eyJzdGF0dXMiOiI0MDAiLCJzY2hlbWVzIjoiQmVhcmVyIiwic2NvcGUiOiJodHRwczovL21haWwuZ29vZ2xlLmNvbS8ifQ==
+                    // decoded:
+                    // {"status":"400","schemes":"Bearer","scope":"https://mail.google.com/"}
+                    else if (_lastCommand == IMAP_AUTHENTICATE_XOAUTH2)
+                    {
+                        // We ignore the status contained in the response.
+                        // This if clause is reached only in failure case.
+                        AUTHENTICATION_FAILED(_delegate, _mechanism);
+                        break;
+                    }
+
+                    else if (self.currentQueueObject && _lastCommand == IMAP_LOGIN)
+                    {
+                        //INFO(NSStringFromClass([self class]), @"writing password |%s|", [[self.currentQueueObject.info objectForKey: @"Password"] cString]);
+                        [self bulkWriteData:@[[self.currentQueueObject.info objectForKey: @"Password"],
+                                              _crlf]];
+                        break;
+                    } else if (_lastCommand == IMAP_IDLE) {
+                        INFO(NSStringFromClass([self class]), @"entering IDLE");
+                        POST_NOTIFICATION(PantomimeIdleEntered, self, self.currentQueueObject.info);
+                        PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
+                    }
                 }
 
-                else if (self.currentQueueObject && _lastCommand == IMAP_LOGIN)
+                msn = 0; b = YES; d = 1;
+                j = i+1; buf++;
+
+                // Let's see if we can read a MSN
+                while (j < count && *buf != ' ')
                 {
-                    //INFO(NSStringFromClass([self class]), @"writing password |%s|", [[self.currentQueueObject.info objectForKey: @"Password"] cString]);
-                    [self bulkWriteData:@[[self.currentQueueObject.info objectForKey: @"Password"],
-                                          _crlf]];
-                    break;
-                } else if (_lastCommand == IMAP_IDLE) {
-                    INFO(NSStringFromClass([self class]), @"entering IDLE");
-                    POST_NOTIFICATION(PantomimeIdleEntered, self, self.currentQueueObject.info);
-                    PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
+                    if (!isdigit((int)(unsigned char)*buf)) b = NO;
+                    buf++; j++;
+                }
+
+                //INFO(NSStringFromClass([self class]), @"j = %d, b = %d", j, b);
+
+                //
+                // The token following our "*" is all-digit. Let's
+                // decode the MSN and get the kind of response.
+                //
+                // We will also read the untagged responses we get
+                // when SELECT'ing a mailbox ("* 4 EXISTS" for example).
+                //
+                // We parse those results but we ignore the "MSN" since
+                // it bears no relation to an actual MSN.
+                //
+                if (b)
+                {
+                    NSInteger k;
+
+                    k = j;
+
+                    // We compute the MSN
+                    while (k > i+1)
+                    {
+                        buf--; k--;
+                        //INFO(NSStringFromClass([self class]), @"msn c = %c", *buf);
+                        msn += ((*buf-48) * d);
+                        d *= 10;
+                    }
+
+                    //INFO(NSStringFromClass([self class]), @"Done computing the msn = %d  k = %d", msn, k);
+
+                    // We now get what kind of response we read (FETCH, etc?)
+                    buf += (j-i);
+                    k = j+1;
+
+                    while (k < count && isalpha((int)(unsigned char)*buf))
+                    {
+                        //INFO(NSStringFromClass([self class]), @"response after c = %c", *buf);
+                        buf++; k++;
+                    }
+
+                    //INFO(NSStringFromClass([self class]), @"Done reading response: i = %d  j = %d  k = %d", i, j, k);
+
+                    buf = buf-k+j+1;
+                    len = k-j-1;
+                }
+                //
+                // It's NOT all-digit.
+                //
+                else
+                {
+                    buf = buf-j+i+1;
+                    len = j-i-1;
+                }
+
+                //NSData *foo;
+                //foo = [NSData dataWithBytes: buf  length: len];
+                //INFO(NSStringFromClass([self class]), @"DONE!!! foo after * = |%@| b = %d, msn = %d", [foo asciiString], b, msn);
+                //INFO(NSStringFromClass([self class]), @"len = %d", len);
+
+                //
+                // We got an untagged OK response. We handle only the one used in the IMAP authorization
+                // state and ignore the ones required during a SELECT command (like OK [UNSEEN <n>]).
+                //
+                if (len && strncasecmp("OK", buf, 2) == 0 && _lastCommand == IMAP_AUTHORIZATION)
+                {
+                    [self _parseOK];
+                }
+                //
+                // We got a BAD response without sequence number.
+                // Example: "* BAD internal server error"
+                // Stop parsing. _parseBAD is responsable for handling it.
+                //
+                else if (len && strncasecmp("BAD", buf, 3) == 0)
+                {
+                    [self _parseBAD];
+                }
+                //
+                // We check if we got disconnected from the IMAP server.
+                // If it's the case, we invoke -reconnect.
+                //
+                else if (len && strncasecmp("BYE", buf, 3) == 0)
+                {
+                    [self _parseBYE];
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("LIST", buf, 4) == 0)
+                {
+                    [self _parseLIST];
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("LSUB", buf, 4) == 0)
+                {
+                    [self _parseLSUB];
+                }
+                //
+                // We got a FETCH response and we are done reading all
+                // bytes specified by our literal. We also handle
+                // untagged responses coming AFTER a tagged response,
+                // like that:
+                //
+                // 000c UID FETCH 3071053:3071053 BODY[TEXT]
+                // * 1 FETCH (UID 3071053 BODY[TEXT] {859}
+                // f00 bar zarb
+                // ..
+                // )
+                // 000c OK UID FETCH completed
+                // * 1 FETCH (FLAGS (\Seen))
+                //
+                // Responses like that must be carefully handled since
+                // self.currentQueueObject would nil after getting the
+                // tagged response.
+                //
+                else if (len && strncasecmp("FETCH", buf, 5) == 0 &&
+                         (!self.currentQueueObject || (self.currentQueueObject && self.currentQueueObject.literal == 0)))
+                {
+                    switch (_lastCommand)
+                    {
+                        case IMAP_UID_FETCH_UIDS:
+                            [self _parseFETCH_UIDS];
+                            break;
+                        default:
+                            [self _parseFETCH: msn];
+                    }
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("EXISTS", buf, 6) == 0)
+                {
+                    [self _parseEXISTS];
+                    [_responsesFromServer removeLastObject];
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("RECENT", buf, 6) == 0)
+                {
+                    [self _parseRECENT];
+                    [_responsesFromServer removeLastObject];
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("SEARCH", buf, 6) == 0)
+                {
+                    switch (_lastCommand)
+                    {
+                        case IMAP_UID_SEARCH:
+                        case IMAP_UID_SEARCH_ANSWERED:
+                        case IMAP_UID_SEARCH_FLAGGED:
+                        case IMAP_UID_SEARCH_UNSEEN:
+                            [self _parseSEARCH_CACHE];
+                            break;
+                        default:
+                            [self _parseSEARCH];
+                    }
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("STATUS", buf, 6) == 0)
+                {
+                    [self _parseSTATUS];
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("EXPUNGE", buf, 7) == 0)
+                {
+                    [self _parseEXPUNGE];
+                }
+                //
+                //
+                //
+                else if (len && strncasecmp("CAPABILITY", buf, 10) == 0)
+                {
+                    [self _parseCAPABILITY];
                 }
             }
-
-            msn = 0; b = YES; d = 1;
-            j = i+1; buf++;
-
-            // Let's see if we can read a MSN
-            while (j < count && *buf != ' ')
-            {
-                if (!isdigit((int)(unsigned char)*buf)) b = NO;
-                buf++; j++;
-            }
-
-            //INFO(NSStringFromClass([self class]), @"j = %d, b = %d", j, b);
-
             //
-            // The token following our "*" is all-digit. Let's
-            // decode the MSN and get the kind of response.
-            //
-            // We will also read the untagged responses we get
-            // when SELECT'ing a mailbox ("* 4 EXISTS" for example).
-            //
-            // We parse those results but we ignore the "MSN" since
-            // it bears no relation to an actual MSN.
-            //
-            if (b)
-            {
-                NSInteger k;
-
-                k = j;
-
-                // We compute the MSN
-                while (k > i+1)
-                {
-                    buf--; k--;
-                    //INFO(NSStringFromClass([self class]), @"msn c = %c", *buf);
-                    msn += ((*buf-48) * d);
-                    d *= 10;
-                }
-
-                //INFO(NSStringFromClass([self class]), @"Done computing the msn = %d  k = %d", msn, k);
-
-                // We now get what kind of response we read (FETCH, etc?)
-                buf += (j-i);
-                k = j+1;
-
-                while (k < count && isalpha((int)(unsigned char)*buf))
-                {
-                    //INFO(NSStringFromClass([self class]), @"response after c = %c", *buf);
-                    buf++; k++;
-                }
-
-                //INFO(NSStringFromClass([self class]), @"Done reading response: i = %d  j = %d  k = %d", i, j, k);
-
-                buf = buf-k+j+1;
-                len = k-j-1;
-            }
-            //
-            // It's NOT all-digit.
+            // We got a tagged response
             //
             else
             {
+                NSInteger j;
+
+                //NSData *foo;
+                //foo = [NSData dataWithBytes: buf-i  length: i];
+                //INFO(NSStringFromClass([self class]), @"tag = |%@|", [foo asciiString]);
+
+                j = i+1;
+                buf++;
+
+                // We read past our tag, in order to find
+                // the type of response (OK/NO/BAD).
+                while (j < count && *buf != ' ')
+                {
+                    //INFO(NSStringFromClass([self class]), @"IN OK: %c", *buf);
+                    buf++; j++;
+                }
+
+                //INFO(NSStringFromClass([self class]), @"OK/NO/BAD response = |%@|", [[NSData dataWithBytes: buf-j+i+1  length: j-i-1] asciiString]);
                 buf = buf-j+i+1;
-                len = j-i-1;
-            }
 
-            //NSData *foo;
-            //foo = [NSData dataWithBytes: buf  length: len];
-            //INFO(NSStringFromClass([self class]), @"DONE!!! foo after * = |%@| b = %d, msn = %d", [foo asciiString], b, msn);
-            //INFO(NSStringFromClass([self class]), @"len = %d", len);
-
-            //
-            // We got an untagged OK response. We handle only the one used in the IMAP authorization
-            // state and ignore the ones required during a SELECT command (like OK [UNSEEN <n>]).
-            //
-            if (len && strncasecmp("OK", buf, 2) == 0 && _lastCommand == IMAP_AUTHORIZATION)
-            {
-                [self _parseOK];
-            }
-            //
-            // We got a BAD response without sequence number.
-            // Example: "* BAD internal server error"
-            // Stop parsing. _parseBAD is responsable for handling it.
-            //
-            else if (len && strncasecmp("BAD", buf, 3) == 0)
-            {
-                [self _parseBAD];
-            }
-            //
-            // We check if we got disconnected from the IMAP server.
-            // If it's the case, we invoke -reconnect.
-            //
-            else if (len && strncasecmp("BYE", buf, 3) == 0)
-            {
-                [self _parseBYE];
-            }
-            //
-            //
-            //
-            else if (len && strncasecmp("LIST", buf, 4) == 0)
-            {
-                [self _parseLIST];
-            }
-            //
-            //
-            //
-            else if (len && strncasecmp("LSUB", buf, 4) == 0)
-            {
-                [self _parseLSUB];
-            }
-            //
-            // We got a FETCH response and we are done reading all
-            // bytes specified by our literal. We also handle
-            // untagged responses coming AFTER a tagged response,
-            // like that:
-            //
-            // 000c UID FETCH 3071053:3071053 BODY[TEXT]
-            // * 1 FETCH (UID 3071053 BODY[TEXT] {859}
-            // f00 bar zarb
-            // ..
-            // )
-            // 000c OK UID FETCH completed
-            // * 1 FETCH (FLAGS (\Seen))
-            //
-            // Responses like that must be carefully handled since
-            // self.currentQueueObject would nil after getting the
-            // tagged response.
-            //
-            else if (len && strncasecmp("FETCH", buf, 5) == 0 &&
-                     (!self.currentQueueObject || (self.currentQueueObject && self.currentQueueObject.literal == 0)))
-            {
-                switch (_lastCommand)
+                // From RFC3501:
+                //
+                // The server completion result response indicates the success or
+                // failure of the operation.  It is tagged with the same tag as the
+                // client command which began the operation.  Thus, if more than one
+                // command is in progress, the tag in a server completion response
+                // identifies the command to which the response applies.  There are
+                // three possible server completion responses: OK (indicating success),
+                // NO (indicating failure), or BAD (indicating a protocol error such as
+                // unrecognized command or command syntax error).
+                //
+                if (strncasecmp("OK", buf, 2) == 0)
                 {
-                    case IMAP_UID_FETCH_UIDS:
-                        [self _parseFETCH_UIDS];
-                        break;
-                    default:
-                        [self _parseFETCH: msn];
+                    [self _parseOK];
+                }
+                //
+                // RFC3501 says:
+                //
+                // The NO response indicates an operational error message from the
+                // server.  When tagged, it indicates unsuccessful completion of the
+                // associated command.  The untagged form indicates a warning; the
+                // command can still complete successfully.  The human-readable text
+                // describes the condition.
+                //
+                else if (strncasecmp("NO", buf, 2) == 0)
+                {
+                    [self _parseNO];
+                }
+                else
+                {
+                    [self _parseBAD];
                 }
             }
-            //
-            //
-            //
-            else if (len && strncasecmp("EXISTS", buf, 6) == 0)
-            {
-                [self _parseEXISTS];
-                [_responsesFromServer removeLastObject];
-            }
-            //
-            //
-            //
-            else if (len && strncasecmp("RECENT", buf, 6) == 0)
-            {
-                [self _parseRECENT];
-                [_responsesFromServer removeLastObject];
-            }
-            //
-            //
-            //
-            else if (len && strncasecmp("SEARCH", buf, 6) == 0)
-            {
-                switch (_lastCommand)
-                {
-                    case IMAP_UID_SEARCH:
-                    case IMAP_UID_SEARCH_ANSWERED:
-                    case IMAP_UID_SEARCH_FLAGGED:
-                    case IMAP_UID_SEARCH_UNSEEN:
-                        [self _parseSEARCH_CACHE];
-                        break;
-                    default:
-                        [self _parseSEARCH];
-                }
-            }
-            //
-            //
-            //
-            else if (len && strncasecmp("STATUS", buf, 6) == 0)
-            {
-                [self _parseSTATUS];
-            }
-            //
-            //
-            //
-            else if (len && strncasecmp("EXPUNGE", buf, 7) == 0)
-            {
-                [self _parseEXPUNGE];
-            }
-            //
-            //
-            //
-            else if (len && strncasecmp("CAPABILITY", buf, 10) == 0)
-            {
-                [self _parseCAPABILITY];
-            }
-        }
-        //
-        // We got a tagged response
-        //
-        else
-        {
-            NSInteger j;
-
-            //NSData *foo;
-            //foo = [NSData dataWithBytes: buf-i  length: i];
-            //INFO(NSStringFromClass([self class]), @"tag = |%@|", [foo asciiString]);
-
-            j = i+1;
-            buf++;
-
-            // We read past our tag, in order to find
-            // the type of response (OK/NO/BAD).
-            while (j < count && *buf != ' ')
-            {
-                //INFO(NSStringFromClass([self class]), @"IN OK: %c", *buf);
-                buf++; j++;
-            }
-
-            //INFO(NSStringFromClass([self class]), @"OK/NO/BAD response = |%@|", [[NSData dataWithBytes: buf-j+i+1  length: j-i-1] asciiString]);
-            buf = buf-j+i+1;
-
-            // From RFC3501:
-            //
-            // The server completion result response indicates the success or
-            // failure of the operation.  It is tagged with the same tag as the
-            // client command which began the operation.  Thus, if more than one
-            // command is in progress, the tag in a server completion response
-            // identifies the command to which the response applies.  There are
-            // three possible server completion responses: OK (indicating success),
-            // NO (indicating failure), or BAD (indicating a protocol error such as
-            // unrecognized command or command syntax error).
-            //
-            if (strncasecmp("OK", buf, 2) == 0)
-            {
-                [self _parseOK];
-            }
-            //
-            // RFC3501 says:
-            //
-            // The NO response indicates an operational error message from the
-            // server.  When tagged, it indicates unsuccessful completion of the
-            // associated command.  The untagged form indicates a warning; the
-            // command can still complete successfully.  The human-readable text
-            // describes the condition.
-            //
-            else if (strncasecmp("NO", buf, 2) == 0)
-            {
-                [self _parseNO];
-            }
-            else
-            {
-                [self _parseBAD];
-            }
-        }
-    } // while ((aData = split_lines...
-    
-    //INFO(NSStringFromClass([self class]), @"While loop broken!");
+        } // while ((aData = split_lines...
+        
+        //INFO(NSStringFromClass([self class]), @"While loop broken!");
+    });
 }
 
 

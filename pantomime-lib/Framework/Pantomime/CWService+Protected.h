@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
     /** Used to serialize writes to the connection. As we serialize only public methods, pantomime and
      methods called form a client might write at the same time.*/
     dispatch_queue_t _writeQueue;
+    /** Used to serialize the processing of received data.*/
+    dispatch_queue_t _readQueue;
     /** Used to serialize public methods. They might be called from different threads concurrently. */
     dispatch_queue_t _serviceQueue;
     __block unsigned int _connectionTimeout;
@@ -78,10 +80,10 @@ NS_ASSUME_NONNULL_BEGIN
 //
 #define DEFAULT_TIMEOUT 60
 
-/** Lazy initialized */
 - (dispatch_queue_t _Nullable)writeQueue;
 
-/** Lazy initialized */
+- (dispatch_queue_t _Nullable)readQueue;
+
 - (dispatch_queue_t _Nullable)serviceQueue;
 
 /*!
