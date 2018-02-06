@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1502BA812029AB6700E13501 /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
 		1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */; };
 		1505D6081F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */; };
 		1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */; };
@@ -818,6 +819,7 @@
 				433C51B21E6480F800272E19 /* CWPart.m in Sources */,
 				4338E37D1DF1BC050070176B /* CWFolder.m in Sources */,
 				151DE7DD1FC586D700CDC273 /* CWIMAPStore+Protected.m in Sources */,
+				1502BA812029AB6700E13501 /* CWService+Protected.m in Sources */,
 				433C51BE1E658C7F00272E19 /* CWISO8859_11.m in Sources */,
 				433C51B31E64810400272E19 /* CWMIMEUtility.m in Sources */,
 				433C51BC1E658C6300272E19 /* CWISO8859_1.m in Sources */,
