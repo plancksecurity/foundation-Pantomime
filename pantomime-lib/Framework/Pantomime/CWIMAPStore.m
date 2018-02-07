@@ -2213,7 +2213,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSUInteger len;
 
     theString = [[_responsesFromServer lastObject] imapUtf7String];
-
     //
     // We verify if we got the number of bytes to read instead of the real mailbox name.
     // That happens if we couldn't get the ASCII string of what we read.
@@ -2339,7 +2338,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 /**
- Parses Special-Use attributes for one mailboxe/folder from a \LIST response. RFC 6154.
+ Parses Special-Use attributes for one mailbox/folder from a \LIST response. RFC 6154.
 
  @param listResponse server response for \LIST command for one folder
  @return special-use attribute
@@ -2354,31 +2353,31 @@ static inline int has_literal(char *buf, NSUInteger c)
     {
         if ([listResponse rangeOfString: @"\\All" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse |= PantomimeSpecialUseMailboxAll;
+            specialUse = PantomimeSpecialUseMailboxAll;
         }
         if ([listResponse rangeOfString: @"\\Archive" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse |= PantomimeSpecialUseMailboxArchive;
+            specialUse = PantomimeSpecialUseMailboxArchive;
         }
         if ([listResponse rangeOfString: @"\\Drafts" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse |= PantomimeSpecialUseMailboxDrafts;
+            specialUse = PantomimeSpecialUseMailboxDrafts;
         }
         if ([listResponse rangeOfString: @"\\Flagged" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse |= PantomimeSpecialUseMailboxFlagged;
+            specialUse = PantomimeSpecialUseMailboxFlagged;
         }
         if ([listResponse rangeOfString: @"\\Junk" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse |= PantomimeSpecialUseMailboxJunk;
+            specialUse = PantomimeSpecialUseMailboxJunk;
         }
         if ([listResponse rangeOfString: @"\\Sent" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse |= PantomimeSpecialUseMailboxSent;
+            specialUse = PantomimeSpecialUseMailboxSent;
         }
         if ([listResponse rangeOfString: @"\\Trash" options: NSCaseInsensitiveSearch].length)
         {
-            specialUse |= PantomimeSpecialUseMailboxTrash;
+            specialUse = PantomimeSpecialUseMailboxTrash;
         }
     }
 
