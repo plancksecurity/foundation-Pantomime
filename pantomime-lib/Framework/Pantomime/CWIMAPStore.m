@@ -1602,9 +1602,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 // This method parses an * CAPABILITY IMAP4 IMAP4rev1 ACL AUTH=LOGIN NAMESPACE ..
 // untagged response (6.1.1)
-//
-// FIXME: check for OK/BAD
-//
 - (void) _parseCAPABILITY
 {
     NSString *aString;
