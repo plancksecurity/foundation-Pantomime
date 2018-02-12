@@ -1555,7 +1555,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                                PantomimeErrorInfo);
         }
             break;
-
+        case IMAP_UID_EXPUNGE:
         default:
             // We got a BAD response that we could not handle. Inform the delegate,
             // post a notification and remove the command that caused this from the queue.
@@ -1647,6 +1647,15 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
 }
 
+#pragma mark - UIDPLUS
+
+- (void) _parseUID_EXPUNGE
+{
+    NSData *aData;
+    aData = [_responsesFromServer lastObject];
+    NSLog(@"aData: %@", [[NSString alloc]initWithData:aData encoding:NSUTF8StringEncoding]);
+}
+#pragma mark - --
 
 //
 // Example: * 44 EXPUNGE
@@ -2518,6 +2527,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         case IMAP_LSUB:
         case IMAP_NOOP:
         case IMAP_STARTTLS:
+        case IMAP_UID_EXPUNGE:
         case IMAP_UID_FETCH_BODY_TEXT:
         case IMAP_UID_FETCH_HEADER_FIELDS:
         case IMAP_UID_FETCH_FLAGS:
@@ -2717,6 +2727,11 @@ static inline int has_literal(char *buf, NSUInteger c)
         case IMAP_UID_COPY:
             POST_NOTIFICATION(PantomimeMessagesCopyCompleted, self, self.currentQueueObject.info);
             PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyCompleted:), PantomimeMessagesCopyCompleted, self.currentQueueObject.info);
+            break;
+
+        case IMAP_UID_EXPUNGE:
+            POST_NOTIFICATION(PantomimeMessageUidExpungeCompleted, self, self.currentQueueObject.info);
+            PERFORM_SELECTOR_3(_delegate, @selector(messageUidExpungeCompleted:), PantomimeMessageUidExpungeCompleted, self.currentQueueObject.info);
             break;
 
         case IMAP_UID_FETCH_RFC822:

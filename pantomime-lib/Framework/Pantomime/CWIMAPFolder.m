@@ -197,6 +197,19 @@
   RELEASE(aMutableString);
 }
 
+#pragma mark - UIDPLUS
+
+// Extremely basic and incomplete UIDPLUS implementation, currently soley used for Gmail accounts
+// to be able to remove a message from "All Messages" virtual mailbox.
+
+- (void)expunge:(NSUInteger)uid;
+{
+    NSParameterAssert(uid);
+    NSParameterAssert(uid > 0);
+    NSParameterAssert(uid <= [self lastUID]);
+    [_store sendCommand: IMAP_UID_EXPUNGE  info: nil arguments: @"UID EXPUNGE %u", uid];
+}
+
 #pragma mark - Fetching
 
 // Fetches fetchMaxMails number of (yet unfetched) older messages by MSN.
@@ -219,7 +232,7 @@
 // The Problem is that the UIDs are not sequential.
 // uidGap: 108 - 10 - 1 == 97
 // Handling the UID gap by making multiple calls can cause many, many calls (num calls ~= uidGap / fetchMaxMails)
-// which might even be punished by the provider by denying access. Temporarly or forever.
+// which might even be punished by the provider by denying access due to assumed DOS attempt. Temporarly or forever.
 // Thus we are fetching by MSNs.
 - (void) fetchOlder
 {
