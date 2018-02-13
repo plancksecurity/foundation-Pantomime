@@ -81,7 +81,7 @@ NSString *PantomimeIdleFinished = @"PantomimeIdleFinished";
 // CWMessage notifications
 NSString* PantomimeMessageChanged = @"PantomimeMessageChanged";
 NSString* PantomimeMessageExpunged = @"PantomimeMessageExpunged";
-NSString* PantomimeMessageUidExpungeCompleted = @"PantomimeMessageUidExpungeCompleted";
+NSString* PantomimeMessageUidMoveCompleted = @"PantomimeMessageUidMoveCompleted";
 NSString* PantomimeMessageFetchCompleted = @"PantomimeMessageFetchCompleted";
 NSString* PantomimeMessageFetchFailed = @"PantomimeMessageFetchFailed";
 NSString* PantomimeMessagePrefetchCompleted = @"PantomimeMessagePrefetchCompleted";

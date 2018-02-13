@@ -199,15 +199,17 @@
 
 #pragma mark - UIDPLUS
 
-// Extremely basic and incomplete UIDPLUS implementation, currently soley used for Gmail accounts
-// to be able to remove a message from "All Messages" virtual mailbox.
+// Basic implementation of the IMAP MOVE extension(see RFC-6851), currently soley used for Gmail
+//accounts to be able to move a message from "All Messages" virtual mailbox to trash.
+// UID MOVE xxx "[Gmail]/Trash"
 
-- (void)expunge:(NSUInteger)uid;
+- (void)moveMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString *)targetFolderName;
 {
-    NSParameterAssert(uid);
     NSParameterAssert(uid > 0);
-    NSParameterAssert(uid <= [self lastUID]);
-    [_store sendCommand: IMAP_UID_EXPUNGE  info: nil arguments: @"UID EXPUNGE %u", uid];
+
+    [_store sendCommand: IMAP_UID_MOVE
+                   info: nil
+              arguments: @"UID MOVE %u \"%@\"", uid, targetFolderName];
 }
 
 #pragma mark - Fetching

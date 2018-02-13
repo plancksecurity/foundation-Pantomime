@@ -269,28 +269,26 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
  */
 - (void)expungeMSN:(NSUInteger)msn;
 
-#pragma mark - UIDPLUS
-
-// ATTENTION!
-// UIDPLUS implementaion is completel incomplete!
+#pragma mark - MOVE EXTENSION
 
 /**
- Expunges one message with given UID.
- On success, this method posts a PantomimeMessageUidExpungeCompleted notification
- (and calls -messageUidExpungeCompleted: on the delegate, if any).
+ Moves one message with given UID to a given folder. (see RFC-6851)
+ On success, this method posts a PantomimeMessageUidMoveCompleted notification
+ (and calls -messageUidMoveCompleted: on the delegate, if any).
 
- The current implementation is incomplete and it's only pupose is to delete messages from
+ The current implementation is incomplete and it's only pupose is to move messages from
  Gmails "All Messages" mailbox
 
- Note:  This method is part of the UID_PLUS IMAP extention and should (in theory) be called only on
-        servers reporting UIDPLUS in the CAPATIBILITIES.
-        However, we currently use this soley for Gmail, which is *not* reporting UIDPLUS in it's
+ Note:  This method is part of the MOVE IMAP extention and should (in theory) be called only on
+        servers reporting MOVE in the CAPATIBILITIES.
+        However, we currently use this soley for Gmail, which is *not* reporting MOVE in it's
         CAPABILITIES.
 
 
- @param uid uid of message to expunge
+ @param uid uid of message to move
+ @param targetFolderName name of folder to move the message to
  */
-- (void)expunge:(NSUInteger)uid;
+- (void)moveMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString *)targetFolderName;
 
 @end
 

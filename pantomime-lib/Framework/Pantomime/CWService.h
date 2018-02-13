@@ -241,7 +241,7 @@ extern NSString * _Nonnull PantomimeProtocolException;
 
 - (void) messageExpunged: (NSNotification * _Nullable) theNotification;
 
-- (void) messageUidExpungeCompleted: (NSNotification * _Nullable) theNotification;
+- (void) messageUidMoveCompleted: (NSNotification * _Nullable) theNotification;
 
 - (void) messagePrefetchCompleted: (NSNotification * _Nullable) theNotification;
 

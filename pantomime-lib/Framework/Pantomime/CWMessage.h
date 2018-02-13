@@ -70,10 +70,10 @@ extern NSString * _Nonnull const PantomimeMessageChanged;
 extern NSString * _Nonnull const PantomimeMessageExpunged;
 
 /*!
- @const PantomimeMessageUidExpungeCompleted
- @discussion This notification is posted when UIDPLUS call to UID_EXPUNGE completed
+ @const PantomimeMessageUidMoveCompleted
+ @discussion This notification is posted when MOVE call  completed
  */
-extern NSString * _Nonnull const PantomimeMessageUidExpungeCompleted;
+extern NSString * _Nonnull const PantomimeMessageUidMoveCompleted;
 
 @class CWFlags;
 @class CWFolder;
