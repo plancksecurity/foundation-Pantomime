@@ -197,6 +197,21 @@
   RELEASE(aMutableString);
 }
 
+#pragma mark - UIDPLUS
+
+// Basic implementation of the IMAP MOVE extension(see RFC-6851), currently soley used for Gmail
+//accounts to be able to move a message from "All Messages" virtual mailbox to trash.
+// UID MOVE xxx "[Gmail]/Trash"
+
+- (void)moveMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString *)targetFolderName;
+{
+    NSParameterAssert(uid > 0);
+
+    [_store sendCommand: IMAP_UID_MOVE
+                   info: nil
+              arguments: @"UID MOVE %u \"%@\"", uid, targetFolderName];
+}
+
 #pragma mark - Fetching
 
 // Fetches fetchMaxMails number of (yet unfetched) older messages by MSN.
@@ -219,7 +234,7 @@
 // The Problem is that the UIDs are not sequential.
 // uidGap: 108 - 10 - 1 == 97
 // Handling the UID gap by making multiple calls can cause many, many calls (num calls ~= uidGap / fetchMaxMails)
-// which might even be punished by the provider by denying access. Temporarly or forever.
+// which might even be punished by the provider by denying access due to assumed DOS attempt. Temporarly or forever.
 // Thus we are fetching by MSNs.
 - (void) fetchOlder
 {

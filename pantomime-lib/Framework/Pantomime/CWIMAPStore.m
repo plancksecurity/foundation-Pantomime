@@ -1555,7 +1555,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                                PantomimeErrorInfo);
         }
             break;
-
+        case IMAP_UID_MOVE:
         default:
             // We got a BAD response that we could not handle. Inform the delegate,
             // post a notification and remove the command that caused this from the queue.
@@ -1647,12 +1647,27 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
 }
 
+#pragma mark - --
 
 //
 // Example: * 44 EXPUNGE
 //
 - (void) _parseEXPUNGE
 {
+    if (_lastCommand == IMAP_UID_MOVE) {
+        // Calling IMAP_UID_MOVE, the server reports the messages that have been expunged in the a
+        // source folder (where it has been moved from).
+        // The client has to take care to delete the original msg currently.
+        return;
+    }
+    if (_lastCommand == IMAP_UID_STORE) {
+        // Calling IMAP_UID_STORE to set a \deleted flag on Gmail server, the server moves those
+        // messages to "All Messages", expunges it from the folder it has been deleted in and
+        // reports it here.
+        // The client has to take care to delete the original msg currently.
+        return;
+    }
+
     CWIMAPMessage *aMessage;
     NSData *aData;
     int msn;
@@ -2518,6 +2533,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         case IMAP_LSUB:
         case IMAP_NOOP:
         case IMAP_STARTTLS:
+        case IMAP_UID_MOVE:
         case IMAP_UID_FETCH_BODY_TEXT:
         case IMAP_UID_FETCH_HEADER_FIELDS:
         case IMAP_UID_FETCH_FLAGS:
@@ -2717,6 +2733,11 @@ static inline int has_literal(char *buf, NSUInteger c)
         case IMAP_UID_COPY:
             POST_NOTIFICATION(PantomimeMessagesCopyCompleted, self, self.currentQueueObject.info);
             PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyCompleted:), PantomimeMessagesCopyCompleted, self.currentQueueObject.info);
+            break;
+
+        case IMAP_UID_MOVE:
+            POST_NOTIFICATION(PantomimeMessageUidMoveCompleted, self, self.currentQueueObject.info);
+            PERFORM_SELECTOR_3(_delegate, @selector(messageUidMoveCompleted:), PantomimeMessageUidMoveCompleted, self.currentQueueObject.info);
             break;
 
         case IMAP_UID_FETCH_RFC822:
