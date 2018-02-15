@@ -32,11 +32,6 @@
 {
     @synchronized (self) {
         if (_currentQueueObject != currentQueueObject) {
-            if (currentQueueObject == nil) {
-                // The cause for IOS-390 might be nil setting during sendCommand.
-                // Set a breakpoint here.
-                INFO(NSStringFromClass([self class]), @"IOS-390 setting nil currentQueueObject");
-            }
             _currentQueueObject = currentQueueObject;
         }
     }
@@ -241,15 +236,6 @@
         INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
     } else {
         INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
-    }
-
-    //IOS-390:
-    // In the line above, self.currentQueueObject.arguments is |LIST "" *|
-    // but in the line below it is nil :-O
-    
-    if (self.currentQueueObject == nil || self.currentQueueObject.arguments == nil) {
-        // For IOS-390, set a breakpoint here, the app will soon crash.
-        INFO(NSStringFromClass([self class]), @"IOS-390, why sending nil?");
     }
 
     _lastCommand = self.currentQueueObject.command;
