@@ -2759,6 +2759,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
             PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
             break;
+
         case IMAP_UID_FETCH_FLAGS: {
             _connection_state.opening_mailbox = NO;
             POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
@@ -2798,7 +2799,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         case IMAP_UID_STORE:
         {
-            // Once the STORE has completed, we update the messages.
+            // Once STORE has completed, we update the messages.
             NSArray *theMessages;
             CWFlags *theFlags;
             NSUInteger i, count;
@@ -2814,8 +2815,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             POST_NOTIFICATION(PantomimeMessageStoreCompleted, self, self.currentQueueObject.info);
             PERFORM_SELECTOR_3(_delegate, @selector(messageStoreCompleted:), PantomimeMessageStoreCompleted, self.currentQueueObject.info);
-        }
             break;
+        }
 
         case IMAP_UNSUBSCRIBE:
             // We must remove the folder from our list of subscribed folders.
