@@ -504,7 +504,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                     // IMAP_AUTHENTICATE_XOAUTH2 answers with OK response in case of success.
                     // In case case of failure a JSON containing the status is returned, no BAD or NO
                     // response.
-                    // not handled here.
                     //
                     // Example success response from gmail:
                     // "0002 OK Thats all she wrote! o3mb34104947ljc"
@@ -2840,7 +2839,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     //
     if (![aData hasCPrefix: "*"])// || _lastCommand == IMAP_AUTHORIZATION)
     {
-        //INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
+//        INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
         if (self.currentQueueObject && self.currentQueueObject.info) {
             [self.currentQueueObject.info
              setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
