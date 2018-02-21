@@ -160,7 +160,7 @@
     NSThread *backgroundThread = ((CWTCPConnection *) _connection).backgroundThread;
     if ([NSThread currentThread] != backgroundThread) {
         [self performSelector:@selector(writeInternalData:) onThread:backgroundThread
-                   withObject:theData waitUntilDone:NO];
+                   withObject:theData waitUntilDone:YES];
     } else {
         [self writeInternalData:theData];
     }
@@ -192,7 +192,7 @@
 //
 //
 //
-- (void)writeInternalData:(NSData *)theData
+- (void) writeInternalData: (NSData *) theData
 {
     if (theData && [theData length])
     {
