@@ -17,32 +17,38 @@
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)writeQueue;
 {
-    if (!_writeQueue) {
-        _writeQueue = dispatch_queue_create("CWService - _writeQueue", DISPATCH_QUEUE_SERIAL);
+    @synchronized(self) {
+        if (!_writeQueue) {
+            _writeQueue = dispatch_queue_create("CWService - _writeQueue", DISPATCH_QUEUE_SERIAL);
+        }
+        
+        return _writeQueue;
     }
-
-    return _writeQueue;
 }
 
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)readQueue;
 {
-    if (!_readQueue) {
-        _readQueue = dispatch_queue_create("CWService - _readQueue", DISPATCH_QUEUE_SERIAL);
+    @synchronized(self) {
+        if (!_readQueue) {
+            _readQueue = dispatch_queue_create("CWService - _readQueue", DISPATCH_QUEUE_SERIAL);
+        }
+        
+        return _readQueue;
     }
-
-    return _readQueue;
 }
 
 
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)serviceQueue;
 {
-    if (!_serviceQueue) {
-        _serviceQueue = dispatch_queue_create("CWService - _serviceQueue", DISPATCH_QUEUE_SERIAL);
+    @synchronized(self) {
+        if (!_serviceQueue) {
+            _serviceQueue = dispatch_queue_create("CWService - _serviceQueue", DISPATCH_QUEUE_SERIAL);
+        }
+        
+        return _serviceQueue;
     }
-
-    return _serviceQueue;
 }
 
 
