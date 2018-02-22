@@ -173,80 +173,82 @@
 - (void) sendCommandInternal: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
                       string:(NSString * _Nonnull)theString
 {
-    if (theCommand == IMAP_EMPTY_QUEUE)
-    {
-        if ([_queue count])
+    @synchronized(self) {
+        if (theCommand == IMAP_EMPTY_QUEUE)
         {
-            // We dequeue the first inserted command from the queue.
-            self.currentQueueObject = [_queue lastObject];
-        }
-        else
-        {
-            // The queue is empty, we have nothing more to do...
-            INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
-            self.currentQueueObject = nil;
-            return;
-        }
-    }
-    else
-    {
-        //
-        // We must check in the queue if we aren't trying to add a command that is already there.
-        // This could happend if -rawSource is called in IMAPMessage multiple times before
-        // PantomimeMessageFetchCompleted is sent.
-        //
-        // We skip this verification for the IMAP_APPEND command as a messages with the same size
-        // could be quickly appended to the folder and we do NOT want to skip the second one.
-        //
-        for (CWIMAPQueueObject *aQueueObject in _queue) {
-            if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
-                [aQueueObject.arguments isEqualToString: theString])
+            if ([_queue count])
             {
-                //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
+                // We dequeue the first inserted command from the queue.
+                self.currentQueueObject = [_queue lastObject];
+            }
+            else
+            {
+                // The queue is empty, we have nothing more to do...
+                INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
+                self.currentQueueObject = nil;
                 return;
             }
         }
-
-        CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
-                                           initWithCommand: theCommand  arguments: theString
-                                           tag: [self nextTag]  info: theInfo];
-
-        [_queue insertObject: aQueueObject  atIndex: 0];
-        RELEASE(aQueueObject);
-
-        INFO(NSStringFromClass([self class]), @"queue size = %lul", (unsigned long) [_queue count]);
-
-        // If we had queued commands, we return since we'll eventually
-        // dequeue them one by one. Otherwise, we run it immediately.
-        if ([_queue count] > 1)
+        else
         {
-            //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
-            return;
+            //
+            // We must check in the queue if we aren't trying to add a command that is already there.
+            // This could happend if -rawSource is called in IMAPMessage multiple times before
+            // PantomimeMessageFetchCompleted is sent.
+            //
+            // We skip this verification for the IMAP_APPEND command as a messages with the same size
+            // could be quickly appended to the folder and we do NOT want to skip the second one.
+            //
+            for (CWIMAPQueueObject *aQueueObject in _queue) {
+                if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
+                    [aQueueObject.arguments isEqualToString: theString])
+                {
+                    //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
+                    return;
+                }
+            }
+            
+            CWIMAPQueueObject *aQueueObject = [[CWIMAPQueueObject alloc]
+                                               initWithCommand: theCommand  arguments: theString
+                                               tag: [self nextTag]  info: theInfo];
+            
+            [_queue insertObject: aQueueObject  atIndex: 0];
+            RELEASE(aQueueObject);
+            
+            INFO(NSStringFromClass([self class]), @"queue size = %lul", (unsigned long) [_queue count]);
+            
+            // If we had queued commands, we return since we'll eventually
+            // dequeue them one by one. Otherwise, we run it immediately.
+            if ([_queue count] > 1)
+            {
+                //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
+                return;
+            }
+            
+            self.currentQueueObject = aQueueObject;
         }
-
-        self.currentQueueObject = aQueueObject;
+        
+        BOOL isPrivate = NO;
+        if (self.currentQueueObject.command == IMAP_LOGIN) {
+            isPrivate = YES;
+        }
+        
+        if (isPrivate) {
+            INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
+        } else {
+            INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
+        }
+        
+        _lastCommand = self.currentQueueObject.command;
+        
+        [self bulkWriteData:@[self.currentQueueObject.tag,
+                              [NSData dataWithBytes: " "  length: 1],
+                              [self.currentQueueObject.arguments dataUsingEncoding: _defaultCStringEncoding],
+                              _crlf]];
+        
+        POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
+        PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
     }
-
-    BOOL isPrivate = NO;
-    if (self.currentQueueObject.command == IMAP_LOGIN) {
-        isPrivate = YES;
-    }
-
-    if (isPrivate) {
-        INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
-    } else {
-        INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
-    }
-
-    _lastCommand = self.currentQueueObject.command;
-
-    [self bulkWriteData:@[self.currentQueueObject.tag,
-                          [NSData dataWithBytes: " "  length: 1],
-                          [self.currentQueueObject.arguments dataUsingEncoding: _defaultCStringEncoding],
-                          _crlf]];
-
-    POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
-    PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
 }
 
 
