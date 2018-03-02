@@ -87,29 +87,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (dispatch_queue_t _Nullable)serviceQueue;
 
 /*!
- @method name
- @discussion This method is used to obtain the server name.
- @result The server name.
- */
-- (NSString * _Nonnull) name;
-
-/*!
- @method setName:
- @discussion This method is used to set the server name to which
- we will eventually connect to.
- @param theName The name of the server.
- */
-- (void) setName: (NSString * _Nonnull) theName;
-
-/*!
- @method setPort:
- @discussion This method is used to set the server port to which
- we will eventually connect to.
- @param theName The port of the server.
- */
-- (void) setPort: (unsigned int) thePort;
-
-/*!
  @method connection
  @discussion This method is used to retrieve the associated connection
  object for the service (usually a CWTCPConnection instance).
