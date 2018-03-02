@@ -288,7 +288,7 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
  @param uid uid of message to move
  @param targetFolderName name of folder to move the message to
  */
-- (void)moveMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString *)targetFolderName;
+- (void)moveMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString * _Nonnull)targetFolderName;
 
 @end
 
