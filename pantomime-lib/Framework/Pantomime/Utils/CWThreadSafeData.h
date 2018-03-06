@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion Useful for server responses that are CRLF terminated (for instance IMAP, POP3 and SMTP servers)
  @result A line as a NSData instance, nil if no line was splitted.
  */
-- (NSData *)dropFirstLine;
+- (NSData * _Nullable)dropFirstLine;
 
 @end
 

@@ -99,7 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
     });
 }
 
-- (NSData *)dropFirstLine
+- (NSData * _Nullable)dropFirstLine
 {
     __block NSData *firstLine = nil;
     dispatch_sync(self.queue, ^{

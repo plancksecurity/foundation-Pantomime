@@ -579,7 +579,7 @@
   // than a STORE FLAGS (<new flags>) since some broken servers might not 
   // support it (like Cyrus v1.5.19 and v1.6.24).
   //
-  if (theFlags->flags == 0)
+  if (theFlags->flags == 0 && aMessage)
     {
       [aMutableString appendFormat: @"UID STORE %@ -FLAGS.SILENT (", aSequenceSet];
       [aMutableString appendString: [[aMessage flags] asString]];

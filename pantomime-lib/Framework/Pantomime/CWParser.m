@@ -381,8 +381,10 @@ NSRange shrinkRange(NSRange range)
       unsigned char *bytes, *word;
 
       aData = [theLine subdataFromIndex: 6];
+
       word = malloc(256);
-      
+      *word = '\0';
+
       //INFO(NSStringFromClass([self class]), @"Have to parse |%@|", [aData asciiString]);
 
       bytes = (unsigned char*)[aData bytes];
