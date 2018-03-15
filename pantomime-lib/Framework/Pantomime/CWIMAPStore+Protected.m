@@ -330,12 +330,15 @@
 - (void)signalFolderFetchCompleted
 {
     //INFO(NSStringFromClass([self class]), @"DONE PREFETCHING FOLDER");
-    POST_NOTIFICATION(PantomimeFolderFetchCompleted,
-                      self,
-                      [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
-    PERFORM_SELECTOR_2(_delegate,
+    NSMutableDictionary *info = [NSMutableDictionary new];
+    if (_selectedFolder) {
+        info[@"Folder"] = _selectedFolder;
+    }
+    POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, info);
+    PERFORM_SELECTOR_3(_delegate,
                        @selector(folderFetchCompleted:),
-                       PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
+                       PantomimeFolderFetchCompleted,
+                       info);
 }
 
 @end
