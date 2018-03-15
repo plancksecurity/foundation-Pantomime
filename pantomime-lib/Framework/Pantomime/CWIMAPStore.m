@@ -1781,12 +1781,12 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) _parseFETCH_UIDS
 {
-    NSArray *uidFromResponse = [self _uniqueIdentifiersFromData: [_responsesFromServer lastObject]];
+    NSArray *uidsFromResponse = [self _uniqueIdentifiersFromData: [_responsesFromServer lastObject]];
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
     if (!alreadyParsedUids) {
-        alreadyParsedUids = uidFromResponse;
+        alreadyParsedUids = uidsFromResponse;
     } else {
-        alreadyParsedUids = [alreadyParsedUids arrayByAddingObjectsFromArray:uidFromResponse];
+        alreadyParsedUids = [alreadyParsedUids arrayByAddingObjectsFromArray:uidsFromResponse];
     }
     // Store/update the results in our command queue.
     [self.currentQueueObject.info setObject: alreadyParsedUids  forKey: @"Uids"];
@@ -2768,10 +2768,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         case IMAP_UID_FETCH_UIDS: {
             _connection_state.opening_mailbox = NO;
-            NSDictionary *info = @{@"Folder":_selectedFolder,
-                                   @"Uids":self.currentQueueObject.info[@"Uids"]};
-            POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, info);//[NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
-            PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderSyncCompleted, info);
+            NSMutableDictionary *info = [NSMutableDictionary new];
+            if (_selectedFolder) {
+                info[@"Folder"] = _selectedFolder;
+            }
+            if (self.currentQueueObject.info[@"Uids"]) {
+                info[@"Uids"] = self.currentQueueObject.info[@"Uids"];
+            }
+            POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, info);
+            PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, info);
             break;
         }
 
