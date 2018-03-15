@@ -401,7 +401,8 @@
 //
 - (void) fetchUidsForNewMails
 {
-    NSInteger from = [self lastUID] + 1;
+    NSInteger lastUid = [self lastUID] ? [self lastUID] : 0;
+    NSInteger from = lastUid + 1;
     [_store sendCommand:IMAP_UID_FETCH_UIDS  info:nil arguments:@"UID FETCH %u:* (UID)", from];
 }
 
