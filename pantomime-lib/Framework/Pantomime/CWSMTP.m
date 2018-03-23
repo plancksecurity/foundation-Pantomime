@@ -291,17 +291,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
 
 //
-//
-//
-- (void) connectInBackgroundAndNotify
-{
-    [self dispatchSyncOnConnectionThreadBlock: ^{
-        [super connectInBackgroundAndNotify];
-    }];
-}
-
-
-//
 // This method is used to authenticate ourself to the SMTP server.
 //
 - (void) authenticate: (NSString *) theUsername
