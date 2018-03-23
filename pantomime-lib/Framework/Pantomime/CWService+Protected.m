@@ -280,6 +280,11 @@
     }
 }
 
+- (void)dispatchSyncOnConnectionThreadBlock:(dispatch_block_t)block
+{
+    [self dispatchOnConnectionThreadWaitUntilDone:YES block:block];
+}
+
 #pragma mark - CWConnectionDelegate
 
 /**
