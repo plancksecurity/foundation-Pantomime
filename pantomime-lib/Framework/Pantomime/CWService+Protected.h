@@ -229,6 +229,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)nullifyQueues;
 
+/**
+ Executes a given block on the connection thread.
+ */
+- (void)dispatchOnConnectionThreadWaitUntilDone:(BOOL)waitUntilDone block:(dispatch_block_t)block;
+
 NS_ASSUME_NONNULL_END
 
 @end

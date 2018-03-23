@@ -308,6 +308,25 @@
     _serviceQueue = nil;
 }
 
+- (void)dispatchBlock:(id)blockObject
+{
+    dispatch_block_t theBlock = (dispatch_block_t) blockObject;
+    theBlock();
+}
+
+- (void)dispatchOnConnectionThreadWaitUntilDone:(BOOL)waitUntilDone block:(dispatch_block_t)block
+{
+    NSThread *connectionThread = ((CWTCPConnection *) _connection).backgroundThread;
+    if ([NSThread currentThread] != connectionThread) {
+        [self performSelector:@selector(dispatchBlock:)
+                     onThread:connectionThread
+                   withObject:block
+                waitUntilDone:waitUntilDone];
+    } else {
+        block();
+    }
+}
+
 #pragma mark - CWConnectionDelegate
 
 /**

@@ -234,9 +234,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
               string:(NSString * _Nonnull)theString
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchOnConnectionThreadWaitUntilDone:YES block: ^{
         [self sendCommandInternal:theCommand info:theInfo string:theString];
-    });
+    }];
 }
 
 
@@ -279,9 +279,10 @@ static inline int has_literal(char *buf, NSUInteger c)
                             mode: (PantomimeFolderMode) theMode
 {
     __block CWIMAPFolder *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchOnConnectionThreadWaitUntilDone:YES block: ^{
         returnee = [self folderForNameInternal:theName mode:theMode];
-    });
+    }];
 
     return returnee;
 }
@@ -1002,7 +1003,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSEnumerator *) folderEnumerator
 {
     __block NSEnumerator *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchOnConnectionThreadWaitUntilDone:YES block: ^{
         if (![_folders count]) {
             // Only top level folders: LIST "" %
             [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
@@ -1011,7 +1013,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             return;
         }
         returnee = [_folders keyEnumerator];
-    });
+    }];
 
     return returnee;
 }
