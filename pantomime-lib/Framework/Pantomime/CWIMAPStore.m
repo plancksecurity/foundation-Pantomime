@@ -849,16 +849,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 //
-//
-//
-- (void) connectInBackgroundAndNotify
-{
-    [self dispatchSyncOnConnectionThreadBlock: ^{
-        [super connectInBackgroundAndNotify];
-    }];
-}
-
-//
 // This method authenticates the Store to the IMAP server.
 // In case of an error, it returns NO.
 //
