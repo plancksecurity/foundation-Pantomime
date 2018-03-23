@@ -212,11 +212,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (unsigned int) lastCommand;
 
 /**
- Sets all internal dispatch_queues used for serialization to nil.
- */
-- (void)nullifyQueues;
-
-/**
  Executes a given block on the connection thread.
  */
 - (void)dispatchSyncOnConnectionThreadBlock:(dispatch_block_t)block;

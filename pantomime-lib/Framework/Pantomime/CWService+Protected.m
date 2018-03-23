@@ -149,11 +149,9 @@
 //
 - (void) bulkWriteData: (NSArray<NSData*> *_Nonnull) bulkData;
 {
-    dispatch_sync(self.writeQueue, ^{
-        for (NSData *data in bulkData) {
-            [self write:data];
-        }
-    });
+    for (NSData *data in bulkData) {
+        [self write:data];
+    }
 }
 
 
