@@ -166,9 +166,11 @@
 - (unsigned int) port
 {
     __block unsigned int returnee = 0;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = _port;
-    });
+    }];
+
     return returnee;
 }
 
@@ -179,9 +181,11 @@
 - (NSArray *) supportedMechanisms
 {
     __block NSArray *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = [_supportedMechanisms array];
-    });
+    }];
+
     return returnee;
 }
 

@@ -220,11 +220,11 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void)exitIDLE
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         if (self.lastCommand == IMAP_IDLE) {
             [self writeData: IDLE_DONE_CONTINUATION];
         }
-    });
+    }];
 }
 
 
@@ -234,7 +234,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
               string:(NSString * _Nonnull)theString
 {
-    [self dispatchOnConnectionThreadWaitUntilDone:YES block: ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommandInternal:theCommand info:theInfo string:theString];
     }];
 }
@@ -246,7 +246,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSArray *) supportedMechanisms
 {
     __block NSArray *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         NSMutableArray *aMutableArray;
         NSString *aString;
         NSUInteger i, count;;
@@ -265,7 +266,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
         
         returnee =  aMutableArray;
-    });
+    }];
     
     return returnee;
 }
@@ -280,7 +281,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     __block CWIMAPFolder *returnee = nil;
 
-    [self dispatchOnConnectionThreadWaitUntilDone:YES block: ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = [self folderForNameInternal:theName mode:theMode];
     }];
 
@@ -294,9 +295,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) cancelRequest
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [super cancelRequest];
-    });
+    }];
 }
 
 
@@ -305,7 +306,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) close
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         // ignore all subsequent messages from the servers
         _folderBuilder = nil;
         _delegate = nil;
@@ -316,7 +317,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
         }
         [super close];
-    });
+    }];
 }
 
 
@@ -340,7 +341,7 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
-    dispatch_sync(self.readQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         NSData *aData;
 
         NSUInteger i, count;
@@ -787,7 +788,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         } // while ((aData = split_lines...
         
         //INFO(NSStringFromClass([self class]), @"While loop broken!");
-    });
+    }];
 }
 
 
@@ -796,9 +797,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) noop
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommand: IMAP_NOOP  info: nil  arguments: @"NOOP"];
-    });
+    }];
 }
 
 
@@ -807,7 +808,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (int) reconnect
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         //INFO(NSStringFromClass([self class]), @"CWIMAPStore: -reconnect");
 
         [_connection_state.previous_queue addObjectsFromArray: [_queue array]];
@@ -831,7 +832,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         [super close];
         [super connectInBackgroundAndNotify];
-    });
+    }];
 
     return 0; // In case you wonder see reconnect doc: @result Pending.
 }
@@ -842,9 +843,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) startTLS
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommand: IMAP_STARTTLS  info: nil  arguments: @"STARTTLS"];
-    });
+    }];
 }
 
 //
@@ -852,9 +853,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) connectInBackgroundAndNotify
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [super connectInBackgroundAndNotify];
-    });
+    }];
 }
 
 //
@@ -870,7 +871,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     __block NSString *blockPassword = thePassword;
 
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         ASSIGN(_username, theUsername);
         ASSIGN(_password, thePassword);
         ASSIGN(_mechanism, theMechanism);
@@ -921,7 +922,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
 
         [self sendCommand: IMAP_LOGIN  info: nil  arguments: @"LOGIN %@ %@", _username, thePassword];
-    });
+    }];
 }
 
 #pragma mark - CWStore
@@ -936,11 +937,11 @@ static inline int has_literal(char *buf, NSUInteger c)
                          type: (PantomimeFolderFormat) theType
                      contents: (NSData *) theContents
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommand: IMAP_CREATE
                      info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
                 arguments: @"CREATE \"%@\"", [theName modifiedUTF7String]];
-    });
+    }];
 }
 
 
@@ -951,11 +952,11 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) deleteFolderWithName: (NSString *) theName
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommand: IMAP_DELETE
                      info: [NSDictionary dictionaryWithObject: theName  forKey: @"Name"]
                 arguments: @"DELETE \"%@\"", [theName modifiedUTF7String]];
-    });
+    }];
 }
 
 
@@ -976,7 +977,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     __block NSString *blockName = theName;
     __block NSString *blockNewName = theNewName;
 
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         NSDictionary *info;
 
         blockName = [blockName stringByDeletingFirstPathSeparator: _folderSeparator];
@@ -993,7 +994,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         [self sendCommand: IMAP_RENAME
                      info: info
                 arguments: @"RENAME \"%@\" \"%@\"", [blockName modifiedUTF7String], [blockNewName modifiedUTF7String]];
-    });
+    }];
 }
 
 
@@ -1004,7 +1005,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     __block NSEnumerator *returnee = nil;
 
-    [self dispatchOnConnectionThreadWaitUntilDone:YES block: ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         if (![_folders count]) {
             // Only top level folders: LIST "" %
             [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
@@ -1025,7 +1026,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSEnumerator *) subscribedFolderEnumerator
 {
     __block NSEnumerator *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         if (![_subscribedFolders count])
         {
             [self sendCommand: IMAP_LSUB  info: nil  arguments: @"LSUB \"\" \"*\""];
@@ -1035,7 +1037,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
 
         returnee = [_subscribedFolders objectEnumerator];
-    });
+    }];
 
     return returnee;
 }
@@ -1047,7 +1049,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (id) folderForURL: (NSString *) theURL
 {
     __block id returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         CWURLName *theURLName;
         id aFolder;
 
@@ -1056,7 +1059,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         aFolder = [self folderForNameInternal: [theURLName foldername]];
         RELEASE(theURLName);
         returnee = aFolder;
-    });
+    }];
 
     return returnee;
 }
@@ -1068,9 +1071,10 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSEnumerator *) openFoldersEnumerator
 {
     __block NSEnumerator *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = [_openFolders objectEnumerator];
-    });
+    }];
 
     return returnee;
 }
@@ -1081,14 +1085,14 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) removeFolderFromOpenFolders: (CWFolder *) theFolder
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         if (_selectedFolder == (CWIMAPFolder *)theFolder)
         {
             _selectedFolder = nil;
         }
 
         [_openFolders removeObjectForKey: [theFolder name]];
-    });
+    }];
 }
 
 
@@ -1098,7 +1102,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (BOOL) folderForNameIsOpen: (NSString *) theName
 {
     __block BOOL returnee = NO;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         NSEnumerator *anEnumerator;
         CWIMAPFolder *aFolder;
 
@@ -1115,7 +1120,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
 
         returnee = NO;
-    });
+    }];
 
     return returnee;
 }
@@ -1132,7 +1137,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (PantomimeFolderAttribute) folderTypeForFolderName: (NSString *) theName
 {
     __block PantomimeFolderAttribute returnee = 0;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         id o;
 
         o = [_folders objectForKey: theName];
@@ -1144,7 +1150,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
 
         [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" \"%@\"", [theName modifiedUTF7String]];
-    });
+    }];
 
     return returnee;
 
@@ -1179,10 +1185,11 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (id) folderForName: (NSString *) theName
 {
     __block id returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = [self folderForNameInternal: theName
                                           mode: PantomimeReadWriteMode];
-    });
+    }];
 
     return returnee;
 }

@@ -152,9 +152,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) cancelRequest
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [super cancelRequest];
-    });
+    }];
 }
 
 
@@ -163,12 +163,12 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) close
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         if (_connected) {
             [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
         }
         [super close];
-    });
+    }];
 }
 
 
@@ -177,9 +177,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) reset
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommand: SMTP_RSET  arguments: @"RSET"];
-    });
+    }];
 }
 
 
@@ -260,9 +260,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) noop
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommand: SMTP_NOOP  arguments: @"NOOP"];
-    });
+    }];
 }
 
 
@@ -271,9 +271,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (int) reconnect
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [super reconnect];
-    });
+    }];
 
     return 0; // In case you wonder see reconnect doc: @result Pending.
 }
@@ -284,9 +284,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) startTLS
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [self sendCommand: SMTP_STARTTLS  arguments: @"STARTTLS"];
-    });
+    }];
 }
 
 
@@ -295,9 +295,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) connectInBackgroundAndNotify
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         [super connectInBackgroundAndNotify];
-    });
+    }];
 }
 
 
@@ -308,7 +308,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
              password: (NSString *) thePassword
             mechanism: (NSString *) theMechanism
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         ASSIGN(_username, theUsername);
         ASSIGN(_password, thePassword);
         ASSIGN(_mechanism, theMechanism);
@@ -341,7 +341,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
             // Unknown / Unsupported mechanism
             AUTHENTICATION_FAILED(_delegate, theMechanism);
         }
-    });
+    }];
 }
 
 #pragma mark - CWTransport
@@ -354,7 +354,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) sendMessage
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         NSString *aString;
 
         if (!_message && !_data)
@@ -405,7 +405,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         {
             [self sendCommand: SMTP_MAIL  arguments: @"MAIL FROM:<%@>", aString];
         }
-    });
+    }];
 }
 
 
@@ -414,18 +414,19 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setMessage: (CWMessage *) theMessage
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         DESTROY(_data);
         ASSIGN(_message, theMessage);
-    });
+    }];
 }
 
 - (CWMessage *) message
 {
     __block CWMessage *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = _message;
-    });
+    }];
 
     return returnee;
 }
@@ -436,18 +437,19 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setMessageData: (NSData *) theData
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         DESTROY(_message);
         ASSIGN(_data, theData);
-    });
+    }];
 }
 
 - (NSData *) messageData
 {
     __block NSData *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = _data;
-    });
+    }];
 
     return returnee;
 }
@@ -458,14 +460,14 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setRecipients: (NSArray *) theRecipients
 {
-    dispatch_sync(self.serviceQueue, ^{
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         DESTROY(_recipients);
 
         if (theRecipients)
         {
             ASSIGN(_recipients, [NSMutableArray arrayWithArray: theRecipients]);
         }
-    });
+    }];
 }
 
 
@@ -475,9 +477,10 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 - (NSArray *) recipients
 {
     __block NSArray *returnee = nil;
-    dispatch_sync(self.serviceQueue, ^{
+
+    [self dispatchSyncOnConnectionThreadBlock: ^{
         returnee = _recipients;
-    });
+    }];
 
     return returnee;
 }
