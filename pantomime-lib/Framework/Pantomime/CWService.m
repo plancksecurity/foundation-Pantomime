@@ -202,7 +202,6 @@
 //
 - (void) cancelRequest
 {
-    [self nullifyQueues];
     [_connection close];
     DESTROY(_connection);
     [_queue removeAllObjects];
@@ -217,7 +216,6 @@
 //
 - (void) close
 {
-    [self nullifyQueues];
     //
     // If we are reconnecting, no matter what, we close and release our current connection immediately.
     // We do that since we'll create a new on in -connect/-connectInBackgroundAndNotify. No need
