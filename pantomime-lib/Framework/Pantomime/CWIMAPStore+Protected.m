@@ -236,7 +236,9 @@
         if (isPrivate) {
             INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
         } else {
-            INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
+            INFO(NSStringFromClass([self class]), @"Sending (%x) |%@|",
+                 (unsigned) self,
+                 self.currentQueueObject.arguments);
         }
         
         _lastCommand = self.currentQueueObject.command;
