@@ -141,10 +141,8 @@
 // We serialize access from outside and use the underlying iVars internally to avoid deadlocks
 - (void) setDelegate: (id _Nullable) theDelegate
 {
-    @synchronized (self) {
-        if (_delegate != theDelegate) {
-            _delegate = theDelegate;
-        }
+    if (_delegate != theDelegate) {
+        _delegate = theDelegate;
     }
 }
 
@@ -154,9 +152,7 @@
 //
 - (id) delegate
 {
-    @synchronized (self) {
-        return _delegate;
-    }
+    return _delegate;
 }
 
 
@@ -362,9 +358,7 @@
 //
 - (NSSet *) capabilities
 {
-    @synchronized (self) {
-        return [[NSSet alloc] initWithArray:[_capabilities array]];
-    }
+    return [[NSSet alloc] initWithArray:[_capabilities array]];
 }
 
 @end
