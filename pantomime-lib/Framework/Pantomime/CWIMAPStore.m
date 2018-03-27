@@ -339,6 +339,8 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
+    // Nothing in here should run on the connections thread.
+    // Dispatch away but don't block it!
     dispatch_async(self.readQueue, ^{
         NSData *aData;
 

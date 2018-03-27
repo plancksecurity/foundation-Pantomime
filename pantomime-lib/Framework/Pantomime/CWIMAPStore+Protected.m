@@ -173,6 +173,8 @@
 - (void) sendCommandInternal: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
                       string:(NSString * _Nonnull)theString
 {
+    // If two calls to this method happen concurrently, one might empty the queue the other is
+    // currenly using (causes |SENDING null|).
     @synchronized(self) {
         if (theCommand == IMAP_EMPTY_QUEUE)
         {
