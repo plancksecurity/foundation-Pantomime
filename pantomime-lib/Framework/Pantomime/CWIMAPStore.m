@@ -846,15 +846,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     });
 }
 
-//
-//
-//
-- (void) connectInBackgroundAndNotify
-{
-    dispatch_sync(self.serviceQueue, ^{
-        [super connectInBackgroundAndNotify];
-    });
-}
 
 //
 // This method authenticates the Store to the IMAP server.
