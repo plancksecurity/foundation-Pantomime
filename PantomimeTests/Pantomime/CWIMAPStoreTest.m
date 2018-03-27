@@ -59,12 +59,21 @@ static NSString *CRLF = @"\r\n";
 @end
 
 @interface StoreTestDelegate:NSObject<TestableImapStoreDelegate>
-@property BOOL parseBadCalled;
+@property (nonatomic, strong) XCTestExpectation *badCalledExp;
 @end
 @implementation StoreTestDelegate
+- (instancetype)initWithBadCalledExpectation:(XCTestExpectation *)badCalledExp
+{
+    self = [super init];
+    if (self) {
+        self.badCalledExp = badCalledExp;
+    }
+    return self;
+}
+
 - (void)testableImapStoreDidCallParseBad:(TestableImapStore *)store
 {
-    self.parseBadCalled = YES;
+    [self.badCalledExp fulfill];
 }
 @end
 
@@ -187,25 +196,29 @@ static NSString *CRLF = @"\r\n";
 //IOS-292: server responce without sequence number ignored
 - (void)testUpdateRead_BadWithoutSequenceNumber {
     NSString *serverResponseString = [@"* BAD internal server error" crLfTerminated];
-    StoreTestDelegate *delegate = [StoreTestDelegate new];
+    XCTestExpectation *expBadCalled = [self expectationWithDescription:@"expBadCalled"];
+    StoreTestDelegate *delegate = [[StoreTestDelegate alloc]
+                                   initWithBadCalledExpectation:expBadCalled];
     TestableImapStore *store = [TestableImapStore new];
     store.testDelegate = delegate;
     NSData *serverResponseData = [serverResponseString dataUsingEncoding:NSUTF8StringEncoding];
     [store setReadBufferData:serverResponseData];
     [store updateRead];
-    XCTAssertTrue(delegate.parseBadCalled);
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
 
 - (void)testUpdateRead_BadWithSequenceNumber {
     NSString *serverResponseString =
     [@"A00000009 BAD Error in IMAP command FETCH: Invalid messageset (0.000 + 0.040 + 0.039 secs)" crLfTerminated];
-    StoreTestDelegate *delegate = [StoreTestDelegate new];
+    XCTestExpectation *expBadCalled = [self expectationWithDescription:@"expBadCalled"];
+    StoreTestDelegate *delegate = [[StoreTestDelegate alloc]
+                                   initWithBadCalledExpectation:expBadCalled];
     TestableImapStore *store = [TestableImapStore new];
     store.testDelegate = delegate;
     NSData *serverResponseData = [serverResponseString dataUsingEncoding:NSUTF8StringEncoding];
     [store setReadBufferData:serverResponseData];
     [store updateRead];
-    XCTAssertTrue(delegate.parseBadCalled);
+    [self waitForExpectationsWithTimeout:5.0 handler:nil];
 }
 
 @end

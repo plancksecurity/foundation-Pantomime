@@ -339,7 +339,7 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
-    dispatch_sync(self.readQueue, ^{
+    dispatch_async(self.readQueue, ^{
         NSData *aData;
 
         NSUInteger i, count;
