@@ -277,10 +277,13 @@ static inline int has_literal(char *buf, NSUInteger c)
 #warning VERIFY FOR NoSelect
 - (CWIMAPFolder *) folderForName: (NSString *) theName
                             mode: (PantomimeFolderMode) theMode
+               updateExistsCount: (BOOL)updateExistsCount
 {
     __block CWIMAPFolder *returnee = nil;
     dispatch_sync(self.serviceQueue, ^{
-        returnee = [self folderForNameInternal:theName mode:theMode];
+        returnee = [self folderForNameInternal:theName
+                                          mode:theMode
+                             updateExistsCount:updateExistsCount];
     });
 
     return returnee;
@@ -1160,19 +1163,20 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (id) defaultFolder
 {
     // is serialized by folderForName:
-    return [self folderForName: @"INBOX"];
+    return [self folderForName: @"INBOX" updateExistsCount: NO];
 }
 
 
 //
 //
 //
-- (id) folderForName: (NSString *) theName
+- (id) folderForName: (NSString *) theName  updateExistsCount: (BOOL)updateExistsCount//IOS-986
 {
     __block id returnee = nil;
     dispatch_sync(self.serviceQueue, ^{
         returnee = [self folderForNameInternal: theName
-                                          mode: PantomimeReadWriteMode];
+                                          mode: PantomimeReadWriteMode
+                             updateExistsCount:updateExistsCount];
     });
 
     return returnee;
@@ -1184,7 +1188,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (id) folderForNameInternal: (NSString *) theName
 {
     return [self folderForNameInternal: theName
-                                  mode: PantomimeReadWriteMode];
+                                  mode: PantomimeReadWriteMode updateExistsCount:NO];
 }
 
 @end

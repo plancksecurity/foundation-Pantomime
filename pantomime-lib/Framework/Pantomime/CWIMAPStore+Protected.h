@@ -138,15 +138,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) sendCommandInternal: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
                       string:(NSString * _Nonnull)theString;
 
-/*!
- @discussion This method is used to get the folder with
- the specified name and mode. Also selects the folder.
+/**
+ This method is used to get the folder with the specified name and mode.
+ Note: This method also selects the folder if, and only if, the folder is not
+ selected already to avoid network. As aconsequence the folders EXISTS count might be outdated.
+ If you have to rely on a valid EXISTS count set updateExistsCount to YES.
  @param theName The name of the folder to obtain.
  @param theMode The mode to use. The value is one of the PantomimeFolderMode enum.
- @result A CWIMAPFolder instance.
+ @param updateExistsCount if true, a valid exists count is guaranteed.
+ @return A CWIMAPFolder instance.
  */
 - (CWIMAPFolder *) folderForNameInternal: (NSString *) theName
-                                    mode: (PantomimeFolderMode) theMode;
+                                    mode: (PantomimeFolderMode) theMode
+                       updateExistsCount: (BOOL)updateExistsCount;
 
 - (void)signalFolderSyncError;
 

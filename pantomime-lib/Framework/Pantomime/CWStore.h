@@ -93,14 +93,19 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
 */
 - (id _Nonnull) defaultFolder;
 
-/*!
-  @method folderForName:
-  @discussion This method is used to obtain a CWFolder instance
-              with the specifed name.
-  @param theName The name of the folder to obtain.
-  @result A CWFolder subclass instance.
-*/
-- (id _Nullable) folderForName: (NSString * _Nullable) theName;
+
+/**
+ This method is used to obtain a CWFolder instance
+ with the specifed name.
+ Note: This method also selects the folder if, and only if, the folder has not been
+ selected already. As aconsequence the folders EXISTS count might be outdated.
+ If you have to rely on a valid EXISTS count set updateExistsCount to YES.
+ @param theName The name of the folder to obtain.
+ @param updateExistsCount if true, a valid exists count is guaranteed.
+ @return A CWFolder subclass instance.
+ */
+- (id _Nullable) folderForName: (NSString * _Nullable) theName
+             updateExistsCount: (BOOL)updateExistsCount; //IOS-986
 
 /*!
   @method folderForURL:

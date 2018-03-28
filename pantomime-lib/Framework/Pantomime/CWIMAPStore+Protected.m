@@ -51,7 +51,7 @@
 
     if (aBOOL)
     {
-        return [self folderForName: theName];
+        return [self folderForName: theName updateExistsCount:aBOOL];
     }
     else
     {
@@ -260,12 +260,18 @@
 #warning VERIFY FOR NoSelect
 - (CWIMAPFolder *) folderForNameInternal: (NSString *) theName
                                     mode: (PantomimeFolderMode) theMode
+                       updateExistsCount: (BOOL)updateExistsCount
 {
         CWIMAPFolder *aFolder = [_openFolders objectForKey: theName];
 
         if (aFolder) {
             if ([_selectedFolder.name isEqualToString:theName]) {
-                return aFolder;
+                // We have the folder already and it is already selected.
+                if (!updateExistsCount) {
+                    // Return it in case exists count is not of interest ...
+                    return aFolder;
+                }
+                // ... otherwize update exists count by calling SELECT/EXAMINE.
             }
         } else {
             aFolder = [self folderWithName:theName];

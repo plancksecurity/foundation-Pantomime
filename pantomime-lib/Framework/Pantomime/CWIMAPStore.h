@@ -213,17 +213,6 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 @property (nonatomic) NSUInteger maxFetchCount;
 
 /*!
-  @method folderForName:mode:
-  @discussion This method is used to get the folder with
-              the specified name and mode. Also selects the folder.
-  @param theName The name of the folder to obtain.
-  @param theMode The mode to use. The value is one of the PantomimeFolderMode enum.
-  @result A CWIMAPFolder instance.
-*/
-- (CWIMAPFolder *_Nullable) folderForName: (NSString * _Nonnull) theName
-                                     mode: (PantomimeFolderMode) theMode;
-
-/*!
  @method sendCommand:info:string: ...
  @discussion This method is used to send commands to the IMAP server.
  Normally, you should not call this method directly.
