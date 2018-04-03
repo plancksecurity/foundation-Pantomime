@@ -105,7 +105,7 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
  @return A CWFolder subclass instance.
  */
 - (id _Nullable) folderForName: (NSString * _Nullable) theName
-             updateExistsCount: (BOOL)updateExistsCount; //IOS-986
+             updateExistsCount: (BOOL)updateExistsCount;
 
 /*!
   @method folderForURL:

@@ -1170,7 +1170,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 //
 //
-- (id) folderForName: (NSString *) theName  updateExistsCount: (BOOL)updateExistsCount//IOS-986
+- (id) folderForName: (NSString *) theName  updateExistsCount: (BOOL)updateExistsCount
 {
     __block id returnee = nil;
     dispatch_sync(self.serviceQueue, ^{
