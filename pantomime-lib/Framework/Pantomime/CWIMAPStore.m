@@ -1510,69 +1510,72 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseBAD
 {
-    NSData *aData;
+    // Synchronize all methods that alter the _queue
+    @synchronized(self) {
+        NSData *aData;
 
-    aData = [_responsesFromServer lastObject];
+        aData = [_responsesFromServer lastObject];
 
-    INFO(NSStringFromClass([self class]), @"IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
+        INFO(NSStringFromClass([self class]), @"IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
 
-    switch (_lastCommand)
-    {
-        case IMAP_LOGIN:
-            // This can happen if we got an empty username or password.
-            AUTHENTICATION_FAILED(_delegate, _mechanism);
-            break;
-        case IMAP_AUTHENTICATE_CRAM_MD5:
-        case IMAP_AUTHENTICATE_XOAUTH2: // Only added for completenes. In reality XOAuth2 never responds with BAD (only Gmail tested so far)
-        case IMAP_AUTHENTICATE_LOGIN:
-            // Probably wrong credentials.
-            // Example case: 0003 BAD [AUTHENTICATIONFAILED] AUTHENTICATE Invalid credentials
-            AUTHENTICATION_FAILED(_delegate, _mechanism);
-            break;
-        case IMAP_SELECT: {
-            [_queue removeLastObject];
-            [_responsesFromServer removeAllObjects];
+        switch (_lastCommand)
+        {
+            case IMAP_LOGIN:
+                // This can happen if we got an empty username or password.
+                AUTHENTICATION_FAILED(_delegate, _mechanism);
+                break;
+            case IMAP_AUTHENTICATE_CRAM_MD5:
+            case IMAP_AUTHENTICATE_XOAUTH2: // Only added for completenes. In reality XOAuth2 never responds with BAD (only Gmail tested so far)
+            case IMAP_AUTHENTICATE_LOGIN:
+                // Probably wrong credentials.
+                // Example case: 0003 BAD [AUTHENTICATIONFAILED] AUTHENTICATE Invalid credentials
+                AUTHENTICATION_FAILED(_delegate, _mechanism);
+                break;
+            case IMAP_SELECT: {
+                [_queue removeLastObject];
+                [_responsesFromServer removeAllObjects];
 
-            if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
-                // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
-                // without calling CLOSE.
-                // see RFC4549-4.2.5
-                _selectedFolder = nil;
-                PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
-                POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
-                return;
+                if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
+                    // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
+                    // without calling CLOSE.
+                    // see RFC4549-4.2.5
+                    _selectedFolder = nil;
+                    PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
+                    POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
+                    return;
+                }
+
+                NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
+
+                POST_NOTIFICATION(PantomimeFolderOpenFailed, self, userInfo);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:),
+                                   PantomimeFolderOpenFailed, userInfo,
+                                   PantomimeErrorInfo);
             }
+                break;
+            case IMAP_UID_MOVE:
+            default:
+                // We got a BAD response that we could not handle. Inform the delegate,
+                // post a notification and remove the command that caused this from the queue.
+                [_queue removeLastObject];
+                [_responsesFromServer removeAllObjects];
 
-            NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
+                NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
 
-            POST_NOTIFICATION(PantomimeFolderOpenFailed, self, userInfo);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:),
-                               PantomimeFolderOpenFailed, userInfo,
-                               PantomimeErrorInfo);
+                POST_NOTIFICATION(PantomimeBadResponse, self, userInfo);
+                PERFORM_SELECTOR_2(_delegate, @selector(badResponse:),
+                                   PantomimeBadResponse, userInfo,
+                                   PantomimeErrorInfo);
         }
-            break;
-        case IMAP_UID_MOVE:
-        default:
-            // We got a BAD response that we could not handle. Inform the delegate,
-            // post a notification and remove the command that caused this from the queue.
+
+        if (![aData hasCPrefix: "*"])
+        {
             [_queue removeLastObject];
-            [_responsesFromServer removeAllObjects];
+            [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
+        }
 
-            NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
-
-            POST_NOTIFICATION(PantomimeBadResponse, self, userInfo);
-            PERFORM_SELECTOR_2(_delegate, @selector(badResponse:),
-                               PantomimeBadResponse, userInfo,
-                               PantomimeErrorInfo);
+        [_responsesFromServer removeAllObjects];
     }
-
-    if (![aData hasCPrefix: "*"])
-    {
-        [_queue removeLastObject];
-        [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
-    }
-
-    [_responsesFromServer removeAllObjects];
 }
 
 
@@ -2433,144 +2436,147 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseNO
 {
-    NSData *aData;
+    // Synchronize all methods that alter the _queue
+    @synchronized(self) {
+        NSData *aData;
 
-    aData = [_responsesFromServer lastObject];
+        aData = [_responsesFromServer lastObject];
 
-    INFO(NSStringFromClass([self class]), @"IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
+        INFO(NSStringFromClass([self class]), @"IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
 
-    switch (_lastCommand)
-    {
-        case IMAP_APPEND:
-            POST_NOTIFICATION(PantomimeFolderAppendFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(folderAppendFailed:), PantomimeFolderAppendFailed, self.currentQueueObject.info);
-            break;
+        switch (_lastCommand)
+        {
+            case IMAP_APPEND:
+                POST_NOTIFICATION(PantomimeFolderAppendFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(folderAppendFailed:), PantomimeFolderAppendFailed, self.currentQueueObject.info);
+                break;
 
-        case IMAP_AUTHENTICATE_CRAM_MD5:
-        case IMAP_AUTHENTICATE_LOGIN:
-        case IMAP_AUTHENTICATE_XOAUTH2:  // Only added for completenes. In reality XOAuth2 never responds with NO (only Gmail tested so far)
-        case IMAP_LOGIN:
-            AUTHENTICATION_FAILED(_delegate, _mechanism);
-            break;
+            case IMAP_AUTHENTICATE_CRAM_MD5:
+            case IMAP_AUTHENTICATE_LOGIN:
+            case IMAP_AUTHENTICATE_XOAUTH2:  // Only added for completenes. In reality XOAuth2 never responds with NO (only Gmail tested so far)
+            case IMAP_LOGIN:
+                AUTHENTICATION_FAILED(_delegate, _mechanism);
+                break;
 
-        case IMAP_CREATE:
-            POST_NOTIFICATION(PantomimeFolderCreateFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(folderCreateFailed:), PantomimeFolderCreateFailed);
-            break;
+            case IMAP_CREATE:
+                POST_NOTIFICATION(PantomimeFolderCreateFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(folderCreateFailed:), PantomimeFolderCreateFailed);
+                break;
 
-        case IMAP_DELETE:
-            POST_NOTIFICATION(PantomimeFolderDeleteFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(folderDeleteFailed:), PantomimeFolderDeleteFailed);
-            break;
+            case IMAP_DELETE:
+                POST_NOTIFICATION(PantomimeFolderDeleteFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(folderDeleteFailed:), PantomimeFolderDeleteFailed);
+                break;
 
-        case IMAP_EXPUNGE:
-            POST_NOTIFICATION(PantomimeFolderExpungeFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderExpungeFailed:), PantomimeFolderExpungeFailed, _selectedFolder, @"Folder");
-            break;
+            case IMAP_EXPUNGE:
+                POST_NOTIFICATION(PantomimeFolderExpungeFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderExpungeFailed:), PantomimeFolderExpungeFailed, _selectedFolder, @"Folder");
+                break;
 
-        case IMAP_RENAME:
-            POST_NOTIFICATION(PantomimeFolderRenameFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(folderRenameFailed:), PantomimeFolderRenameFailed);
-            break;
+            case IMAP_RENAME:
+                POST_NOTIFICATION(PantomimeFolderRenameFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(folderRenameFailed:), PantomimeFolderRenameFailed);
+                break;
 
-        case IMAP_SELECT:
-            _connection_state.opening_mailbox = NO;
-            if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
-                // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
-                // without calling CLOSE.
-                // see RFC4549-4.2.5
+            case IMAP_SELECT:
+                _connection_state.opening_mailbox = NO;
+                if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
+                    // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
+                    // without calling CLOSE.
+                    // see RFC4549-4.2.5
+                    _selectedFolder = nil;
+                    PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
+                    POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
+                    return;
+                }
+                POST_NOTIFICATION(PantomimeFolderOpenFailed, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:), PantomimeFolderOpenFailed, _selectedFolder, @"Folder");
+                [_openFolders removeObjectForKey: [_selectedFolder name]];
                 _selectedFolder = nil;
-                PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
-                POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
-                return;
-            }
-            POST_NOTIFICATION(PantomimeFolderOpenFailed, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:), PantomimeFolderOpenFailed, _selectedFolder, @"Folder");
-            [_openFolders removeObjectForKey: [_selectedFolder name]];
-            _selectedFolder = nil;
-            break;
+                break;
 
-        case IMAP_SUBSCRIBE:
-            POST_NOTIFICATION(PantomimeFolderSubscribeFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderSubscribeFailed:), PantomimeFolderSubscribeFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
-            break;
+            case IMAP_SUBSCRIBE:
+                POST_NOTIFICATION(PantomimeFolderSubscribeFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderSubscribeFailed:), PantomimeFolderSubscribeFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+                break;
 
-        case IMAP_UID_COPY:
-            POST_NOTIFICATION(PantomimeMessagesCopyFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyFailed:), PantomimeMessagesCopyFailed, self.currentQueueObject.info);
-            break;
+            case IMAP_UID_COPY:
+                POST_NOTIFICATION(PantomimeMessagesCopyFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyFailed:), PantomimeMessagesCopyFailed, self.currentQueueObject.info);
+                break;
 
-        case IMAP_UID_SEARCH_ALL:
-            POST_NOTIFICATION(PantomimeFolderSearchFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(folderSearchFailed:), PantomimeFolderSearchFailed);
-            break;
+            case IMAP_UID_SEARCH_ALL:
+                POST_NOTIFICATION(PantomimeFolderSearchFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(folderSearchFailed:), PantomimeFolderSearchFailed);
+                break;
 
-        case IMAP_STATUS:
-            POST_NOTIFICATION(PantomimeFolderStatusFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderStatusFailed:), PantomimeFolderStatusFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
-            break;
+            case IMAP_STATUS:
+                POST_NOTIFICATION(PantomimeFolderStatusFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderStatusFailed:), PantomimeFolderStatusFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+                break;
 
-        case IMAP_UID_STORE:
-            POST_NOTIFICATION(PantomimeMessageStoreFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(messageStoreFailed:), PantomimeMessageStoreFailed, self.currentQueueObject.info);
-            break;
+            case IMAP_UID_STORE:
+                POST_NOTIFICATION(PantomimeMessageStoreFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(messageStoreFailed:), PantomimeMessageStoreFailed, self.currentQueueObject.info);
+                break;
 
-        case IMAP_UNSUBSCRIBE:
-            POST_NOTIFICATION(PantomimeFolderUnsubscribeFailed, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeFailed:), PantomimeFolderUnsubscribeFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
-            break;
+            case IMAP_UNSUBSCRIBE:
+                POST_NOTIFICATION(PantomimeFolderUnsubscribeFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeFailed:), PantomimeFolderUnsubscribeFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+                break;
 
-        case IMAP_AUTHORIZATION:
-        case IMAP_CAPABILITY:
-        case IMAP_CLOSE:
-        case IMAP_EXAMINE:
-        case IMAP_LIST:
-        case IMAP_LOGOUT:
-        case IMAP_LSUB:
-        case IMAP_NOOP:
-        case IMAP_STARTTLS:
-        case IMAP_UID_MOVE:
-        case IMAP_UID_FETCH_BODY_TEXT:
-        case IMAP_UID_FETCH_HEADER_FIELDS:
-        case IMAP_UID_FETCH_FLAGS:
-        case IMAP_UID_FETCH_HEADER_FIELDS_NOT:
-        case IMAP_UID_FETCH_RFC822:
-        case IMAP_UID_SEARCH:
-        case IMAP_UID_SEARCH_ANSWERED:
-        case IMAP_UID_SEARCH_FLAGGED:
-        case IMAP_UID_SEARCH_UNSEEN:
-        case IMAP_EMPTY_QUEUE:
-            POST_NOTIFICATION(PantomimeActionFailed, self, self.currentQueueObject.info);
-            if ([[self currentQueueObject] info]) {
-                PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed,
-                                   [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
-            } else {
-                PERFORM_SELECTOR_1(_delegate, @selector(actionFailed:), PantomimeActionFailed);
-            }
-            break;
-        default:
-            INFO(NSStringFromClass([self class]), @"Unhandled \"NO\" response!");
-            NSAssert(false, @"");
-            break;
+            case IMAP_AUTHORIZATION:
+            case IMAP_CAPABILITY:
+            case IMAP_CLOSE:
+            case IMAP_EXAMINE:
+            case IMAP_LIST:
+            case IMAP_LOGOUT:
+            case IMAP_LSUB:
+            case IMAP_NOOP:
+            case IMAP_STARTTLS:
+            case IMAP_UID_MOVE:
+            case IMAP_UID_FETCH_BODY_TEXT:
+            case IMAP_UID_FETCH_HEADER_FIELDS:
+            case IMAP_UID_FETCH_FLAGS:
+            case IMAP_UID_FETCH_HEADER_FIELDS_NOT:
+            case IMAP_UID_FETCH_RFC822:
+            case IMAP_UID_SEARCH:
+            case IMAP_UID_SEARCH_ANSWERED:
+            case IMAP_UID_SEARCH_FLAGGED:
+            case IMAP_UID_SEARCH_UNSEEN:
+            case IMAP_EMPTY_QUEUE:
+                POST_NOTIFICATION(PantomimeActionFailed, self, self.currentQueueObject.info);
+                if ([[self currentQueueObject] info]) {
+                    PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed,
+                                       [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+                } else {
+                    PERFORM_SELECTOR_1(_delegate, @selector(actionFailed:), PantomimeActionFailed);
+                }
+                break;
+            default:
+                INFO(NSStringFromClass([self class]), @"Unhandled \"NO\" response!");
+                NSAssert(false, @"");
+                break;
+        }
+
+        //
+        // If the NO response is tagged response, we remove the current
+        // queued object from the queue since it reached completion.
+        //
+        if (![aData hasCPrefix: "*"])//|| _lastCommand == IMAP_AUTHORIZATION)
+        {
+            //INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
+
+            [self.currentQueueObject.info setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
+            POST_NOTIFICATION(@"PantomimeCommandCompleted", self, self.currentQueueObject.info);
+            PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
+
+            [_queue removeLastObject];
+            [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
+        }
+
+        [_responsesFromServer removeAllObjects];
     }
-
-    //
-    // If the NO response is tagged response, we remove the current
-    // queued object from the queue since it reached completion.
-    //
-    if (![aData hasCPrefix: "*"])//|| _lastCommand == IMAP_AUTHORIZATION)
-    {
-        //INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
-
-        [self.currentQueueObject.info setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
-        POST_NOTIFICATION(@"PantomimeCommandCompleted", self, self.currentQueueObject.info);
-        PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
-
-        [_queue removeLastObject];
-        [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
-    }
-
-    [_responsesFromServer removeAllObjects];
 }
 
 
@@ -2589,273 +2595,275 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseOK
 {
-    NSData *aData;
+    // Synchronize all methods that alter the _queue
+    @synchronized(self) {
+        NSData *aData;
+        aData = [_responsesFromServer lastObject];
 
-    aData = [_responsesFromServer lastObject];
+        //INFO(NSStringFromClass([self class]), @"IN _parseOK: |%@|", [aData asciiString]);
 
-    //INFO(NSStringFromClass([self class]), @"IN _parseOK: |%@|", [aData asciiString]);
+        switch (_lastCommand)
+        {
+            case IMAP_APPEND:
+                //
+                // No need to do add the newly append messages to our internal messages holder as
+                // we will get an untagged * EXISTS response that will trigger the new FETCH
+                // RFC3501 says:
+                //
+                // If the mailbox is currently selected, the normal new message
+                // actions SHOULD occur.  Specifically, the server SHOULD notify the
+                // client immediately via an untagged EXISTS response.  If the server
+                // does not do so, the client MAY issue a NOOP command (or failing
+                // that, a CHECK command) after one or more APPEND commands.
+                //
+                POST_NOTIFICATION(PantomimeFolderAppendCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(folderAppendCompleted:), PantomimeFolderAppendCompleted, self.currentQueueObject.info);
+                break;
 
-    switch (_lastCommand)
-    {
-        case IMAP_APPEND:
-            //
-            // No need to do add the newly append messages to our internal messages holder as
-            // we will get an untagged * EXISTS response that will trigger the new FETCH
-            // RFC3501 says:
-            //
-            // If the mailbox is currently selected, the normal new message
-            // actions SHOULD occur.  Specifically, the server SHOULD notify the
-            // client immediately via an untagged EXISTS response.  If the server
-            // does not do so, the client MAY issue a NOOP command (or failing
-            // that, a CHECK command) after one or more APPEND commands.
-            //
-            POST_NOTIFICATION(PantomimeFolderAppendCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(folderAppendCompleted:), PantomimeFolderAppendCompleted, self.currentQueueObject.info);
-            break;
-
-        case IMAP_AUTHENTICATE_CRAM_MD5:
-        case IMAP_AUTHENTICATE_LOGIN:
-        case IMAP_AUTHENTICATE_XOAUTH2:
-        case IMAP_LOGIN:
-            if (_connection_state.reconnecting)
-            {
-                if (_selectedFolder)
+            case IMAP_AUTHENTICATE_CRAM_MD5:
+            case IMAP_AUTHENTICATE_LOGIN:
+            case IMAP_AUTHENTICATE_XOAUTH2:
+            case IMAP_LOGIN:
+                if (_connection_state.reconnecting)
                 {
-                    if ([_selectedFolder mode] == PantomimeReadOnlyMode)
+                    if (_selectedFolder)
                     {
-                        [self sendCommand: IMAP_EXAMINE  info: nil  arguments: @"EXAMINE \"%@\"", [[_selectedFolder name] modifiedUTF7String]];
+                        if ([_selectedFolder mode] == PantomimeReadOnlyMode)
+                        {
+                            [self sendCommand: IMAP_EXAMINE  info: nil  arguments: @"EXAMINE \"%@\"", [[_selectedFolder name] modifiedUTF7String]];
+                        }
+                        else
+                        {
+                            [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [[_selectedFolder name] modifiedUTF7String]];
+                        }
+
+                        if (_connection_state.opening_mailbox) [_selectedFolder fetch];
                     }
                     else
                     {
-                        [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [[_selectedFolder name] modifiedUTF7String]];
+                        [self _restoreQueue];
                     }
-
-                    if (_connection_state.opening_mailbox) [_selectedFolder fetch];
                 }
                 else
                 {
-                    [self _restoreQueue];
+                    AUTHENTICATION_COMPLETED(_delegate, _mechanism);
                 }
-            }
-            else
-            {
-                AUTHENTICATION_COMPLETED(_delegate, _mechanism);
-            }
-            break;
+                break;
 
-        case IMAP_AUTHORIZATION:
-            if ([aData hasCPrefix: "* OK"])
-            {
-                [self sendCommand: IMAP_CAPABILITY  info: nil  arguments: @"CAPABILITY"];
-            }
-            else
-            {
-                // FIXME
-                // connectionLost? or should we call [self close]?
-            }
-            break;
+            case IMAP_AUTHORIZATION:
+                if ([aData hasCPrefix: "* OK"])
+                {
+                    [self sendCommand: IMAP_CAPABILITY  info: nil  arguments: @"CAPABILITY"];
+                }
+                else
+                {
+                    // FIXME
+                    // connectionLost? or should we call [self close]?
+                }
+                break;
 
-        case IMAP_CLOSE:
-            POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self.currentQueueObject.info);
-            break;
+            case IMAP_CLOSE:
+                POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self.currentQueueObject.info);
+                break;
 
-        case IMAP_CREATE:
-            [_folders setObject: [NSNumber numberWithInt: 0]  forKey: [self.currentQueueObject.info objectForKey: @"Name"]];
-            POST_NOTIFICATION(PantomimeFolderCreateCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(folderCreateCompleted:), PantomimeFolderCreateCompleted);
-            break;
+            case IMAP_CREATE:
+                [_folders setObject: [NSNumber numberWithInt: 0]  forKey: [self.currentQueueObject.info objectForKey: @"Name"]];
+                POST_NOTIFICATION(PantomimeFolderCreateCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(folderCreateCompleted:), PantomimeFolderCreateCompleted);
+                break;
 
-        case IMAP_DELETE:
-            [_folders removeObjectForKey: [self.currentQueueObject.info objectForKey: @"Name"]];
-            POST_NOTIFICATION(PantomimeFolderDeleteCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(folderDeleteCompleted:), PantomimeFolderDeleteCompleted);
-            break;
+            case IMAP_DELETE:
+                [_folders removeObjectForKey: [self.currentQueueObject.info objectForKey: @"Name"]];
+                POST_NOTIFICATION(PantomimeFolderDeleteCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(folderDeleteCompleted:), PantomimeFolderDeleteCompleted);
+                break;
 
-        case IMAP_EXPUNGE:
-            //
-            // No need to synchronize our IMAP cache here since, at worst, the
-            // expunged messages will get removed once we reopen the mailbox.
-            //
-            if ([_selectedFolder allContainers])
-            {
-                [_selectedFolder thread];
-            }
+            case IMAP_EXPUNGE:
+                //
+                // No need to synchronize our IMAP cache here since, at worst, the
+                // expunged messages will get removed once we reopen the mailbox.
+                //
+                if ([_selectedFolder allContainers])
+                {
+                    [_selectedFolder thread];
+                }
 
-            if ([_selectedFolder cacheManager])
-            {
-                [[_selectedFolder cacheManager] expunge];
-            }
-            POST_NOTIFICATION(PantomimeFolderExpungeCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderExpungeCompleted:), PantomimeFolderExpungeCompleted, _selectedFolder, @"Folder");
-            break;
+                if ([_selectedFolder cacheManager])
+                {
+                    [[_selectedFolder cacheManager] expunge];
+                }
+                POST_NOTIFICATION(PantomimeFolderExpungeCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderExpungeCompleted:), PantomimeFolderExpungeCompleted, _selectedFolder, @"Folder");
+                break;
 
-        case IMAP_LIST:
-            POST_NOTIFICATION(PantomimeFolderListCompleted, self, [NSDictionary dictionaryWithObject: [_folders keyEnumerator] forKey: @"NSEnumerator"]);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderListCompleted:), PantomimeFolderListCompleted, [_folders keyEnumerator], @"NSEnumerator");
-            break;
+            case IMAP_LIST:
+                POST_NOTIFICATION(PantomimeFolderListCompleted, self, [NSDictionary dictionaryWithObject: [_folders keyEnumerator] forKey: @"NSEnumerator"]);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderListCompleted:), PantomimeFolderListCompleted, [_folders keyEnumerator], @"NSEnumerator");
+                break;
 
-        case IMAP_LOGOUT:
-            // FIXME: What should we do here?
-            [super close];
-            break;
+            case IMAP_LOGOUT:
+                // FIXME: What should we do here?
+                [super close];
+                break;
 
-        case IMAP_LSUB:
-            POST_NOTIFICATION(PantomimeFolderListSubscribedCompleted, self, [NSDictionary dictionaryWithObject: [_subscribedFolders objectEnumerator] forKey: @"NSEnumerator"]);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderListSubscribedCompleted:), PantomimeFolderListSubscribedCompleted, [_subscribedFolders objectEnumerator], @"NSEnumerator");
-            break;
+            case IMAP_LSUB:
+                POST_NOTIFICATION(PantomimeFolderListSubscribedCompleted, self, [NSDictionary dictionaryWithObject: [_subscribedFolders objectEnumerator] forKey: @"NSEnumerator"]);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderListSubscribedCompleted:), PantomimeFolderListSubscribedCompleted, [_subscribedFolders objectEnumerator], @"NSEnumerator");
+                break;
 
-        case IMAP_RENAME:
-            [self _renameFolder];
-            POST_NOTIFICATION(PantomimeFolderRenameCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(folderRenameCompleted:), PantomimeFolderRenameCompleted);
-            break;
+            case IMAP_RENAME:
+                [self _renameFolder];
+                POST_NOTIFICATION(PantomimeFolderRenameCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(folderRenameCompleted:), PantomimeFolderRenameCompleted);
+                break;
 
-        case IMAP_SELECT:
-            [self _parseSELECT];
-            break;
+            case IMAP_SELECT:
+                [self _parseSELECT];
+                break;
 
-        case IMAP_STARTTLS:
-            [self _parseSTARTTLS];
-            break;
+            case IMAP_STARTTLS:
+                [self _parseSTARTTLS];
+                break;
 
-        case IMAP_SUBSCRIBE:
-            // We must add the folder to our list of subscribed folders.
-            [_subscribedFolders addObject: [self.currentQueueObject.info objectForKey: @"Name"]];
-            POST_NOTIFICATION(PantomimeFolderSubscribeCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderSubscribeCompleted:), PantomimeFolderSubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
-            break;
+            case IMAP_SUBSCRIBE:
+                // We must add the folder to our list of subscribed folders.
+                [_subscribedFolders addObject: [self.currentQueueObject.info objectForKey: @"Name"]];
+                POST_NOTIFICATION(PantomimeFolderSubscribeCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderSubscribeCompleted:), PantomimeFolderSubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+                break;
 
-        case IMAP_UID_COPY:
-            POST_NOTIFICATION(PantomimeMessagesCopyCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyCompleted:), PantomimeMessagesCopyCompleted, self.currentQueueObject.info);
-            break;
+            case IMAP_UID_COPY:
+                POST_NOTIFICATION(PantomimeMessagesCopyCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyCompleted:), PantomimeMessagesCopyCompleted, self.currentQueueObject.info);
+                break;
 
-        case IMAP_UID_MOVE:
-            POST_NOTIFICATION(PantomimeMessageUidMoveCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(messageUidMoveCompleted:), PantomimeMessageUidMoveCompleted, self.currentQueueObject.info);
-            break;
+            case IMAP_UID_MOVE:
+                POST_NOTIFICATION(PantomimeMessageUidMoveCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(messageUidMoveCompleted:), PantomimeMessageUidMoveCompleted, self.currentQueueObject.info);
+                break;
 
-        case IMAP_UID_FETCH_RFC822:
-            // fetchOlder() fetches the message for the oldest local UID to update its
-            // MSN before it actually fetches older messages.
-            // Thus it has to be called again after sucessfully updating the MSN.
-            if ([_selectedFolder fetchOlderNeedsReCall]) {
-                [_selectedFolder fetchOlderProtected];
+            case IMAP_UID_FETCH_RFC822:
+                // fetchOlder() fetches the message for the oldest local UID to update its
+                // MSN before it actually fetches older messages.
+                // Thus it has to be called again after sucessfully updating the MSN.
+                if ([_selectedFolder fetchOlderNeedsReCall]) {
+                    [_selectedFolder fetchOlderProtected];
+                    break;
+                }
+                // Since we download mail all in one, we signal the
+                // end of fetch when all new mails have been downloadad.
+                _connection_state.opening_mailbox = NO;
+                if ([_selectedFolder cacheManager])
+                {
+                    [[_selectedFolder cacheManager] synchronize];
+                }
+                //INFO(NSStringFromClass([self class]), @"DONE FETCHING FOLDER");
+                POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
+                break;
+
+            case IMAP_UID_FETCH_FLAGS: {
+                _connection_state.opening_mailbox = NO;
+                POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderSyncCompleted:), PantomimeFolderSyncCompleted, _selectedFolder, @"Folder");
                 break;
             }
-            // Since we download mail all in one, we signal the
-            // end of fetch when all new mails have been downloadad.
-            _connection_state.opening_mailbox = NO;
-            if ([_selectedFolder cacheManager])
-            {
-                [[_selectedFolder cacheManager] synchronize];
-            }
-            //INFO(NSStringFromClass([self class]), @"DONE FETCHING FOLDER");
-            POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
-            break;
 
-        case IMAP_UID_FETCH_FLAGS: {
-            _connection_state.opening_mailbox = NO;
-            POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderSyncCompleted:), PantomimeFolderSyncCompleted, _selectedFolder, @"Folder");
-            break;
+            case IMAP_UID_FETCH_UIDS: {
+                _connection_state.opening_mailbox = NO;
+                NSMutableDictionary *info = [NSMutableDictionary new];
+                if (_selectedFolder) {
+                    info[@"Folder"] = _selectedFolder;
+                }
+                if (self.currentQueueObject.info[@"Uids"]) {
+                    info[@"Uids"] = self.currentQueueObject.info[@"Uids"];
+                }
+                POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, info);
+                PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, info);
+                break;
+            }
+
+            case IMAP_UID_SEARCH_ALL:
+                //
+                // Before assuming we got a result and initialized everything in _parseSEARCH,
+                // we do a basic check. This is to prevent a rather weird behavior from
+                // UW IMAP Server, like this:
+                //
+                // . UID SEARCH ALL FROM "collaboration-world"
+                // * OK [PARSE] Unexpected characters at end of address: <>, Aix.p4@itii-paca.net...
+                // * SEARCH
+                // 000d OK UID SEARCH completed^
+                //
+                if ([self.currentQueueObject.info objectForKey: @"Results"])
+                {
+                    NSDictionary *userInfo;
+
+                    userInfo = [NSDictionary dictionaryWithObjectsAndKeys: _selectedFolder, @"Folder", [self.currentQueueObject.info objectForKey: @"Results"], @"Results", nil];
+                    POST_NOTIFICATION(PantomimeFolderSearchCompleted, self, userInfo);
+                    PERFORM_SELECTOR_3(_delegate, @selector(folderSearchCompleted:), PantomimeFolderSearchCompleted, userInfo);
+                }
+                break;
+
+            case IMAP_UID_STORE:
+            {
+                // Once STORE has completed, we update the messages.
+                NSArray *theMessages;
+                CWFlags *theFlags;
+                NSUInteger i, count;
+
+                theMessages = [self.currentQueueObject.info objectForKey: PantomimeMessagesKey];
+                theFlags = [self.currentQueueObject.info objectForKey: PantomimeFlagsKey];
+                count = [theMessages count];
+
+                for (i = 0; i < count; i++)
+                {
+                    [[(CWMessage *) [theMessages objectAtIndex: i] flags] replaceWithFlags: theFlags];
+                }
+
+                POST_NOTIFICATION(PantomimeMessageStoreCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(messageStoreCompleted:), PantomimeMessageStoreCompleted, self.currentQueueObject.info);
+                break;
+            }
+
+            case IMAP_UNSUBSCRIBE:
+                // We must remove the folder from our list of subscribed folders.
+                [_subscribedFolders removeObject: [self.currentQueueObject.info objectForKey: @"Name"]];
+                POST_NOTIFICATION(PantomimeFolderUnsubscribeCompleted, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeCompleted:), PantomimeFolderUnsubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+                break;
+
+            case IMAP_IDLE:
+                POST_NOTIFICATION(PantomimeIdleFinished, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_1(_delegate, @selector(idleFinished:), PantomimeIdleFinished);
+                break;
+
+            default:
+                break;
         }
 
-        case IMAP_UID_FETCH_UIDS: {
-            _connection_state.opening_mailbox = NO;
-            NSMutableDictionary *info = [NSMutableDictionary new];
-            if (_selectedFolder) {
-                info[@"Folder"] = _selectedFolder;
-            }
-            if (self.currentQueueObject.info[@"Uids"]) {
-                info[@"Uids"] = self.currentQueueObject.info[@"Uids"];
-            }
-            POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, info);
-            PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, info);
-            break;
-        }
-
-        case IMAP_UID_SEARCH_ALL:
-            //
-            // Before assuming we got a result and initialized everything in _parseSEARCH,
-            // we do a basic check. This is to prevent a rather weird behavior from
-            // UW IMAP Server, like this:
-            //
-            // . UID SEARCH ALL FROM "collaboration-world"
-            // * OK [PARSE] Unexpected characters at end of address: <>, Aix.p4@itii-paca.net...
-            // * SEARCH
-            // 000d OK UID SEARCH completed^
-            //
-            if ([self.currentQueueObject.info objectForKey: @"Results"])
-            {
-                NSDictionary *userInfo;
-
-                userInfo = [NSDictionary dictionaryWithObjectsAndKeys: _selectedFolder, @"Folder", [self.currentQueueObject.info objectForKey: @"Results"], @"Results", nil];
-                POST_NOTIFICATION(PantomimeFolderSearchCompleted, self, userInfo);
-                PERFORM_SELECTOR_3(_delegate, @selector(folderSearchCompleted:), PantomimeFolderSearchCompleted, userInfo);
-            }
-            break;
-
-        case IMAP_UID_STORE:
+        //
+        // If the OK response is tagged response, we remove the current
+        // queued object from the queue since it reached completion.
+        //
+        if (![aData hasCPrefix: "*"])// || _lastCommand == IMAP_AUTHORIZATION)
         {
-            // Once STORE has completed, we update the messages.
-            NSArray *theMessages;
-            CWFlags *theFlags;
-            NSUInteger i, count;
-
-            theMessages = [self.currentQueueObject.info objectForKey: PantomimeMessagesKey];
-            theFlags = [self.currentQueueObject.info objectForKey: PantomimeFlagsKey];
-            count = [theMessages count];
-
-            for (i = 0; i < count; i++)
-            {
-                [[(CWMessage *) [theMessages objectAtIndex: i] flags] replaceWithFlags: theFlags];
+            //        INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
+            if (self.currentQueueObject && self.currentQueueObject.info) {
+                [self.currentQueueObject.info
+                 setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
+                POST_NOTIFICATION(@"PantomimeCommandCompleted", self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
+            } else {
+                INFO(NSStringFromClass([self class]), @"self.currentQueueObject == nil");
             }
 
-            POST_NOTIFICATION(PantomimeMessageStoreCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(messageStoreCompleted:), PantomimeMessageStoreCompleted, self.currentQueueObject.info);
-            break;
+            [_queue removeLastObject];
+            [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
         }
 
-        case IMAP_UNSUBSCRIBE:
-            // We must remove the folder from our list of subscribed folders.
-            [_subscribedFolders removeObject: [self.currentQueueObject.info objectForKey: @"Name"]];
-            POST_NOTIFICATION(PantomimeFolderUnsubscribeCompleted, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeCompleted:), PantomimeFolderUnsubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
-            break;
-
-        case IMAP_IDLE:
-            POST_NOTIFICATION(PantomimeIdleFinished, self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_1(_delegate, @selector(idleFinished:), PantomimeIdleFinished);
-            break;
-
-        default:
-            break;
+        [_responsesFromServer removeAllObjects];
     }
-
-    //
-    // If the OK response is tagged response, we remove the current
-    // queued object from the queue since it reached completion.
-    //
-    if (![aData hasCPrefix: "*"])// || _lastCommand == IMAP_AUTHORIZATION)
-    {
-//        INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
-        if (self.currentQueueObject && self.currentQueueObject.info) {
-            [self.currentQueueObject.info
-             setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
-            POST_NOTIFICATION(@"PantomimeCommandCompleted", self, self.currentQueueObject.info);
-            PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
-        } else {
-            INFO(NSStringFromClass([self class]), @"self.currentQueueObject == nil");
-        }
-
-        [_queue removeLastObject];
-        [self sendCommand: IMAP_EMPTY_QUEUE  info: nil  arguments: @""];
-    }
-
-    [_responsesFromServer removeAllObjects];
 }
 
 
@@ -3169,15 +3177,18 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _restoreQueue
 {
-    // We restore our list of pending commands
-    [_queue addObjectsFromArray: _connection_state.previous_queue];
-    
-    // We clean the state
-    [_connection_state.previous_queue removeAllObjects];
-    _connection_state.reconnecting = NO;
-    
-    POST_NOTIFICATION(PantomimeServiceReconnected, self, nil);
-    PERFORM_SELECTOR_1(_delegate, @selector(serviceReconnected:), PantomimeServiceReconnected);
+    // Synchronize all methods that alter the _queue
+    @synchronized(self) {
+        // We restore our list of pending commands
+        [_queue addObjectsFromArray: _connection_state.previous_queue];
+
+        // We clean the state
+        [_connection_state.previous_queue removeAllObjects];
+        _connection_state.reconnecting = NO;
+
+        POST_NOTIFICATION(PantomimeServiceReconnected, self, nil);
+        PERFORM_SELECTOR_1(_delegate, @selector(serviceReconnected:), PantomimeServiceReconnected);
+    }
 }
 
 @end
