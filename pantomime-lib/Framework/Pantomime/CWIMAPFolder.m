@@ -385,7 +385,7 @@
             [_store signalFolderFetchCompleted];
             return;
         } else {
-            NSInteger lowerMessageSequenceNumber = upperMessageSequenceNumber - fetchMaxMails;
+            NSInteger lowerMessageSequenceNumber = upperMessageSequenceNumber - fetchMaxMails + 1;
             lowerMessageSequenceNumber = MAX(1, lowerMessageSequenceNumber);
             [_store sendCommand: IMAP_UID_FETCH_RFC822  info: nil
                       arguments: @"FETCH %u:%u (UID FLAGS BODY.PEEK[])",
