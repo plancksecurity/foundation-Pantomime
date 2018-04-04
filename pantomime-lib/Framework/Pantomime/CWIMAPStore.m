@@ -1946,12 +1946,11 @@ static inline int has_literal(char *buf, NSUInteger c)
     if ([_selectedFolder cacheManager]) {
         if (must_flush_record)
         {
-            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage];
+            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage]; //This can never be reached afaics. Check, remove.
         }
 
         CLEAR_CACHE_RECORD(cacheRecord);
         must_flush_record = YES;
-
         //[[_selectedFolder cacheManager] addObject: aMessage];
     }
 
@@ -2156,14 +2155,22 @@ static inline int has_literal(char *buf, NSUInteger c)
         i = j;
         done = ![aScanner scanUpToCharactersFromSet: aCharacterSet  intoString: NULL];
 
-        if (done && must_flush_record)
-        {
+        if (done && must_flush_record) {
             if (isMessageUpdate && !messageUpdate.isNoChange) {
                 // If the message existed locally before (is update), bother the cache manager only
                 // if something has changed on server.
                 [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
                                               messageUpdate: messageUpdate];
             } else if (!isMessageUpdate) {
+                if (messageUpdate.isNoChange || messageUpdate.isFlagsOnly) {
+                    // It can happen that the server reports changes for a message we do not know.
+                    // Example:
+                    // * 68 FETCH (UID 60196 FLAGS (\Flagged \Seen))
+                    // where we do not know a mail with UID 60196.
+                    // As we do not know it, we can not update it neither.
+                    // Ignore.
+                    return;
+                }
                 // Its a new mail, the cache manager has to be informed.
                 [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
                                               messageUpdate: messageUpdate];
