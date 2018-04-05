@@ -2161,20 +2161,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 // if something has changed on server.
                 [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
                                               messageUpdate: messageUpdate];
-            } else if (!isMessageUpdate) {
-                if (messageUpdate.isNoChange || messageUpdate.isFlagsOnly) {
-                    // It can happen that the server reports changes for a message we do not know.
-                    // Example:
-                    // * 68 FETCH (UID 60196 FLAGS (\Flagged \Seen))
-                    // where we do not know a mail with UID 60196.
-                    // As we do not know it, we can not update it neither.
-                    // Ignore.
-                    return;
-                }
-                // Its a new mail, the cache manager has to be informed.
-                [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
-                                              messageUpdate: messageUpdate];
-            }
+            } 
         }
     }
 
