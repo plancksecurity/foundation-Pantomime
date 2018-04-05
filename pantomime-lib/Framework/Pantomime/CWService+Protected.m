@@ -26,18 +26,6 @@
     }
 }
 
-/** Lazy initialized */
-- (dispatch_queue_t _Nullable)readQueue;
-{
-    @synchronized(self) {
-        if (!_readQueue) {
-            _readQueue = dispatch_queue_create("CWService - _readQueue", DISPATCH_QUEUE_SERIAL);
-        }
-        
-        return _readQueue;
-    }
-}
-
 
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)serviceQueue;

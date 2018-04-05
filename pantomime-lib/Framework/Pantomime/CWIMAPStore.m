@@ -342,9 +342,6 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) updateRead
 {
-    // Nothing in here should run on the connections thread.
-    // Dispatch away but don't block it!
-    dispatch_async(self.readQueue, ^{
         NSData *aData;
 
         NSUInteger i, count;
@@ -791,7 +788,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         } // while ((aData = split_lines...
         
         //INFO(NSStringFromClass([self class]), @"While loop broken!");
-    });
 }
 
 
@@ -2161,7 +2157,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 // if something has changed on server.
                 [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
                                               messageUpdate: messageUpdate];
-            } 
+            }
         }
     }
 
