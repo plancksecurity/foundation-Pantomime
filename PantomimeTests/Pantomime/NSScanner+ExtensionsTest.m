@@ -18,11 +18,14 @@
 
 - (void)setUp {
     [super setUp];
-    self.testInputs = @{/*@"* SEARCH 1 4 59 81": @[@1, @4, @59, @81],
-                         @"* SEARCH": @[],
-                         @"* 5 FETCH (UID 905)": @[@905],*/
-                         @"0A34": @[@0, @34]/*,
-                        @"ABCD": @[]*/};
+    self.testInputs = @{@"* SEARCH 1 4 59 81": @[@1, @4, @59, @81],
+                        @"* SEARCH": @[],
+                        @"* 5 FETCH (UID 905)": @[@905],
+                        @"0A34": @[@0, @34],
+                        @"ABCD": @[],
+                        @"0BC1": @[@0, @1],
+                        @"A0C": @[@0]
+                        };
 }
 
 //IOS-1057
@@ -37,10 +40,14 @@
             [scanner scanUnsignedInt: &result];
             [results addObject: [NSNumber numberWithInteger: result]];
         }
-        for (NSNumber *expected in self.testInputs.allValues[i]) {
-            XCTAssertTrue([results containsObject:expected]);
+        // Assure all ints are scanned
+        if (self.testInputs.allValues.count == 0) {
+            XCTAssertEqual(results.count, 0);
+        } else {
+            for (NSNumber *expected in self.testInputs.allValues[i]) {
+                XCTAssertTrue([results containsObject:expected]);
+            }
         }
-        NSLog(@"testee: %@ : results: %@", testee, results);
     }
 }
 
