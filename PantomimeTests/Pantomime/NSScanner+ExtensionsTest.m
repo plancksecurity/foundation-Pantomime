@@ -18,11 +18,11 @@
 
 - (void)setUp {
     [super setUp];
-    self.testInputs = @{@"* SEARCH 1 4 59 81": @[@1, @4, @59, @81],
+    self.testInputs = @{/*@"* SEARCH 1 4 59 81": @[@1, @4, @59, @81],
                          @"* SEARCH": @[],
-                         @"* 5 FETCH (UID 905)": @[@905],
-                         /*@"0A34": @[@0, @34],*/
-                        @"ABCD": @[]};
+                         @"* 5 FETCH (UID 905)": @[@905],*/
+                         @"0A34": @[@0, @34]/*,
+                        @"ABCD": @[]*/};
 }
 
 //IOS-1057

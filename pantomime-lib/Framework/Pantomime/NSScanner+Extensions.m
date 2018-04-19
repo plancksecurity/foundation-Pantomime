@@ -32,7 +32,8 @@
 - (BOOL) scanUnsignedInt: (NSUInteger *) theValue
 {
     NSString *s;
-    NSUInteger d, v, l1, l2, len;
+    NSUInteger d, v, len;
+    NSInteger l1, l2;
 
     l1 = l2 = [self scanLocation];
     s = [self string];
