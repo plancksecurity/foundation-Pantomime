@@ -31,49 +31,44 @@
 
 - (BOOL) scanUnsignedInt: (NSUInteger *) theValue
 {
-  NSString *s;
-  NSUInteger d, v, l1, l2, len;
+    NSString *s;
+    NSUInteger d, v, l1, l2, len;
 
-  l1 = l2 = [self scanLocation];
-  s = [self string];
-  len = [s length];
+    l1 = l2 = [self scanLocation];
+    s = [self string];
+    len = [s length];
 
-  while (l1 < len)
-    {
-      if (isdigit([s characterAtIndex: l1]))
-	{
-	  l2 = l1;
-	  while (l2 < len && isdigit([s characterAtIndex: l2]))
-	    {
-	      l2++;
-	    }
-	  break;
-	}
-      l1++;
+    while (l1 < len) {
+        if (isdigit([s characterAtIndex: l1])) {
+            l2 = l1;
+            while (l2 < len && isdigit([s characterAtIndex: l2])) {
+                l2++;
+            }
+            break;
+        }
+        l1++;
     }
 
-  if (l2 <= l1)
-    {
-      [self setScanLocation: l1+1];
-      return NO;
+    if (l2 <= l1) {
+        [self setScanLocation: l1+1];
+        return NO;
     }
 
-  [self setScanLocation: (l2+1 > len ? len : l2+1)];
+    [self setScanLocation: (l2+1 > len ? len : l2+1)];
 
-  v = 0;
-  d = 1;
-  l2--;
+    v = 0;
+    d = 1;
+    l2--;
 
-  while (l2 >= l1)
-    {
-      v += (([s characterAtIndex: l2]-48)*d);
-      d *= 10;
-      l2--;
+    while (l2 >= l1) {
+        v += (([s characterAtIndex: l2]-48)*d);
+        d *= 10;
+        l2--;
     }
 
-  *theValue = v;
+    *theValue = v;
 
-  return YES;
+    return YES;
 }
 
 @end
