@@ -1384,6 +1384,17 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
 }
 
+//
+// This method parses a SEARCH response in order to decode
+// all UIDs in the result.
+//
+// Example: "* 5 FETCH (UID 905)"
+- (NSArray *)_uniqueIdentifiersFromFetchUidsResponseData:(NSData *)response
+{
+    NSString *searchResponsePrefix = @"* 5 FETCH";
+    return [self _uniqueIdentifiersFromData: response
+                 skippingFirstNumberOfChars: searchResponsePrefix.length];
+}
 
 //
 // This method parses a SEARCH response in order to decode
@@ -1394,34 +1405,37 @@ static inline int has_literal(char *buf, NSUInteger c)
 // "* SEARCH 1 4 59 81"
 // "* SEARCH"
 //
-- (NSArray *) _uniqueIdentifiersFromData: (NSData *) theData
+- (NSArray *)_uniqueIdentifiersFromSearchResponseData:(NSData *)response
 {
-    NSMutableArray *aMutableArray;
-    NSScanner *aScanner;
-    NSUInteger value;
+    NSString *searchResponsePrefix = @"* SEARCH";
+    return [self _uniqueIdentifiersFromData: response
+                 skippingFirstNumberOfChars: searchResponsePrefix.length];
+}
 
-    aMutableArray = [NSMutableArray array];
 
-    theData = [theData subdataFromIndex: 8];
-
-    // If we have no results, let's return right away.
-    if (![theData length])
-    {
-        return aMutableArray;
+- (NSArray *)_uniqueIdentifiersFromData:(NSData *)theData
+             skippingFirstNumberOfChars:(NSUInteger)numSkip
+{
+    NSMutableArray *results = [NSMutableArray new];
+    if (numSkip >= theData.length) {
+        // Nothing to scan.
+        return results;
     }
-
+    theData = [theData subdataFromIndex: numSkip];
+    if (![theData length]) {
+        // Nothing to scan.
+        return results;
+    }
     // We scan all our UIDs.
-    aScanner = [[NSScanner alloc] initWithString: [theData asciiString]];
-
-    while (![aScanner isAtEnd])
-    {
-        [aScanner scanUnsignedInt: &value];
-        [aMutableArray addObject: [NSNumber numberWithInteger: value]];
+    NSScanner *scanner = [[NSScanner alloc] initWithString: [theData asciiString]];
+    NSUInteger value = 0;
+    while (![scanner isAtEnd]) {
+        [scanner scanUnsignedInt: &value];
+        [results addObject: [NSNumber numberWithInteger: value]];
     }
-
     RELEASE(aScanner);
 
-    return aMutableArray;
+    return results;
 }
 
 
@@ -1777,7 +1791,8 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) _parseFETCH_UIDS
 {
-    NSArray *uidsFromResponse = [self _uniqueIdentifiersFromData: [_responsesFromServer lastObject]];
+    NSArray *uidsFromResponse =
+    [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]]; //IOS-1057:
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
     if (!alreadyParsedUids) {
         alreadyParsedUids = uidsFromResponse;
@@ -2877,7 +2892,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSArray *allResults;
     NSUInteger i, count;
 
-    allResults = [self _uniqueIdentifiersFromData: [_responsesFromServer lastObject]];
+    allResults = [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer lastObject]];
     count = [allResults count];
 
     aMutableArray = [NSMutableArray array];
@@ -2923,7 +2938,8 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSInteger i, count;
     BOOL b;
 
-    allResults = [self _uniqueIdentifiersFromData: [_responsesFromServer objectAtIndex: 0]];
+    allResults =
+    [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer objectAtIndex: 0]];
     count = [allResults count];
 
     switch (_lastCommand)
