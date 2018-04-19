@@ -10,6 +10,8 @@
 		1502BA812029AB6700E13501 /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
 		1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */; };
 		1505D6081F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */; };
+		150BC3E62088D8FF00C4850B /* NSScanner+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 150BC3E52088D8FF00C4850B /* NSScanner+ExtensionsTest.m */; };
+		150BC3E72088DDC800C4850B /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; };
 		1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */; };
 		1519EA4C1F2F434200B269A8 /* libPantomimeStatic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */; };
 		151DE7DD1FC586D700CDC273 /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
@@ -145,6 +147,7 @@
 /* Begin PBXFileReference section */
 		1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-421_MessageHeapOverflow.txt"; sourceTree = "<group>"; };
 		1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+PantomimeExtensionsTest.m"; sourceTree = "<group>"; };
+		150BC3E52088D8FF00C4850B /* NSScanner+ExtensionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+ExtensionsTest.m"; sourceTree = "<group>"; };
 		1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStoreTest.m; sourceTree = "<group>"; };
 		15208D50200917CB00455F70 /* NSString+PantomimeTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PantomimeTestHelper.m"; sourceTree = "<group>"; };
 		15208D51200917CB00455F70 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUtil.m; sourceTree = "<group>"; };
@@ -363,6 +366,7 @@
 				1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */,
 				1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */,
 				152177391F22072600C83122 /* NSString+ExtensionsTest.m */,
+				150BC3E52088D8FF00C4850B /* NSScanner+ExtensionsTest.m */,
 			);
 			path = Pantomime;
 			sourceTree = "<group>";
@@ -460,8 +464,8 @@
 		43E854D21CB7EA9B006867C0 /* PantomimeTests */ = {
 			isa = PBXGroup;
 			children = (
-				15208D57200917ED00455F70 /* Utils */,
 				15208D4F200917CB00455F70 /* TestUtils */,
+				15208D57200917ED00455F70 /* Utils */,
 				152177371F22072600C83122 /* Pantomime */,
 				433C51A61E647EBD00272E19 /* Resources */,
 				43E854D51CB7EA9B006867C0 /* Info.plist */,
@@ -852,6 +856,8 @@
 				1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */,
 				156926E41FA1E03200D5F396 /* CWIMAPFolder+CWProtected.m in Sources */,
 				1598B22A1F6812FC00582157 /* CWInternetAddressTest.m in Sources */,
+				150BC3E72088DDC800C4850B /* NSScanner+Extensions.m in Sources */,
+				150BC3E62088D8FF00C4850B /* NSScanner+ExtensionsTest.m in Sources */,
 				433C51B71E64813700272E19 /* CWInternetAddress.m in Sources */,
 				15208D5F2009187600455F70 /* CWThreadSafeData.m in Sources */,
 				433C51B41E64810D00272E19 /* CWRegEx.m in Sources */,
