@@ -50,7 +50,7 @@
     }
 
     if (l2 <= l1) {
-        [self setScanLocation: l1+1];
+        [self setScanLocation: (l1+1 > len ? len : l1+1)];
         return NO;
     }
 
