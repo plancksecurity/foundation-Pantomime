@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "CWIMAPStore.h"
+#import "CWIMAPStore+TestVisibility.h"
 
 #pragma mark - HELPER
 
@@ -219,6 +220,57 @@ static NSString *CRLF = @"\r\n";
     [store setReadBufferData:serverResponseData];
     [store updateRead];
     [self waitForExpectationsWithTimeout:5.0 handler:nil];
+}
+
+#pragma mark - UID PARSING
+
+#pragma mark _uniqueIdentifiersFromSearchResponseData
+
+- (void)test_uniqueIdentifiersFromSearchResponseData
+{
+    NSDictionary *testInputs = @{@"* SEARCH 1 4 59 81": @[@1, @4, @59, @81],
+                                 @"* SEARCH": @[],
+                                 @"* SEARCH 11": @[@11],
+                                 @"": @[]};
+    CWIMAPStore *store = [CWIMAPStore new];
+    for (int i = 0; i < testInputs.count; ++i) {
+        NSString *testee = testInputs.allKeys[i];
+        NSData *testeeData = [testee dataUsingEncoding:NSISOLatin1StringEncoding];
+
+        NSArray *results = [store _uniqueIdentifiersFromSearchResponseData:testeeData];
+
+        if (testInputs.allValues.count == 0) {
+            XCTAssertEqual(results.count, 0);
+        } else {
+            for (NSNumber *expected in testInputs.allValues[i]) {
+                XCTAssertTrue([results containsObject:expected]);
+            }
+        }
+    }
+}
+
+#pragma mark _uniqueIdentifiersFromFetchUidsResponseData
+
+- (void)test_uniqueIdentifiersFromFetchUidsResponseData
+{
+    NSDictionary *testInputs = @{@"* 5 FETCH (UID 905)": @[@905],
+                                 @"* 7 FETCH (UID 3819)": @[@3819],                                
+                                 @"": @[]};
+    CWIMAPStore *store = [CWIMAPStore new];
+    for (int i = 0; i < testInputs.count; ++i) {
+        NSString *testee = testInputs.allKeys[i];
+        NSData *testeeData = [testee dataUsingEncoding:NSISOLatin1StringEncoding];
+
+        NSArray *results = [store _uniqueIdentifiersFromFetchUidsResponseData:testeeData];
+
+        if (testInputs.allValues.count == 0) {
+            XCTAssertEqual(results.count, 0);
+        } else {
+            for (NSNumber *expected in testInputs.allValues[i]) {
+                XCTAssertTrue([results containsObject:expected]);
+            }
+        }
+    }
 }
 
 @end

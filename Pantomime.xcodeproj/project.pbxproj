@@ -148,6 +148,7 @@
 		1505D6051F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-421_MessageHeapOverflow.txt"; sourceTree = "<group>"; };
 		1505D6071F3D9E4A00A04A0B /* NSData+PantomimeExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+PantomimeExtensionsTest.m"; sourceTree = "<group>"; };
 		150BC3E52088D8FF00C4850B /* NSScanner+ExtensionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+ExtensionsTest.m"; sourceTree = "<group>"; };
+		150BC3E92088F4C000C4850B /* CWIMAPStore+TestVisibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CWIMAPStore+TestVisibility.h"; sourceTree = "<group>"; };
 		1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStoreTest.m; sourceTree = "<group>"; };
 		15208D50200917CB00455F70 /* NSString+PantomimeTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PantomimeTestHelper.m"; sourceTree = "<group>"; };
 		15208D51200917CB00455F70 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUtil.m; sourceTree = "<group>"; };
@@ -323,12 +324,13 @@
 		15208D4F200917CB00455F70 /* TestUtils */ = {
 			isa = PBXGroup;
 			children = (
-				15208D50200917CB00455F70 /* NSString+PantomimeTestHelper.m */,
 				15208D51200917CB00455F70 /* TestUtil.m */,
 				15208D52200917CB00455F70 /* TestUtil.h */,
 				15208D53200917CB00455F70 /* NSString+PantomimeTestHelper.h */,
+				15208D50200917CB00455F70 /* NSString+PantomimeTestHelper.m */,
 				155C96A92021CB4000F5EB6F /* NSString+PEPDataUtils.h */,
 				155C96AA2021CB4000F5EB6F /* NSString+PEPDataUtils.m */,
+				150BC3E92088F4C000C4850B /* CWIMAPStore+TestVisibility.h */,
 			);
 			path = TestUtils;
 			sourceTree = "<group>";

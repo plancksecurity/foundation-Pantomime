@@ -1389,6 +1389,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 // all UIDs in the result.
 //
 // Example: "* 5 FETCH (UID 905)"
+//
 - (NSArray *)_uniqueIdentifiersFromFetchUidsResponseData:(NSData *)response
 {
     NSString *searchResponsePrefix = @"* 5 FETCH";
