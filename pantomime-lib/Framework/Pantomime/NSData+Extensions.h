@@ -70,7 +70,7 @@
               encoded using the quoted-printable method.
   @param aBOOL Specifies if we are decoding data from
                a message header, or not.
-  @result Returns a new NSData object.
+  @result Returns a new NSData object with decoded data if the decoding succeeded, nil otherwize
 */
 - (NSData *) decodeQuotedPrintableInHeader: (BOOL) aBOOL;
 
