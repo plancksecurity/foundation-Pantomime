@@ -552,18 +552,15 @@ static int seed_count = 1;
 //
 // 
 + (id) discreteContentFromRawSource: (NSData *) theData
-			   encoding: (PantomimeEncoding) theEncoding
+                           encoding: (PantomimeEncoding) theEncoding
 {
-  if (theEncoding == PantomimeEncodingQuotedPrintable)
-    {
-      return [theData decodeQuotedPrintableInHeader: NO];
+    if (theEncoding == PantomimeEncodingQuotedPrintable) {
+        return [theData decodeQuotedPrintableInHeader: NO];
+    } lse if (theEncoding == PantomimeEncodingBase64) {
+        return [[theData dataByRemovingLineFeedCharacters] decodeBase64];
     }
-  else if (theEncoding == PantomimeEncodingBase64)
-    {
-      return [[theData dataByRemovingLineFeedCharacters] decodeBase64];
-    }
-  
-  return theData;
+
+    return theData;
 }
 
 
