@@ -573,63 +573,49 @@ static int seed_count = 1;
 + (void) setContentFromRawSource: (NSData *) theData
                           inPart: (CWPart *) thePart
 {
-  //NSAutoreleasePool *pool;
- 
-  // We create a temporary autorelease pool since this method can be
-  // memory consuming on our default autorelease pool.
-  //pool = [[NSAutoreleasePool alloc] init];
-
     @autoreleasepool {
+        //
+        // Composite types (message/multipart).
+        //
+        if ([thePart isMIMEType: @"message"  subType: @"rfc822"]) {
+            NSData *aData;
 
-  //
-  // Composite types (message/multipart).
-  //
-  if ([thePart isMIMEType: @"message"  subType: @"rfc822"])
-    {
-      NSData *aData;
+            aData = theData;
 
-      aData = theData;
+            // We verify the Content-Transfer-Encoding, this part could be base64 encoded.
+            if ([thePart contentTransferEncoding] == PantomimeEncodingBase64) {
+                NSMutableData *aMutableData;
 
-      // We verify the Content-Transfer-Encoding, this part could be base64 encoded.
-      if ([thePart contentTransferEncoding] == PantomimeEncodingBase64)
-	{
-	  NSMutableData *aMutableData;
+                aData = [[theData dataByRemovingLineFeedCharacters] decodeBase64];
 
-	  aData = [[theData dataByRemovingLineFeedCharacters] decodeBase64];
-	  
-	  aMutableData = [NSMutableData dataWithData: aData];
-	  [aMutableData replaceCRLFWithLF];
-	  aData = aMutableData;
-	}
+                aMutableData = [NSMutableData dataWithData: aData];
+                [aMutableData replaceCRLFWithLF];
+                aData = aMutableData;
+            }
 
-      [thePart setContent: [CWMIMEUtility compositeMessageContentFromRawSource: aData]];
-    }
-  else if ([thePart isMIMEType: @"multipart"  subType: @"*"])
-    {
-      [thePart setContent: [CWMIMEUtility compositeMultipartContentFromRawSource: theData
-					  boundary: [thePart boundary]]];
-    }
-  // 
-  // Discrete types (text/application/audio/image/video) or any "unsupported Content-Type:s"
-  //
-  // text/*
-  // image/*
-  // application/*
-  // audio/*
-  // video/*
-  //
-  // We also treat those composite type as discrete types:
-  //
+            [thePart setContent: [CWMIMEUtility compositeMessageContentFromRawSource: aData]];
+        } else if ([thePart isMIMEType: @"multipart"  subType: @"*"]) {
+            [thePart setContent: [CWMIMEUtility compositeMultipartContentFromRawSource: theData
+                                                                              boundary: [thePart boundary]]];
+        } else {
+            //
+            // Discrete types (text/application/audio/image/video) or any "unsupported Content-Type:s"
+            //
+            // text/*
+            // image/*
+            // application/*
+            // audio/*
+            // video/*
+            //
+            // We also treat those composite type as discrete types:
+            //
 #warning test extensively those
-  // message/delivery-status
-  // message/disposition-notification
-  //
-  else
-    {
-      [thePart setContent: [CWMIMEUtility discreteContentFromRawSource: theData
-					  encoding: [thePart contentTransferEncoding]]];
-    }
-  
+            // message/delivery-status
+            // message/disposition-notification
+            //
+            [thePart setContent: [CWMIMEUtility discreteContentFromRawSource: theData
+                                                                    encoding: [thePart contentTransferEncoding]]];
+        }
     } //RELEASE(pool);
 }
 
