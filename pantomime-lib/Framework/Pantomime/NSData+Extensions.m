@@ -220,8 +220,11 @@ static const char *hexDigit = "0123456789ABCDEF";
             } else if (*b>='0' && *b<='9') {
                 ch=16*(*b-'0');
             } else {
-                [[NSException exceptionWithName:@"Pantomime Exception" reason:@"Hex data contained invalid char" userInfo:nil] raise];
-                return nil;
+                // The encoding is invalid (Hex data contained invalid char).
+                // The sender might have set "Content-Transfer-Encoding: quoted-printable" even if
+                // it is not.
+                // The best we can do is to return the original, unaltered data.
+                return self;
             }
 
             b++;
@@ -234,8 +237,11 @@ static const char *hexDigit = "0123456789ABCDEF";
             } else if (*b>='0' && *b<='9') {
                 ch+=*b-'0';
             } else {
-                [[NSException exceptionWithName:@"Pantomime Exception" reason:@"Hex data contained invalid char" userInfo:nil] raise];
-                return nil;
+                // The encoding is invalid (Hex data contained invalid char).
+                // The sender might have set "Content-Transfer-Encoding: quoted-printable" even if
+                // it is not.
+                // The best we can do is to return the original, unaltered data.
+                return self;
             }
 
             [result appendBytes: &ch length: 1];
