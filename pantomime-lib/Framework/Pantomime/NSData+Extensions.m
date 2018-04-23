@@ -191,85 +191,63 @@ static const char *hexDigit = "0123456789ABCDEF";
 //
 - (NSData *) decodeQuotedPrintableInHeader: (BOOL) aBOOL
 {
-  NSMutableData *result;
+    NSMutableData *result;
 
-  const unsigned char *bytes,*b;
-  unsigned char ch;
-  NSUInteger i,len;
+    const unsigned char *bytes,*b;
+    unsigned char ch;
+    NSUInteger i,len;
 
-  len = [self length];
-  bytes = [self bytes];
+    len = [self length];
+    bytes = [self bytes];
 
-  result = [[NSMutableData alloc] initWithCapacity: len];
-  
-  ch=0;
-  b=bytes;
+    result = [[NSMutableData alloc] initWithCapacity: len];
 
-  for (i = 0; i < len; i++,b++)
-    {
-      if (b[0]=='=' && i+1<len && b[1]=='\n')
-	{
-        b++;
-        i++;
-	  continue;
-	}
-      else if (*b=='=' && i+2<len)
-	{
-        b++;
-        i++;
-	  if (*b>='A' && *b<='F')
-	    {
-	      ch=16*(*b-'A'+10);
-	    }
-	  else if (*b>='a' && *b<='f')
-	    {
-	      ch=16*(*b-'a'+10);
-	    }
-	  else if (*b>='0' && *b<='9')
-	    {
-	      ch=16*(*b-'0');
-	    }
-          else
-            {
-              [[NSException exceptionWithName:@"Pantomime Exception" reason:@"Hex data contained invalid char" userInfo:nil] raise];
-              return nil;
+    ch=0;
+    b=bytes;
+
+    for (i = 0; i < len; i++,b++) {
+        if (b[0]=='=' && i+1<len && b[1]=='\n') {
+            b++;
+            i++;
+            continue;
+        } else if (*b=='=' && i+2<len) {
+            b++;
+            i++;
+            if (*b>='A' && *b<='F') {
+                ch=16*(*b-'A'+10);
+            } else if (*b>='a' && *b<='f') {
+                ch=16*(*b-'a'+10);
+            } else if (*b>='0' && *b<='9') {
+                ch=16*(*b-'0');
+            } else {
+                [[NSException exceptionWithName:@"Pantomime Exception" reason:@"Hex data contained invalid char" userInfo:nil] raise];
+                return nil;
             }
 
-        b++;
-        i++;
+            b++;
+            i++;
 
-	  if (*b>='A' && *b<='F')
-	    {
-	      ch+=*b-'A'+10;
-	    }
-	  else if (*b>='a' && *b<='f')
-	    {
-	      ch+=*b-'a'+10;
-	    }
-	  else if (*b>='0' && *b<='9')
-	    {
-	      ch+=*b-'0';
-	    }
-          else
-            {
-              [[NSException exceptionWithName:@"Pantomime Exception" reason:@"Hex data contained invalid char" userInfo:nil] raise];
-              return nil;
+            if (*b>='A' && *b<='F') {
+                ch+=*b-'A'+10;
+            } else if (*b>='a' && *b<='f') {
+                ch+=*b-'a'+10;
+            } else if (*b>='0' && *b<='9') {
+                ch+=*b-'0';
+            } else {
+                [[NSException exceptionWithName:@"Pantomime Exception" reason:@"Hex data contained invalid char" userInfo:nil] raise];
+                return nil;
             }
-	  
-	  [result appendBytes: &ch length: 1];
-	}
-      else if (aBOOL && *b=='_')
-	{
-	  ch=0x20;
-	  [result appendBytes: &ch length: 1];
-	}
-      else
-	{
-	  [result appendBytes: b length: 1];
-	}
+
+            [result appendBytes: &ch length: 1];
+        } else if (aBOOL && *b=='_') {
+            ch=0x20;
+            [result appendBytes: &ch length: 1];
+        } else {
+            [result appendBytes: b length: 1];
+        }
     }
 
-  return AUTORELEASE(result);
+    return AUTORELEASE(result);
 }
 
 
