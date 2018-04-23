@@ -554,13 +554,23 @@ static int seed_count = 1;
 + (id) discreteContentFromRawSource: (NSData *) theData
                            encoding: (PantomimeEncoding) theEncoding
 {
+    NSData *result = nil;
+
     if (theEncoding == PantomimeEncodingQuotedPrintable) {
-        return [theData decodeQuotedPrintableInHeader: NO];
-    } lse if (theEncoding == PantomimeEncodingBase64) {
-        return [[theData dataByRemovingLineFeedCharacters] decodeBase64];
+        result = [theData decodeQuotedPrintableInHeader: NO];
+    } else if (theEncoding == PantomimeEncodingBase64) {
+        result = [[theData dataByRemovingLineFeedCharacters] decodeBase64];
     }
 
-    return theData;
+    if (!result) {
+        // Decoding failed for unknown reason.
+        // One known reason is that the sender set "Content-Transfer-Encoding:" to
+        // "quoted-printable" even if it is not.
+        // The best we can do is to return the original, unaltered data.
+        result = theData.copy;
+    }
+
+    return result;
 }
 
 

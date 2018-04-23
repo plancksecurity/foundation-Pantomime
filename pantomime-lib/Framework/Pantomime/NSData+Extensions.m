@@ -221,10 +221,8 @@ static const char *hexDigit = "0123456789ABCDEF";
                 ch=16*(*b-'0');
             } else {
                 // The encoding is invalid (Hex data contained invalid char).
-                // The sender might have set "Content-Transfer-Encoding: quoted-printable" even if
-                // it is not.
-                // The best we can do is to return the original, unaltered data.
-                return self;
+                // Nothing we can do.
+                return nil;
             }
 
             b++;
@@ -238,10 +236,8 @@ static const char *hexDigit = "0123456789ABCDEF";
                 ch+=*b-'0';
             } else {
                 // The encoding is invalid (Hex data contained invalid char).
-                // The sender might have set "Content-Transfer-Encoding: quoted-printable" even if
-                // it is not.
-                // The best we can do is to return the original, unaltered data.
-                return self;
+                // Nothing we can do.
+                return nil;
             }
 
             [result appendBytes: &ch length: 1];
