@@ -116,6 +116,22 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
                               flags:(CWFlags * _Nullable) theFlags
                        internalDate: (NSDate * _Nullable) theDate;
 
+#pragma mark - UID COPY
+
+/**
+ This method copies the message with the given UID from the receiver to the destination folder
+ named <i>theFolder</i>.
+ On success, this method posts a PantomimeMessagesCopyCompleted notification
+ (and calls -messagesCopyCompleted: on the delegate, if any). On failure,
+ it posts a PantomimeMessagesCopyFailed notification (and calls
+ -messagesCopyFailed: on the delegate, if any). This method is
+ fully asynchronous.
+ @param uid UID of the message to copy.
+ @param targetFolderName The name of the folder to move the message to. The name must include
+        hierarchy separators if the target folder is a subfolder.
+ */
+- (void)copyMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString *)targetFolderName;
+
 /*!
   @method copyMessages: toFolder:
   @discussion This method copies the messages in <i>theMessages</i> array from
@@ -131,6 +147,8 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 */
 - (void) copyMessages: (NSArray * _Nonnull) theMessages
              toFolder: (NSString * _Nonnull) theFolder;
+
+#pragma mark - FETCH
 
 /**
  Fetches  fetchMaxMails number of older messages with decreasing MSN, starting from MSN of oldest local message - 1.
@@ -167,11 +185,15 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
  */
 - (void) fetchUidsForNewMails;
 
+#pragma mark - FLAGS
+
 /*!
  @discussion Syncs the flags of existing mails (until the given lastUID),
  thereby finding out flag changes and deleted messages.
  */
 - (void)syncExistingFirstUID:(NSUInteger)firstUID lastUID:(NSUInteger)lastUID;
+
+#pragma mark -
 
 /*!
   @method UIDValidity
@@ -289,7 +311,6 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
  @param targetFolderName name of folder to move the message to
  */
 - (void)moveMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString * _Nonnull)targetFolderName;
-
 @end
 
 #endif // _Pantomime_H_CWIMAPFolder

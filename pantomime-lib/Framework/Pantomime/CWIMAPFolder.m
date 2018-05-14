@@ -159,9 +159,19 @@
     }
 }
 
-//
-//
-//
+#pragma mark - UID COPY
+
+// Implementation of UID COPY
+// (see https://tools.ietf.org/html/rfc3501#section-6.4.8)
+- (void)copyMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString *)targetFolderName;
+{
+    NSParameterAssert(uid > 0);
+
+    [_store sendCommand: IMAP_UID_COPY
+                   info: nil
+              arguments: @"UID COPY %u \"%@\"", uid, targetFolderName];
+}
+
 - (void) copyMessages: (NSArray *) theMessages
 	     toFolder: (NSString *) theFolder
 {
@@ -197,12 +207,9 @@
   RELEASE(aMutableString);
 }
 
-#pragma mark - UIDPLUS
+#pragma mark - UID MOVE
 
-// Basic implementation of the IMAP MOVE extension(see RFC-6851), currently soley used for Gmail
-//accounts to be able to move a message from "All Messages" virtual mailbox to trash.
-// UID MOVE xxx "[Gmail]/Trash"
-
+// Basic implementation of the UID MOVE extension(see RFC-6851)
 - (void)moveMessageWithUid:(NSUInteger)uid toFolderNamed:(NSString *)targetFolderName;
 {
     NSParameterAssert(uid > 0);
