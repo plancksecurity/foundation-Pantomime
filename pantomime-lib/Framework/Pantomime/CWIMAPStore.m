@@ -1664,12 +1664,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseEXPUNGE
 {
-    if (_lastCommand == IMAP_UID_MOVE) {
-        // Calling IMAP_UID_MOVE, the server reports the messages that have been expunged in the a
-        // source folder (where it has been moved from).
-        // The client has to take care to delete the original msg currently.
-        return;
-    }
     if (_lastCommand == IMAP_UID_STORE) {
         // Calling IMAP_UID_STORE to set a \deleted flag on Gmail server, the server moves those
         // messages to "All Messages", expunges it from the folder it has been deleted in and
@@ -1695,11 +1689,11 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     // The conditions for being able to react safely to expunges have to be verified.
     // In the case of IDLE, it's probably safe.
-    if (_lastCommand != IMAP_IDLE) {
+    if (_lastCommand != IMAP_IDLE && _lastCommand != IMAP_UID_MOVE) {
         return;
     }
 
-    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
+//    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
 
     //
     // Messages CAN be expunged before we really had time to FETCH them.
@@ -1728,8 +1722,12 @@ static inline int has_literal(char *buf, NSUInteger c)
     // We remove its entry in our cache
     if ([_selectedFolder cacheManager])
     {
-        [(CWIMAPCacheManager *)[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]];
+        [(CWIMAPCacheManager *)[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]]; //IOS-663: this doubles removeMessage above. Cleaup cacheManager mess.
     }
+
+    // Keep exist count up to date.
+    _selectedFolder.existsCount = _selectedFolder.existsCount - 1;
+
 
     //
     // If our previous command is NOT the EXPUNGE command, we must inform our
@@ -1755,7 +1753,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     RELEASE(aMessage);
 
-    //INFO(NSStringFromClass([self class]), @"Expunged %d", msn);
+//    INFO(NSStringFromClass([self class]), @"Expunged %d", msn);
 }
 
 /**
