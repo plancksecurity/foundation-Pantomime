@@ -58,6 +58,8 @@ NSString * PantomimeFolderSeparatorKey = @"PantomimeFolderSeparatorKey";
 NSString * PantomimeFolderSpecialUseKey = @"PantomimeFolderSpecialUseKey";
 
 // CWIMAPFolder notifications
+NSString* PantomimeMessageUidMoveCompleted = @"PantomimeMessageUidMoveCompleted";
+NSString* PantomimeMessageUidMoveFailed = @"PantomimeMessageUidMoveFailed";
 NSString* PantomimeMessagesCopyCompleted = @"PantomimeMessagesCopyCompleted";
 NSString* PantomimeMessagesCopyFailed = @"PantomimeMessagesCopyFailed";
 NSString* PantomimeMessageStoreCompleted = @"PantomimeMessageStoreCompleted";
@@ -81,7 +83,6 @@ NSString *PantomimeIdleFinished = @"PantomimeIdleFinished";
 // CWMessage notifications
 NSString* PantomimeMessageChanged = @"PantomimeMessageChanged";
 NSString* PantomimeMessageExpunged = @"PantomimeMessageExpunged";
-NSString* PantomimeMessageUidMoveCompleted = @"PantomimeMessageUidMoveCompleted";
 NSString* PantomimeMessageFetchCompleted = @"PantomimeMessageFetchCompleted";
 NSString* PantomimeMessageFetchFailed = @"PantomimeMessageFetchFailed";
 NSString* PantomimeMessagePrefetchCompleted = @"PantomimeMessagePrefetchCompleted";

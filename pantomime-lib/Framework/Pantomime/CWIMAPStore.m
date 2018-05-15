@@ -2509,6 +2509,11 @@ static inline int has_literal(char *buf, NSUInteger c)
                 PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyFailed:), PantomimeMessagesCopyFailed, self.currentQueueObject.info);
                 break;
 
+            case IMAP_UID_MOVE:
+                POST_NOTIFICATION(PantomimeMessageUidMoveFailed, self, self.currentQueueObject.info);
+                PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyFailed:), PantomimeMessageUidMoveFailed, self.currentQueueObject.info);
+                break;
+
             case IMAP_UID_SEARCH_ALL:
                 POST_NOTIFICATION(PantomimeFolderSearchFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderSearchFailed:), PantomimeFolderSearchFailed);
@@ -2538,7 +2543,6 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_LSUB:
             case IMAP_NOOP:
             case IMAP_STARTTLS:
-            case IMAP_UID_MOVE:
             case IMAP_UID_FETCH_BODY_TEXT:
             case IMAP_UID_FETCH_HEADER_FIELDS:
             case IMAP_UID_FETCH_FLAGS:
