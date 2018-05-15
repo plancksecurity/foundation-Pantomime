@@ -255,6 +255,8 @@ extern NSString * _Nonnull PantomimeProtocolException;
 
 - (void) messagesCopyFailed: (NSNotification * _Nullable) theNotification;
 
+- (void) messageUidMoveFailed: (NSNotification * _Nullable) theNotification;
+
 - (void) folderStatusFailed: (NSNotification * _Nullable) theNotification;
 
 - (void) messageStoreFailed: (NSNotification * _Nullable) theNotification;
