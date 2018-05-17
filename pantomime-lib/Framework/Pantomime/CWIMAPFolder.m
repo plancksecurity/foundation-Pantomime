@@ -169,7 +169,7 @@
 
     [_store sendCommand: IMAP_UID_COPY
                    info: nil
-              arguments: @"UID COPY %u \"%@\"", uid, targetFolderName];
+              arguments: @"UID COPY %u \"%@\"", uid, [targetFolderName modifiedUTF7String]];
 }
 
 - (void) copyMessages: (NSArray *) theMessages
@@ -216,7 +216,7 @@
 
     [_store sendCommand: IMAP_UID_MOVE
                    info: nil
-              arguments: @"UID MOVE %u \"%@\"", uid, targetFolderName];
+              arguments: @"UID MOVE %u \"%@\"", uid, [targetFolderName modifiedUTF7String]];
 }
 
 #pragma mark - Fetching
