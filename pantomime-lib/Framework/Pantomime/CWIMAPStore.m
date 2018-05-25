@@ -1722,7 +1722,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     // We remove its entry in our cache
     if ([_selectedFolder cacheManager])
     {
-        [(CWIMAPCacheManager *)[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]]; //IOS-663: this doubles removeMessage above. Cleaup cacheManager mess.
+        [(CWIMAPCacheManager *)[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]]; //This doubles remove Message above. Cleanup cacheManager mess.
     }
 
     // Keep exist count up to date.
