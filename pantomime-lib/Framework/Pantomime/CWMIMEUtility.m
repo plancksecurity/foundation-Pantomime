@@ -478,73 +478,46 @@ static int seed_count = 1;
 //
 // FIXME: whitespace after boundary markers
 // 
-+ (CWMIMEMultipart *) compositeMultipartContentFromRawSource: (NSData *) theData
-						    boundary: (NSData *) theBoundary
++ (CWMIMEMultipart *)compositeMultipartContentFromRawSource:(NSData *)source
+                                                   boundary:(NSData *)boundary
 {
-  CWMIMEMultipart *aMimeMultipart;
-  
-  NSMutableData *aMutableData;
-  NSArray *allParts;
-  NSRange aRange;
-  NSUInteger i, count;
-  
-  aMimeMultipart = [[CWMIMEMultipart alloc] init];
-
-  aMutableData = [[NSMutableData alloc] init];
-  [aMutableData appendBytes: "--"  length: 2];
-  [aMutableData appendData: theBoundary];
-
-  // We first skip everything before the first boundary
-    aRange = [theData rangeOfData:aMutableData options:0 range:[theData fullRange]];
-   
-  if (aRange.length && aRange.location)
-    {
-      theData = [theData subdataFromIndex: (aRange.location + aRange.length)];
+    NSMutableData *seperator = [NSMutableData new];
+    [seperator appendBytes: "--"  length: 2];
+    [seperator appendData: boundary];
+    // We first skip everything before the first boundary
+    NSRange seperatorRange = [source rangeOfData:seperator];
+    if (seperatorRange.length && seperatorRange.location) {
+        source = [source subdataFromIndex: (seperatorRange.location + seperatorRange.length)];
     }
-  
-  [aMutableData setLength: 0];
-  [aMutableData appendBytes: "\n--"  length: 3];
-  [aMutableData appendData: theBoundary];
-  
-  // Add terminating 0 so we can use it as a C string below
-  [aMutableData appendBytes: "\0" length: 1];
-
-  // We split this mime body part into multiple parts since we have various representations
-  // of the actual body part.
-  allParts = [theData componentsSeparatedByCString: [aMutableData bytes]];
-  count = [allParts count];
-  RELEASE(aMutableData);
-
-  for (i = 0; i < count; i++)
-    {
-      CWPart *aPart;
-      NSData *aData;
-
-      aData = [allParts objectAtIndex: i];
-      
-      if (aData && [aData length] > 0)
-	{
-	  // This is the last part. Ignore everything past the end marker
-	  if ([aData hasCPrefix: "--\n"] ||
-	      ([aData length] == 2 && [aData hasCPrefix: "--"]))
-	    {
-	      break;
-	    }
-	  
-	  // We then skip the first character since it's a \n (the one at the end of the boundary)
-	  if ([aData hasCPrefix: "\n"])
-	    {
-	      aData = [aData subdataFromIndex: 1];
-	    }
-	
-	  aPart = [[CWPart alloc] initWithData: aData];
-	  [aPart setSize: [aData length]];
-	  [aMimeMultipart addPart: aPart];
-	  RELEASE(aPart);
-	}
+    [seperator setLength: 0];
+    [seperator appendBytes: "\n--"  length: 3];
+    [seperator appendData: boundary];
+    // Add terminating 0 so we can use it as a C string below
+    [seperator appendBytes: "\0" length: 1];
+    // We split this mime body part into multiple parts since we have various representations
+    // of the actual body part.
+    NSArray *allRawParts = [source componentsSeparatedByCString: [seperator bytes]];
+    NSUInteger count = [allRawParts count];
+    CWMIMEMultipart *resultMultiPart = [CWMIMEMultipart new];
+    for (int i = 0; i < count; i++) {
+        NSData *rawPart = [allRawParts objectAtIndex: i];
+        if (rawPart && [rawPart length] > 0) {
+            // This is the last part. Ignore everything past the end marker
+            if ([rawPart hasCPrefix: "--\n"] ||
+                ([rawPart length] == 2 && [rawPart hasCPrefix: "--"])) {
+                break;
+            }
+            // We then skip the first character since it's a \n (the one at the end of the boundary)
+            if ([rawPart hasCPrefix: "\n"]) {
+                rawPart = [rawPart subdataFromIndex: 1];
+            }
+            CWPart *part = [[CWPart alloc] initWithData: rawPart];
+            [part setSize: [rawPart length]];
+            [resultMultiPart addPart: part];
+        }
     }
 
-  return AUTORELEASE(aMimeMultipart);
+    return resultMultiPart;
 }
 
 
