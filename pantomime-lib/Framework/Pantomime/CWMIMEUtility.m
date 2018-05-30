@@ -495,7 +495,7 @@ static int seed_count = 1;
   [aMutableData appendData: theBoundary];
 
   // We first skip everything before the first boundary
-  aRange = [theData rangeOfData: aMutableData];
+    aRange = [theData rangeOfData:aMutableData options:0 range:[theData fullRange]];
    
   if (aRange.length && aRange.location)
     {

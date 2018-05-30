@@ -332,24 +332,14 @@ static const char *hexDigit = "0123456789ABCDEF";
   return AUTORELEASE(aMutableData);
 }
 
-- (NSRange)rangeOfData:(NSData *)theData
+- (NSRange)rangeOfData:(NSData *)needle
 {
-    if (!theData) {
-        return NSMakeRange(NSNotFound,0);
-    }
-    NSUInteger slen = [theData length];
-    const char *str = [theData bytes];
+    return [self rangeOfData:needle options:0 range:[self fullRange]];
+}
 
-    NSUInteger len = [self length];
-    const char *b = [self bytes];
-
-    for (int i = 0; i <= len - slen; ++i, ++b) {
-        if (!memcmp(str, b, slen)) {
-            return NSMakeRange(i, slen);
-        }
-    }
-
-    return NSMakeRange(NSNotFound,0);
+- (NSRange)fullRange;
+{
+    return NSMakeRange(0, self.length);
 }
 
 

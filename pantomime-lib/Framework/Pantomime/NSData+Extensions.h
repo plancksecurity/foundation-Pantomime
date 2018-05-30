@@ -91,9 +91,16 @@
   @discussion This method searches for <i>theData</i> in the receiver
               and returns the associated NSRange.
   @param theData The data to search for in the receiver.
-  @result The associated range.
+  @result The associated range if found, NSNotFound range otherwize
 */
--(NSRange) rangeOfData: (NSData *) theData;
+-(NSRange) rangeOfData:(NSData *)needle;
+
+/**
+ Convenience method to get the full range.
+
+ @return full range of data
+ */
+- (NSRange)fullRange;
 
 /*!
   @method rangeOfCString:
