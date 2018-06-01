@@ -972,31 +972,21 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseSTARTTLS
 {
-  NSData *aData;
-
-  aData = [_responsesFromServer lastObject];
-  
-  if ([aData hasCPrefix: "220"])
-    {          
-      // We first activate SSL.
-      [(id<CWConnection>) _connection startTLS];
-
-      // We now forget about the initial negotiated state; see RFC2487 for more details,
-      [_supportedMechanisms removeAllObjects];
-      [self sendCommand: SMTP_EHLO  arguments: [NSString stringWithFormat:@"EHLO %@", pEpEHLOBase]];
-    }
-  else
-    {
-      // The server probably doesn't support TLS. We inform the delegate that the transaction initiation
-      // failed or that the message wasn't sent.
-      if (PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:), PantomimeTransactionInitiationFailed))
-	{
-	  POST_NOTIFICATION(PantomimeTransactionInitiationFailed, self, [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
-	}
-      else
-	{
-	  [self fail];
-	}
+    NSData *aData = [_responsesFromServer lastObject];
+    if ([aData hasCPrefix: "220"]) {
+        // We first activate SSL.
+        [(id<CWConnection>) _connection startTLS];
+        // We now forget about the initial negotiated state; see RFC2487 for more details,
+        [_supportedMechanisms removeAllObjects];
+        [self sendCommand: SMTP_EHLO  arguments: [NSString stringWithFormat:@"EHLO %@", pEpEHLOBase]];
+    } else {
+        // The server probably doesn't support TLS. We inform the delegate that the transaction initiation
+        // failed or that the message wasn't sent.
+        if (PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:), PantomimeTransactionInitiationFailed)) {
+            POST_NOTIFICATION(PantomimeTransactionInitiationFailed, self, [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
+        } else {
+            [self fail];
+        }
     }
 }
 
