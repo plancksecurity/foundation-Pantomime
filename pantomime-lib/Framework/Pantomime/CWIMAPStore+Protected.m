@@ -362,6 +362,7 @@
                   info: (NSDictionary *) theInfo
 {
     self = [super init];
+
     INFO(NSStringFromClass([self class]), @"CWIMAPQueueObject.init %@\n", self);
     _command = theCommand;
     _literal = 0;
@@ -401,6 +402,10 @@
 //
 - (NSString *) description
 {
+    if (self.command == IMAP_LOGIN || self.command == IMAP_AUTHENTICATE_LOGIN) {
+        // Arguments might hold passwords.
+        return [NSString stringWithFormat: @"%d (IMAP_LOGIN or IMAP_AUTHENTICATE_LOGIN)", self.command];
+    }
     return [NSString stringWithFormat: @"%d %@", self.command, self.arguments];
 }
 
