@@ -73,78 +73,67 @@
 // - HELP
 // - NOOP
 //
-- (void) sendCommand: (SMTPCommand) theCommand  arguments: (NSString *) theFormat, ...
+- (void) sendCommand:(SMTPCommand)theCommand  arguments:(NSString *)theFormat, ...
 {
+    // If two calls to this method happen concurrently, one might empty the queue the other is
+    // currenly using (causes |SENDING null|).
     @synchronized(self) {
-    CWSMTPQueueObject *aQueueObject;
+        CWSMTPQueueObject *aQueueObject;
 
-    if (theCommand == SMTP_EMPTY_QUEUE)
-    {
-        if ([_queue count])
-        {
-            // We dequeue the first inserted command from the queue.
-            aQueueObject = [_queue lastObject];
-            if (!aQueueObject) {
-                INFO(NSStringFromClass([self class]), @"_queue has %lu objects", (unsigned long) _queue.count);
-                for (NSObject *obj in _queue) {
-                    INFO(NSStringFromClass([self class]), @"obj %@", obj);
+        if (theCommand == SMTP_EMPTY_QUEUE) {
+            if ([_queue count]) {
+                // We dequeue the first inserted command from the queue.
+                aQueueObject = [_queue lastObject];
+                if (!aQueueObject) {
+                    INFO(NSStringFromClass([self class]),
+                         @"_queue has %lu objects", (unsigned long) _queue.count);
+                    for (NSObject *obj in _queue) {
+                        INFO(NSStringFromClass([self class]), @"obj %@", obj);
+                    }
+                    INFO(NSStringFromClass([self class]), @"aQueueObject nil");
                 }
-                INFO(NSStringFromClass([self class]), @"aQueueObject nil");
+            } else {
+                // The queue is empty, we have nothing more to do...
+                return;
+            }
+        } else {
+            va_list args;
+            va_start(args, theFormat);
+
+            NSString *aString = [[NSString alloc] initWithFormat: theFormat  arguments: args];
+            aQueueObject = [[CWSMTPQueueObject alloc] initWithCommand: theCommand
+                                                            arguments: aString];
+            [_queue insertObject: aQueueObject  atIndex: 0];
+
+            // If we had queued commands, we return since we'll eventually
+            // dequeue them one by one. Otherwise, we run it immediately.
+            if ([_queue count] > 1) {
+                return;
             }
         }
-        else
-        {
-            // The queue is empty, we have nothing more to do...
-            return;
-        }
-    }
-    else
-    {
-        NSString *aString;
-        va_list args;
 
-        va_start(args, theFormat);
-
-        aString = [[NSString alloc] initWithFormat: theFormat  arguments: args];
-
-        aQueueObject = [[CWSMTPQueueObject alloc] initWithCommand: theCommand  arguments: aString];
-        RELEASE(aString);
-
-        [_queue insertObject: aQueueObject  atIndex: 0];
-        RELEASE(aQueueObject);
-
-        // If we had queued commands, we return since we'll eventually
-        // dequeue them one by one. Otherwise, we run it immediately.
-        if ([_queue count] > 1)
-        {
-            return;
-        }
-    }
-
-    if (aQueueObject) {
-        BOOL isPrivate = NO;
-        if ((aQueueObject->command == SMTP_AUTH_CRAM_MD5 ||
-             aQueueObject->command ==  SMTP_AUTH_LOGIN ||
-             aQueueObject->command == SMTP_AUTH_LOGIN_CHALLENGE ||
-             aQueueObject->command == SMTP_AUTH_PLAIN) &&
-            ![aQueueObject->arguments hasPrefix:@"AUTH"]) {
-            isPrivate = YES;
-        }
-
-        if (isPrivate) {
-            INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
+        if (aQueueObject) {
+            BOOL isPrivate = NO;
+            if ((aQueueObject->command == SMTP_AUTH_CRAM_MD5 ||
+                 aQueueObject->command ==  SMTP_AUTH_LOGIN ||
+                 aQueueObject->command == SMTP_AUTH_LOGIN_CHALLENGE ||
+                 aQueueObject->command == SMTP_AUTH_PLAIN) &&
+                ![aQueueObject->arguments hasPrefix:@"AUTH"]) {
+                isPrivate = YES;
+            }
+            if (isPrivate) {
+                INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
+            } else {
+                INFO(NSStringFromClass([self class]), @"Sending |%@|", aQueueObject->arguments);
+            }
+            _lastCommand = aQueueObject->command;
+            [self bulkWriteData:@[[aQueueObject->arguments
+                                   dataUsingEncoding: _defaultCStringEncoding],
+                                  _crlf]];
         } else {
-            INFO(NSStringFromClass([self class]), @"Sending |%@|", aQueueObject->arguments);
+            // TODO: Why is aQueueObject sometimes nil?
+            INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
         }
-
-        _lastCommand = aQueueObject->command;
-
-        [self bulkWriteData:@[[aQueueObject->arguments dataUsingEncoding: _defaultCStringEncoding],
-                              _crlf]];
-    } else {
-        // TODO: Why is aQueueObject sometimes nil?
-        INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
-    }
     }
 }
 
