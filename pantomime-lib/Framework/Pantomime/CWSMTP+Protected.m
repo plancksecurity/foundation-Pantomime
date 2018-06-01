@@ -153,7 +153,7 @@
     else {
         POST_NOTIFICATION(PantomimeMessageNotSent,
                           self,
-                          [NSDictionary dictionaryWithObject: AUTORELEASE([CWMessage new])
+                          [NSDictionary dictionaryWithObject: [CWMessage new]
                                                       forKey: @"Message"]);
         PERFORM_SELECTOR_1(_delegate, @selector(messageNotSent:), PantomimeMessageNotSent);
     }
