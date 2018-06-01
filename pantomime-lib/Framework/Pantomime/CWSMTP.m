@@ -983,7 +983,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         // The server probably doesn't support TLS. We inform the delegate that the transaction initiation
         // failed or that the message wasn't sent.
         if (PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:), PantomimeTransactionInitiationFailed)) {
-            POST_NOTIFICATION(PantomimeTransactionInitiationFailed, self, [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
+            POST_NOTIFICATION(PantomimeTransactionInitiationFailed, self, [NSDictionary dictionaryWithObject: _message ? _message : [CWMessage new]  forKey: @"Message"]); 
         } else {
             [self fail];
         }
