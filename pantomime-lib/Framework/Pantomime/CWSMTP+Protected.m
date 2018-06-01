@@ -75,6 +75,7 @@
 //
 - (void) sendCommand: (SMTPCommand) theCommand  arguments: (NSString *) theFormat, ...
 {
+    @synchronized(self) {
     CWSMTPQueueObject *aQueueObject;
 
     if (theCommand == SMTP_EMPTY_QUEUE)
@@ -143,6 +144,7 @@
     } else {
         // TODO: Why is aQueueObject sometimes nil?
         INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
+    }
     }
 }
 
