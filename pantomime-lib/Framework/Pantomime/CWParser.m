@@ -714,25 +714,22 @@ NSRange shrinkRange(NSRange range)
 //
 //
 //
-+ (NSData *) parseMessageID: (NSData *) theLine
-		  inMessage: (CWMessage *) theMessage
-		      quick: (BOOL) theBOOL
++ (NSData *)parseMessageID:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL)quick
 {
-  NSData *aData;
-
-    if (!theBOOL && !([theLine length] > 12))
-    {
-      return [NSData data];
+    if (!quick && !([rawLine length] > 12)) {
+        return [NSData data];
     }
+    NSData *result = nil;
+    if (quick) {
+        result = rawLine;
+    } else {
+        result = [rawLine subdataFromIndex: 12];
+    }
+    result =  [result unwrap];
 
-  if (theBOOL) aData = theLine;
-  else aData = [theLine subdataFromIndex: 12];
+    [message setMessageID: [[result dataByTrimmingWhiteSpaces] asciiString]];
 
-
-  aData =  [aData unwrap];
-
-  [theMessage setMessageID: [[aData dataByTrimmingWhiteSpaces] asciiString]];
-  return aData;
+    return result;
 }
 
 
@@ -752,55 +749,35 @@ NSRange shrinkRange(NSRange range)
 //
 //
 //
-+ (NSData *) parseReferences: (NSData *) theLine
-		   inMessage: (CWMessage *) theMessage
-		       quick: (BOOL) theBOOL
++ (NSData *) parseReferences:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL) quick
 {
-  NSData *aData;
+    NSData *result = nil;
 
-  aData = nil;
+    if (quick) {
+        result = rawLine;
+    } else if ([rawLine length] > 12) {
+        result = [rawLine subdataFromIndex: 12];
+    }
 
-  if (theBOOL)
-    {
-      aData = theLine;
-    }
-  else if ([theLine length] > 12)
-    {
-      aData = [theLine subdataFromIndex: 12];
-    }
-  
-  if (aData && [aData length])
-    {
-      NSMutableArray *aMutableArray;
-      NSArray *allReferences;
-      NSData *aReference;
-      NSString *aString;
-      NSUInteger i, count;
-      
-      allReferences = [aData componentsSeparatedByCString: " "];
-      count = [allReferences count];
+    if (result && [result length]) {
+        NSArray<NSData*> *rawReferences = [result componentsSeparatedByCString: " "];
+        NSUInteger count = [rawReferences count];
 
-      aMutableArray = [[NSMutableArray alloc] initWithCapacity: count];
-      
-      for (i = 0; i < count; i++)
-	{
-	  aReference = [allReferences objectAtIndex: i];
-	  aString = [aReference asciiString];
-	  
-	  // We protect ourself against values that could hold 8-bit characters.
-	  if (aString)
-	    {
-	      [aMutableArray addObject: aString];
-	    }
-	}
-      
-      [theMessage setReferences: aMutableArray];
-      RELEASE(aMutableArray);
-      
-      return aData;
+        NSMutableArray<NSString*> *references = [[NSMutableArray alloc] initWithCapacity: count];
+
+        for (int i = 0; i < count; i++) {
+            NSData *rawReference = [rawReferences objectAtIndex: i];
+            NSString *reference = [rawReference asciiString];
+            // We protect ourself against values that could hold 8-bit characters.
+            if (reference) {
+                [references addObject: reference];
+            }
+        }
+        [message setReferences: references];
+        return result;
     }
-  
-  return [NSData data];
+
+    return [NSData data];
 }
 
 
