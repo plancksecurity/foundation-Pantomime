@@ -610,9 +610,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) setReferences: (NSArray *) theReferences
+- (void)setReferences:(NSArray *)theReferences
 {
-  ASSIGN(_references, theReferences);
+    self->_references = theReferences;
 }
 
 
@@ -1117,14 +1117,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   
     // We set our Message-ID
     // Make sure to only output it if it exists, and avoid double angle brackets
-    NSString *theMessageID = [self messageID];
+    NSString *theMessageID = [[self messageID] wrapped];
     if ([theMessageID length] > 0) {
-        if ([theMessageID length] > 2 &&
-            [[theMessageID substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"<"]) {
-            theMessageID = [theMessageID
-                            substringWithRange:NSMakeRange(1, [theMessageID length] - 2)];
-        }
-        [aMutableData appendCFormat: @"Message-ID: <%@>%s", theMessageID, LF];
+        [aMutableData appendCFormat: @"Message-ID: %@%s", theMessageID, LF];
     }
 
   // We set our MIME-Version header
@@ -1203,11 +1198,12 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
         [aMutableData appendCString:"References:"];
         BOOL first = true;
         for (NSString *ref in [self allReferences]) {
+            NSString *wrapped = [ref wrapped];
             if (first) {
-                [aMutableData appendCFormat:@" %@", ref];
+                [aMutableData appendCFormat:@" %@", wrapped];
                 first = NO;
             } else {
-                [aMutableData appendCFormat:@" %s %@", LF, ref];
+                [aMutableData appendCFormat:@" %s %@", LF, wrapped];
             }
         }
         [aMutableData appendCFormat:@"%s", LF];
