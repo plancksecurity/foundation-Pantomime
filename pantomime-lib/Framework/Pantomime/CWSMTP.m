@@ -343,55 +343,41 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) sendMessage
 {
+    __block __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        NSString *aString;
-
-        if (!_message && !_data)
-        {
-            [self fail];
+        __block typeof(self) strongSelf = weakSelf;
+        if (!strongSelf->_message && !strongSelf->_data) {
+            [strongSelf fail];
             return;
         }
-        if (!_recipients && _message)
-        {
-            ASSIGN(_recipients, [NSMutableArray arrayWithArray: [_message recipients]]);
+        if (!strongSelf->_recipients && strongSelf->_message) {
+            strongSelf->_recipients =
+            [NSMutableArray arrayWithArray:[strongSelf->_message recipients]];
 
-            if (!_data)
-            {
-                ASSIGN(_data, [_message dataValue]);
+            if (!strongSelf->_data) {
+                strongSelf->_data = [strongSelf->_message dataValue];
             }
+        } else if (!strongSelf->_recipients && strongSelf->_data) {
+            CWMessage *aMessage = [[CWMessage alloc] initWithData: strongSelf->_data];
+            strongSelf->_message = aMessage;
+            strongSelf->_recipients = [NSMutableArray arrayWithArray: [aMessage recipients]];
         }
-        else if (!_recipients && _data)
-        {
-            CWMessage *aMessage;
+        strongSelf->_sent_recipients = [strongSelf->_recipients mutableCopy];
 
-            aMessage = [[CWMessage alloc] initWithData: _data];
-            ASSIGN(_message, aMessage);
-            ASSIGN(_recipients, [NSMutableArray arrayWithArray: [aMessage recipients]]);
-
-            RELEASE(aMessage);
-        }
-
-        DESTROY(_sent_recipients);
-        _sent_recipients = [_recipients mutableCopy];
-
+        NSString *aString;
         // We first verify if it's a redirected message
-        if ([_message resentFrom])
-        {
-            _redirected = YES;
-            aString = [[_message resentFrom] address];
-        }
-        else
-        {
-            _redirected = NO;
-            aString = [[_message from] address];
+        if ([strongSelf->_message resentFrom]) {
+            strongSelf->_redirected = YES;
+            aString = [[strongSelf->_message resentFrom] address];
+        } else {
+            strongSelf->_redirected = NO;
+            aString = [[strongSelf->_message from] address];
         }
 
-        if (_max_size)
-        {
-            [self sendCommand: SMTP_MAIL  arguments: @"MAIL FROM:<%@> SIZE=%d", aString, [_data length]];
-        }
-        else
-        {
+        if (strongSelf->_max_size) {
+            [self sendCommand: SMTP_MAIL
+                    arguments: @"MAIL FROM:<%@> SIZE=%d", aString, [strongSelf->_data length]];
+        } else {
             [self sendCommand: SMTP_MAIL  arguments: @"MAIL FROM:<%@>", aString];
         }
     });
