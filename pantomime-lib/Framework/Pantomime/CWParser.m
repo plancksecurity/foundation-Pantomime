@@ -767,6 +767,7 @@ NSRange shrinkRange(NSRange range)
 
         for (int i = 0; i < count; i++) {
             NSData *rawReference = [rawReferences objectAtIndex: i];
+            rawReference = [rawReference unwrap];
             NSString *reference = [rawReference asciiString];
             // We protect ourself against values that could hold 8-bit characters.
             if (reference) {
@@ -774,6 +775,7 @@ NSRange shrinkRange(NSRange range)
             }
         }
         [message setReferences: references];
+
         return result;
     }
 
