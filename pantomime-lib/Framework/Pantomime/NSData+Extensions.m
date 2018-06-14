@@ -853,7 +853,8 @@ static const char *hexDigit = "0123456789ABCDEF";
 - (NSData *) unwrap
 {
     NSData *result = self;
-    if ([self characterAtIndex: 0] == '<' && [self characterAtIndex: self.length - 1] == '>') {
+    if (self.length >= 2 &&
+        [self characterAtIndex: 0] == '<' && [self characterAtIndex: self.length - 1] == '>') {
         NSRange rangeWithoutWrappers = NSMakeRange(1, self.length - 2);
         result =  [self subdataWithRange:rangeWithoutWrappers];
     }
