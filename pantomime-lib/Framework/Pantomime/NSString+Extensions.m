@@ -938,5 +938,13 @@
         
         return AUTORELEASE(aMutableString); 
     }
+
+- (NSString *)wrapped;
+{
+    if ([self hasPrefix:@"<"] && [self hasSuffix:@">"]) {
+        return self;
+    }
+    return [NSString stringWithFormat:@"<%@>", self];
+}
     
-    @end
+@end

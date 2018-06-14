@@ -285,6 +285,17 @@
 */
 + (NSString *) stringFromRecipients: (NSArray *) theRecipients
                                type: (PantomimeRecipientType) theRecipientType;
+
+/**
+ Wraps the receiver inangle brackets.
+ Examples:
+ "Hello Wolrd" -> "<Hello Wolrd>"
+ "<Hello Wolrd>" -> "<Hello Wolrd>"
+
+ @return    If the receiver is not wrapped in angle brackets already: wrapped string
+            Otherwize: the unmodified string
+ */
+- (NSString *)wrapped;
 @end
 
 #endif // _Pantomime_H_NSString_Extensions
