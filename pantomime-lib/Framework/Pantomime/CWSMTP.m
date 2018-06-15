@@ -293,42 +293,31 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 // This method is used to authenticate ourself to the SMTP server.
 //
-- (void) authenticate: (NSString *) theUsername
-             password: (NSString *) thePassword
-            mechanism: (NSString *) theMechanism
+- (void)authenticate:(NSString *)username
+            password:(NSString *)password
+           mechanism:(NSString *)mechanism
 {
     dispatch_sync(self.serviceQueue, ^{
-        ASSIGN(_username, theUsername);
-        ASSIGN(_password, thePassword);
-        ASSIGN(_mechanism, theMechanism);
+        _username = username;
+        _password = password;
+        _mechanism = mechanism;
 
-        if (!theMechanism)
-        {
+        if (!mechanism) {
             AUTHENTICATION_FAILED(_delegate, @"");
-        }
-        else if ([theMechanism caseInsensitiveCompare: @"PLAIN"] == NSOrderedSame)
-        {
+        } else if ([mechanism caseInsensitiveCompare: @"PLAIN"] == NSOrderedSame) {
             [self sendCommand: SMTP_AUTH_PLAIN  arguments: @"AUTH PLAIN"];
-        }
-        else if ([theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
-        {
+        } else if ([mechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame) {
             [self sendCommand: SMTP_AUTH_LOGIN  arguments: @"AUTH LOGIN"];
-        }
-        else if ([theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
-        {
+        } else if ([mechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame) {
             [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
-        }
-        else if ([theMechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame)
-        {
+        } else if ([mechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame) {
             NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:_username
                                                                             accessToken:_password];
             NSString *args = [NSString stringWithFormat:@"AUTH XOAUTH2 %@", clientResponse];
             [self sendCommand: SMTP_AUTH_XOAUTH2  arguments: args];
-        }
-        else
-        {
+        } else {
             // Unknown / Unsupported mechanism
-            AUTHENTICATION_FAILED(_delegate, theMechanism);
+            AUTHENTICATION_FAILED(_delegate, mechanism);
         }
     });
 }

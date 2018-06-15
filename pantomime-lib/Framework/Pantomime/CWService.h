@@ -396,13 +396,13 @@ extern NSString * _Nonnull PantomimeProtocolException;
 	      PantomimeAuthenticationFailed notification (or calls the
 	      -authenticationFailed: method on the delegate, if any). This method
 	      is fully asynchronous.
-  @param theUsername The username to use, overwriting -username: if any.
-  @param thePassword The password to use.
-  @param theMechanism The authentication mechanism to use.
+  @param username The username to use, overwriting -username: if any.
+  @param password The password to use.
+  @param mechanism The authentication mechanism to use.
 */
-- (void) authenticate: (NSString * _Nonnull) theUsername
-             password: (NSString * _Nullable) thePassword
-            mechanism: (NSString * _Nonnull) theMechanism;
+- (void)authenticate:(NSString *)username
+            password:(NSString *)password
+           mechanism:(NSString *)mechanism;
 
 /*!
   @method cancelRequest

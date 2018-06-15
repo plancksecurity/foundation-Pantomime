@@ -189,11 +189,11 @@
 //
 // Other methods
 //
-- (void) authenticate: (NSString *) theUsername
-             password: (NSString *) thePassword
-            mechanism: (NSString *) theMechanism
+- (void)authenticate:(NSString *)username
+            password:(NSString *)password
+           mechanism:(NSString *)mechanism
 {
-  [self subclassResponsibility: _cmd];
+    [self subclassResponsibility: _cmd];
 }
 
 
