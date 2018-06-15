@@ -668,47 +668,35 @@ NSRange shrinkRange(NSRange range)
 //
 // This method is used to parse the In-Reply-To: header value.
 //
-+ (NSData *) parseInReplyTo: (NSData *) theLine
-		  inMessage: (CWMessage *) theMessage
-		      quick: (BOOL) theBOOL
++ (NSData *)parseInReplyTo:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL)quick
 {
-  NSData *aData;
-  NSInteger x, y;
-  
-  if (theBOOL)
-    {
-      aData = theLine;
-    }
-  else if ([theLine length] > 13)
-    {
-      aData = [theLine subdataFromIndex: 13];
-    }
-  else
-    {
-      return [NSData data];
+    NSData *result = nil;
+    if (quick) {
+        result = rawLine;
+    } else if ([rawLine length] > 13) {
+        result = [rawLine subdataFromIndex: 13];
+    } else {
+        return [NSData data];
     }
 
-  // We check for lame headers like that:
-  //
-  // In-Reply-To: <4575197F.7020602@de.ibm.com> (Markus Deuling's message of "Tue, 05 Dec 2006 08:02:23 +0100")
-  // In-Reply-To: <MABBJIJNAFCGBJJJOEBHEEFGKIAA.reldred@viablelinks.com>; from reldred@viablelinks.com on Wed, Mar 26, 2003 at 11:23:37AM -0800
-  //
-  x = [aData indexOfCharacter: ';'];
-  y = [aData indexOfCharacter: ' '];
+    // We check for lame headers like that:
+    //
+    // In-Reply-To: <4575197F.7020602@de.ibm.com> (Markus Deuling's message of "Tue, 05 Dec 2006 08:02:23 +0100")
+    // In-Reply-To: <MABBJIJNAFCGBJJJOEBHEEFGKIAA.reldred@viablelinks.com>; from reldred@viablelinks.com on Wed, Mar 26, 2003 at 11:23:37AM -0800
+    //
+    NSInteger x = [result indexOfCharacter: ';'];
+    NSInteger y = [result indexOfCharacter: ' '];
 
-  if (x > 0 && x < y)
-    {
-      aData = [aData subdataToIndex: x];
-    }
-  else if (y > 0)
-    {
-      aData = [aData subdataToIndex: y];
+    if (x > 0 && x < y) {
+        result = [result subdataToIndex: x];
+    } else if (y > 0) {
+        result = [result subdataToIndex: y];
     }
 
-    [aData unwrap];
-  [theMessage setInReplyTo: [aData asciiString]];
+    [result unwrap];
+    [message setInReplyTo: [result asciiString]];
 
-  return aData;
+    return result;
 }
 
 

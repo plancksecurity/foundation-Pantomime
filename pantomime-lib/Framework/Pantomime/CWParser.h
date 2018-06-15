@@ -133,22 +133,18 @@
 /*!
   @method parseInReplyTo: inMessage:
   @discussion This method is used to parse a In-Reply-To header line.
-  @param theLine The line to parse.
-  @param theMessage The message in which to store the parsed value, if any.
+  @param rawLine The line to parse.
+  @param message The message in which to store the parsed value, if any.
 */
-+ (NSData *) parseInReplyTo: (NSData *) theLine
-                  inMessage: (CWMessage *) theMessage
-                      quick: (BOOL) theBOOL;
++ (NSData *)parseInReplyTo:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL)quick;
 
 /*!
   @method parseMessageID: inMessage:
   @discussion This method is used to parse a Message-ID header line.
-  @param theLine The line to parse.
-  @param theMessage The message in which to store the parsed value, if any.
+  @param rawLine The line to parse.
+  @param message The message in which to store the parsed value, if any.
 */
-+ (NSData *) parseMessageID: (NSData *) theLine
-                  inMessage: (CWMessage *) theMessage
-                      quick: (BOOL) theBOOL;
++ (NSData *)parseMessageID:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL)quick
 
 /*!
   @method parseMIMEVersion: inMessage:
@@ -162,12 +158,10 @@
 /*!
   @method parseReferences: inMessage:
   @discussion This method is used to parse a References header line.
-  @param theLine The line to parse.
-  @param theMessage The message in which to store the parsed value, if any.
+  @param rawLine The line to parse.
+  @param message The message in which to store the parsed value, if any.
 */
-+ (NSData *) parseReferences: (NSData *) theLine
-                   inMessage: (CWMessage *) theMessage
-                       quick: (BOOL) theBOOL;
++ (NSData *) parseReferences:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL) quick
 
 /*!
   @method parseReply: inMessage:
