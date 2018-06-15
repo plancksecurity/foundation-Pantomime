@@ -257,7 +257,7 @@
 //
 //
 //
-#warning VERIFY FOR NoSelect
+//! VERIFY FOR NoSelect
 - (CWIMAPFolder *) folderForNameInternal: (NSString *) theName
                                     mode: (PantomimeFolderMode) theMode
                        updateExistsCount: (BOOL)updateExistsCount

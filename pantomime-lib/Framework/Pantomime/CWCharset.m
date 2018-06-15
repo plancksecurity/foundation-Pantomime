@@ -95,7 +95,7 @@ static NSMutableDictionary *charset_instance_cache = nil;
 
 
 //
-// TODO: what should this return for eg. \t and \n?
+//!  what should this return for eg. \t and \n?
 //
 - (int) codeForCharacter: (unichar) theCharacter
 {

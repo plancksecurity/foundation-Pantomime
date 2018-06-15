@@ -276,7 +276,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 //
 //
-#warning VERIFY FOR NoSelect
+////! VERIFY FOR NoSelect
 - (CWIMAPFolder *) folderForName: (NSString *) theName
                             mode: (PantomimeFolderMode) theMode
                updateExistsCount: (BOOL)updateExistsCount
@@ -858,7 +858,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 // This method authenticates the Store to the IMAP server.
 // In case of an error, it returns NO.
 //
-// FIXME: We MUST NOT send a login command if LOGINDISABLED is
+//!  We MUST NOT send a login command if LOGINDISABLED is
 //        enforced by the server (6.2.3).
 //
 - (void) authenticate: (NSString*) theUsername
@@ -908,7 +908,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             //
             // We support non-ASCII password by using the 8-bit ISO Latin 1 encoding.
-            // FIXME: Is there any standard on which encoding to use?
+            //!  Is there any standard on which encoding to use?
             //
             aData = [thePassword dataUsingEncoding: NSISOLatin1StringEncoding];
 
@@ -2618,7 +2618,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseNOOP
 {
     //INFO(NSStringFromClass([self class]), @"Parsing noop responses...");
-    // FIXME
+    //!
 }
 
 //
@@ -2688,7 +2688,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 }
                 else
                 {
-                    // FIXME
+                    //! 
                     // connectionLost? or should we call [self close]?
                 }
                 break;
@@ -2734,7 +2734,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
 
             case IMAP_LOGOUT:
-                // FIXME: What should we do here?
+                //!  What should we do here?
                 [super close];
                 break;
 

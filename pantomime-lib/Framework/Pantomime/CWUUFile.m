@@ -182,7 +182,7 @@ void uudecodeline(char *line, NSMutableData *data)
 
 
 //
-// FIXME, we currently ignore theRange
+//!  we currently ignore theRange
 //
 + (NSRange) rangeOfUUEncodedStringFromString: (NSString *) theString
                                        range: (NSRange) theRange

@@ -274,7 +274,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 
 //
-// NSCopying protocol (FIXME)
+//!  NSCopying protocol
 //
 - (id) copyWithZone: (NSZone *) zone
 {

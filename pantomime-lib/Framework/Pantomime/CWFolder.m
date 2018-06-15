@@ -96,7 +96,7 @@
 
 
 //
-// NSCopying protocol (FIXME)
+//!  NSCopying protocol
 //
 - (id) copyWithZone: (NSZone *) zone
 {
@@ -136,7 +136,7 @@
 	  [_allVisibleMessages addObject: theMessage];
 	}
 
-      // FIXME
+      //!
       // If we've done message threading, we simply append the message
       // to the end of our containers array. We might want to place
       // it in the right thread in the future.
@@ -344,7 +344,7 @@
 	  [_allVisibleMessages removeObject: theMessage];
 	}
 
-      // FIXME - We must go through our _allContainers ivar in order
+      //!  - We must go through our _allContainers ivar in order
       //         to find the message that has just been removed from
       //         this folder. We must go through all levels.
       //         Right now, we simply do again our message threading algo
@@ -652,7 +652,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 	       [aMessage headerValueForName: @"In-Reply-To"])
 	{
 	  [aContainer setParent: (CWContainer *)NSMapGet(id_table, [aMessage headerValueForName: @"In-Reply-To"])];
-	  // FIXME, should we really do that? or should we do it in B?
+	  //!  should we really do that? or should we do it in B?
 	  [(CWContainer *)NSMapGet(id_table, [aMessage headerValueForName: @"In-Reply-To"]) setChild: aContainer];
 	}
       else
@@ -705,7 +705,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 	      aContainer->child == nil)
 	    {
 	      // We nuke it
-	      // FIXME: Won't work for non-root containers.
+	      //!  Won't work for non-root containers.
 	      [_allContainers removeObject: aContainer];
 	    }
 	  
@@ -713,7 +713,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
 	  //    promote its children to this level (that is, splice them in to the current child list.)
 	  //    Do not promote the children if doing so would promote them to the root set 
 	  //    -- unless there is only one child, in which case, do. 
-	  // FIXME: We promote to the root no matter what :)
+	  //!  We promote to the root no matter what :)
 	  if (aContainer->message == nil && aContainer->child)
 	    {
 	      CWContainer *c;
@@ -853,7 +853,7 @@ void NSMapRemove(NSMutableDictionary *dict, id key)
       else
 	{
 #if 0
-	  // FIXME - not so sure about that step.
+	  //!  - not so sure about that step.
 	  CWContainer *aNewContainer;
 	  
 	  aNewContainer = [[CWContainer alloc] init];

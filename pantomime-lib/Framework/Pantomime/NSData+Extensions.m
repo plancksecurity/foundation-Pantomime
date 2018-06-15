@@ -44,14 +44,14 @@ static const char *hexDigit = "0123456789ABCDEF";
 
 
 
-// TODO:
+//!
 // add an NSData cluster member NSSubrangeData that retaind its parent and
 // used its data. Would make almost all of these operations work without
 // copying.
 @implementation NSData (PantomimeExtensions)
 
 //
-// FIXME: this should ignore characters in the stream that aren't in
+//!  this should ignore characters in the stream that aren't in
 //        the base64 alphabet (as per the spec). would remove need for
 //        ...removeLinefeeds... too
 //
@@ -288,7 +288,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 			length: 3];
 	  line += 3;
 	}
-      // FIXME: really always pass \n through here?
+      //!  really always pass \n through here?
       else if (!aBOOL &&
 	       (*b == '\n' || *b == ' ' || *b == '\t'
 		|| (*b >= 33 && *b <= 60)
@@ -397,7 +397,7 @@ static const char *hexDigit = "0123456789ABCDEF";
       len = theRange.location + theRange.length;
     }
 
-#warning this could be optimized
+//!  this could be optimized
   if (theOptions & NSCaseInsensitiveSearch)
     {
       i = theRange.location;

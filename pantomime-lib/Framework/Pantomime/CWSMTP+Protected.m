@@ -131,7 +131,6 @@
                                    dataUsingEncoding: _defaultCStringEncoding],
                                   _crlf]];
         } else {
-            // TODO: Why is aQueueObject sometimes nil?
             INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
         }
     }

@@ -290,7 +290,7 @@ static int seed_count = 1;
 
 
 //
-// FIXME: Should we really use NSUTF8StringEncoding in base64?
+//!  Should we really use NSUTF8StringEncoding in base64?
 //
 + (NSData *) encodeHeader: (NSString *) theText
 		  charset: (NSString *) theCharset
@@ -316,7 +316,7 @@ static int seed_count = 1;
       return [aData encodeBase64WithLineLength: 0];
     }
   //
-  // FIXME: What should we do here, should we just return the 'aData' w/o 
+  //! What should we do here, should we just return the 'aData' w/o
   //        encoding it or should we generate an exception?
   else
     {
@@ -336,7 +336,7 @@ static int seed_count = 1;
 // The string returned will NOT be more than 75 characters long
 // for each folded part of the original string.
 //
-#warning remove/combine or leave and document
+//!  remove/combine or leave and document
 + (NSData *) encodeWordUsingQuotedPrintable: (NSString *) theWord
 			       prefixLength: (int) thePrefixLength
 {  
@@ -476,7 +476,7 @@ static int seed_count = 1;
 
 
 //
-// FIXME: whitespace after boundary markers
+//!  whitespace after boundary markers
 // 
 + (CWMIMEMultipart *)compositeMultipartContentFromRawSource:(NSData *)source
                                                    boundary:(NSData *)boundary
@@ -589,7 +589,7 @@ static int seed_count = 1;
             //
             // We also treat those composite type as discrete types:
             //
-#warning test extensively those
+//!  test extensively those
             // message/delivery-status
             // message/disposition-notification
             //

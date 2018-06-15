@@ -500,7 +500,7 @@
                 }
             }
 
-            // FIXME: can't break even if there is only one left. First we have to check
+            //!  can't break even if there is only one left. First we have to check
             //        whether that encoding will actually work for the entire string. If it
             //	doesn't we'll need to fall back to utf-8 (or something else that can encode
             //        _everything_).

@@ -163,7 +163,7 @@
 //
 @implementation CWURLName (Private)
 
-//// FIXME (finish!)
+//!  (finish!)
 // imap://<iserver>/<foldername>
 //
 // Examples: imap://minbari.org/gray-council;UIDVALIDITY=385759045/;UID=20
@@ -238,7 +238,7 @@
 
 
 //
-// FIXME (finish!)
+//! (finish!)
 // pop://<user>;auth=<auth>@<host>:<port>
 //
 // Examples: pop://rg@mailsrv.qualcomm.com

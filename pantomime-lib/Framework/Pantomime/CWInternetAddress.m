@@ -54,7 +54,7 @@
   // "Marcotte, Ludovic" <ludovic@Sophos.ca>
   // "Joe" User <joe@acme.com>
   //
-#warning also support "joe@acme.com (Joe User)"
+//!  also support "joe@acme.com (Joe User)"
 
   a = [theString indexOfCharacter: '<'];
 

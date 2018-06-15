@@ -77,7 +77,7 @@
 // 
 //
 //
-#warning Fix mem leaks
+//! Fix mem leaks
 - (void) setChild: (CWContainer *) theChild
 {
   if (!theChild || theChild == self || theChild->next == self || theChild == child)
@@ -91,7 +91,7 @@
 
       // We search down in the children of theChild to be sure that
       // self IS NOT reachable
-      // FIXME - we should use childrenEnumerator since we are NOT looping
+      //! we should use childrenEnumerator since we are NOT looping
       // in all children with this code
       aChild = theChild->child;
 

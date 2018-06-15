@@ -528,7 +528,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
 
 //
-// FIXME, rename if needed.
+//!  rename if needed.
 //
 - (void) _parseAUTH_LOGIN_CHALLENGE
 {
@@ -651,7 +651,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     {
       // Handle the fact when a server is loaded and can't handle our requests
       // right away.
-#warning FIXME
+//!  unhandled
     }
 }
 
@@ -806,7 +806,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
 
 
-#warning FIXME - Inform the delegate if it is ready or not, especially if EHLO failed
+//!  - Inform the delegate if it is ready or not, especially if EHLO failed
   POST_NOTIFICATION(PantomimeServiceInitialized, self, nil);
   PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:), PantomimeServiceInitialized);
 }
@@ -817,7 +817,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseHELO
 {
-  // FIXME - Implement. + inform the delegate if it's ready or not.
+  //!  - Implement. + inform the delegate if it's ready or not.
 }
 
 
@@ -923,7 +923,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
   else
     {
-#warning also send the invalid recipient in perform selector and when posting the notification
+//!  also send the invalid recipient in perform selector and when posting the notification
       if (PERFORM_SELECTOR_1(_delegate, @selector(recipientIdentificationFailed:), PantomimeRecipientIdentificationFailed))
 	{
 	  POST_NOTIFICATION(PantomimeRecipientIdentificationFailed, self, [NSDictionary dictionaryWithObject: _recipients  forKey: @"Recipients"]);
@@ -1005,7 +1005,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
   if ([aData hasCPrefix: "421"])
     {
-      // FIXME: - lost connection
+      //!  - lost connection
       //INFO(NSStringFromClass([self class]), @"LOST CONNECTION TO THE SERVER");
       [super close];
     }
@@ -1075,7 +1075,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
 	default:
 	  break;
-	  // FIXME
+	  //! 
 	}
     }
   

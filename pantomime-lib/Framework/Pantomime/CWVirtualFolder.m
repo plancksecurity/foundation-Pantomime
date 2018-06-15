@@ -89,7 +89,7 @@
 // the allMessages ivar since it's holding messages potentially removed
 // from the real Folder objects.
 //
-#warning FIXME
+//! 
 - (void) expunge: (BOOL) returnDeletedMessages
 {
 #if 0
@@ -123,7 +123,7 @@
 	   mask: (PantomimeSearchMask) theMask
 	options: (PantomimeSearchOption) theOptions
 {
-#warning FIXME
+//! 
 #if 0
   NSMutableArray *aMutableArray;
   int i;
