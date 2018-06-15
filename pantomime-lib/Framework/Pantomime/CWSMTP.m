@@ -297,13 +297,15 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
             password:(NSString *)password
            mechanism:(NSString *)mechanism
 {
+    __block __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        _username = username;
-        _password = password;
-        _mechanism = mechanism;
+        __block typeof(self) strongSelf = weakSelf;
+        strongSelf->_username = username;
+        strongSelf->_password = password;
+        strongSelf->_mechanism = mechanism;
 
         if (!mechanism) {
-            AUTHENTICATION_FAILED(_delegate, @"");
+            AUTHENTICATION_FAILED(strongSelf->_delegate, @"");
         } else if ([mechanism caseInsensitiveCompare: @"PLAIN"] == NSOrderedSame) {
             [self sendCommand: SMTP_AUTH_PLAIN  arguments: @"AUTH PLAIN"];
         } else if ([mechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame) {
@@ -311,13 +313,14 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         } else if ([mechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame) {
             [self sendCommand: SMTP_AUTH_CRAM_MD5  arguments: @"AUTH CRAM-MD5"];
         } else if ([mechanism caseInsensitiveCompare: @"XOAUTH2"] == NSOrderedSame) {
-            NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:_username
-                                                                            accessToken:_password];
+            NSString *clientResponse =
+            [CWOAuthUtils base64EncodedClientResponseForUser:strongSelf->_username
+                                                 accessToken:strongSelf->_password];
             NSString *args = [NSString stringWithFormat:@"AUTH XOAUTH2 %@", clientResponse];
             [self sendCommand: SMTP_AUTH_XOAUTH2  arguments: args];
         } else {
             // Unknown / Unsupported mechanism
-            AUTHENTICATION_FAILED(_delegate, mechanism);
+            AUTHENTICATION_FAILED(strongSelf->_delegate, mechanism);
         }
     });
 }
