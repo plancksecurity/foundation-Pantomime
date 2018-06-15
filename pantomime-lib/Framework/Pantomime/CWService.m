@@ -166,8 +166,10 @@
 - (unsigned int) port
 {
     __block unsigned int returnee = 0;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        returnee = _port;
+        typeof(self) strongSelf = weakSelf;
+        returnee = strongSelf->_port;
     });
     return returnee;
 }
@@ -179,8 +181,10 @@
 - (NSArray *) supportedMechanisms
 {
     __block NSArray *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        returnee = [_supportedMechanisms array];
+        typeof(self) strongSelf = weakSelf;
+        returnee = [strongSelf->_supportedMechanisms array];
     });
     return returnee;
 }

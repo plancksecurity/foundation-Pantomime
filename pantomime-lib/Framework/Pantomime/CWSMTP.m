@@ -163,9 +163,11 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) close
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        if (_connected) {
-            [self sendCommand: SMTP_QUIT  arguments: @"QUIT"];
+        typeof(self) strongSelf = weakSelf;
+        if (strongSelf->_connected) {
+            [strongSelf sendCommand: SMTP_QUIT  arguments: @"QUIT"];
         }
         [super close];
     });
@@ -297,7 +299,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
             password:(NSString *)password
            mechanism:(NSString *)mechanism
 {
-    __block __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
         __block typeof(self) strongSelf = weakSelf;
         strongSelf->_username = username;
@@ -335,9 +337,9 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) sendMessage
 {
-    __block __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        __block typeof(self) strongSelf = weakSelf;
+        typeof(self) strongSelf = weakSelf;
         if (!strongSelf->_message && !strongSelf->_data) {
             [strongSelf fail];
             return;
@@ -381,17 +383,21 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setMessage: (CWMessage *) theMessage
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        DESTROY(_data);
-        ASSIGN(_message, theMessage);
+        typeof(self) strongSelf = weakSelf;
+        strongSelf->_data = nil;
+        strongSelf->_message = theMessage;
     });
 }
 
 - (CWMessage *) message
 {
     __block CWMessage *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        returnee = _message;
+        typeof(self) strongSelf = weakSelf;
+        returnee = strongSelf->_message;
     });
 
     return returnee;
@@ -403,17 +409,21 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setMessageData: (NSData *) theData
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        DESTROY(_message);
-        ASSIGN(_data, theData);
+        typeof(self) strongSelf = weakSelf;
+        strongSelf->_message = nil;
+        strongSelf->_data = theData;
     });
 }
 
 - (NSData *) messageData
 {
     __block NSData *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        returnee = _data;
+        typeof(self) strongSelf = weakSelf;
+        returnee = strongSelf->_data;
     });
 
     return returnee;
@@ -425,12 +435,13 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) setRecipients: (NSArray *) theRecipients
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        DESTROY(_recipients);
+        typeof(self) strongSelf = weakSelf;
+        strongSelf->_recipients = nil;
 
-        if (theRecipients)
-        {
-            ASSIGN(_recipients, [NSMutableArray arrayWithArray: theRecipients]);
+        if (theRecipients) {
+            strongSelf->_recipients = [NSMutableArray arrayWithArray: theRecipients];
         }
     });
 }
@@ -442,10 +453,12 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 - (NSArray *) recipients
 {
     __block NSArray *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        returnee = _recipients;
+        typeof(self) strongSelf = weakSelf;
+        returnee = strongSelf->_recipients;
     });
-
+    
     return returnee;
 }
 

@@ -246,17 +246,19 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSArray *) supportedMechanisms
 {
     __block NSArray *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
+        typeof(self) strongSelf = weakSelf;
         NSMutableArray *aMutableArray;
         NSString *aString;
         NSUInteger i, count;;
 
         aMutableArray = [NSMutableArray array];
-        count = [_capabilities count];
+        count = [strongSelf->_capabilities count];
 
         for (i = 0; i < count; i++)
         {
-            aString = [_capabilities objectAtIndex: i];
+            aString = [strongSelf->_capabilities objectAtIndex: i];
 
             if ([aString hasCaseInsensitivePrefix: @"AUTH="])
             {
@@ -307,15 +309,17 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) close
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
+        typeof(self) strongSelf = weakSelf;
         // ignore all subsequent messages from the servers
-        _folderBuilder = nil;
-        _delegate = nil;
+        strongSelf->_folderBuilder = nil;
+        strongSelf->_delegate = nil;
 
-        [_openFolders removeAllObjects];
+        [strongSelf->_openFolders removeAllObjects];
 
-        if (_connected) {
-            [self sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
+        if (strongSelf->_connected) {
+            [strongSelf sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
         }
         [super close];
     });
@@ -807,15 +811,17 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (int) reconnect
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
+        typeof(self) strongSelf = weakSelf;
         //INFO(NSStringFromClass([self class]), @"CWIMAPStore: -reconnect");
 
-        [_connection_state.previous_queue addObjectsFromArray: [_queue array]];
-        _connection_state.reconnecting = YES;
+        [strongSelf->_connection_state.previous_queue addObjectsFromArray: [strongSelf->_queue array]];
+        strongSelf->_connection_state.reconnecting = YES;
 
         // We flush our read/write buffers.
-        [_rbuf reset];
-        [_wbuf reset];
+        [strongSelf->_rbuf reset];
+        [strongSelf->_wbuf reset];
 
         //
         // We first empty our queue and set again our _lastCommand ivar to
@@ -823,11 +829,11 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         //INFO(NSStringFromClass([self class]), @"queue count = %d", [_queue count]);
         //INFO(NSStringFromClass([self class]), @"%@", [_queue description]);
-        [_queue removeAllObjects];
-        _lastCommand = IMAP_AUTHORIZATION;
-        INFO(NSStringFromClass([self class]), @"reconnect currentQueueObject = nil");
-        self.currentQueueObject = nil;
-        _counter = 0;
+        [strongSelf->_queue removeAllObjects];
+        strongSelf->_lastCommand = IMAP_AUTHORIZATION;
+        INFO(NSStringFromClass([strongSelf class]), @"reconnect currentQueueObject = nil");
+        strongSelf.currentQueueObject = nil;
+        strongSelf->_counter = 0;
 
         [super close];
         [super connectInBackgroundAndNotify];
@@ -860,21 +866,22 @@ static inline int has_literal(char *buf, NSUInteger c)
             mechanism: (NSString*) theMechanism
 {
     __block NSString *blockPassword = thePassword;
-
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        ASSIGN(_username, theUsername);
-        ASSIGN(_password, thePassword);
-        ASSIGN(_mechanism, theMechanism);
+        typeof(self) strongSelf = weakSelf;
+        strongSelf->_username = theUsername;
+        strongSelf->_password = thePassword;
+        strongSelf->_mechanism = theMechanism;
 
         // AUTH=CRAM-MD5
         if (theMechanism && [theMechanism caseInsensitiveCompare: @"CRAM-MD5"] == NSOrderedSame)
         {
-            [self sendCommand: IMAP_AUTHENTICATE_CRAM_MD5  info: nil  arguments: @"AUTHENTICATE CRAM-MD5"];
+            [strongSelf sendCommand: IMAP_AUTHENTICATE_CRAM_MD5  info: nil  arguments: @"AUTHENTICATE CRAM-MD5"];
             return;
         } // AUTH=LOGIN
         else if (theMechanism && [theMechanism caseInsensitiveCompare: @"LOGIN"] == NSOrderedSame)
         {
-            [self sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
+            [strongSelf sendCommand: IMAP_AUTHENTICATE_LOGIN  info: nil  arguments: @"AUTHENTICATE LOGIN"];
             return;
         }
         // AUTH=XOAUTH2
@@ -882,7 +889,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         {
             NSString *clientResponse = [CWOAuthUtils base64EncodedClientResponseForUser:theUsername
                                                                             accessToken:thePassword];
-            [self sendCommand: IMAP_AUTHENTICATE_XOAUTH2
+            [strongSelf sendCommand: IMAP_AUTHENTICATE_XOAUTH2
                          info: nil
                     arguments: @"AUTHENTICATE XOAUTH2 %@", clientResponse];
             return;
@@ -905,13 +912,15 @@ static inline int has_literal(char *buf, NSUInteger c)
             //
             aData = [thePassword dataUsingEncoding: NSISOLatin1StringEncoding];
 
-            [self sendCommand: IMAP_LOGIN
-                         info: [NSDictionary dictionaryWithObject: aData  forKey: @"Password"]
-                    arguments: @"LOGIN %@ {%d}", _username, [aData length]];
+            [strongSelf sendCommand: IMAP_LOGIN
+                               info: [NSDictionary dictionaryWithObject: aData  forKey: @"Password"]
+                          arguments: @"LOGIN %@ {%d}", strongSelf->_username, [aData length]];
             return;
         }
 
-        [self sendCommand: IMAP_LOGIN  info: nil  arguments: @"LOGIN %@ %@", _username, thePassword];
+        [strongSelf sendCommand: IMAP_LOGIN
+                           info: nil
+                      arguments: @"LOGIN %@ %@", strongSelf->_username, thePassword];
     });
 }
 
@@ -967,23 +976,27 @@ static inline int has_literal(char *buf, NSUInteger c)
     __block NSString *blockName = theName;
     __block NSString *blockNewName = theNewName;
 
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
+        typeof(self) strongSelf = weakSelf;
         NSDictionary *info;
 
-        blockName = [blockName stringByDeletingFirstPathSeparator: _folderSeparator];
-        blockNewName = [blockNewName stringByDeletingFirstPathSeparator: _folderSeparator];
+        blockName = [blockName stringByDeletingFirstPathSeparator: strongSelf->_folderSeparator];
+        blockNewName = [blockNewName stringByDeletingFirstPathSeparator: strongSelf->_folderSeparator];
         info = [NSDictionary dictionaryWithObjectsAndKeys: blockName, @"Name", blockNewName, @"NewName", nil];
 
         if ([[blockName stringByTrimmingWhiteSpaces] length] == 0 ||
             [[blockNewName stringByTrimmingWhiteSpaces] length] == 0)
         {
-            POST_NOTIFICATION(PantomimeFolderRenameFailed, self, info);
-            PERFORM_SELECTOR_3(_delegate, @selector(folderRenameFailed:), PantomimeFolderRenameFailed, info);
+            POST_NOTIFICATION(PantomimeFolderRenameFailed, strongSelf, info);
+            PERFORM_SELECTOR_3(strongSelf->_delegate, @selector(folderRenameFailed:),
+                               PantomimeFolderRenameFailed, info);
         }
 
-        [self sendCommand: IMAP_RENAME
+        [strongSelf sendCommand: IMAP_RENAME
                      info: info
-                arguments: @"RENAME \"%@\" \"%@\"", [blockName modifiedUTF7String], [blockNewName modifiedUTF7String]];
+                arguments: @"RENAME \"%@\" \"%@\"", [blockName modifiedUTF7String],
+         [blockNewName modifiedUTF7String]];
     });
 }
 
@@ -994,15 +1007,17 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSEnumerator *) folderEnumerator
 {
     __block NSEnumerator *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        if (![_folders count]) {
+        typeof(self) strongSelf = weakSelf;
+        if (![strongSelf->_folders count]) {
             // Only top level folders: LIST "" %
-            [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
+            [strongSelf sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
             returnee = nil;
 
             return;
         }
-        returnee = [_folders keyEnumerator];
+        returnee = [strongSelf->_folders keyEnumerator];
     });
 
     return returnee;
@@ -1015,16 +1030,18 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSEnumerator *) subscribedFolderEnumerator
 {
     __block NSEnumerator *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        if (![_subscribedFolders count])
+        typeof(self) strongSelf = weakSelf;
+        if (![strongSelf->_subscribedFolders count])
         {
-            [self sendCommand: IMAP_LSUB  info: nil  arguments: @"LSUB \"\" \"*\""];
+            [strongSelf sendCommand: IMAP_LSUB  info: nil  arguments: @"LSUB \"\" \"*\""];
             returnee = nil;
 
             return;
         }
 
-        returnee = [_subscribedFolders objectEnumerator];
+        returnee = [strongSelf->_subscribedFolders objectEnumerator];
     });
 
     return returnee;
@@ -1058,8 +1075,10 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (NSEnumerator *) openFoldersEnumerator
 {
     __block NSEnumerator *returnee = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        returnee = [_openFolders objectEnumerator];
+        typeof(self) strongSelf = weakSelf;
+        returnee = [strongSelf->_openFolders objectEnumerator];
     });
 
     return returnee;
@@ -1071,13 +1090,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) removeFolderFromOpenFolders: (CWFolder *) theFolder
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        if (_selectedFolder == (CWIMAPFolder *)theFolder)
+        typeof(self) strongSelf = weakSelf;
+        if (strongSelf->_selectedFolder == (CWIMAPFolder *)theFolder)
         {
-            _selectedFolder = nil;
+            strongSelf->_selectedFolder = nil;
         }
 
-        [_openFolders removeObjectForKey: [theFolder name]];
+        [strongSelf->_openFolders removeObjectForKey: [theFolder name]];
     });
 }
 
@@ -1122,10 +1143,10 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (PantomimeFolderAttribute) folderTypeForFolderName: (NSString *) theName
 {
     __block PantomimeFolderAttribute returnee = 0;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
-        id o;
-
-        o = [_folders objectForKey: theName];
+        typeof(self) strongSelf = weakSelf;
+        id o = [strongSelf->_folders objectForKey: theName];
 
         if (o)
         {
@@ -1133,7 +1154,9 @@ static inline int has_literal(char *buf, NSUInteger c)
             return;
         }
 
-        [self sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" \"%@\"", [theName modifiedUTF7String]];
+        [strongSelf sendCommand: IMAP_LIST
+                           info: nil
+                      arguments: @"LIST \"\" \"%@\"", [theName modifiedUTF7String]];
     });
 
     return returnee;
