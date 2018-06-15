@@ -144,7 +144,7 @@
   @param rawLine The line to parse.
   @param message The message in which to store the parsed value, if any.
 */
-+ (NSData *)parseMessageID:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL)quick
++ (NSData *)parseMessageID:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL)quick;
 
 /*!
   @method parseMIMEVersion: inMessage:
@@ -161,7 +161,7 @@
   @param rawLine The line to parse.
   @param message The message in which to store the parsed value, if any.
 */
-+ (NSData *) parseReferences:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL) quick
++ (NSData *) parseReferences:(NSData *)rawLine inMessage:(CWMessage *)message quick:(BOOL)quick;
 
 /*!
   @method parseReply: inMessage:
