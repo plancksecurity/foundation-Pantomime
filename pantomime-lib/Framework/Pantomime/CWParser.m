@@ -705,6 +705,7 @@ NSRange shrinkRange(NSRange range)
       aData = [aData subdataToIndex: y];
     }
 
+    [aData unwrap];
   [theMessage setInReplyTo: [aData asciiString]];
 
   return aData;
