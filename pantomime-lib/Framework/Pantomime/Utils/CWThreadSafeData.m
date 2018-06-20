@@ -48,33 +48,41 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger)length
 {
     __block NSUInteger result = 0;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
-        result = self.data.length;
+        typeof(self) strongSelf = weakSelf;
+        result = strongSelf.data.length;
     });
     return result;
 }
 
 - (void)reset
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
-        self.data = [NSMutableData new];
+        typeof(self) strongSelf = weakSelf;
+        strongSelf.data = [NSMutableData new];
     });
 }
 
 - (void)truncateLeadingBytes:(NSUInteger)numBytes
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
-        NSUInteger length = self.data.length - numBytes;
-        NSData *newData =  [self.data subdataWithRange:NSMakeRange(numBytes, length)];
-        self.data = [NSMutableData dataWithData: newData];
+        typeof(self) strongSelf = weakSelf;
+        NSUInteger length = strongSelf.data.length - numBytes;
+        NSData *newData =  [strongSelf.data subdataWithRange:NSMakeRange(numBytes, length)];
+        strongSelf.data = [NSMutableData dataWithData: newData];
     });
 }
 
 - (const char*)copyOfBytes
 {
     __block const char* copyOfBytes = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
-        NSData *copy = self.data.copy;
+        typeof(self) strongSelf = weakSelf;
+        NSData *copy = strongSelf.data.copy;
         copyOfBytes = copy.bytes;
     });
 
@@ -84,8 +92,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSData *)subdataToIndex:(NSUInteger)index
 {
     __block NSData *subData = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
-            subData = [self.data subdataWithRange: NSMakeRange(0, index)];
+        typeof(self) strongSelf = weakSelf;
+        subData = [strongSelf.data subdataWithRange: NSMakeRange(0, index)];
     });
 
     return subData;
@@ -93,34 +103,38 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)appendData:(NSData *)data
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
-        [self.data appendData:data];
+        typeof(self) strongSelf = weakSelf;
+        [strongSelf.data appendData:data];
     });
 }
 
 - (NSData * _Nullable)dropFirstLine
 {
     __block NSData *firstLine = nil;
+    __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
+        typeof(self) strongSelf = weakSelf;
         char *bytes, *end;
         NSUInteger i, count;
 
-        bytes = (char *)[self.data mutableBytes];
+        bytes = (char *)[strongSelf.data mutableBytes];
         end = bytes + 1;
-        count = self.data.length;
+        count = strongSelf.data.length;
 
         for (i = 1; i < count; i++) {
             if (*end == '\n' && *(end - 1) == '\r') {
                 NSData *aData = [NSData dataWithBytes: bytes  length: (i - 1)];
                 memmove(bytes,end + 1,count - i - 1);
-                [self.data setLength: count - i - 1];
+                [strongSelf.data setLength: count - i - 1];
                 firstLine = aData;
                 return;
             }
             end++;
         }
     });
-    
+
     return firstLine;
 }
 
