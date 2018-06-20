@@ -64,10 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)truncateLeadingBytes:(NSUInteger)numBytes
 {
     dispatch_sync(self.queue, ^{
-        char* bytes = self.data.mutableBytes;
-        NSUInteger newLength = self.data.length - numBytes;
-        memmove(bytes, bytes + numBytes, newLength);
-        self.data.length = newLength;
+        NSUInteger length = self.data.length - numBytes;
+        NSData *newData =  [self.data subdataWithRange:NSMakeRange(numBytes, length)];
+        self.data = [NSMutableData dataWithData: newData];
     });
 }
 
