@@ -1060,27 +1060,12 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 - (NSData *) dataValue
 {
   NSMutableData *aMutableData;
-  NSDictionary *aLocale;
 
   NSEnumerator *allHeaderKeyEnumerator;
   NSString *aKey;
 
   NSDate *aCalendarDate;
   NSData *aData;
-
-
-  // We get our locale in English
-#ifndef MACOSX
-  aLocale = [NSDictionary dictionaryWithContentsOfFile: [[NSBundle bundleForLibrary: @"gnustep-base"]
-							  pathForResource: @"English"
-							  ofType: nil
-							  inDirectory: @"Languages"]];
-#else
-  aLocale = [NSDictionary dictionaryWithContentsOfFile: [[NSBundle bundleForClass: [NSObject class]]
-							  pathForResource: @"English"
-							  ofType: nil
-							  inDirectory: @"Languages"] ];
-#endif
   
   // We initialize our mutable data object holding the raw data of the
   // new message.
