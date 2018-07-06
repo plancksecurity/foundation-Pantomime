@@ -1231,24 +1231,18 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 //
-- (void) addHeader: (NSString *) theName
-	 withValue: (NSString *) theValue
+- (void)addHeader:(NSString *)name withValue:(NSString *)value
 {
-  if (theName && theValue)
-    {
-      NSString *aString;
-      
-      if ((aString = [_headers objectForKey: theName]))
-	{
-	  aString = [NSString stringWithFormat: @"%@ %@", aString, theValue];
-	}
-      else
-	{
-	  aString = theValue;
-	}
-      
-      [_headers setObject: aString  forKey: theName];
+    if (!name || !value) {
+        return;
     }
+    NSString *aString;
+    if ((aString = [_headers objectForKey: name])) {
+        aString = [NSString stringWithFormat: @"%@ %@", aString, value];
+    } else {
+        aString = value;
+    }
+    [_headers setObject: aString  forKey: name];
 }
 
 //
