@@ -1053,169 +1053,122 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   return AUTORELEASE(theMessage);
 }
 
-
-//
-//
-//
-- (NSData *) dataValue
+- (NSData *)dataValue
 {
-  NSMutableData *aMutableData;
+    // Our data object holding the raw data of the new message.
+    NSMutableData *newMessageRawData = [[NSMutableData alloc] init];
 
-  NSEnumerator *allHeaderKeyEnumerator;
-  NSString *aKey;
-
-  NSDate *aCalendarDate;
-  NSData *aData;
-  
-  // We initialize our mutable data object holding the raw data of the
-  // new message.
-  aMutableData = [[NSMutableData alloc] init];
-  
+    NSDate *aCalendarDate;
     if ([self originationDate]) {
         aCalendarDate = [self originationDate];
     } else {
-#ifndef MACOSX
-        if ([[NSUserDefaults standardUserDefaults] objectForKey: @"Local Time Zone"]) {
-            aCalendarDate = [[NSDate date] dateWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"
-                                                         timeZone: [NSTimeZone systemTimeZone]];
-        } else {
-            tzset();
-            aCalendarDate = [[NSDate date] dateWithCalendarFormat: @"%a, %d %b %Y %H:%M:%S %z"
-                                                         timeZone: [NSTimeZone timeZoneWithAbbreviation:
-                                                                    [NSString stringWithCString: tzname[1]]]];
-        }
-#else
         aCalendarDate = [NSDate date];
-#endif
+    }
+    [newMessageRawData appendCFormat:@"Date: %@%s", aCalendarDate.rfc2822String, LF];
+
+    // We set the subject, if we have one!
+    if ([[[self subject] stringByTrimmingWhiteSpaces] length] > 0) {
+        [newMessageRawData appendCString:"Subject: "];
+        [newMessageRawData appendData: [CWMIMEUtility encodeWordUsingQuotedPrintable:[self subject]
+                                                                        prefixLength:8]];
+        [newMessageRawData appendCString: LF];
     }
 
-    [aMutableData appendCFormat: @"Date: %@%s", aCalendarDate.rfc2822String, LF];
-  
-  // We set the subject, if we have one!
-  if ([[[self subject] stringByTrimmingWhiteSpaces] length] > 0)
-    {
-      [aMutableData appendCString: "Subject: "];
-      [aMutableData appendData: [CWMIMEUtility encodeWordUsingQuotedPrintable: [self subject]
-					       prefixLength: 8]];
-      [aMutableData appendCString: LF];
-    }
-  
     // We set our Message-ID
     // Make sure to only output it if it exists, and avoid double angle brackets
     NSString *theMessageID = [[self messageID] wrapped];
     if ([theMessageID length] > 0) {
-        [aMutableData appendCFormat: @"Message-ID: %@%s", theMessageID, LF];
+        [newMessageRawData appendCFormat:@"Message-ID: %@%s", theMessageID, LF];
     }
 
-  // We set our MIME-Version header
-  [aMutableData appendCFormat: @"MIME-Version: 1.0%s", LF];
+    // We set our MIME-Version header
+    [newMessageRawData appendCFormat:@"MIME-Version: 1.0%s", LF];
 
-  // We encode our From: field
-  [aMutableData appendCFormat: @"From: "];
-  [aMutableData appendData: [[self from] dataValue]];
-  [aMutableData appendCFormat: @"%s", LF];
-  
-  // We encode our To field
-  aData = [self _formatRecipientsWithType: PantomimeToRecipient];
-  
-  if (aData)
-    {
-      [aMutableData appendCString: "To: "];
-      [aMutableData appendData: aData];
-      [aMutableData appendCString: LF];
+    // We encode our From: field
+    [newMessageRawData appendCFormat:@"From: "];
+    [newMessageRawData appendData:[[self from] dataValue]];
+    [newMessageRawData appendCFormat:@"%s", LF];
+
+    // We encode our To field
+    NSData *recipients = [self _formatRecipientsWithType: PantomimeToRecipient];
+    if (recipients) {
+        [newMessageRawData appendCString:"To: "];
+        [newMessageRawData appendData:recipients];
+        [newMessageRawData appendCString: LF];
     }
-  
-  // We encode our Cc field
-  aData = [self _formatRecipientsWithType: PantomimeCcRecipient];
-  
-  if (aData)
-    {
-      [aMutableData appendCString: "Cc: "];
-      [aMutableData appendData: aData];
-      [aMutableData appendCString: LF];
+    // We encode our Cc field
+    recipients = [self _formatRecipientsWithType:PantomimeCcRecipient];
+    if (recipients) {
+        [newMessageRawData appendCString:"Cc: "];
+        [newMessageRawData appendData:recipients];
+        [newMessageRawData appendCString: LF];
+    }
+    // We encode our Bcc field
+    recipients = [self _formatRecipientsWithType:PantomimeBccRecipient];
+    if (recipients) {
+        [newMessageRawData appendCString:"Bcc: "];
+        [newMessageRawData appendData:recipients];
+        [newMessageRawData appendCString: LF];
     }
 
-  // We encode our Bcc field
-  aData = [self _formatRecipientsWithType: PantomimeBccRecipient];
-  
-  if (aData)
-    {
-      [aMutableData appendCString: "Bcc: "];
-      [aMutableData appendData: aData];
-      [aMutableData appendCString: LF];
+    // We set the Reply-To address in case we need to
+    if ([self replyTo]) {
+        [newMessageRawData appendCFormat:@"Reply-To: "];
+
+        NSUInteger count = [[self replyTo] count];
+        for (int i = 0; i < count; i++) {
+            [newMessageRawData appendData:[[[self replyTo] objectAtIndex:i] dataValue]];
+            if (i < count - 1) {
+                [newMessageRawData appendCString:", "];
+            }
+        }
+        [newMessageRawData appendCString: LF];
     }
-  
-  // We set the Reply-To address in case we need to
-  if ([self replyTo])
-    {
-      NSInteger i;
-        NSUInteger count;
 
-      [aMutableData appendCFormat: @"Reply-To: "];
-
-      count = [[self replyTo] count];
-      for (i = 0; i < count; i++)
-	{
-	  [aMutableData appendData: [[[self replyTo] objectAtIndex: i] dataValue]];
-
-	  if (i < count-1) [aMutableData appendCString: ", "];
-	}
-
-      [aMutableData appendCString: LF];
+    // We set the Organization header value if we need to
+    if ([self organization]) {
+        [newMessageRawData appendCString:"Organization: "];
+        [newMessageRawData appendData:[CWMIMEUtility encodeWordUsingQuotedPrintable:
+                                       [self organization]
+                                                                       prefixLength: 13]];
+        [newMessageRawData appendCString: LF];
     }
-  
-  // We set the Organization header value if we need to
-  if ([self organization])
-    {
-      [aMutableData appendCString: "Organization: "];
-      [aMutableData appendData: [CWMIMEUtility encodeWordUsingQuotedPrintable: [self organization]
-					       prefixLength: 13]];
-      [aMutableData appendCString: LF];
-    }
-  
-  // We set the In-Reply-To header if we need to
-  if ([self headerValueForName: @"In-Reply-To"])
-    {
-      [aMutableData appendCFormat: @"In-Reply-To: %@%s", [[self inReplyTo] wrapped], LF];
+
+    // We set the In-Reply-To header if we need to
+    if ([self headerValueForName:@"In-Reply-To"]) {
+        [newMessageRawData appendCFormat:@"In-Reply-To: %@%s", [[self inReplyTo] wrapped], LF];
     }
 
     if ([[self allReferences] count]) {
-        [aMutableData appendCString:"References:"];
+        [newMessageRawData appendCString:"References:"];
         BOOL first = true;
         for (NSString *ref in [self allReferences]) {
             NSString *wrapped = [ref wrapped];
             if (first) {
-                [aMutableData appendCFormat:@" %@", wrapped];
+                [newMessageRawData appendCFormat:@" %@", wrapped];
                 first = NO;
             } else {
-                [aMutableData appendCFormat:@" %s %@", LF, wrapped];
+                [newMessageRawData appendCFormat:@" %s %@", LF, wrapped];
             }
         }
-        [aMutableData appendCFormat:@"%s", LF];
+        [newMessageRawData appendCFormat:@"%s", LF];
+    }
+    // We now set all X-* headers
+    NSEnumerator *allHeaderKeyEnumerator = [_headers keyEnumerator];
+
+    NSString *key;
+    while ((key = [allHeaderKeyEnumerator nextObject]))  {
+        if ([key hasPrefix:@"X-"] || ([key caseInsensitiveCompare:@"User-Agent"] == NSOrderedSame)) {
+            [newMessageRawData appendCFormat:@"%@: %@%s", key, [self headerValueForName: key], LF];
+        }
     }
 
-  // We now set all X-* headers
-  allHeaderKeyEnumerator = [_headers keyEnumerator];
-  
-  while ((aKey = [allHeaderKeyEnumerator nextObject])) 
-    {
-      if ([aKey hasPrefix: @"X-"] || ([aKey caseInsensitiveCompare: @"User-Agent"] == NSOrderedSame))
-	{
-	  [aMutableData appendCFormat: @"%@: %@%s", aKey, [self headerValueForName: aKey], LF];
-	}
-    }
-  
-  //
-  // We add our message header/body separator
-  //
-  [aMutableData appendData: [super dataValue]];
+    // We add our message header/body separator
+    [newMessageRawData appendData:[super dataValue]];
 
-  return AUTORELEASE(aMutableData);
+    return newMessageRawData;
 }
 
-//
-//
-//
 - (void)addHeader:(NSString *)name withValue:(NSString *)value
 {
     if (!name || !value) {
