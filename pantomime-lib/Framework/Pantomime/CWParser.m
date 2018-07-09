@@ -693,7 +693,7 @@ NSRange shrinkRange(NSRange range)
         result = [result subdataToIndex: y];
     }
 
-    [result unwrap];
+    result = [result unwrap];
     [message setInReplyTo: [result asciiString]];
 
     return result;

@@ -856,7 +856,7 @@ static const char *hexDigit = "0123456789ABCDEF";
     if (self.length >= 2 &&
         [self characterAtIndex: 0] == '<' && [self characterAtIndex: self.length - 1] == '>') {
         NSRange rangeWithoutWrappers = NSMakeRange(1, self.length - 2);
-        result =  [self subdataWithRange:rangeWithoutWrappers];
+        result = [self subdataWithRange:rangeWithoutWrappers];
     }
     return result;
 }
