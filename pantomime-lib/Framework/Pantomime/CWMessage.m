@@ -1158,7 +1158,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
     NSString *key;
     while ((key = [allHeaderKeyEnumerator nextObject]))  {
-        [newMessageRawData appendCFormat:@"%@: %@%s", key, [self headerValueForName: key], LF];
+        if ([key hasPrefix:@"X-"] || ([key caseInsensitiveCompare:@"User-Agent"] == NSOrderedSame)) {
+            [newMessageRawData appendCFormat:@"%@: %@%s", key, [self headerValueForName: key], LF];
+        }
     }
 
     // We add our message header/body separator
