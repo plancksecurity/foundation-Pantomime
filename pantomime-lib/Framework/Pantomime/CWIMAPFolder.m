@@ -119,18 +119,14 @@
 
     NSDictionary *aDictionary;
     if (theFlags) {
-        aDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                       aData, @"NSDataToAppend",
-                       theData, @"NSData",
-                       self, @"Folder",
-                       theFlags, PantomimeFlagsKey,
-                       nil];
+        aDictionary = @{@"NSDataToAppend":aData,
+                        @"NSData":theData,
+                        @"Folder":self,
+                        PantomimeFlagsKey:theFlags};
     } else {
-        aDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                       aData, @"NSDataToAppend",
-                       theData, @"NSData",
-                       self, @"Folder",
-                       nil];
+        aDictionary = @{@"NSDataToAppend":aData,
+                        @"NSData":theData,
+                        @"Folder":self};
     }
 
     if (theDate) {
