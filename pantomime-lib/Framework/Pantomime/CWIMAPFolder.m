@@ -105,45 +105,45 @@
 	internalDate: nil];
 }
 
-- (void)appendMessageFromRawSource:(NSData *)theData
-                             flags:(CWFlags *)theFlags
-                      internalDate:(NSDate *)theDate
+- (void)appendMessageFromRawSource:(NSData *)rawSource
+                             flags:(CWFlags *)flags
+                      internalDate:(NSDate *)date
 {
     NSString *flagsAsString = @"";
-    if (theFlags) {
-        flagsAsString = [theFlags asString];
+    if (flags) {
+        flagsAsString = [flags asString];
     }
 
     // We remove any invalid headers from our message
-    NSData *aData = [self _removeInvalidHeadersFromMessage: theData];
+    NSData *dataToAppend = [self _removeInvalidHeadersFromMessage: rawSource];
 
     NSDictionary *aDictionary;
-    if (theFlags) {
-        aDictionary = @{@"NSDataToAppend":aData,
-                        @"NSData":theData,
+    if (flags) {
+        aDictionary = @{@"NSDataToAppend":dataToAppend,
+                        @"NSData":rawSource,
                         @"Folder":self,
-                        PantomimeFlagsKey:theFlags};
+                        PantomimeFlagsKey:flags};
     } else {
-        aDictionary = @{@"NSDataToAppend":aData,
-                        @"NSData":theData,
+        aDictionary = @{@"NSDataToAppend":dataToAppend,
+                        @"NSData":rawSource,
                         @"Folder":self};
     }
 
-    if (theDate) {
+    if (date) {
         [_store sendCommand: IMAP_APPEND
                        info: aDictionary
                   arguments: @"APPEND \"%@\" (%@) \"%@\" {%d}", // IMAP command
          [_name modifiedUTF7String],                            // folder name
          flagsAsString,                                         // flags
-         [theDate rfc2822String],                               // internal date
-         [aData length]];                                       // length of the data to write
+         [date rfc2822String],                                  // internal date
+         [dataToAppend length]];                                // length of the data to write
     } else {
         [_store sendCommand: IMAP_APPEND
                        info: aDictionary
                   arguments: @"APPEND \"%@\" (%@) {%d}",        // IMAP command
          [_name modifiedUTF7String],                            // folder name
          flagsAsString,                                         // flags
-         [aData length]];                                       // length of the data to write
+         [dataToAppend length]];                                // length of the data to write
     }
 }
 
