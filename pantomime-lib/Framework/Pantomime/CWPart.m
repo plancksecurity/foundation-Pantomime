@@ -416,211 +416,160 @@ static int currentPartVersion = 2;
   _size = theSize;
 }
 
-
-//
-//
-//
-- (NSData *) dataValue
+- (NSData *)dataValue
 {
-  NSMutableData *aMutableData;
-  NSMutableArray *allKeys;
-  NSData *aDataToSend;
-  NSArray *allLines;
-  NSString *aFilename; 
-  NSUInteger i, count;
+    NSMutableData *dataValue = [[NSMutableData alloc] init];
 
-  aMutableData = [[NSMutableData alloc] init];
-  
-  // We start off by exactring the filename of the part.
-  if ([[self filename] is7bitSafe])
-    {
-      aFilename = [self filename];
-    }
-  else
-    {
-      aFilename = [[NSString alloc] initWithData: [CWMIMEUtility encodeWordUsingQuotedPrintable: [self filename]
-								 prefixLength: 0]
-				    encoding: NSASCIIStringEncoding];
-      AUTORELEASE_VOID(aFilename);
+    // We start off by exactring the filename of the part.
+    NSString *filename;
+    if ([[self filename] is7bitSafe]) {
+        filename = [self filename];
+    } else {
+        filename = [[NSString alloc] initWithData: [CWMIMEUtility encodeWordUsingQuotedPrintable: [self filename]
+                                                                                     prefixLength: 0]
+                                          encoding: NSASCIIStringEncoding];
     }
 
-  // We encode our Content-Transfer-Encoding header.
-  if ([self contentTransferEncoding] != PantomimeEncodingNone)
-    {
-      [aMutableData appendCFormat: @"Content-Transfer-Encoding: %@%s",
-		    [NSString stringValueOfTransferEncoding: [self contentTransferEncoding]],
-		    LF];
+    // We encode our Content-Transfer-Encoding header.
+    if ([self contentTransferEncoding] != PantomimeEncodingNone) {
+        [dataValue appendCFormat: @"Content-Transfer-Encoding: %@%s",
+         [NSString stringValueOfTransferEncoding: [self contentTransferEncoding]],
+         LF];
     }
 
-  // We encode our Content-ID header.
-  if ([self contentID])
-    {
-      [aMutableData appendCFormat: @"Content-ID: %@%s", [self contentID], LF];
-    }
-  
-  // We encode our Content-Description header.
-  if ([self contentDescription])
-    {
-      [aMutableData appendCString: "Content-Description: "];
-      [aMutableData appendData: [CWMIMEUtility encodeWordUsingQuotedPrintable: [self contentDescription]
-					       prefixLength: 21]];
-      [aMutableData appendCString: LF];
+    // We encode our Content-ID header.
+    if ([self contentID]) {
+        [dataValue appendCFormat: @"Content-ID: %@%s", [self contentID], LF];
     }
 
-  // We now encode the Content-Type header with its parameters.
-  [aMutableData appendCFormat: @"Content-Type: %@", [self contentType]];
-
-  if ([self charset])
-    {
-      [aMutableData appendCFormat: @"; charset=\"%@\"", [self charset]];
+    // We encode our Content-Description header.
+    if ([self contentDescription]) {
+        [dataValue appendCString: "Content-Description: "];
+        [dataValue appendData: [CWMIMEUtility encodeWordUsingQuotedPrintable: [self contentDescription]
+                                                                   prefixLength: 21]];
+        [dataValue appendCString: LF];
     }
 
-  if ([self format] == PantomimeFormatFlowed &&
-      ([self contentTransferEncoding] == PantomimeEncodingNone || [self contentTransferEncoding] == PantomimeEncoding8bit))
-    {
-      [aMutableData appendCString: "; format=\"flowed\""];
+    // We now encode the Content-Type header with its parameters.
+    [dataValue appendCFormat: @"Content-Type: %@", [self contentType]];
+
+    if ([self charset]) {
+        [dataValue appendCFormat: @"; charset=\"%@\"", [self charset]];
+    }
+    if ([self format] == PantomimeFormatFlowed &&
+        ([self contentTransferEncoding] == PantomimeEncodingNone || [self contentTransferEncoding] == PantomimeEncoding8bit)) {
+        [dataValue appendCString: "; format=\"flowed\""];
+    }
+    if (filename && [filename length]) {
+        [dataValue appendCFormat: @"; name=\"%@\"", filename];
     }
 
-  if (aFilename && [aFilename length])
-    {
-      [aMutableData appendCFormat: @"; name=\"%@\"", aFilename];
+    // Before checking for all other parameters, we check for the boundary one
+    // If we got a CWMIMEMultipart instance as the content but no boundary
+    // was set, we create a boundary and we set it.
+    if ([self boundary] || [_content isKindOfClass: [CWMIMEMultipart class]]) {
+        if (![self boundary]) {
+            [self setBoundary: [CWMIMEUtility globallyUniqueBoundary]];
+        }
+        [dataValue appendCFormat: @";%s\tboundary=\"",LF];
+        [dataValue appendData: [self boundary]];
+        [dataValue appendCString: "\""];
     }
 
-  // Before checking for all other parameters, we check for the boundary one
-  // If we got a CWMIMEMultipart instance as the content but no boundary
-  // was set, we create a boundary and we set it.
-  if ([self boundary] || [_content isKindOfClass: [CWMIMEMultipart class]])
-    {
-      if (![self boundary])
-	{
-	  [self setBoundary: [CWMIMEUtility globallyUniqueBoundary]];
-	}
+    // We now check for any other additional parameters. If we have some,
+    // we add them one per line. We first REMOVE what we have added! We'll
+    // likely and protocol= here.
+    NSMutableArray *allKeys = [NSMutableArray arrayWithArray: [_parameters allKeys]];
+    [allKeys removeObject: @"boundary"];
+    [allKeys removeObject: @"charset"];
+    [allKeys removeObject: @"filename"];
+    [allKeys removeObject: @"format"];
 
-      [aMutableData appendCFormat: @";%s\tboundary=\"",LF];
-      [aMutableData appendData: [self boundary]];
-      [aMutableData appendCString: "\""];
-    }
-  
-  // We now check for any other additional parameters. If we have some,
-  // we add them one per line. We first REMOVE what we have added! We'll
-  // likely and protocol= here.
-  allKeys = [NSMutableArray arrayWithArray: [_parameters allKeys]];
-  [allKeys removeObject: @"boundary"];
-  [allKeys removeObject: @"charset"];
-  [allKeys removeObject: @"filename"];
-  [allKeys removeObject: @"format"];
-  
-  for (i = 0; i < [allKeys count]; i++)
-    {
-      [aMutableData appendCFormat: @";%s", LF];
-      [aMutableData appendCFormat: @"\t%@=\"%@\"", [allKeys objectAtIndex: i], [_parameters objectForKey: [allKeys objectAtIndex: i]]];
+    for (int i = 0; i < [allKeys count]; i++) {
+        [dataValue appendCFormat: @";%s", LF];
+        [dataValue appendCFormat: @"\t%@=\"%@\"", [allKeys objectAtIndex: i], [_parameters objectForKey: [allKeys objectAtIndex: i]]];
     }
 
-  [aMutableData appendCString: LF];
+    [dataValue appendCString: LF];
 
-  // We encode our Content-Disposition header. We ignore other parameters
-  // (other than the filename one) since they are pretty much worthless.
-  // See RFC2183 for details.
+    // We encode our Content-Disposition header. We ignore other parameters
+    // (other than the filename one) since they are pretty much worthless.
+    // See RFC2183 for details.
     PantomimeContentDisposition disposition = [self contentDisposition];
     if (disposition == PantomimeAttachmentDisposition ||
         disposition == PantomimeInlineDisposition) {
         if (disposition == PantomimeAttachmentDisposition) {
-            [aMutableData appendCString: "Content-Disposition: attachment"];
+            [dataValue appendCString: "Content-Disposition: attachment"];
         } else {
-            [aMutableData appendCString: "Content-Disposition: inline"];
+            [dataValue appendCString: "Content-Disposition: inline"];
         }
 
-        if (aFilename && [aFilename length])
-        {
-            [aMutableData appendCFormat: @"; filename=\"%@\"", aFilename];
+        if (filename && [filename length]) {
+            [dataValue appendCFormat: @"; filename=\"%@\"", filename];
         }
 
-        [aMutableData appendCString: LF];
+        [dataValue appendCString: LF];
     }
 
-  if ([_content isKindOfClass: [CWMessage class]])
-    {
-      aDataToSend = [(CWMessage *)_content rawSource];
-    }
-  else if ([_content isKindOfClass: [CWMIMEMultipart class]])
-    {
-      CWMIMEMultipart *aMimeMultipart;
-      NSMutableData *md;
-      CWPart *aPart;
-      
-      md = [[NSMutableData alloc] init];
-      aMimeMultipart = (CWMIMEMultipart *)_content;
-      count = [aMimeMultipart count];
-      
-      for (i = 0; i < count; i++)
-	{
-	  aPart = [aMimeMultipart partAtIndex: i];
-	  
-	  if (i > 0)
-	    {
-	      [md appendBytes: LF  length: strlen(LF)];
-	    }
-	  
-	  [md appendBytes: "--"  length: 2];
-	  [md appendData: [self boundary]];
-	  [md appendBytes: LF  length: strlen(LF)];
-	  [md appendData: [aPart dataValue]];
-	}
-      
-      [md appendBytes: "--"  length: 2];
-      [md appendData: [self boundary]];
-      [md appendBytes: "--"  length: 2];
-      [md appendBytes: LF  length: strlen(LF)];
-	  
-      aDataToSend = AUTORELEASE(md);
-    }
-  else
-    {
-      aDataToSend = (NSData *)_content;
+    NSData *dataToSend;
+    if ([_content isKindOfClass: [CWMessage class]]) {
+        dataToSend = [(CWMessage *)_content rawSource];
+    } else if ([_content isKindOfClass: [CWMIMEMultipart class]]) {
+        CWMIMEMultipart *aMimeMultipart;
+        NSMutableData *md;
+        CWPart *aPart;
+
+        md = [[NSMutableData alloc] init];
+        aMimeMultipart = (CWMIMEMultipart *)_content;
+        NSUInteger count = [aMimeMultipart count];
+
+        for (int i = 0; i < count; i++) {
+            aPart = [aMimeMultipart partAtIndex: i];
+            if (i > 0) {
+                [md appendBytes: LF  length: strlen(LF)];
+            }
+            [md appendBytes: "--"  length: 2];
+            [md appendData: [self boundary]];
+            [md appendBytes: LF  length: strlen(LF)];
+            [md appendData: [aPart dataValue]];
+        }
+        [md appendBytes: "--"  length: 2];
+        [md appendData: [self boundary]];
+        [md appendBytes: "--"  length: 2];
+        [md appendBytes: LF  length: strlen(LF)];
+
+        dataToSend = md;
+    } else {
+        dataToSend = (NSData *)_content;
     }
 
-  // We separe our part's headers from the content
-  [aMutableData appendCFormat: @"%s", LF];
+    // We separe our part's headers from the content
+    [dataValue appendCFormat: @"%s", LF];
 
-  // We now encode our content the way it was specified
-  if ([self contentTransferEncoding] == PantomimeEncodingQuotedPrintable)
-    {
-      aDataToSend = [aDataToSend encodeQuotedPrintableWithLineLength: 72  inHeader: NO];
-    }
-  else if ([self contentTransferEncoding] == PantomimeEncodingBase64)
-    {
-      aDataToSend = [aDataToSend encodeBase64WithLineLength: 72];
-    }
-  else if (([self contentTransferEncoding] == PantomimeEncodingNone || [self contentTransferEncoding] == PantomimeEncoding8bit) &&
-	   [self format] == PantomimeFormatFlowed)
-    {
-      NSUInteger limit;
-      
-      limit = _line_length;
-      
-      if (limit < 2 || limit > 998)
-	{
-	  limit = 72;
-	}
-      
-      aDataToSend = [aDataToSend wrapWithLimit: limit];
+    // We now encode our content the way it was specified
+    if ([self contentTransferEncoding] == PantomimeEncodingQuotedPrintable) {
+        dataToSend = [dataToSend encodeQuotedPrintableWithLineLength: 72  inHeader: NO];
+    } else if ([self contentTransferEncoding] == PantomimeEncodingBase64) {
+        dataToSend = [dataToSend encodeBase64WithLineLength: 72];
+    } else if (([self contentTransferEncoding] == PantomimeEncodingNone || [self contentTransferEncoding] == PantomimeEncoding8bit) &&
+             [self format] == PantomimeFormatFlowed) {
+        NSUInteger limit = _line_length;
+        if (limit < 2 || limit > 998) {
+            limit = 72;
+        }
+        dataToSend = [dataToSend wrapWithLimit: limit];
     }
 
-  allLines = [aDataToSend componentsSeparatedByCString: "\n"];
-  count = [allLines count];
-
-  for (i = 0; i < count; i++)
-    {
-      if (i == count-1 && [[allLines objectAtIndex: i] length] == 0)
-	{
-	  break;
-	}
-      
-      [aMutableData appendData: [allLines objectAtIndex: i]];
-      [aMutableData appendBytes: LF  length: 1];
+    NSArray *allLines = [dataToSend componentsSeparatedByCString: "\n"];
+    NSUInteger count = [allLines count];
+    for (int i = 0; i < count; i++) {
+        if (i == count - 1 && [[allLines objectAtIndex: i] length] == 0) {
+            break;
+        }
+        [dataValue appendData: [allLines objectAtIndex: i]];
+        [dataValue appendBytes: LF  length: 1];
     }
-  
-  return AUTORELEASE(aMutableData);
+    return dataValue;
 }
 
 

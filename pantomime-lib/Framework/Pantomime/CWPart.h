@@ -284,7 +284,7 @@
 	      "Subject" and so on.
   @result The encoded CWPart instance, as a NSData instance.
 */
-- (NSData * _Nullable) dataValue;
+- (NSData * _Nullable)dataValue;
 
 /*!
   @method boundary
