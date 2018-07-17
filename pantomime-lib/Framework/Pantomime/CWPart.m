@@ -134,7 +134,7 @@ static int currentPartVersion = 2;
             charset: (NSString *) theCharset
 {
   [CWPart setVersion: currentPartVersion];
-  
+
   [self setDefaultCharset: theCharset];
   
   return [self initWithData: theData];
