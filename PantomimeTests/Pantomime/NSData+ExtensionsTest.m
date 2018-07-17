@@ -37,4 +37,15 @@
     XCTAssertEqualObjects(testee, expected);
 }
 
+//IOS-1175 "Let=E2=80=99s see.=" decdoded as "Let's see.="
+- (void)testDecodeQuotedPrintableInHeader
+{
+    NSString *testStr = @"Let=E2=80=99s see.=";
+    NSString *expected = @"Let’s see.";
+    NSData *testData = [testStr dataUsingEncoding:NSASCIIStringEncoding];
+    NSData *testeeData = [testData decodeQuotedPrintableInHeader:NO];
+    NSString* testee = [[NSString alloc] initWithData:testeeData encoding:NSUTF8StringEncoding];
+    XCTAssertEqualObjects(testee, expected);
+}
+
 @end
