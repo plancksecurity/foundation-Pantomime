@@ -194,7 +194,11 @@ static const char *hexDigit = "0123456789ABCDEF";
     NSMutableData *result = [[NSMutableData alloc] initWithCapacity:len];
     NSUInteger i = 0;
     for (i = 0; i < len; i++,b++) {
-        if (b[0] == '=' && i + 1 < len && b[1] == '\n') {
+        if (b[0] == '=' && i + 1 == len) {
+            // Trailing '=', ignore.
+            // Example: "Let=E2=80=99s see.="
+            break;
+        } else if (b[0] == '=' && i + 1 < len && b[1] == '\n') {
             b++;
             i++;
             continue;
