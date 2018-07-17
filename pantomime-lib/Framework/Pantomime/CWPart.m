@@ -455,6 +455,9 @@ static int currentPartVersion = 2;
 
     if ([self charset]) {
         [dataValue appendCFormat: @"; charset=\"%@\"", [self charset]];
+    } else {
+        // Charset unknown, default to UTF-8
+        [dataValue appendCFormat: @"; charset=\"%@\"", @"UTF-8"];
     }
     if ([self format] == PantomimeFormatFlowed &&
         ([self contentTransferEncoding] == PantomimeEncodingNone || [self contentTransferEncoding] == PantomimeEncoding8bit)) {
