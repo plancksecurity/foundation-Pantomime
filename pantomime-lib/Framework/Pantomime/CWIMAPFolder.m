@@ -105,57 +105,45 @@
 	internalDate: nil];
 }
 
-//
-//
-//
-- (void) appendMessageFromRawSource: (NSData *) theData
-                              flags: (CWFlags *) theFlags
-		       internalDate: (NSDate *) theDate
+- (void)appendMessageFromRawSource:(NSData *)rawSource
+                             flags:(CWFlags *)flags
+                      internalDate:(NSDate *)date
 {
-  NSDictionary *aDictionary;
-  NSString *flagsAsString;
-  NSData *aData;
- 
-  if (theFlags)
-    {
-      flagsAsString = [theFlags asString];
-    }
-  else
-    {
-      flagsAsString = @"";
-    }
-  
-  // We remove any invalid headers from our message
-  aData = [self _removeInvalidHeadersFromMessage: theData];
-  
-  if (theFlags)
-    {
-      aDictionary = [NSDictionary dictionaryWithObjectsAndKeys: aData, @"NSDataToAppend", theData, @"NSData", self, @"Folder", theFlags, PantomimeFlagsKey, nil];
-    }
-  else
-    {
-      aDictionary = [NSDictionary dictionaryWithObjectsAndKeys: aData, @"NSDataToAppend", theData, @"NSData", self, @"Folder", nil];
+    NSString *flagsAsString = @"";
+    if (flags) {
+        flagsAsString = [flags asString];
     }
 
-  
-  if (theDate)
-    {
-      [_store sendCommand: IMAP_APPEND
-	      info: aDictionary
-	      arguments: @"APPEND \"%@\" (%@) \"%@\" {%d}",                    // IMAP command
-	      [_name modifiedUTF7String],                                      // folder name
-	      flagsAsString,                                                   // flags
-	      [theDate rfc2822String], // internal date
-	      [aData length]];                                                 // length of the data to write
+    // We remove any invalid headers from our message
+    NSData *dataToAppend = [self _removeInvalidHeadersFromMessage: rawSource];
+
+    NSDictionary *aDictionary;
+    if (flags) {
+        aDictionary = @{@"NSDataToAppend":dataToAppend,
+                        @"NSData":rawSource,
+                        @"Folder":self,
+                        PantomimeFlagsKey:flags};
+    } else {
+        aDictionary = @{@"NSDataToAppend":dataToAppend,
+                        @"NSData":rawSource,
+                        @"Folder":self};
     }
-  else
-    {
-      [_store sendCommand: IMAP_APPEND
-	      info: aDictionary
-	      arguments: @"APPEND \"%@\" (%@) {%d}",  // IMAP command
-	      [_name modifiedUTF7String],             // folder name
-	      flagsAsString,                          // flags
-	      [aData length]];                        // length of the data to write
+
+    if (date) {
+        [_store sendCommand: IMAP_APPEND
+                       info: aDictionary
+                  arguments: @"APPEND \"%@\" (%@) \"%@\" {%d}", // IMAP command
+         [_name modifiedUTF7String],                            // folder name
+         flagsAsString,                                         // flags
+         [date rfc2822String],                                  // internal date
+         [dataToAppend length]];                                // length of the data to write
+    } else {
+        [_store sendCommand: IMAP_APPEND
+                       info: aDictionary
+                  arguments: @"APPEND \"%@\" (%@) {%d}",        // IMAP command
+         [_name modifiedUTF7String],                            // folder name
+         flagsAsString,                                         // flags
+         [dataToAppend length]];                                // length of the data to write
     }
 }
 

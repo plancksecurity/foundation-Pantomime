@@ -185,40 +185,32 @@ static const char *hexDigit = "0123456789ABCDEF";
   return AUTORELEASE(aMutableData);
 }
 
-
-//
-//
-//
-- (NSData *) decodeQuotedPrintableInHeader: (BOOL) aBOOL
+- (NSData *)decodeQuotedPrintableInHeader:(BOOL)aBOOL
 {
-    NSMutableData *result;
-
-    const unsigned char *bytes,*b;
-    unsigned char ch;
-    NSUInteger i,len;
-
-    len = [self length];
-    bytes = [self bytes];
-
-    result = [[NSMutableData alloc] initWithCapacity: len];
-
-    ch=0;
-    b=bytes;
-
+    NSUInteger len = [self length];
+    const unsigned char *bytes = [self bytes];
+    unsigned char ch = 0;
+    const unsigned char *b = bytes;
+    NSMutableData *result = [[NSMutableData alloc] initWithCapacity:len];
+    NSUInteger i = 0;
     for (i = 0; i < len; i++,b++) {
-        if (b[0]=='=' && i+1<len && b[1]=='\n') {
+        if (b[0] == '=' && i + 1 == len) {
+            // Trailing '=', ignore.
+            // Example: "Let=E2=80=99s see.="
+            break;
+        } else if (b[0] == '=' && i + 1 < len && b[1] == '\n') {
             b++;
             i++;
             continue;
-        } else if (*b=='=' && i+2<len) {
+        } else if (*b == '=' && i + 2 < len) {
             b++;
             i++;
-            if (*b>='A' && *b<='F') {
-                ch=16*(*b-'A'+10);
-            } else if (*b>='a' && *b<='f') {
-                ch=16*(*b-'a'+10);
-            } else if (*b>='0' && *b<='9') {
-                ch=16*(*b-'0');
+            if (*b >= 'A' && *b <= 'F') {
+                ch = 16 * (*b - 'A' + 10);
+            } else if (*b >= 'a' && *b <= 'f') {
+                ch = 16 * (*b - 'a' + 10);
+            } else if (*b >= '0' && *b <= '9') {
+                ch = 16 * (*b - '0');
             } else {
                 // The encoding is invalid (Hex data contained invalid char).
                 // Nothing we can do.
@@ -228,28 +220,27 @@ static const char *hexDigit = "0123456789ABCDEF";
             b++;
             i++;
 
-            if (*b>='A' && *b<='F') {
-                ch+=*b-'A'+10;
-            } else if (*b>='a' && *b<='f') {
-                ch+=*b-'a'+10;
-            } else if (*b>='0' && *b<='9') {
-                ch+=*b-'0';
+            if (*b >= 'A' && *b <= 'F') {
+                ch += *b - 'A' + 10;
+            } else if (*b >= 'a' && *b <= 'f') {
+                ch += *b - 'a' + 10;
+            } else if (*b  >= '0' && *b <= '9') {
+                ch += *b - '0';
             } else {
                 // The encoding is invalid (Hex data contained invalid char).
                 // Nothing we can do.
                 return nil;
             }
-
-            [result appendBytes: &ch length: 1];
-        } else if (aBOOL && *b=='_') {
-            ch=0x20;
-            [result appendBytes: &ch length: 1];
+            [result appendBytes:&ch length:1];
+        } else if (aBOOL && *b == '_') {
+            ch = 0x20;
+            [result appendBytes:&ch length:1];
         } else {
-            [result appendBytes: b length: 1];
+            [result appendBytes:b length:1];
         }
     }
 
-    return AUTORELEASE(result);
+    return result;
 }
 
 

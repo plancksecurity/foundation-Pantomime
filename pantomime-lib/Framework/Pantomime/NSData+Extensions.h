@@ -68,11 +68,10 @@
   @abstract Decode using the quoted-printable encoding.
   @discussion This method is used to decode data that has been
               encoded using the quoted-printable method.
-  @param aBOOL Specifies if we are decoding data from
-               a message header, or not.
+  @param aBOOL Specifies if we are decoding data from a message header, or not.
   @result Returns a new NSData object with decoded data if the decoding succeeded, nil otherwize
 */
-- (NSData *) decodeQuotedPrintableInHeader: (BOOL) aBOOL;
+- (NSData *)decodeQuotedPrintableInHeader:(BOOL)aBOOL;
 
 /*!
   @method encodeQuotedPrintableWithLineLength:inHeader:

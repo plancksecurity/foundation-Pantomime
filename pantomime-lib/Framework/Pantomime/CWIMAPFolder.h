@@ -108,13 +108,13 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 	      date will cause some servers and clients to report the date of the message
 	      as the current date and time, rather than that specified in the Received
 	      header.
-  @param theData The raw representation of the message to append.
-  @param theFlags The flags of the message, nil if no flags need to be kept.
-  @param theDate The INTERNALDATE of the message, or nil to use the current date.
+  @param rawSource The raw representation of the message to append.
+  @param flags The flags of the message, nil if no flags need to be kept.
+  @param date The INTERNALDATE of the message, or nil to use the current date.
 */
-- (void) appendMessageFromRawSource: (NSData * _Nonnull) theData
-                              flags:(CWFlags * _Nullable) theFlags
-                       internalDate: (NSDate * _Nullable) theDate;
+- (void)appendMessageFromRawSource:(NSData *)rawSource
+                             flags:(CWFlags *)flags
+                      internalDate:(NSDate *)date;
 
 #pragma mark - UID COPY
 

@@ -111,21 +111,19 @@
 //
 //
 //
-- (NSData *) rawSource
+- (NSData *)rawSource
 {
-  if (![(CWIMAPFolder *)[self folder] selected])
-    {
-      [NSException raise: PantomimeProtocolException
-		   format: @"Unable to fetch message data from unselected mailbox."];
-      return _rawSource;
+    if (![(CWIMAPFolder *)[self folder] selected]) {
+        [NSException raise: PantomimeProtocolException
+                    format: @"Unable to fetch message data from unselected mailbox."];
+        return _rawSource;
     }
 
-  if (!_rawSource)
-    {
-      [(CWIMAPStore *)[[self folder] store] sendCommand: IMAP_UID_FETCH_RFC822  info: nil  arguments: @"UID FETCH %u:%u RFC822", _UID, _UID];
+    if (!_rawSource) {
+        [(CWIMAPStore *)[[self folder] store] sendCommand: IMAP_UID_FETCH_RFC822  info: nil  arguments: @"UID FETCH %u:%u RFC822", _UID, _UID];
     }
-  
-  return _rawSource;
+
+    return _rawSource;
 }
 
 
