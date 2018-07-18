@@ -1685,7 +1685,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 // Example: * 44 EXPUNGE
 //
-- (void) _parseEXPUNGE
+- (void)_parseEXPUNGE
 {
     if (_lastCommand == IMAP_UID_STORE) {
         // Calling IMAP_UID_STORE to set a \deleted flag on Gmail server, the server moves those
@@ -1695,41 +1695,36 @@ static inline int has_literal(char *buf, NSUInteger c)
         return;
     }
 
-    CWIMAPMessage *aMessage;
-    NSData *aData;
     int msn;
-
-    aData = [_responsesFromServer lastObject];
+    NSData *aData = [_responsesFromServer lastObject];
     sscanf([aData cString], "* %d EXPUNGE", &msn);
 
     // It looks like some servers send untagged expunge reponses
     // _after_ the selected folder has been closed.
-    if (!_selectedFolder)
-    {
+    if (!_selectedFolder) {
         INFO(NSStringFromClass([self class]), @"EXPUNGE %d on already closed folder", msn);
         return;
     }
-
     // The conditions for being able to react safely to expunges have to be verified.
     // In the case of IDLE, it's probably safe.
     if (_lastCommand != IMAP_IDLE && _lastCommand != IMAP_UID_MOVE) {
         return;
     }
 
-//    INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
+    // INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
 
-    //
     // Messages CAN be expunged before we really had time to FETCH them.
     // We simply proceed by skipping over MSN that are bigger than we
     // we have so far. It should be safe since the view hasn't even
     // had the chance to display them.
-    //
     if (msn > [_selectedFolder lastMSN]) {
         return;
     }
 
-    aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: msn];
-    RETAIN_VOID(aMessage);
+    CWIMAPMessage *aMessage = (CWIMAPMessage *) [_selectedFolder messageAtIndex: msn];
+
+    //!!!: The following is a complete mess. Inconsistant. Wrong.
+    //!!!: Please rethink, rewrite and remove.
 
     // We do NOT use  [_selectedFolder removeMessage: aMessage] since it'll
     // thread the messages everytime we invoke it. We rather thread messages
@@ -1738,45 +1733,34 @@ static inline int has_literal(char *buf, NSUInteger c)
     //   an EXPUNGE one (see below, near the end of the method)
     // * We sent an EXPUNGE command - we'll do the threading of the
     //   messages in _parseOK:
-    //
     [_selectedFolder removeMessage: aMessage]; // responsible for also shifting following MSNs
     [_selectedFolder updateCache];
 
     // We remove its entry in our cache
-    if ([_selectedFolder cacheManager])
-    {
+    if ([_selectedFolder cacheManager]) {
         [(CWIMAPCacheManager *)[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]]; //This doubles remove Message above. Cleanup cacheManager mess.
     }
 
     // Keep exist count up to date.
     _selectedFolder.existsCount = _selectedFolder.existsCount - 1;
 
-
-    //
     // If our previous command is NOT the EXPUNGE command, we must inform our
     // delegate that messages have been expunged. The delegate SHOULD refresh
     // its view and does NOT have to issue any command to update the state
     // of the messages (since it has been done).
-    //
-    if (_lastCommand != IMAP_EXPUNGE)
-    {
-        if ([_selectedFolder allContainers])
-        {
+    if (_lastCommand != IMAP_EXPUNGE) {
+        if ([_selectedFolder allContainers]) {
             [_selectedFolder thread];
         }
-
-        if ([_selectedFolder cacheManager])
-        {
+        if ([_selectedFolder cacheManager]) {
             [[_selectedFolder cacheManager] expunge];
         }
-
-        POST_NOTIFICATION(PantomimeMessageExpunged, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
+        POST_NOTIFICATION(PantomimeMessageExpunged,
+                          self,
+                          [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
         PERFORM_SELECTOR_1(_delegate, @selector(messageExpunged:), PantomimeMessageExpunged);
     }
-
-    RELEASE(aMessage);
-
-//    INFO(NSStringFromClass([self class]), @"Expunged %d", msn);
+    //    INFO(NSStringFromClass([self class]), @"Expunged %d", msn);
 }
 
 /**
