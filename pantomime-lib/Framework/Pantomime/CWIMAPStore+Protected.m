@@ -247,8 +247,7 @@
                               [NSData dataWithBytes: " "  length: 1],
                               [self.currentQueueObject.arguments dataUsingEncoding: _defaultCStringEncoding],
                               _crlf]];
-        
-        POST_NOTIFICATION(@"PantomimeCommandSent", self, self.currentQueueObject.info);
+
         PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
     }
 }
@@ -325,8 +324,6 @@
 //
 - (void)signalFolderSyncError
 {
-    POST_NOTIFICATION(PantomimeFolderSyncFailed, self,
-                      [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
     PERFORM_SELECTOR_2(_delegate, @selector(folderSyncFailed:),
                        PantomimeFolderSyncFailed, _selectedFolder, @"Folder");
 }
@@ -342,7 +339,6 @@
     if (_selectedFolder) {
         info[@"Folder"] = _selectedFolder;
     }
-    POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, info);
     PERFORM_SELECTOR_3(_delegate,
                        @selector(folderFetchCompleted:),
                        PantomimeFolderFetchCompleted,

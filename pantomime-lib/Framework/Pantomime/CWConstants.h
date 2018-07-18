@@ -144,18 +144,11 @@ if (del && [del respondsToSelector: sel]) \
 }
 
 #define AUTHENTICATION_COMPLETED(del, s) \
-POST_NOTIFICATION(PantomimeAuthenticationCompleted, self, [NSDictionary dictionaryWithObject: ((id)s?(id)s:(id)@"")  forKey:  @"Mechanism"]); \
 PERFORM_SELECTOR_2(del, @selector(authenticationCompleted:), PantomimeAuthenticationCompleted, ((id)s?(id)s:(id)@""), @"Mechanism");
 
 
 #define AUTHENTICATION_FAILED(del, s) \
-POST_NOTIFICATION(PantomimeAuthenticationFailed, self, [NSDictionary dictionaryWithObject: ((id)s?(id)s:(id)@"")  forKey:  @"Mechanism"]); \
 PERFORM_SELECTOR_2(del, @selector(authenticationFailed:), PantomimeAuthenticationFailed, ((id)s?(id)s:(id)@""), @"Mechanism");
-
-#define POST_NOTIFICATION(name, obj, info) \
-[[NSNotificationCenter defaultCenter] postNotificationName: name \
-  object: obj \
-  userInfo: info]
 
 /*!
   @typedef PantomimeEncoding

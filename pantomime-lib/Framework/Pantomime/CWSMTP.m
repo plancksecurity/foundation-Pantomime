@@ -718,7 +718,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     {
       // The data we wrote in the previous call was sucessfully written.
       // We inform the delegate that the mail was sucessfully sent.
-      POST_NOTIFICATION(PantomimeMessageSent, self, [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
       PERFORM_SELECTOR_2(_delegate, @selector(messageSent:), PantomimeMessageSent, _message, @"Message");
     }
   else
@@ -807,7 +806,6 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
 
 //!  - Inform the delegate if it is ready or not, especially if EHLO failed
-  POST_NOTIFICATION(PantomimeServiceInitialized, self, nil);
   PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:), PantomimeServiceInitialized);
 }
 
@@ -837,18 +835,13 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     {
       // We write the first recipient while respecting the fact
       // that we are bouncing or not the message.
-      POST_NOTIFICATION(PantomimeTransactionInitiationCompleted, self, [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
       PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationCompleted:), PantomimeTransactionInitiationCompleted);
 
       [self sendCommand: SMTP_RCPT  arguments: @"RCPT TO:<%@>", [next_recipient(_sent_recipients, _redirected) address]];
     }
   else
     {
-      if (PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:), PantomimeTransactionInitiationFailed))
-	{
-	  POST_NOTIFICATION(PantomimeTransactionInitiationFailed, self, [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
-	}
-      else
+      if (!PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:), PantomimeTransactionInitiationFailed))
 	{
 	  [self fail];
 	}
@@ -917,18 +910,12 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
       // We are done writing the recipients, we now write the content
       // of the message.
-      POST_NOTIFICATION(PantomimeRecipientIdentificationCompleted, self, [NSDictionary dictionaryWithObject: _recipients  forKey: @"Recipients"]);
       PERFORM_SELECTOR_2(_delegate, @selector(recipientIdentificationCompleted:), PantomimeRecipientIdentificationCompleted, _recipients, @"Recipients");
       [self sendCommand: SMTP_DATA  arguments: @"DATA"];
     }
   else
     {
-//!  also send the invalid recipient in perform selector and when posting the notification
-      if (PERFORM_SELECTOR_1(_delegate, @selector(recipientIdentificationFailed:), PantomimeRecipientIdentificationFailed))
-	{
-	  POST_NOTIFICATION(PantomimeRecipientIdentificationFailed, self, [NSDictionary dictionaryWithObject: _recipients  forKey: @"Recipients"]);
-	}
-      else
+      if (!PERFORM_SELECTOR_1(_delegate, @selector(recipientIdentificationFailed:), PantomimeRecipientIdentificationFailed))
 	{
 	  [self fail];
 	}
@@ -947,12 +934,10 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   
   if ([aData hasCPrefix: "250"])
     {
-      POST_NOTIFICATION(PantomimeTransactionResetCompleted, self, nil);
       PERFORM_SELECTOR_1(_delegate, @selector(transactionResetCompleted:), PantomimeTransactionResetCompleted);
     }
   else
     {
-      POST_NOTIFICATION(PantomimeTransactionResetFailed, self, nil);
       PERFORM_SELECTOR_1(_delegate, @selector(transactionResetFailed:), PantomimeTransactionResetFailed);
     }
 }
@@ -974,13 +959,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     } else {
         // The server probably doesn't support TLS. We inform the delegate that the transaction
         // initiation failed or that the message wasn't sent.
-        if (PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:),
+        if (!PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:),
                                PantomimeTransactionInitiationFailed)) {
-            POST_NOTIFICATION(PantomimeTransactionInitiationFailed,
-                              self,
-                              [NSDictionary dictionaryWithObject: _message ? _message : [CWMessage new]
-                                                          forKey: @"Message"]);
-        } else {
             [self fail];
         }
     }

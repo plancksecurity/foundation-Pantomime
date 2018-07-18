@@ -146,14 +146,8 @@
         PERFORM_SELECTOR_2(_delegate, @selector(messageNotSent:),
                            PantomimeMessageNotSent,
                            _message, @"Message");
-        POST_NOTIFICATION(PantomimeMessageNotSent, self,
-                          [NSDictionary dictionaryWithObject: _message  forKey: @"Message"]);
     }
     else {
-        POST_NOTIFICATION(PantomimeMessageNotSent,
-                          self,
-                          [NSDictionary dictionaryWithObject: [CWMessage new]
-                                                      forKey: @"Message"]);
         PERFORM_SELECTOR_1(_delegate, @selector(messageNotSent:), PantomimeMessageNotSent);
     }
 }
