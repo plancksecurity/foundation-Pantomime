@@ -211,7 +211,6 @@
     DESTROY(_connection);
     [_queue removeAllObjects];
 
-    POST_NOTIFICATION(PantomimeRequestCancelled, self, nil);
     PERFORM_SELECTOR_1(_delegate, @selector(requestCancelled:), PantomimeRequestCancelled);
 }
 
@@ -238,7 +237,6 @@
         _connected = NO;
         [_connection close];
 
-        POST_NOTIFICATION(PantomimeConnectionTerminated, self, nil);
         PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
     } else {
         INFO(NSStringFromClass(self.class), @"CWService.close: Double invocation");
@@ -282,7 +280,6 @@
         if (_connection.streamError)
         {
             [_connection close];
-            POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
             PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
         }
     }
@@ -328,7 +325,6 @@
 
     if (!_connection)
     {
-        POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
         PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),  PantomimeConnectionTimedOut);
         return;
     }

@@ -335,11 +335,9 @@
         case ET_EDESC:
             //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
-                POST_NOTIFICATION(PantomimeConnectionLost, self, nil);
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
                 [self close];
             } else {
-                POST_NOTIFICATION(PantomimeConnectionTimedOut, self, nil);
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
                                    PantomimeConnectionTimedOut);
             }
@@ -358,7 +356,6 @@
 - (void)connectionEstablished
 {
     _connected = YES;
-    POST_NOTIFICATION(PantomimeConnectionEstablished, self, nil);
     PERFORM_SELECTOR_1(_delegate, @selector(connectionEstablished:),
                        PantomimeConnectionEstablished);
 }

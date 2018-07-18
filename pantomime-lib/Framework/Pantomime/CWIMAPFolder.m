@@ -418,7 +418,7 @@
 //
 // This method simply close the selected mailbox (ie. folder)
 //
-- (void) close
+- (void)close
 {
   IMAPCommand theCommand;
 
@@ -461,7 +461,6 @@
   else
     {
       PERFORM_SELECTOR_2([_store delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
-      POST_NOTIFICATION(PantomimeFolderCloseCompleted, _store, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
     }
 
   [_store removeFolderFromOpenFolders: self];

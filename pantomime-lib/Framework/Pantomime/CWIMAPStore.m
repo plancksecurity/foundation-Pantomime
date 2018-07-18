@@ -534,7 +534,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                         break;
                     } else if (_lastCommand == IMAP_IDLE) {
                         INFO(NSStringFromClass([self class]), @"entering IDLE");
-                        POST_NOTIFICATION(PantomimeIdleEntered, self, self.currentQueueObject.info);
                         PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
                     }
                 }
@@ -988,7 +987,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         if ([[blockName stringByTrimmingWhiteSpaces] length] == 0 ||
             [[blockNewName stringByTrimmingWhiteSpaces] length] == 0)
         {
-            POST_NOTIFICATION(PantomimeFolderRenameFailed, strongSelf, info);
             PERFORM_SELECTOR_3(strongSelf->_delegate, @selector(folderRenameFailed:),
                                PantomimeFolderRenameFailed, info);
         }
@@ -1359,7 +1357,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     {
         NSDictionary *userInfo = [NSDictionary
                                   dictionaryWithObject: theMessage  forKey: @"Message"];
-        POST_NOTIFICATION(PantomimeMessageChanged, self, userInfo);
         PERFORM_SELECTOR_2(_delegate, @selector(messageChanged:), PantomimeMessageChanged,
                            userInfo, PantomimeMessageChanged);
     }
@@ -1575,13 +1572,10 @@ static inline int has_literal(char *buf, NSUInteger c)
                     // see RFC4549-4.2.5
                     _selectedFolder = nil;
                     PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
-                    POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
                     return;
                 }
 
-                NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
-
-                POST_NOTIFICATION(PantomimeFolderOpenFailed, self, userInfo);
+                NSDictionary *userInfo = @{PantomimeBadResponseInfoKey:[aData asciiString]};
                 PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:),
                                    PantomimeFolderOpenFailed, userInfo,
                                    PantomimeErrorInfo);
@@ -1595,8 +1589,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                 [_responsesFromServer removeAllObjects];
 
                 NSDictionary *userInfo = @{PantomimeBadResponseInfoKey: [aData asciiString]};
-
-                POST_NOTIFICATION(PantomimeBadResponse, self, userInfo);
                 PERFORM_SELECTOR_2(_delegate, @selector(badResponse:),
                                    PantomimeBadResponse, userInfo,
                                    PantomimeErrorInfo);
@@ -1652,7 +1644,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
     else
     {
-        POST_NOTIFICATION(PantomimeServiceInitialized, self, nil);
         PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:),  PantomimeServiceInitialized);
     }
 }
@@ -1675,7 +1666,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     _selectedFolder.existsCount = n;
     INFO(NSStringFromClass([self class]), @"EXISTS %d", n);
     if (_lastCommand == IMAP_IDLE) {
-        POST_NOTIFICATION(PantomimeIdleNewMessages, self, nil);
         PERFORM_SELECTOR_1(_delegate, @selector(idleNewMessages:), PantomimeIdleNewMessages);
     }
 }
@@ -2121,8 +2111,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 messageUpdate.bodyText = YES;
                 [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
                                               messageUpdate: messageUpdate];
-                
-                POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self, [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
+
                 PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
             }
             break;
@@ -2157,9 +2146,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             messageUpdate.rfc822 = YES;
             [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
                                           messageUpdate: messageUpdate];
-            
-            POST_NOTIFICATION(PantomimeMessagePrefetchCompleted, self,
-                              [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
+
             PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:),
                                PantomimeMessagePrefetchCompleted, aMessage, @"Message");
 
@@ -2308,7 +2295,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
 
     // Inform client about potential new folder, so it can be saved.
-    POST_NOTIFICATION(PantomimeFolderNameParsed, self, userInfo);
     PERFORM_SELECTOR_2(_delegate, @selector(folderNameParsed:),
                        PantomimeFolderNameParsed, userInfo, PantomimeFolderInfo);
 
@@ -2455,7 +2441,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         switch (_lastCommand)
         {
             case IMAP_APPEND:
-                POST_NOTIFICATION(PantomimeFolderAppendFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(folderAppendFailed:), PantomimeFolderAppendFailed, self.currentQueueObject.info);
                 break;
 
@@ -2467,22 +2452,18 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
 
             case IMAP_CREATE:
-                POST_NOTIFICATION(PantomimeFolderCreateFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderCreateFailed:), PantomimeFolderCreateFailed);
                 break;
 
             case IMAP_DELETE:
-                POST_NOTIFICATION(PantomimeFolderDeleteFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderDeleteFailed:), PantomimeFolderDeleteFailed);
                 break;
 
             case IMAP_EXPUNGE:
-                POST_NOTIFICATION(PantomimeFolderExpungeFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderExpungeFailed:), PantomimeFolderExpungeFailed, _selectedFolder, @"Folder");
                 break;
 
             case IMAP_RENAME:
-                POST_NOTIFICATION(PantomimeFolderRenameFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderRenameFailed:), PantomimeFolderRenameFailed);
                 break;
 
@@ -2494,47 +2475,38 @@ static inline int has_literal(char *buf, NSUInteger c)
                     // see RFC4549-4.2.5
                     _selectedFolder = nil;
                     PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
-                    POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
                     return;
                 }
-                POST_NOTIFICATION(PantomimeFolderOpenFailed, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderOpenFailed:), PantomimeFolderOpenFailed, _selectedFolder, @"Folder");
                 [_openFolders removeObjectForKey: [_selectedFolder name]];
                 _selectedFolder = nil;
                 break;
 
             case IMAP_SUBSCRIBE:
-                POST_NOTIFICATION(PantomimeFolderSubscribeFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderSubscribeFailed:), PantomimeFolderSubscribeFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
                 break;
 
             case IMAP_UID_COPY:
-                POST_NOTIFICATION(PantomimeMessagesCopyFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyFailed:), PantomimeMessagesCopyFailed, self.currentQueueObject.info);
                 break;
 
             case IMAP_UID_MOVE:
-                POST_NOTIFICATION(PantomimeMessageUidMoveFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyFailed:), PantomimeMessageUidMoveFailed, self.currentQueueObject.info);
                 break;
 
             case IMAP_UID_SEARCH_ALL:
-                POST_NOTIFICATION(PantomimeFolderSearchFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderSearchFailed:), PantomimeFolderSearchFailed);
                 break;
 
             case IMAP_STATUS:
-                POST_NOTIFICATION(PantomimeFolderStatusFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderStatusFailed:), PantomimeFolderStatusFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
                 break;
 
             case IMAP_UID_STORE:
-                POST_NOTIFICATION(PantomimeMessageStoreFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(messageStoreFailed:), PantomimeMessageStoreFailed, self.currentQueueObject.info);
                 break;
 
             case IMAP_UNSUBSCRIBE:
-                POST_NOTIFICATION(PantomimeFolderUnsubscribeFailed, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeFailed:), PantomimeFolderUnsubscribeFailed, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
                 break;
 
@@ -2557,7 +2529,6 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_UID_SEARCH_FLAGGED:
             case IMAP_UID_SEARCH_UNSEEN:
             case IMAP_EMPTY_QUEUE:
-                POST_NOTIFICATION(PantomimeActionFailed, self, self.currentQueueObject.info);
                 if ([[self currentQueueObject] info]) {
                     PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed,
                                        [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
@@ -2580,7 +2551,6 @@ static inline int has_literal(char *buf, NSUInteger c)
             //INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
 
             [self.currentQueueObject.info setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
-            POST_NOTIFICATION(@"PantomimeCommandCompleted", self, self.currentQueueObject.info);
             PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
 
             [_queue removeLastObject];
@@ -2628,7 +2598,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                 // does not do so, the client MAY issue a NOOP command (or failing
                 // that, a CHECK command) after one or more APPEND commands.
                 //
-                POST_NOTIFICATION(PantomimeFolderAppendCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(folderAppendCompleted:), PantomimeFolderAppendCompleted, self.currentQueueObject.info);
                 break;
 
@@ -2675,19 +2644,16 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
 
             case IMAP_CLOSE:
-                POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self.currentQueueObject.info);
                 break;
 
             case IMAP_CREATE:
                 [_folders setObject: [NSNumber numberWithInt: 0]  forKey: [self.currentQueueObject.info objectForKey: @"Name"]];
-                POST_NOTIFICATION(PantomimeFolderCreateCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderCreateCompleted:), PantomimeFolderCreateCompleted);
                 break;
 
             case IMAP_DELETE:
                 [_folders removeObjectForKey: [self.currentQueueObject.info objectForKey: @"Name"]];
-                POST_NOTIFICATION(PantomimeFolderDeleteCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderDeleteCompleted:), PantomimeFolderDeleteCompleted);
                 break;
 
@@ -2705,12 +2671,10 @@ static inline int has_literal(char *buf, NSUInteger c)
                 {
                     [[_selectedFolder cacheManager] expunge];
                 }
-                POST_NOTIFICATION(PantomimeFolderExpungeCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderExpungeCompleted:), PantomimeFolderExpungeCompleted, _selectedFolder, @"Folder");
                 break;
 
             case IMAP_LIST:
-                POST_NOTIFICATION(PantomimeFolderListCompleted, self, [NSDictionary dictionaryWithObject: [_folders keyEnumerator] forKey: @"NSEnumerator"]);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderListCompleted:), PantomimeFolderListCompleted, [_folders keyEnumerator], @"NSEnumerator");
                 break;
 
@@ -2720,13 +2684,11 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
 
             case IMAP_LSUB:
-                POST_NOTIFICATION(PantomimeFolderListSubscribedCompleted, self, [NSDictionary dictionaryWithObject: [_subscribedFolders objectEnumerator] forKey: @"NSEnumerator"]);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderListSubscribedCompleted:), PantomimeFolderListSubscribedCompleted, [_subscribedFolders objectEnumerator], @"NSEnumerator");
                 break;
 
             case IMAP_RENAME:
                 [self _renameFolder];
-                POST_NOTIFICATION(PantomimeFolderRenameCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(folderRenameCompleted:), PantomimeFolderRenameCompleted);
                 break;
 
@@ -2741,17 +2703,14 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_SUBSCRIBE:
                 // We must add the folder to our list of subscribed folders.
                 [_subscribedFolders addObject: [self.currentQueueObject.info objectForKey: @"Name"]];
-                POST_NOTIFICATION(PantomimeFolderSubscribeCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderSubscribeCompleted:), PantomimeFolderSubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
                 break;
 
             case IMAP_UID_COPY:
-                POST_NOTIFICATION(PantomimeMessagesCopyCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(messagesCopyCompleted:), PantomimeMessagesCopyCompleted, self.currentQueueObject.info);
                 break;
 
             case IMAP_UID_MOVE:
-                POST_NOTIFICATION(PantomimeMessageUidMoveCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(messageUidMoveCompleted:), PantomimeMessageUidMoveCompleted, self.currentQueueObject.info);
                 break;
 
@@ -2771,13 +2730,11 @@ static inline int has_literal(char *buf, NSUInteger c)
                     [[_selectedFolder cacheManager] synchronize];
                 }
                 //INFO(NSStringFromClass([self class]), @"DONE FETCHING FOLDER");
-                POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
                 break;
 
             case IMAP_UID_FETCH_FLAGS: {
                 _connection_state.opening_mailbox = NO;
-                POST_NOTIFICATION(PantomimeFolderSyncCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderSyncCompleted:), PantomimeFolderSyncCompleted, _selectedFolder, @"Folder");
                 break;
             }
@@ -2791,7 +2748,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                 if (self.currentQueueObject.info[@"Uids"]) {
                     info[@"Uids"] = self.currentQueueObject.info[@"Uids"];
                 }
-                POST_NOTIFICATION(PantomimeFolderFetchCompleted, self, info);
                 PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, info);
                 break;
             }
@@ -2809,10 +2765,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 //
                 if ([self.currentQueueObject.info objectForKey: @"Results"])
                 {
-                    NSDictionary *userInfo;
-
-                    userInfo = [NSDictionary dictionaryWithObjectsAndKeys: _selectedFolder, @"Folder", [self.currentQueueObject.info objectForKey: @"Results"], @"Results", nil];
-                    POST_NOTIFICATION(PantomimeFolderSearchCompleted, self, userInfo);
+                    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys: _selectedFolder, @"Folder", [self.currentQueueObject.info objectForKey: @"Results"], @"Results", nil];
                     PERFORM_SELECTOR_3(_delegate, @selector(folderSearchCompleted:), PantomimeFolderSearchCompleted, userInfo);
                 }
                 break;
@@ -2833,7 +2786,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                     [[(CWMessage *) [theMessages objectAtIndex: i] flags] replaceWithFlags: theFlags];
                 }
 
-                POST_NOTIFICATION(PantomimeMessageStoreCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(messageStoreCompleted:), PantomimeMessageStoreCompleted, self.currentQueueObject.info);
                 break;
             }
@@ -2841,12 +2793,10 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_UNSUBSCRIBE:
                 // We must remove the folder from our list of subscribed folders.
                 [_subscribedFolders removeObject: [self.currentQueueObject.info objectForKey: @"Name"]];
-                POST_NOTIFICATION(PantomimeFolderUnsubscribeCompleted, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeCompleted:), PantomimeFolderUnsubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
                 break;
 
             case IMAP_IDLE:
-                POST_NOTIFICATION(PantomimeIdleFinished, self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_1(_delegate, @selector(idleFinished:), PantomimeIdleFinished);
                 break;
 
@@ -2864,7 +2814,6 @@ static inline int has_literal(char *buf, NSUInteger c)
             if (self.currentQueueObject && self.currentQueueObject.info) {
                 [self.currentQueueObject.info
                  setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
-                POST_NOTIFICATION(@"PantomimeCommandCompleted", self, self.currentQueueObject.info);
                 PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
             } else {
                 INFO(NSStringFromClass([self class]), @"self.currentQueueObject == nil");
@@ -3059,7 +3008,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         // see RFC4549-4.2.5
         _selectedFolder = nil;
         PERFORM_SELECTOR_2([self delegate], @selector(folderCloseCompleted:), PantomimeFolderCloseCompleted, self, @"Folder");
-        POST_NOTIFICATION(PantomimeFolderCloseCompleted, self, [NSDictionary dictionaryWithObject: self  forKey: @"Folder"]);
         return;
     }
 
@@ -3104,7 +3052,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     else
     {
         [_selectedFolder setSelected: YES];
-        POST_NOTIFICATION(PantomimeFolderOpenCompleted, self, [NSDictionary dictionaryWithObject: _selectedFolder  forKey: @"Folder"]);
         PERFORM_SELECTOR_2(_delegate, @selector(folderOpenCompleted:), PantomimeFolderOpenCompleted, _selectedFolder, @"Folder");
     }
 }
@@ -3116,7 +3063,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseSTARTTLS
 {
     [(id<CWConnection>)_connection startTLS];
-    POST_NOTIFICATION(PantomimeServiceInitialized, self, nil);
     PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:),  PantomimeServiceInitialized);
 }
 
@@ -3152,8 +3098,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aFolderName = [aFolderName stringFromQuotedString];
     [_folderStatus setObject: aFolderInformation  forKey: aFolderName];
     
-    info = [NSDictionary dictionaryWithObjectsAndKeys: aFolderInformation, @"FolderInformation", aFolderName, @"FolderName", nil];  
-    POST_NOTIFICATION(PantomimeFolderStatusCompleted, self, info);
+    info = [NSDictionary dictionaryWithObjectsAndKeys: aFolderInformation, @"FolderInformation", aFolderName, @"FolderName", nil];
     
     if (_delegate && [_delegate respondsToSelector: @selector(folderStatusCompleted:)]) 
     {
@@ -3199,7 +3144,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         [_connection_state.previous_queue removeAllObjects];
         _connection_state.reconnecting = NO;
 
-        POST_NOTIFICATION(PantomimeServiceReconnected, self, nil);
         PERFORM_SELECTOR_1(_delegate, @selector(serviceReconnected:), PantomimeServiceReconnected);
     }
 }
