@@ -1755,9 +1755,6 @@ static inline int has_literal(char *buf, NSUInteger c)
         if ([_selectedFolder cacheManager]) {
             [[_selectedFolder cacheManager] expunge];
         }
-        POST_NOTIFICATION(PantomimeMessageExpunged,
-                          self,
-                          [NSDictionary dictionaryWithObject: aMessage  forKey: @"Message"]);
         PERFORM_SELECTOR_1(_delegate, @selector(messageExpunged:), PantomimeMessageExpunged);
     }
     //    INFO(NSStringFromClass([self class]), @"Expunged %d", msn);
