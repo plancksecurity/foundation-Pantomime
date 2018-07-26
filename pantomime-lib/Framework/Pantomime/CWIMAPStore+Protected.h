@@ -143,14 +143,14 @@ NS_ASSUME_NONNULL_BEGIN
  Note: This method also selects the folder if, and only if, the folder is not
  selected already to avoid network. As aconsequence the folders EXISTS count might be outdated.
  If you have to rely on a valid EXISTS count set updateExistsCount to YES.
- @param theName The name of the folder to obtain.
- @param theMode The mode to use. The value is one of the PantomimeFolderMode enum.
+ @param name The name of the folder to obtain.
+ @param mode The mode to use. The value is one of the PantomimeFolderMode enum.
  @param updateExistsCount if true, a valid exists count is guaranteed.
  @return A CWIMAPFolder instance.
  */
-- (CWIMAPFolder *) folderForNameInternal: (NSString *) theName
-                                    mode: (PantomimeFolderMode) theMode
-                       updateExistsCount: (BOOL)updateExistsCount;
+- (CWIMAPFolder *)folderForNameInternal:(NSString *)name
+                                   mode:(PantomimeFolderMode)mode
+                      updateExistsCount:(BOOL)updateExistsCount;
 
 - (void)signalFolderSyncError;
 

@@ -252,70 +252,58 @@
     }
 }
 
-
-//
-//
-//
-//! VERIFY FOR NoSelect
-- (CWIMAPFolder *) folderForNameInternal: (NSString *) theName
-                                    mode: (PantomimeFolderMode) theMode
-                       updateExistsCount: (BOOL)updateExistsCount
+- (CWIMAPFolder *)folderForNameInternal:(NSString *)name
+                                   mode:(PantomimeFolderMode)mode
+                      updateExistsCount:(BOOL)updateExistsCount
 {
-        CWIMAPFolder *aFolder = [_openFolders objectForKey: theName];
+    CWIMAPFolder *folder = [_openFolders objectForKey:name];
 
-        if (aFolder) {
-            if ([_selectedFolder.name isEqualToString:theName]) {
-                // We have the folder already and it is already selected.
-                if (!updateExistsCount) {
-                    // Return it in case exists count is not of interest ...
-                    return aFolder;
-                }
-                // ... otherwize update exists count by calling SELECT/EXAMINE.
+    if (folder) {
+        if ([_selectedFolder.name isEqualToString:name]) {
+            // We have the folder already and it is already selected.
+            if (!updateExistsCount) {
+                // Return it in case exists count is not of interest ...
+                return folder;
             }
-        } else {
-            aFolder = [self folderWithName:theName];
-            [_openFolders setObject: aFolder  forKey: theName];
-            RELEASE(aFolder);
+            // ... otherwize update exists count by calling SELECT/EXAMINE.
+        }
+    } else {
+        folder = [self folderWithName:name];
+        [_openFolders setObject:folder  forKey:name];
+    }
+
+    [folder setStore:self];
+    folder.mode = mode;
+
+    //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
+
+    // If we are already opening a mailbox, we must interrupt the process
+    // and open the preferred one instead.
+    if (_connection_state.opening_mailbox) {
+        // Safety measure - in case close (so -removeFolderFromOpenFolders)
+        // on the selected folder wasn't called.
+        if (_selectedFolder) {
+            [_openFolders removeObjectForKey:[_selectedFolder name]];
         }
 
-        [aFolder setStore: self];
-        aFolder.mode = theMode;
+        [super cancelRequest];
+        [self reconnect];
 
-        //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
-
-        // If we are already opening a mailbox, we must interrupt the process
-        // and open the preferred one instead.
-        if (_connection_state.opening_mailbox)
-        {
-            // Safety measure - in case close (so -removeFolderFromOpenFolders)
-            // on the selected folder wasn't called.
-            if (_selectedFolder)
-            {
-                [_openFolders removeObjectForKey: [_selectedFolder name]];
-            }
-
-            [super cancelRequest];
-            [self reconnect];
-
-            _selectedFolder = aFolder;
-            return _selectedFolder;
-        }
-
-        _connection_state.opening_mailbox = YES;
-
-        if (theMode == PantomimeReadOnlyMode)
-        {
-            [self sendCommand: IMAP_EXAMINE  info: nil  arguments: @"EXAMINE \"%@\"", [theName modifiedUTF7String]];
-        }
-        else
-        {
-            [self sendCommand: IMAP_SELECT  info: nil  arguments: @"SELECT \"%@\"", [theName modifiedUTF7String]];
-        }
-
-        // This folder becomes the selected one. This will have to be improved in the future.
-        // No need to retain "aFolder" here. The "_openFolders" dictionary already retains it.
-        _selectedFolder = aFolder;
+        _selectedFolder = folder;
         return _selectedFolder;
+    }
+
+    _connection_state.opening_mailbox = YES;
+
+    if (mode == PantomimeReadOnlyMode) {
+        [self sendCommand:IMAP_EXAMINE  info:nil  arguments:@"EXAMINE \"%@\"", [name modifiedUTF7String]];
+    } else {
+        [self sendCommand:IMAP_SELECT  info:nil  arguments:@"SELECT \"%@\"", [name modifiedUTF7String]];
+    }
+
+    // This folder becomes the selected one. This will have to be improved in the future.
+    _selectedFolder = folder;
+    return _selectedFolder;
 }
 
 
