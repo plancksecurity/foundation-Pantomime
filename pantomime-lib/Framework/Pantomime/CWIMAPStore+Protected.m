@@ -313,7 +313,6 @@
         }
 
         // This folder becomes the selected one. This will have to be improved in the future.
-        // No need to retain "aFolder" here. The "_openFolders" dictionary already retains it.
         _selectedFolder = aFolder;
         return _selectedFolder;
 }
