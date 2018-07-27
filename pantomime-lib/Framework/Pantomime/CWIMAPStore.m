@@ -894,7 +894,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             return;
         }
 
-        // simple LOGIN (https://tools.ietf.org/html/rfc3501#section-6.2.3)
+        // Fallback to simple LOGIN (https://tools.ietf.org/html/rfc3501#section-6.2.3)
         // We must verify if we must quote the password
         if ([thePassword rangeOfCharacterFromSet: [NSCharacterSet punctuationCharacterSet]].length ||
             [thePassword rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]].length)
