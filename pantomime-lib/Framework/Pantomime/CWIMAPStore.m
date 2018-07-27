@@ -864,7 +864,6 @@ static inline int has_literal(char *buf, NSUInteger c)
              password: (NSString*) thePassword
             mechanism: (NSString*) theMechanism
 {
-    __block NSString *blockPassword = thePassword;
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
         typeof(self) strongSelf = weakSelf;
@@ -895,11 +894,14 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
 
         // Fallback to simple LOGIN (https://tools.ietf.org/html/rfc3501#section-6.2.3)
+
+        NSString *safePassword = thePassword;
+
         // We must verify if we must quote the password
         if ([thePassword rangeOfCharacterFromSet: [NSCharacterSet punctuationCharacterSet]].length ||
             [thePassword rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]].length)
         {
-            blockPassword = [NSString stringWithFormat: @"\"%@\"", thePassword];
+            safePassword = [NSString stringWithFormat: @"\"%@\"", thePassword];
         }
         else if (![thePassword is7bitSafe])
         {
@@ -919,7 +921,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         [strongSelf sendCommand: IMAP_LOGIN
                            info: nil
-                      arguments: @"LOGIN %@ %@", strongSelf->_username, thePassword];
+                      arguments: @"LOGIN %@ %@", strongSelf->_username, safePassword];
     });
 }
 
