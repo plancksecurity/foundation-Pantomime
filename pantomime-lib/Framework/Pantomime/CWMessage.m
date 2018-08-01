@@ -1153,14 +1153,15 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
         }
         [newMessageRawData appendCFormat:@"%s", LF];
     }
-    // We now set all X-* headers
+    // We now set all custom or non standard headers we are not aware of.
+    // E.g. headers prefixed with "X-".
     NSEnumerator *allHeaderKeyEnumerator = [_headers keyEnumerator];
-
     NSString *key;
     while ((key = [allHeaderKeyEnumerator nextObject]))  {
-        if ([key hasPrefix:@"X-"] || ([key caseInsensitiveCompare:@"User-Agent"] == NSOrderedSame)) {
-            [newMessageRawData appendCFormat:@"%@: %@%s", key, [self headerValueForName: key], LF];
+        if ([CWMessageSupportedStandardHeaderFields containsObject:key]) {
+            continue;
         }
+        [newMessageRawData appendCFormat:@"%@: %@%s", key, [self headerValueForName: key], LF];
     }
 
     // We add our message header/body separator

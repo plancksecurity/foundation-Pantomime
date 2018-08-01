@@ -35,6 +35,15 @@
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSObject.h>
 
+/**
+ All header fields CWMessage is aware- and takes care of.
+ Header field not contained in this list are simply forwarded MIME<->PantomimeClient.
+ */
+#define CWMessageSupportedStandardHeaderFields [NSArray arrayWithObjects: @"From", @"Message-ID", \
+@"In-Reply-To", @"Date", @"Reply-To", @"Subject", @"Organization", @"MIME-Version", @"Resent-Date",\
+@"Resent-From", @"Resent-Message-ID", @"Resent-Subject", @"Content-Transfer-Encoding", \
+@"Content-Type", @"Content-Disposition:", @"To:", @"Cc:", @"Bcc:", @"References:", nil]
+
 /*!
   @const PantomimeMessageFetchCompleted
 */
