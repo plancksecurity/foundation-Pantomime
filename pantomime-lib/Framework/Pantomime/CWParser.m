@@ -749,19 +749,24 @@ NSRange shrinkRange(NSRange range)
     }
 
     if (result && [result length]) {
-        NSArray<NSData*> *rawReferences = [result componentsSeparatedByCString: " "];
-        NSUInteger count = [rawReferences count];
-
-        NSMutableArray<NSString*> *references = [[NSMutableArray alloc] initWithCapacity: count];
-
-        for (int i = 0; i < count; i++) {
-            NSData *rawReference = [rawReferences objectAtIndex: i];
-            rawReference = [rawReference unwrap];
-            NSString *reference = [rawReference asciiString];
-            // We protect ourself against values that could hold 8-bit characters.
-            if (reference) {
-                [references addObject: reference];
+        NSString *line = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
+        NSArray<NSString*> *wrappedRefs =
+        [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        NSMutableArray<NSString*> *references =
+        [[NSMutableArray alloc] initWithCapacity: wrappedRefs.count];
+        for (NSString *wrappedRef in wrappedRefs) {
+            //
+            NSMutableString *ref = wrappedRef.mutableCopy;
+            [ref stringByTrimmingWhiteSpaces];
+            if ([ref isEqualToString:@""]) {
+                continue;
             }
+            [ref replaceOccurrencesOfString:@"<" withString:@""
+                                    options:0 range:NSMakeRange(0, ref.length)];
+            [ref replaceOccurrencesOfString:@">" withString:@""
+                                    options:0 range:NSMakeRange(0, ref.length)];
+            //
+            [references addObject:ref];
         }
         [message setReferences: references];
 
