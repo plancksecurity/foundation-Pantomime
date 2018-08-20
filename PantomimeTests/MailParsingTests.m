@@ -70,7 +70,8 @@
 
 #pragma mark - IOS-1268 - Reference Parsing
 
-- (void)testReferenceParsingOriginalMail
+//IOS-1268
+- (void)testReferenceParsing_referencesSeperatedByTabs_OriginalMail
 {
     NSSet *refsThatShouldBeContained =
     [NSSet
@@ -83,7 +84,8 @@
                       expectedReferences:refsThatShouldBeContained];
 }
 
-- (void)testReferenceParsingCleanedMail
+//IOS-1268
+- (void)testReferenceParsing_referencesSeperatedByTabs_CleanedMail
 {
     NSSet *refsThatShouldBeContained =
     [NSSet
@@ -93,7 +95,8 @@
                       expectedReferences:refsThatShouldBeContained];
 }
 
-// Helper
+#pragma mark - HELPER
+
 - (void)assureReferenceParsingFilename:(NSString *)filename
                     expectedReferences:(NSSet *)expectedReferences
 {
@@ -101,7 +104,5 @@
     NSSet *actualReferences = [[NSSet alloc] initWithArray:msg.allReferences];
     XCTAssertEqualObjects(actualReferences, expectedReferences);
 }
-
-#pragma mark -
 
 @end
