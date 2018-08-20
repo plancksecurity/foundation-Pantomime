@@ -39,6 +39,8 @@
 		15E019A01FE2B65300DA2973 /* CWParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E0199F1FE2B65300DA2973 /* CWParserTest.m */; };
 		431AD4391F7E479B000247A7 /* MailWithJpgAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */; };
 		431AD43B1F7E4D8F000247A7 /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */; };
+		432D7323212ACF6D0007604F /* Reference_Parsing_Orig.eml in Resources */ = {isa = PBXBuildFile; fileRef = 432D7322212ACF6D0007604F /* Reference_Parsing_Orig.eml */; };
+		432D7325212AD30F0007604F /* Reference_Parsing_Cleaned.eml in Resources */ = {isa = PBXBuildFile; fileRef = 432D7324212AD30F0007604F /* Reference_Parsing_Cleaned.eml */; };
 		4338E37C1DF1BBFF0070176B /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
 		4338E37D1DF1BC050070176B /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F71CB7EBDD006867C0 /* CWFolder.m */; };
 		4338E3851DF1BC880070176B /* CWIMAPFolderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4338E3841DF1BC880070176B /* CWIMAPFolderTests.m */; };
@@ -181,6 +183,8 @@
 		15E0199F1FE2B65300DA2973 /* CWParserTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWParserTest.m; sourceTree = "<group>"; };
 		431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithJpgAttached.txt; sourceTree = "<group>"; };
 		431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
+		432D7322212ACF6D0007604F /* Reference_Parsing_Orig.eml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reference_Parsing_Orig.eml; sourceTree = "<group>"; };
+		432D7324212AD30F0007604F /* Reference_Parsing_Cleaned.eml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reference_Parsing_Cleaned.eml; sourceTree = "<group>"; };
 		433149311CBCEA1100AFC030 /* CWCacheRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheRecord.h; sourceTree = "<group>"; };
 		433149321CBCEA1100AFC030 /* CWCacheRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWCacheRecord.m; sourceTree = "<group>"; };
 		433149341CBCEBCB00AFC030 /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
@@ -424,6 +428,8 @@
 				433C51A71E647EBD00272E19 /* MailParsingAttachments.txt */,
 				431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */,
 				431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */,
+				432D7322212ACF6D0007604F /* Reference_Parsing_Orig.eml */,
+				432D7324212AD30F0007604F /* Reference_Parsing_Cleaned.eml */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -675,7 +681,9 @@
 			files = (
 				431AD43B1F7E4D8F000247A7 /* MailWithDocAttached.txt in Resources */,
 				431AD4391F7E479B000247A7 /* MailWithJpgAttached.txt in Resources */,
+				432D7325212AD30F0007604F /* Reference_Parsing_Cleaned.eml in Resources */,
 				1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */,
+				432D7323212ACF6D0007604F /* Reference_Parsing_Orig.eml in Resources */,
 				433C51A81E647EBD00272E19 /* MailParsingAttachments.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

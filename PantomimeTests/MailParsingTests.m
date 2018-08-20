@@ -68,4 +68,35 @@
     XCTAssertEqualObjects(msg.from.personal, @"\"Test 001\"");
 }
 
+- (void)testReferenceParsingFilename:(NSString *)filename
+                  expectedReferences:(NSSet *)expectedReferences
+{
+    CWIMAPMessage *msg = [self parseEmailFilePath:filename];
+    NSSet *actualReferences = [[NSSet alloc] initWithArray:msg.allReferences];
+    XCTAssertEqualObjects(actualReferences, expectedReferences);
+}
+
+- (void)testReferenceParsingOriginalMail
+{
+    NSSet *refsThatShouldBeContained =
+    [NSSet
+     setWithObjects:@"5B54E741.1020405@theover.org",
+     @"trinity-4cc32f62-339f-4005-a04b-47332ae6a9c6-1532444355985@3c-app-webde-bs06",
+     @"df6602fd08c731e4cee36b21bde6fbcb@synth.net",
+     @"b188e0da-522f-fa7e-58df-1697d572526a@gmx.de", nil];
+
+    [self testReferenceParsingFilename:@"Reference_Parsing_Orig.eml"
+                    expectedReferences:refsThatShouldBeContained];
+}
+
+- (void)testReferenceParsingCleanedMail
+{
+    NSSet *refsThatShouldBeContained =
+    [NSSet
+     setWithObjects:@"1", @"2", @"3", @"5", nil];
+
+    [self testReferenceParsingFilename:@"Reference_Parsing_Cleaned.eml"
+                    expectedReferences:refsThatShouldBeContained];
+}
+
 @end
