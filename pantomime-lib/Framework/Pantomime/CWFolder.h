@@ -362,7 +362,7 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
     NSString *_name;
 
     __weak id _cacheManager;
-    id _store;
+    __weak id _store;
 
     NSMutableArray *_allVisibleMessages;
     NSMutableArray *_allContainers;
