@@ -76,7 +76,7 @@
     XCTAssertEqualObjects(actualReferences, expectedReferences);
 }
 
-- (void)testReferenceParsingOriginalMail
+- (void)noTestReferenceParsingOriginalMail
 {
     NSSet *refsThatShouldBeContained =
     [NSSet
@@ -89,7 +89,7 @@
                     expectedReferences:refsThatShouldBeContained];
 }
 
-- (void)testReferenceParsingCleanedMail
+- (void)noTestReferenceParsingCleanedMail
 {
     NSSet *refsThatShouldBeContained =
     [NSSet
