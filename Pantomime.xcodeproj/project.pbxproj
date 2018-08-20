@@ -31,6 +31,8 @@
 		1568FEA31FB11C5000993EA3 /* NSData+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */; };
 		156926E31FA1E02A00D5F396 /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
 		156926E41FA1E03200D5F396 /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
+		1594C1D8212B141E00CB06E2 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
+		1594C1D9212B157300CB06E2 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
 		1598B22A1F6812FC00582157 /* CWInternetAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598B2291F6812FC00582157 /* CWInternetAddressTest.m */; };
 		15B35D261F60728D00EA57E2 /* CWSMTP+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B35D241F60728D00EA57E2 /* CWSMTP+Protected.m */; };
 		15B3B0FA1F5DA3B600EF9D9E /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B0F91F5DA3B600EF9D9E /* CWLogger.m */; };
@@ -169,6 +171,8 @@
 		155C96AA2021CB4000F5EB6F /* NSString+PEPDataUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+PEPDataUtils.m"; sourceTree = "<group>"; };
 		155C96AC2021CDB100F5EB6F /* CWMessageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWMessageTest.m; sourceTree = "<group>"; };
 		1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+ExtensionsTest.m"; sourceTree = "<group>"; };
+		1594C1D6212B141E00CB06E2 /* NSMutableString+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+Extension.h"; sourceTree = "<group>"; };
+		1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+Extension.m"; sourceTree = "<group>"; };
 		1598B2291F6812FC00582157 /* CWInternetAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWInternetAddressTest.m; sourceTree = "<group>"; };
 		15ADD2BE1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CWIMAPFolder+CWProtected.h"; sourceTree = "<group>"; };
 		15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPFolder+CWProtected.m"; sourceTree = "<group>"; };
@@ -588,6 +592,8 @@
 				43E8556D1CB7EBDD006867C0 /* NSString+Extensions.h */,
 				43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */,
 				43E8556F1CB7EBDD006867C0 /* Pantomime.h */,
+				1594C1D6212B141E00CB06E2 /* NSMutableString+Extension.h */,
+				1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */,
 			);
 			name = Pantomime;
 			path = "pantomime-lib/Framework/Pantomime";
@@ -783,6 +789,7 @@
 				43980E951CBD1B5D00A7FC3C /* CWISO8859_6.m in Sources */,
 				43980E971CBD1B5D00A7FC3C /* CWISO8859_7.m in Sources */,
 				43980E991CBD1B5D00A7FC3C /* CWISO8859_8.m in Sources */,
+				1594C1D8212B141E00CB06E2 /* NSMutableString+Extension.m in Sources */,
 				43980E9B1CBD1B5D00A7FC3C /* CWISO8859_9.m in Sources */,
 				43980E9D1CBD1B5D00A7FC3C /* CWKOI8_R.m in Sources */,
 				43980E9F1CBD1B5D00A7FC3C /* CWKOI8_U.m in Sources */,
@@ -862,6 +869,7 @@
 				433C51C41E658C9300272E19 /* CWISO8859_4.m in Sources */,
 				433C51D01E658CCA00272E19 /* CWWINDOWS_1254.m in Sources */,
 				433C51BF1E658C8200272E19 /* CWISO8859_13.m in Sources */,
+				1594C1D9212B157300CB06E2 /* NSMutableString+Extension.m in Sources */,
 				433C51C31E658C8F00272E19 /* CWISO8859_3.m in Sources */,
 				1521773A1F22072600C83122 /* CWMIMEUtilityTest.m in Sources */,
 				156926E41FA1E03200D5F396 /* CWIMAPFolder+CWProtected.m in Sources */,

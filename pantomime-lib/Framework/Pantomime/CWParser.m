@@ -31,6 +31,7 @@
 #import "Pantomime/CWInternetAddress.h"
 #import "Pantomime/CWMessage.h"
 #import "Pantomime/CWMIMEUtility.h"
+#import "NSMutableString+Extension.h"
 #import "Pantomime/NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
@@ -755,17 +756,11 @@ NSRange shrinkRange(NSRange range)
         NSMutableArray<NSString*> *references =
         [[NSMutableArray alloc] initWithCapacity: wrappedRefs.count];
         for (NSString *wrappedRef in wrappedRefs) {
-            //
-            NSMutableString *ref = wrappedRef.mutableCopy;
-            [ref stringByTrimmingWhiteSpaces];
+            NSMutableString *ref = [wrappedRef stringByTrimmingWhiteSpaces].mutableCopy;
             if ([ref isEqualToString:@""]) {
                 continue;
             }
-            [ref replaceOccurrencesOfString:@"<" withString:@""
-                                    options:0 range:NSMakeRange(0, ref.length)];
-            [ref replaceOccurrencesOfString:@">" withString:@""
-                                    options:0 range:NSMakeRange(0, ref.length)];
-            //
+            [ref unwrap];
             [references addObject:ref];
         }
         [message setReferences: references];
