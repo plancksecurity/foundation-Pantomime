@@ -68,15 +68,9 @@
     XCTAssertEqualObjects(msg.from.personal, @"\"Test 001\"");
 }
 
-- (void)testReferenceParsingFilename:(NSString *)filename
-                  expectedReferences:(NSSet *)expectedReferences
-{
-    CWIMAPMessage *msg = [self parseEmailFilePath:filename];
-    NSSet *actualReferences = [[NSSet alloc] initWithArray:msg.allReferences];
-    XCTAssertEqualObjects(actualReferences, expectedReferences);
-}
+#pragma mark - IOS-1268 - Reference Parsing
 
-- (void)noTestReferenceParsingOriginalMail
+- (void)testReferenceParsingOriginalMail
 {
     NSSet *refsThatShouldBeContained =
     [NSSet
@@ -85,18 +79,29 @@
      @"df6602fd08c731e4cee36b21bde6fbcb@synth.net",
      @"b188e0da-522f-fa7e-58df-1697d572526a@gmx.de", nil];
 
-    [self testReferenceParsingFilename:@"Reference_Parsing_Orig.eml"
-                    expectedReferences:refsThatShouldBeContained];
+    [self assureReferenceParsingFilename:@"Reference_Parsing_Orig.txt"
+                      expectedReferences:refsThatShouldBeContained];
 }
 
-- (void)noTestReferenceParsingCleanedMail
+- (void)testReferenceParsingCleanedMail
 {
     NSSet *refsThatShouldBeContained =
     [NSSet
      setWithObjects:@"1", @"2", @"3", @"5", nil];
 
-    [self testReferenceParsingFilename:@"Reference_Parsing_Cleaned.eml"
-                    expectedReferences:refsThatShouldBeContained];
+    [self assureReferenceParsingFilename:@"Reference_Parsing_Cleaned.txt"
+                      expectedReferences:refsThatShouldBeContained];
 }
+
+// Helper
+- (void)assureReferenceParsingFilename:(NSString *)filename
+                    expectedReferences:(NSSet *)expectedReferences
+{
+    CWIMAPMessage *msg = [self parseEmailFilePath:filename];
+    NSSet *actualReferences = [[NSSet alloc] initWithArray:msg.allReferences];
+    XCTAssertEqualObjects(actualReferences, expectedReferences);
+}
+
+#pragma mark -
 
 @end
