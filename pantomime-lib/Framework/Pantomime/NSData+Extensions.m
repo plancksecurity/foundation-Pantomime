@@ -437,28 +437,19 @@ static const char *hexDigit = "0123456789ABCDEF";
   return [self subdataWithRange: NSMakeRange(0, theIndex)];
 }
 
-
-//
-//
-//
-- (NSData *) dataByTrimmingWhiteSpaces
+- (NSData *)dataByTrimmingWhiteSpaces
 {
-  const char *bytes;
-  NSUInteger i, len;
-    NSInteger j;
-  
-  bytes = [self bytes];
-  len = [self length];
+    const char *bytes = [self bytes];
+    NSUInteger len = [self length];
+    long i = 0;
+    for (i = 0; i < len && (bytes[i] == ' ' || bytes[i] == '\t'); i++);
+    long j = 0;
+    for (j = len - 1; j >= 0 && (bytes[j] == ' ' || bytes[i] == '\t'); j--);
 
-  for (i = 0; i < len && (bytes[i] == ' ' || bytes[i] == '\t'); i++) ;
-  for (j = len-1; j >= 0 && (bytes[j] == ' ' || bytes[i] == '\t'); j--) ;
-  
-  if (j <= i)
-    {
-      return AUTORELEASE(RETAIN(self));
+    if (j <= i) {
+        return self;
     }
-      
-  return [self subdataWithRange: NSMakeRange(i, j-i+1)];
+    return [self subdataWithRange: NSMakeRange(i, j - i + 1)];
 }
 
 
