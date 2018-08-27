@@ -158,15 +158,14 @@
 */
 - (NSData *) subdataToIndex: (NSUInteger) theIndex;
 
-/*!
-  @method dataByTrimmingWhiteSpaces
-  @discussion This method is used to trim the leading and trailing
-              spaces (space characters, tabs, newlines, carriage returns
-              or other characters with no visible representation)
-              from the receiver.
-  @result The trimmed data.
-*/
-- (NSData *) dataByTrimmingWhiteSpaces;
+/**
+ @discussion Simple method to trim the leading and trailing whitespaces (characters with no visible
+ representation). Cahracters currently taken into accout are:
+                * " " (space)
+                * "\t" (tab)
+ @return The trimmed data.
+ */
+- (NSData *)dataByTrimmingWhiteSpaces;
 
 /*!
   @method dataFromQuotedData
