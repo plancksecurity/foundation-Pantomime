@@ -48,4 +48,179 @@
     XCTAssertEqualObjects(testee, expected);
 }
 
+#pragma mark - dataByTrimmingWhiteSpaces
+
+static NSString *text = @"My test\t Text containing 1234567890ß? stuff";
+
+// Space
+
+- (void)testDataByTrimmingWhiteSpaces_space
+{
+    NSString *testee = @" ";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_spaceSpace
+{
+    NSString *testee = @" ";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_spaceSpaceSpace
+{
+    NSString *testee = @"   ";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_spaceTextspace
+{
+    NSString *testFormat = @" %@ ";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_textSpace
+{
+    NSString *testFormat = @"%@ ";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_spaceText
+{
+    NSString *testFormat = @" %@";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+// Tabs
+- (void)testDataByTrimmingWhiteSpaces_tab
+{
+    NSString *testee = @"\t";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabtab
+{
+    NSString *testee = @"\t\t";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabtabtab
+{
+    NSString *testee = @"\t\t\t";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabTextTab
+{
+    NSString *testFormat = @"\t%@\t";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_textTab
+{
+    NSString *testFormat = @"%@\t";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabText
+{
+    NSString *testFormat = @"\t%@";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+// Mixed
+
+- (void)testDataByTrimmingWhiteSpaces_textOnly
+{
+    NSString *testFormat = @"%@";
+    NSString *testee = [NSString stringWithFormat:testFormat, text];
+    NSString *expected = text;
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_empty
+{
+    NSString *testee = @"";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabSpacetabSpaceSpacetabSpace
+{
+    NSString *testee = @"\t \t  \t ";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+///
+- (void)testDataByTrimmingWhiteSpaces_tabSpace
+{
+    NSString *testee = @"\t ";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_spaceTab
+{
+    NSString *testee = @" \t";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabSpacetab
+{
+    NSString *testee = @"\t \t";
+    NSString *expected = @"";
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabTextSapce
+{
+    NSString *testFormat = @"\t%@ ";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_textTabSpace
+{
+    NSString *testFormat = @"%@\t ";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_spaceTabText
+{
+    NSString *testFormat = @" \t%@";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+- (void)testDataByTrimmingWhiteSpaces_tabSpaceText
+{
+    NSString *testFormat = @"\t %@";
+    [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
+}
+
+#pragma mark helper
+
+- (void)assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:(NSString *)format
+{
+    NSString *testee = [NSString stringWithFormat:format, text];
+    NSString *expected = text;
+    [self assertDataByTrimmingWhiteSpacesWithSource:testee expectedResult:expected];
+}
+
+- (void)assertDataByTrimmingWhiteSpacesWithSource:(NSString *)source
+                                   expectedResult:(NSString *)exp
+{
+    NSData *srcData = [source dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *expData = [exp dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *testee = [srcData dataByTrimmingWhiteSpaces];
+    XCTAssertEqualObjects(testee, expData);
+}
+
+#pragma mark -
+
 @end
