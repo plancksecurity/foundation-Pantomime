@@ -446,8 +446,8 @@ static const char *hexDigit = "0123456789ABCDEF";
     long j = 0;
     for (j = len - 1; j >= 0 && (bytes[j] == ' ' || bytes[j] == '\t'); j--);
 
-    if (j <= i) {
-        return self;
+    if (j < i) {
+        return [NSData new];
     }
     return [self subdataWithRange: NSMakeRange(i, j - i + 1)];
 }
