@@ -444,7 +444,7 @@ static const char *hexDigit = "0123456789ABCDEF";
     long i = 0;
     for (i = 0; i < len && (bytes[i] == ' ' || bytes[i] == '\t'); i++);
     long j = 0;
-    for (j = len - 1; j >= 0 && (bytes[j] == ' ' || bytes[i] == '\t'); j--);
+    for (j = len - 1; j >= 0 && (bytes[j] == ' ' || bytes[j] == '\t'); j--);
 
     if (j <= i) {
         return self;
