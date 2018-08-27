@@ -37,7 +37,8 @@
 
 #pragma mark - stringWithData:charset:
 
-- (void)testStringWithData_utf8 {
+- (void)testStringWithData_utf8
+{
     NSString *nameEncoding = @"utf-8";
     NSStringEncoding encoding = NSUTF8StringEncoding;
 
