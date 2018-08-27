@@ -37,6 +37,8 @@
     XCTAssertEqualObjects(testee, expected);
 }
 
+#pragma mark - decodeQuotedPrintableInHeader
+
 //IOS-1175 "Let=E2=80=99s see.=" decdoded as "Let's see.="
 - (void)testDecodeQuotedPrintableInHeader
 {
