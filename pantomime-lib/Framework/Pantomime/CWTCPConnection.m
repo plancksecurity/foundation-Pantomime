@@ -20,16 +20,16 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 @interface CWTCPConnection ()
 
-@property (nonatomic) BOOL connected;
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic) uint32_t port;
-@property (nonatomic) ConnectionTransport transport;
-@property (nonatomic, strong) NSInputStream *readStream;
-@property (nonatomic, strong) NSOutputStream *writeStream;
-@property (nonatomic, strong) NSMutableSet<NSStream *> *openConnections;
+@property (atomic) BOOL connected;
+@property (atomic, strong) NSString *name;
+@property (atomic) uint32_t port;
+@property (atomic) ConnectionTransport transport;
+@property (atomic, strong) NSInputStream *readStream;
+@property (atomic, strong) NSOutputStream *writeStream;
+@property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
 @property (nullable, strong) NSThread *backgroundThread;
-@property (nonatomic) BOOL gettingClosed;
+@property (atomic) BOOL gettingClosed;
 
 @end
 
@@ -143,7 +143,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
 }
 
-#pragma mark -- CWConnection
+#pragma mark - CWConnection
 
 - (BOOL)isConnected
 {
@@ -267,7 +267,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)cancelNoop {}
 
-#pragma mark -- NSStreamDelegate
+#pragma mark - NSStreamDelegate
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
 {
