@@ -143,6 +143,64 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
 }
 
+- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
+{
+    static NSInteger maxLength = 200;
+    if (length) {
+        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (length >= maxLength) {
+            return [string stringByAppendingString:@"..."];
+        }
+        return string;
+    } else {
+        return @"";
+    }
+}
+
+- (void)connectInBackgroundAndStartRunLoop
+{
+    s_numberOfConnectionThreads++;
+
+    CFReadStreamRef readStream = nil;
+    CFWriteStreamRef writeStream = nil;
+    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
+                                       self.port, &readStream, &writeStream);
+
+    NSAssert(readStream != nil, @"Could not create input stream");
+    NSAssert(writeStream != nil, @"Could not create output stream");
+
+    if (readStream != nil && writeStream != nil) {
+        self.readStream = CFBridgingRelease(readStream);
+        self.writeStream = CFBridgingRelease(writeStream);
+        [self setupStream:self.readStream];
+        [self setupStream:self.writeStream];
+    }
+
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    while (1) {
+        if ( [NSThread currentThread].isCancelled ) {
+            break;
+        }
+        @autoreleasepool {
+            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
+        }
+    }
+    s_numberOfConnectionThreads--;
+    self.backgroundThread = nil;
+}
+
+- (void)cancelNoop {}
+
+- (void)cancelBackgroundThead
+{
+    if (self.backgroundThread) {
+        [self.backgroundThread cancel];
+        [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
+                waitUntilDone:NO];
+    }
+}
+
 #pragma mark - CWConnection
 
 - (BOOL)isConnected
@@ -157,21 +215,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
     self.connected = NO;
     self.gettingClosed = YES;
     [self cancelBackgroundThead];
-}
-
-- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
-{
-    static NSInteger maxLength = 200;
-    if (length) {
-        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (length >= maxLength) {
-            return [string stringByAppendingString:@"..."];
-        }
-        return string;
-    } else {
-        return @"";
-    }
 }
 
 - (NSInteger)read:(unsigned char *)buf length:(NSInteger)len
@@ -219,53 +262,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     [self.backgroundThread start];
 }
 
-- (void)connectInBackgroundAndStartRunLoop
-{
-    s_numberOfConnectionThreads++;
-
-    CFReadStreamRef readStream = nil;
-    CFWriteStreamRef writeStream = nil;
-    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
-                                       self.port, &readStream, &writeStream);
-
-    NSAssert(readStream != nil, @"Could not create input stream");
-    NSAssert(writeStream != nil, @"Could not create output stream");
-
-    if (readStream != nil && writeStream != nil) {
-        self.readStream = CFBridgingRelease(readStream);
-        self.writeStream = CFBridgingRelease(writeStream);
-        [self setupStream:self.readStream];
-        [self setupStream:self.writeStream];
-    }
-
-    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-    while (1) {
-        if ( [NSThread currentThread].isCancelled ) {
-            break;
-        }
-        @autoreleasepool {
-            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
-        }
-    }
-    s_numberOfConnectionThreads--;
-    self.backgroundThread = nil;
-}
-
 - (BOOL)canWrite
 {
     return [self.writeStream hasSpaceAvailable];
 }
-
-- (void)cancelBackgroundThead
-{
-    if (self.backgroundThread) {
-        [self.backgroundThread cancel];
-        [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
-                waitUntilDone:NO];
-    }
-}
-
-- (void)cancelNoop {}
 
 #pragma mark - NSStreamDelegate
 
