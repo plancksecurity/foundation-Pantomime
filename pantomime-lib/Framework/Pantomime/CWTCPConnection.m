@@ -83,8 +83,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
                          forKey:NSStreamSocketSecurityLevelKey];
             break;
         case ConnectionTransportTLS:
-            [stream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                         forKey:NSStreamSocketSecurityLevelKey];
+            /*[stream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
+                         forKey:NSStreamSocketSecurityLevelKey];*/
             break;
     }
     [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -232,6 +232,20 @@ static NSInteger s_numberOfConnectionThreads = 0;
     NSAssert(writeStream != nil, @"Could not create output stream");
 
     if (readStream != nil && writeStream != nil) {
+        NSDictionary *settings =
+        [[NSDictionary alloc] initWithObjectsAndKeys:
+         //[NSNumber numberWithBool:YES], kCFStreamSSLAllowsExpiredCertificates,
+         [NSNumber numberWithBool:YES], kCFStreamSSLAllowsAnyRoot,
+         //[NSNumber numberWithBool:YES], kCFStreamSSLAllowsExpiredRoots,
+         //[NSNumber numberWithBool:NO], kCFStreamSSLValidatesCertificateChain,
+         //kCFNull,kCFStreamSSLPeerName,
+         //kCFStreamSocketSecurityLevelSSLv3, kCFStreamSSLLevel,
+         //[NSNumber numberWithBool:YES], kCFStreamPropertyShouldCloseNativeSocket,
+         nil];
+
+        CFReadStreamSetProperty(readStream, kCFStreamPropertySSLSettings, (CFTypeRef)settings);
+        CFWriteStreamSetProperty(writeStream, kCFStreamPropertySSLSettings, (CFTypeRef)settings);
+
         self.readStream = CFBridgingRelease(readStream);
         self.writeStream = CFBridgingRelease(writeStream);
         [self setupStream:self.readStream];
