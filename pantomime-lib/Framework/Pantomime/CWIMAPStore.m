@@ -321,7 +321,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         if (strongSelf->_connected) {
             [strongSelf sendCommand: IMAP_LOGOUT  info: nil  arguments: @"LOGOUT"];
         }
-        [super close];
+        [super close]; 
     });
 }
 

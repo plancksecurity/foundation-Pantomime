@@ -305,29 +305,18 @@
  //  @param theExtra Additional information.
  //  @param theMode The runloop modes.
  //*/
-- (void) receivedEvent: (void *) theData
-                  type: (RunLoopEventType) theType
-                 extra: (void *) theExtra
-               forMode: (NSString *) theMode
+- (void)receivedEvent:(void *)theData
+                 type:(RunLoopEventType)theType
+                 extra:(void *)theExtra
+               forMode:(NSString *)theMode
 {
-    AUTORELEASE_VOID(RETAIN(self));    // Don't be deallocated while handling event
-    switch (theType)
-    {
-#ifdef __MINGW32__
-        case ET_HANDLE:
-        case ET_TRIGGER:
-            [self updateRead];
-            [self updateWrite];
-            break;
-#else
+    switch (theType) {
         case ET_RDESC:
             [self updateRead];
             break;
-
         case ET_WDESC:
             [self updateWrite];
             break;
-
         case ET_EDESC:
             //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
@@ -338,8 +327,6 @@
                                    PantomimeConnectionTimedOut);
             }
             break;
-#endif
-
         default:
             break;
     }

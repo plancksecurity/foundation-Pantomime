@@ -33,10 +33,10 @@
 
 - (void)connectionEstablished;
 
-- (void) receivedEvent: (void * _Nullable) theData
-                  type: (RunLoopEventType) theType
-                 extra: (void * _Nullable) theExtra
-               forMode: (NSString * _Nullable) theMode;
+- (void)receivedEvent:(void *)theData
+                 type:(RunLoopEventType)theType
+                extra:(void *)theExtra
+              forMode:(NSString *)theMode;
 
 @end
 

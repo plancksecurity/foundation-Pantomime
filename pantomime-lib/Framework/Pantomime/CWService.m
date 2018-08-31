@@ -235,7 +235,7 @@
     if (_connected)
     {
         _connected = NO;
-        [_connection close];
+        [_connection close]; //IOS-1296: 
 
         PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
     } else {
