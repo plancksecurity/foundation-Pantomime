@@ -196,8 +196,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
 {
     if (self.backgroundThread) {
         [self.backgroundThread cancel];
-        //IOS-1296: we just cancelled the backgroundThread. As a result the runloop stops and backgroundThread is set to nil.
-        // But next we want to perform somthing on it. Looks fishy.
         [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
                 waitUntilDone:NO];
     }
@@ -212,11 +210,13 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)close
 {
-    [self closeAndRemoveStream:self.readStream];
-    [self closeAndRemoveStream:self.writeStream];
-    self.connected = NO;
-    self.gettingClosed = YES;
-    [self cancelBackgroundThead];
+    @synchronized(self) {
+        [self closeAndRemoveStream:self.readStream];
+        [self closeAndRemoveStream:self.writeStream];
+        self.connected = NO;
+        self.gettingClosed = YES;
+        [self cancelBackgroundThead];
+    }
 }
 
 - (NSInteger)read:(unsigned char *)buf length:(NSInteger)len
