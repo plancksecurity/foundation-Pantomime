@@ -1055,7 +1055,6 @@ NSRange shrinkRange(NSRange range)
             NSUInteger parameters_count = 1;
 
             while (YES) {
-                // end = NSMaxRange(r1);
                 r1 = [theLine rangeOfCString: [[NSString stringWithFormat: @"%s*%li",
                                                 [[theLine subdataWithRange: theRange] cString],
                                                 (unsigned long)parameters_count] UTF8String]
@@ -1087,20 +1086,6 @@ NSRange shrinkRange(NSRange range)
                     break;
                 }
             }
-
-            // We now search again for ";"
-            //r2 = [theLine rangeOfCString: ";"
-            //		options: 0
-            //		range: NSMakeRange(end, len-end)];
-            //
-            //if (r2.location != NSNotFound)
-            //  {
-            //    value_end = r2.location-1;
-            // }
-            //else
-            //  {
-            //   value_end = len-1;
-            //}
         } else if ([theLine characterAtIndex: NSMaxRange(theRange) + 1] == '=') {
             has_charset = YES;
         }
