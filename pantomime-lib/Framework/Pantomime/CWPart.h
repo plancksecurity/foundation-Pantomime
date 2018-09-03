@@ -175,22 +175,20 @@
 */                 
 - (void) setContentTransferEncoding: (PantomimeEncoding) theEncoding;
 
-/*!
-  @method filename
-  @discussion This method is used to get the name of the receiver's
-              file, if any.
-  @result The name of the file, nil if none was specified.
-*/
-- (NSString * _Nullable) filename;
+/**
+ This method is used to get the name of the receiver's
+ file, if any.
+ @result The name of the file, nil if none was specified.
+ */
+- (NSString *)filename;
 
-/*!
-  @method setFilename:
-  @discussion This method is used to set the name of the receiver's file.
-  @param theFilename The name of the file. If nil is passed or if
-                     the length of the string is 0, "unknown" will
-		     be set as the filename.
-*/
-- (void) setFilename: (NSString * _Nullable) theFilename;
+/**
+ This method is used to set the name of the receiver's file.
+ @param theFilename The name of the file. If nil is passed or if
+ the length of the string is 0, "unknown" will
+ be set as the filename.
+ */
+- (void)setFilename:(NSString *)theFilename;
 
 /*!
   @method format

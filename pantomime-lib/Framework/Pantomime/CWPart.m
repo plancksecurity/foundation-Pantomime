@@ -307,27 +307,17 @@ static int currentPartVersion = 2;
   [_headers setObject: [NSNumber numberWithInt: theEncoding]  forKey: @"Content-Transfer-Encoding"];
 }
 
-
-//
-//
-//
-- (NSString *) filename
+- (NSString *)filename
 {
   return [_parameters objectForKey: @"filename"];
-  //return _filename;
 }
 
-- (void) setFilename: (NSString *) theFilename
+- (void)setFilename:(NSString *)theFilename
 {
-  if (theFilename && ([theFilename length] > 0))
-    {
-      //ASSIGN(_filename, theFilename);
-      [_parameters setObject: theFilename  forKey: @"filename"];
-    }
-  else
-    {
-      //ASSIGN(_filename, @"unknown");
-      [_parameters setObject: @"unknown"  forKey: @"filename"];
+    if (theFilename && ([theFilename length] > 0)) {
+        [_parameters setObject: theFilename  forKey: @"filename"];
+    } else {
+        [_parameters setObject: @"unknown"  forKey: @"filename"];
     }
 }
 

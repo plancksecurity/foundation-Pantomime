@@ -21,20 +21,18 @@
         if (!_writeQueue) {
             _writeQueue = dispatch_queue_create("CWService - _writeQueue", DISPATCH_QUEUE_SERIAL);
         }
-        
         return _writeQueue;
     }
 }
-
 
 /** Lazy initialized */
 - (dispatch_queue_t _Nullable)serviceQueue;
 {
     @synchronized(self) {
         if (!_serviceQueue) {
-            _serviceQueue = dispatch_queue_create("CWService - _serviceQueue", DISPATCH_QUEUE_SERIAL);
+            _serviceQueue = dispatch_queue_create("CWService - _serviceQueue",
+                                                  DISPATCH_QUEUE_SERIAL);
         }
-        
         return _serviceQueue;
     }
 }
