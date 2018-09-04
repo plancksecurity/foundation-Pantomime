@@ -150,41 +150,36 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 //
 //
 //
-+ (void) parseContentDisposition: (NSData *) theLine
-                          inPart: (CWPart *) thePart
++ (void)parseContentDisposition:(NSData *)theLine
+                         inPart: (CWPart *)thePart;
 {
     NSInteger keyLength = @"Content-Disposition: ".length;
-  if ([theLine length] > keyLength)
-    {
-      NSData *aData;
-      NSRange aRange;
+    if ([theLine length] > keyLength) {
+        NSData *aData = [theLine subdataFromIndex: keyLength];
+        NSRange aRange = [aData rangeOfCString: ";"];
 
-      aData = [theLine subdataFromIndex: keyLength];
-      aRange = [aData rangeOfCString: ";"];
-      
-      if (aRange.location != NSNotFound)
-	{
-	  NSRange filenameRange;
-	  
-	  // We set the content disposition to this part
-	  [thePart setContentDisposition: ([[[aData subdataWithRange: NSMakeRange(0, aRange.location)] asciiString] caseInsensitiveCompare: @"inline"] == NSOrderedSame ? PantomimeInlineDisposition : PantomimeAttachmentDisposition)];
-	  
-	  // We now decode our filename
-	  filenameRange = [aData rangeOfCString: "filename"];
-
-	  if (filenameRange.location != NSNotFound)
-	    {
-	      [thePart setFilename: [CWParser _parameterValueUsingLine: aData  range: filenameRange  decode: YES  charset: [thePart defaultCharset]]];
-	    }
-	}
-      else
-	{
-	  [thePart setContentDisposition: ([[[aData dataByTrimmingWhiteSpaces] asciiString] caseInsensitiveCompare: @"inline"] == NSOrderedSame ? PantomimeInlineDisposition : PantomimeAttachmentDisposition)];
-	}
-    }
-  else
-    {
-      [thePart setContentDisposition: PantomimeAttachmentDisposition];
+        if (aRange.location != NSNotFound) {
+            // We set the content disposition to this part
+            [thePart setContentDisposition:
+             ([[[aData subdataWithRange: NSMakeRange(0, aRange.location)] asciiString] caseInsensitiveCompare:@"inline"] == NSOrderedSame ?
+              PantomimeInlineDisposition :
+              PantomimeAttachmentDisposition)];
+            // We now decode our filename
+            NSRange filenameRange = [aData rangeOfCString: "filename"];
+            if (filenameRange.location != NSNotFound) {
+                [thePart setFilename: [CWParser _parameterValueUsingLine: aData
+                                                                   range: filenameRange
+                                                                  decode: YES
+                                                                 charset: [thePart defaultCharset]]];
+            }
+        } else {
+            [thePart setContentDisposition:
+             ([[[aData dataByTrimmingWhiteSpaces] asciiString] caseInsensitiveCompare: @"inline"] == NSOrderedSame ?
+              PantomimeInlineDisposition :
+              PantomimeAttachmentDisposition)];
+        }
+    } else {
+        [thePart setContentDisposition: PantomimeAttachmentDisposition];
     }
 }
 

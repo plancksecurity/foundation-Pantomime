@@ -55,8 +55,8 @@
   @param theLine The line to parse.
   @param thePart The part in which to store the parsed value, if any.
 */
-+ (void) parseContentDisposition: (NSData *) theLine
-                          inPart: (CWPart *) thePart;
++ (void)parseContentDisposition:(NSData *)theLine
+                         inPart: (CWPart *)thePart;
 
 /*!
   @method parseContentID: inPart:
