@@ -68,6 +68,31 @@
     XCTAssertEqualObjects(msg.from.personal, @"\"Test 001\"");
 }
 
+- (void)testOdtWithSpaceAttached
+{
+    CWIMAPMessage *cwMsg = [self parseEmailFilePath:@"IOS-1300_odt_attachment.txt"];
+    XCTAssertTrue([cwMsg.content isKindOfClass:CWMIMEMultipart.class]);
+    XCTAssertEqualObjects(cwMsg.contentType, @"multipart/mixed");
+    XCTAssertEqualObjects(cwMsg.subject, @"needed");
+    XCTAssertEqualObjects(cwMsg.from.address, @"someone@yahoo.de");
+    XCTAssertEqualObjects(cwMsg.from.personal, @"\"jools\"");
+
+    id theContent = cwMsg.content;
+    XCTAssertNotNil(theContent);
+    CWMIMEMultipart *part = (CWMIMEMultipart *) theContent;
+    XCTAssertEqual(part.count, 2);
+
+    BOOL haveFoundOdt = NO;
+    for (int i = 0; i < part.count; ++i) {
+        CWPart *subPart = [part partAtIndex:i];
+        if ([subPart.contentType isEqualToString:@"application/vnd.oasis.opendocument.text"]) {
+            haveFoundOdt = YES;
+            XCTAssertEqualObjects(subPart.filename, @"Someone andTextIncludingTheSpace.odt");
+        }
+    }
+    XCTAssertTrue(haveFoundOdt);
+}
+
 #pragma mark - IOS-1268 - Reference Parsing
 
 //IOS-1268
