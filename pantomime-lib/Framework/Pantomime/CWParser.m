@@ -1072,7 +1072,7 @@ NSRange shrinkRange(NSRange range)
                                               range: NSMakeRange(NSMaxRange(r1),
                                                                  len - NSMaxRange(r1))];
                 if (r2.location != NSNotFound) {
-                    value_end = r2.location - 1;
+                    value_end = r2.location;
                 } else {
                     value_end = len;
                 }
