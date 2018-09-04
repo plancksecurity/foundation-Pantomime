@@ -152,13 +152,14 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 //
 + (void) parseContentDisposition: (NSData *) theLine
                           inPart: (CWPart *) thePart
-{  
-  if ([theLine length] > 21)
+{
+    NSInteger keyLength = @"Content-Disposition: ".length;
+  if ([theLine length] > keyLength)
     {
       NSData *aData;
       NSRange aRange;
 
-      aData = [theLine subdataFromIndex: 21];
+      aData = [theLine subdataFromIndex: keyLength];
       aRange = [aData rangeOfCString: ";"];
       
       if (aRange.location != NSNotFound)
