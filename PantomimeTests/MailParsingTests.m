@@ -68,6 +68,9 @@
     XCTAssertEqualObjects(msg.from.personal, @"\"Test 001\"");
 }
 
+/**
+ IOS-1300
+ */
 - (void)testOdtWithSpaceAttached
 {
     CWIMAPMessage *cwMsg = [self parseEmailFilePath:@"IOS-1300_odt_attachment.txt"];
