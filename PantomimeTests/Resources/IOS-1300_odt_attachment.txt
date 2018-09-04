@@ -1,0 +1,94 @@
+Return-Path: <someone@yahoo.de>
+Received: from sonic304-22.consmr.mail.ir2.yahoo.com ([77.238.179.147]) by
+ mx-ha.gmx.net (mxgmx016 [212.227.15.9]) with ESMTPS (Nemesis) id
+ 1MIwJs-1gBj9f2UG2-00Khtm for <someone@gmx.de>; Fri, 31 Aug 2018 13:33:13
+ +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.de; s=s2048; t=1535715193; bh=fTYqE9nAkkeznamdYG3T8hNlp8MRCku0ygUzc+8fTPc=; h=Date:From:To:Subject:References:From:Subject; b=jplXsN+qySg/cOsmt2wSyR4QAqQGjisWpL7br1CsdRAPWOKHPIRQbANs0ODhPY4TgXrjKktjt92o7BoXaV7cm4Chuo1qUl8LGeyn+YSutYgo4n9M9U3R9xJFsbHEAib3RbyPHKcga+GqUEp4QJqBzRV33wkPJA4HXKLGsT5YQKu3SxV6G7OvRKwG3ET/E/ky1L+Ml5BA5B+kUQ5uEhdVLobFNgUhFyG9lZjkasQ6oemk/kfKuuoXeSQuv9J+/8RuUH8A9gEm1NcMhnn6fHfNbzLbWtbxSpaUf/RlI6pfOzZAKe3cGX9WNvonGs7oudpemn89vIoHoI9kacyWn2Tu/w==
+X-YMail-OSG: MoNRujMVM1lHBDbRoYkqwdf.b2Ix3dF71Q07dpANUzHP3Fkwwog56LWLMx.gwJT
+ 05EqSoq_C8ve5xK05Q3gLWZQc8FiWgJv8LFm808bPxvTxl8t8ulTWryWW4iejA8K0j2MJ.rJteVj
+ DzEpMyGgSSLhzYBRuLAJ1o_ac5zl0mn812FW2Vv.xAPIEHO0ReYZiPAoZwtPhxZ3NUDbnXSApWz.
+ _Ua_c97lOoCcb4jj00IuslILCL9.CoHXbMEy0.vtntF1M6G_ClrTN6S77zvWLtmzXS0oAiCD.u70
+ OavaQ5GfwB8kMiKqPS1.WpNf5I.rybXSuvT16lJrn4Ft6yzkIRpqGnqHQFYKRCrPab_WawxIGGem
+ .iyWHIl7qTgoK47lz8YMgEwV_nmbNRXAcDJEXKrRfwuz1JkTIobK1zla2AoI4.ofuhue.Ed1.trr
+ cUVCnjFK7DMIPDRGjMss.dmSYnKWyyOxvlWqWShg71oc.0Q8mPWhx3o9fyTKfuZvKyZyu2TBt65H
+ .siytcav61YObg4P6rKGwCfvjjRgk2wfvg8R6IHMH9IGo7zaiklAI1LDcG1EM43ssP5U1AaLLG.2
+ dLDWGkZjelsRjVYniqx80bZx0gXIp1VeRnwteQaOXbfebsvytO5N1MWCm_i_8h38xLVI9od4mN7N
+ PVgnTE781BiANsRcGZ86Rte0LUOu1jjrroECLf1Zoojx0AF1gibkrjRIY13TpfoToYA_PA4Ipj7O
+ 1AmSRR3EUVbYmmUDi3RFCLqI7Zi4ZyZ92MIpOtbHB_kk76oAfIkBY46yXfClI51dc73KJxr.4OB2
+ XeJzNn._V8mbDWwKgaUHqknhP.5Yh8NZWTR49Fpds.zYR7_0Ym5dzXSz6MA8yHxdsXWubNG69VPA
+ O299R7bmTuUWS7f4Dtu9FToGQzItjIYy.n_f6JRvrUyL7tIvwEPMf2QYv.REdqo9n1JgaVG3k3fd
+ CK6TVvMAiPeqb2hY-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ir2.yahoo.com with HTTP; Fri, 31 Aug 2018 11:33:13 +0000
+Date: Fri, 31 Aug 2018 11:33:11 +0000 (UTC)
+From: jools <someone@yahoo.de>
+To: Someonei <someone@gmx.de>
+Message-ID: <462163841.2365800.1535715191460@mail.yahoo.com>
+Subject: needed
+MIME-Version: 1.0
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_2365799_2031352442.1535715191460"
+References: <462163841.2365800.1535715191460.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.12337 YMailNorrin Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0
+Content-Length: 20195
+Envelope-To: <someone@gmx.de>
+X-GMX-Antispam: 0 (Mail was not recognized as spam); Detail=V3;
+X-UI-Filterresults: notjunk:1;V01:K0:puDIKf/ozvs=:Il8641fRjJwN5KuCjJeYbXlcT7
+ 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
+ yWSwbaqlMBVk=
+
+------=_Part_2365799_2031352442.1535715191460
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_2365798_1118670827.1535715191429"
+
+------=_Part_2365798_1118670827.1535715191429
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+some palin text
+
+------=_Part_2365798_1118670827.1535715191429
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<html><head></head><body><div style=3D"font-family:lucida console, sans-ser=
+if;font-size:13px;"><div>moinsing!</div><div><br></div><div>hoffe geHt dir =
+guT !&nbsp; <br></div><div>someH HTML</br></div></div></body></html>
+------=_Part_2365798_1118670827.1535715191429--
+
+------=_Part_2365799_2031352442.1535715191460
+Content-Type: application/vnd.oasis.opendocument.text
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Someone andTextIncludingTheSpace.odt"
+Content-ID: <253d226f-4e3a-b37f-4809-16cdc02f39e1@yahoo.com>
+
+c29tZSBhdHRhY2htZW50IGRhdGEK
+
+------=_Part_2365799_2031352442.1535715191460--
