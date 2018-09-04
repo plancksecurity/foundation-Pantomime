@@ -205,11 +205,10 @@
     [self assertContentTypeCanBeParsedWithLine: testee];
 }
 
-#pragma mark - HELPER
+#pragma mark Helper
 
 - (void)assertContentTypeCanBeParsedWithLine:(NSString *)line
 {
-    NSLog(@"Testing line: %@", line);
     CWPart *part = [CWPart new];
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
     [CWParser parseContentType:lineData inPart:part];
@@ -217,6 +216,37 @@
     XCTAssertEqualObjects(part.filename, [self.contentName unquoted]);
     XCTAssertEqualObjects(part.charset, [self.charset unquoted]);
     XCTAssertTrue(part.format == self.format);
+}
+
+// MARK: - parse filename
+
+//IOS-1113
+/*
+ Content-Disposition: inline;
+ filename*0*=utf-8''%6D%61%69%6C%69%6E%67%61%73%73%65%74%73%5F%36%31%32;
+ filename*1*=%34%62%37%37%62%66%61%65%36%36%35%39%37%64%64%65%62;
+ filename*2*=%65%62%33%35%38%34%63%32%30%31%39%31%30%64%61%34%64;
+ filename*3*=%61%34%38%2E%6A%70%67*/
+- (void)testRf2231_continuation_charset_noLanguage_ios_1113 {
+    self.contentName = @"mailingassets_6124b77bfae66597ddebeb3584c201910da4da48.jpg";
+    NSString *ios1113ProblemInput = @"Content-Type: image/jpeg\nContent-Transfer-Encoding: base64\nContent-ID: <FWMAIL39a6e3f936f1e13bb6ef62ea36e639f2>\nContent-Disposition: inline;\nfilename*0*=utf-8''%6D%61%69%6C%69%6E%67%61%73%73%65%74%73%5F%36%31%32;\nfilename*1*=%34%62%37%37%62%66%61%65%36%36%35%39%37%64%64%65%62;\nfilename*2*=%65%62%33%35%38%34%63%32%30%31%39%31%30%64%61%34%64;\nfilename*3*=%61%34%38%2E%6A%70%67";
+    NSString *testee = ios1113ProblemInput;
+    /*[NSString stringWithFormat:@"Content-Type: %@;\ntitle*=us-ascii'en-us'%@",
+                        self.contentType,
+                        quoted];
+     */
+    [self assertFileNameCanBeParsedWithLine: testee];
+}
+
+#pragma mark Helper
+
+- (void)assertFileNameCanBeParsedWithLine:(NSString *)line
+{
+    NSLog(@"Testing line: %@", line);
+    CWPart *part = [CWPart new];
+    NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
+    [CWParser parseContentDisposition:lineData inPart:part];
+    XCTAssertEqualObjects(part.filename, [self.contentName unquoted]);
 }
 
 @end
