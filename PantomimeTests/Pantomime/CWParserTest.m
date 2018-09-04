@@ -205,6 +205,57 @@
     [self assertContentTypeCanBeParsedWithLine: testee];
 }
 
+// MARK: - Rf2231 Parameter Value Continuations, Charset & Language
+
+/*
+ Content-Type: application/x-stuff
+ title*0*=us-ascii'en'This%20is%20even%20more%20
+ title*1*=%2A%2A%2Afun%2A%2A%2A%20
+ title*2="isn't it!"
+ */
+
+- (void)testRf2231_continuation_charset_language {
+    self.contentName = @"????";
+    NSString *rfc2231Exapmle =
+    @"Content-Type: image/jpeg;\nfilename*0*=us-ascii'en'This%20is%20even%20more%20\nfilename*1*=%2A%2A%2Afun%2A%2A%2A%20\nfilename*2=\"isn't it!\"";
+    NSString *testee = rfc2231Exapmle;
+    [self assertFileNameCanBeParsedWithLine: testee mustSucceed:YES];
+}
+
+- (void)testRf2231_noContinuation_charset_language {
+    self.contentName = @"This is ***fun***";
+    NSString *rfc2231Exapmle =
+    @"Content-Type: image/jpeg;\nfilename*=us-ascii'en-us'This%20is%20%2A%2A%2Afun%2A%2A%2A";
+    NSString *testee = rfc2231Exapmle;
+    [self assertFileNameCanBeParsedWithLine: testee mustSucceed:YES];
+}
+
+- (void)testRf2231_noContinuation_charset_language_shouldFail {
+    self.contentName = @"Wrong is ***fun***";
+    NSString *rfc2231Exapmle =
+    @"Content-Type: image/jpeg;\nfilename*=us-ascii'en-us'This%20is%20%2A%2A%2Afun%2A%2A%2A";
+    NSString *testee = rfc2231Exapmle;
+    [self assertFileNameCanBeParsedWithLine: testee mustSucceed:NO];
+}
+
+//IOS-1113: filename parsing crashes
+/*
+ Content-Disposition: inline;
+ filename*0*=utf-8''%6D%61%69%6C%69%6E%67%61%73%73%65%74%73%5F%36%31%32;
+ filename*1*=%34%62%37%37%62%66%61%65%36%36%35%39%37%64%64%65%62;
+ filename*2*=%65%62%33%35%38%34%63%32%30%31%39%31%30%64%61%34%64;
+ filename*3*=%61%34%38%2E%6A%70%67*/
+- (void)testRf2231_continuation_charset_noLanguage_filename_parsable {
+    self.contentName = @"mailingassets_6124b77bfae66597ddebeb3584c201910da4da48.jpg";
+    NSString *ios1113ProblemInput = @"Content-Type: image/jpeg\nContent-Transfer-Encoding: base64\nContent-ID: <FWMAIL39a6e3f936f1e13bb6ef62ea36e639f2>\nContent-Disposition: inline;\nfilename*0*=utf-8''%6D%61%69%6C%69%6E%67%61%73%73%65%74%73%5F%36%31%32;\nfilename*1*=%34%62%37%37%62%66%61%65%36%36%35%39%37%64%64%65%62;\nfilename*2*=%65%62%33%35%38%34%63%32%30%31%39%31%30%64%61%34%64;\nfilename*3*=%61%34%38%2E%6A%70%67";
+    NSString *testee = ios1113ProblemInput;
+    /*[NSString stringWithFormat:@"Content-Type: %@;\ntitle*=us-ascii'en-us'%@",
+                        self.contentType,
+                        quoted];
+     */
+    [self assertFileNameCanBeParsedWithLine: testee mustSucceed:YES];
+}
+
 #pragma mark Helper
 
 - (void)assertContentTypeCanBeParsedWithLine:(NSString *)line
@@ -218,35 +269,17 @@
     XCTAssertTrue(part.format == self.format);
 }
 
-// MARK: - parse filename
-
-//IOS-1113
-/*
- Content-Disposition: inline;
- filename*0*=utf-8''%6D%61%69%6C%69%6E%67%61%73%73%65%74%73%5F%36%31%32;
- filename*1*=%34%62%37%37%62%66%61%65%36%36%35%39%37%64%64%65%62;
- filename*2*=%65%62%33%35%38%34%63%32%30%31%39%31%30%64%61%34%64;
- filename*3*=%61%34%38%2E%6A%70%67*/
-- (void)testRf2231_continuation_charset_noLanguage_ios_1113 {
-    self.contentName = @"mailingassets_6124b77bfae66597ddebeb3584c201910da4da48.jpg";
-    NSString *ios1113ProblemInput = @"Content-Type: image/jpeg\nContent-Transfer-Encoding: base64\nContent-ID: <FWMAIL39a6e3f936f1e13bb6ef62ea36e639f2>\nContent-Disposition: inline;\nfilename*0*=utf-8''%6D%61%69%6C%69%6E%67%61%73%73%65%74%73%5F%36%31%32;\nfilename*1*=%34%62%37%37%62%66%61%65%36%36%35%39%37%64%64%65%62;\nfilename*2*=%65%62%33%35%38%34%63%32%30%31%39%31%30%64%61%34%64;\nfilename*3*=%61%34%38%2E%6A%70%67";
-    NSString *testee = ios1113ProblemInput;
-    /*[NSString stringWithFormat:@"Content-Type: %@;\ntitle*=us-ascii'en-us'%@",
-                        self.contentType,
-                        quoted];
-     */
-    [self assertFileNameCanBeParsedWithLine: testee];
-}
-
-#pragma mark Helper
-
-- (void)assertFileNameCanBeParsedWithLine:(NSString *)line
+- (void)assertFileNameCanBeParsedWithLine:(NSString *)line mustSucceed:(BOOL)mustSucceed
 {
     NSLog(@"Testing line: %@", line);
     CWPart *part = [CWPart new];
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
     [CWParser parseContentDisposition:lineData inPart:part];
-    XCTAssertEqualObjects(part.filename, [self.contentName unquoted]);
+    if (mustSucceed) {
+        XCTAssertEqualObjects(part.filename, [self.contentName unquoted]);
+    } else {
+        XCTAssertNotEqualObjects(part.filename, [self.contentName unquoted]);
+    }
 }
 
 @end
