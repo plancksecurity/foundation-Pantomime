@@ -1062,9 +1062,9 @@ NSRange shrinkRange(NSRange range)
                 if (r1.location == NSNotFound) {
                     break;
                 }
-                value_start = NSMaxRange(r1) + 2;
+                value_start = NSMaxRange(r1) + 1;
 
-                if ([inData characterAtIndex: value_start + 1] == '*') {
+                while ([inData characterAtIndex: value_start] == '*' || [inData characterAtIndex: value_start] == '=') {
                     value_start++;
                 }
                 NSRange r2 = [inData rangeOfCString: ";"
