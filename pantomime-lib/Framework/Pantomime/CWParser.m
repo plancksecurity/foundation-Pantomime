@@ -971,29 +971,29 @@ NSRange shrinkRange(NSRange range)
 
 @implementation CWParser (Private)
 
-+ (id)_parameterValueUsingLine:(NSData *)theLine
-                         range:(NSRange)theRange
++ (id)_parameterValueUsingLine:(NSData *)inData
+                         range:(NSRange)range
                         decode:(BOOL)decode
-                       charset:(NSString *)theCharset;
+                       charset:(NSString *)charset;
 {
-    NSUInteger len = [theLine length];
-    //
+    NSUInteger len = [inData length];
     // Look for the first occurrence of '=' before the end of the line within
     // our range. That marks the beginning of the value. If we don't find one,
-    // we set the beggining right after the end of the key tag
-    //
-    NSUInteger searchStart = NSMaxRange(theRange) - 1; // - 1 because we need to start the search *before* the "=" in "name=" to be able to find the "="
-    NSUInteger endOfLine = len - NSMaxRange(theRange);
-    NSRange r1 = [theLine rangeOfCString: "="
-                         options: 0
-                           range: NSMakeRange(searchStart, endOfLine)];
+    // we set the beggining right after the end of the key tag.
+    // (- 1 because we need to start the search *before* the "=" in "name=" to be able to find
+    // the "=")
+    NSUInteger searchStart = NSMaxRange(range) - 1;
+    NSUInteger endOfLine = len - NSMaxRange(range);
+    NSRange r1 = [inData rangeOfCString: "="
+                                options: 0
+                                  range: NSMakeRange(searchStart, endOfLine)];
 
     NSUInteger value_start = 0;
     NSUInteger value_end = 0;
     if (r1.location != NSNotFound){
-        value_start = r1.location+r1.length;
+        value_start = r1.location + r1.length;
     } else {
-        value_start = theRange.location+theRange.length;
+        value_start = range.location + range.length;
     }
 
     // The parameter can be quoted or not like this (for example, with a charset):
@@ -1006,9 +1006,9 @@ NSRange shrinkRange(NSRange range)
     // Look the the first occurrence of ';'.
     // That marks the end of this key value pair.
     // If we don't find one, we set it to the end of the line.
-    r1 = [theLine rangeOfCString: ";"
-                         options: 0
-                           range: NSMakeRange(NSMaxRange(theRange), len-NSMaxRange(theRange))];
+    r1 = [inData rangeOfCString: ";"
+                        options: 0
+                          range: NSMakeRange(NSMaxRange(range), len - NSMaxRange(range))];
 
     if (r1.location != NSNotFound) {
         value_end = r1.location - 1;
@@ -1020,123 +1020,110 @@ NSRange shrinkRange(NSRange range)
     // Build a NSRange out of it.
     if (value_end - value_start + 1 > 0) {
         r1 = NSMakeRange(value_start, value_end - value_start + 1);
-    } else
-    {
+    } else {
         r1 = NSMakeRange(value_start, 0);
     }
 
-    NSMutableData *aMutableData = [[NSMutableData alloc] initWithData:
-                                   [[[theLine subdataWithRange: r1] dataByTrimmingWhiteSpaces]
-                                    dataFromQuotedData]
-                                   ];
-
-    //
+    NSMutableData *resultData = [[NSMutableData alloc] initWithData:
+                                 [[[inData subdataWithRange: r1] dataByTrimmingWhiteSpaces]
+                                  dataFromQuotedData]
+                                 ];
     // VERY IMPORTANT:
-    //
     // We check if something was encoded using RFC2231. We need to adjust
     // value_end if we find a multi-line parameter. We also proceed
     // with data substitution while we loop for parameter values unfolding.
     BOOL is_rfc2231 = NO;
     NSRange r2;
     BOOL has_charset = NO;
-    if ([theLine characterAtIndex: NSMaxRange(theRange)] == '*') {
+    if ([inData characterAtIndex: NSMaxRange(range)] == '*') {
         is_rfc2231 = YES;
 
-        // We consider parameter value continuations (Section 3. of the RFC)
-        // in order the set the appropriate end boundary.
-        if ([theLine characterAtIndex: NSMaxRange(theRange) + 1] == '0') {
+        if ([inData characterAtIndex: NSMaxRange(range) + 1] == '0') {
+            // We consider parameter value continuations (Section 3. of the RFC)
+            // in order the set the appropriate end boundary.
+
             // We check if we have a charset, in case of a multiline value.
-            if ([theLine characterAtIndex: NSMaxRange(theRange) + 2] == '=') {
+            if ([inData characterAtIndex: NSMaxRange(range) + 2] == '*') {
                 has_charset = YES;
             }
 
-            r1.location = theRange.location;
-            r1.length = theRange.length;
+            r1.location = range.location;
+            r1.length = range.length;
             NSUInteger parameters_count = 1;
 
             while (YES) {
-                r1 = [theLine rangeOfCString: [[NSString stringWithFormat: @"%s*%li",
-                                                [[theLine subdataWithRange: theRange] cString],
-                                                (unsigned long)parameters_count] UTF8String]
-                                     options: 0
-                                       range: NSMakeRange(NSMaxRange(r1), len-NSMaxRange(r1))];
+                r1 = [inData rangeOfCString: [[NSString stringWithFormat: @"%s*%li",
+                                               [[inData subdataWithRange: range] cString],
+                                               (unsigned long)parameters_count] UTF8String]
+                                    options: 0
+                                      range: NSMakeRange(NSMaxRange(r1), len-NSMaxRange(r1))];
                 parameters_count++;
 
-                if (r1.location != NSNotFound) {
-                    value_start = NSMaxRange(r1) + 2;
-
-                    if ([theLine characterAtIndex: value_start + 1] == '*') {
-                        value_start++;
-                    }
-
-                    r2 = [theLine rangeOfCString: ";"
-                                         options: 0
-                                           range: NSMakeRange(NSMaxRange(r1), len - NSMaxRange(r1))
-                          ];
-                    if (r2.location != NSNotFound) {
-                        value_end = r2.location - 1;
-                    } else {
-                        value_end = len;
-                    }
-                    [aMutableData appendData:
-                     [[[theLine subdataWithRange: NSMakeRange(value_start, value_end - value_start)]
-                       dataFromSemicolonTerminatedData]
-                      dataFromQuotedData]];
-                } else {
+                if (r1.location == NSNotFound) {
                     break;
                 }
+                value_start = NSMaxRange(r1) + 2;
+
+                if ([inData characterAtIndex: value_start + 1] == '*') {
+                    value_start++;
+                }
+                NSRange r2 = [inData rangeOfCString: ";"
+                                            options: 0
+                                              range: NSMakeRange(NSMaxRange(r1),
+                                                                 len - NSMaxRange(r1))];
+                if (r2.location != NSNotFound) {
+                    value_end = r2.location - 1;
+                } else {
+                    value_end = len;
+                }
+                [resultData appendData:
+                 [[[inData subdataWithRange: NSMakeRange(value_start, value_end - value_start)]
+                   dataFromSemicolonTerminatedData]
+                  dataFromQuotedData]];
             }
-        } else if ([theLine characterAtIndex: NSMaxRange(theRange) + 1] == '=') {
+        } else if ([inData characterAtIndex: NSMaxRange(range) + 1] == '=') {
+            // Example: "title*=us-ascii'en-us'This%20is%20%2A%2A%2Afun%2A%2A%2A"
             has_charset = YES;
         }
     }
 
-    if (is_rfc2231) {
-        if (has_charset) {
-            BOOL lang = NO;
-            NSData *aCharset;
+    char *charsetAndLanguageDelimiter = "'";
+    // Find first delimiter
+    r1 = [resultData rangeOfCString: charsetAndLanguageDelimiter];
+    if (is_rfc2231 && has_charset && r1.location != NSNotFound) {
+        // Find second delimiter
+        r2 = [resultData rangeOfCString: charsetAndLanguageDelimiter
+                                options: 0
+                                  range:
+              NSMakeRange(NSMaxRange(r1), [resultData length] - NSMaxRange(r1))
+              ];
+        // We intentionally ignore the language. We do not have a use case for it.
+        // It would be inbetween r1 and r2 here though.
 
-            aCharset = nil;
-            r1 = [aMutableData rangeOfCString: "'"];
+        // Extract charset (ignore language if any)
+        NSData *charsetData = [resultData subdataToIndex: r1.location];
 
-            if (r1.location != NSNotFound) {
-                lang = YES;
-                // We check for a language
-                r2 = [aMutableData rangeOfCString: "'"
-                                          options: 0
-                                            range:
-                      NSMakeRange(NSMaxRange(r1), [aMutableData length]-NSMaxRange(r1))
-                      ];
-                if (r2.length && r2.location > r1.location + 1) {
-                    INFO(NSStringFromClass([self class]), @"WE'VE GOT A LANGUAGE!");
-                }
-
-                aCharset = [aMutableData subdataToIndex: r2.location - 1];
-
-                // We strip the charset and the language information from our data
-                [aMutableData replaceBytesInRange: NSMakeRange(0, NSMaxRange(r2))
-                                        withBytes: NULL
-                                           length: 0];
-            }
-
-            if (decode) {
-                NSString *aString = [[NSString alloc] initWithData: aMutableData
-                                                          encoding: NSASCIIStringEncoding];
-                if (lang) {
-                    return [aString stringByReplacingPercentEscapesUsingEncoding:
-                            [NSString encodingForCharset: aCharset]];
-                } else {
-                    return aString;
-                }
+        // Strip charset, language and delimiters from our data
+        [resultData replaceBytesInRange: NSMakeRange(0, NSMaxRange(r2))
+                              withBytes: NULL
+                                 length: 0];
+        if (decode) {
+            NSString *result = [[NSString alloc] initWithData: resultData
+                                                     encoding: NSASCIIStringEncoding];
+            if (has_charset) {
+                return [result stringByReplacingPercentEscapesUsingEncoding:
+                        [NSString encodingForCharset: charsetData]];
+            } else {
+                return result;
             }
         }
     } else {
         if (decode) {
-            return [CWMIMEUtility decodeHeader: aMutableData  charset: theCharset];
+            return [CWMIMEUtility decodeHeader: resultData  charset: charset];
         }
     }
 
-    return aMutableData;
+    return resultData;
 }
 
 @end
