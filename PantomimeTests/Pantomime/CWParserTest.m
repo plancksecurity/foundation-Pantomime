@@ -207,14 +207,14 @@
 
 // MARK: - Rf2231 Parameter Value Continuations, Charset & Language
 
-//commented to fix with IOS-1303
-//- (void)testRf2231_noContinuation_noCharset_noLanguage_nonSemicolonSeperated_noQuotes {
-//    self.contentName = @"yes please!";
-//    NSString *rfc2231Exapmle =
-//    @"Content-Type: image/jpeg\nfilename=yes please!\n";
-//    NSString *testee = rfc2231Exapmle;
-//    [self assertFileNameCanBeParsedWithLine: testee mustSucceed:YES];
-//}
+//IOS-1303 Not semicolon terminated
+- (void)testRf2231_noContinuation_noCharset_noLanguage_nonSemicolonSeperated_noQuotes {
+    self.contentName = @"yes please!";
+    NSString *rfc2231Exapmle =
+    @"Content-Type: image/jpeg\nfilename=yes please!\n";
+    NSString *testee = rfc2231Exapmle;
+    [self assertFileNameCanBeParsedWithLine: testee mustSucceed:YES];
+}
 
 - (void)testRf2231_noContinuation_noCharset_noLanguage_semicolonSeperated_noQuotes {
     self.contentName = @"yes please!";

@@ -156,7 +156,11 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
     NSInteger keyLength = @"Content-Disposition: ".length;
     if ([theLine length] > keyLength) {
         NSData *aData = [theLine subdataFromIndex: keyLength];
-        NSRange aRange = [aData rangeOfCString: ";"];
+        NSRange nextSemicolon = [aData rangeOfCString: ";"];
+        NSRange nextNewLine = [aData rangeOfCString: "\n"]; //IOS-1303: extract parsing helpers
+        NSRange aRange = nextSemicolon.location < nextNewLine.location ?
+        nextSemicolon :
+        nextNewLine;
 
         if (aRange.location != NSNotFound) {
             // We set the content disposition to this part
@@ -1002,9 +1006,13 @@ NSRange shrinkRange(NSRange range)
     // Look the the first occurrence of ';'.
     // That marks the end of this key value pair.
     // If we don't find one, we set it to the end of the line.
-    r1 = [inData rangeOfCString: ";"
-                        options: 0
-                          range: NSMakeRange(NSMaxRange(range), len - NSMaxRange(range))];
+    NSRange nextSemicolon = [inData rangeOfCString: ";" //IOS-1303: extract parsing helpers
+                                           options: 0
+                                             range: NSMakeRange(NSMaxRange(range), len - NSMaxRange(range))];
+    NSRange nextNewLine = [inData rangeOfCString: "\n"
+                                         options: 0
+                                           range: NSMakeRange(NSMaxRange(range), len - NSMaxRange(range))];
+    r1 = nextSemicolon.location < nextNewLine.location ? nextSemicolon : nextNewLine;
 
     if (r1.location != NSNotFound) {
         value_end = r1.location - 1;
