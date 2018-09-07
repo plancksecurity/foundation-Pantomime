@@ -33,7 +33,7 @@
 {
     NSRange nearestRange = NSMakeRange(NSNotFound, 0);
     for (NSString *searchFor in searchTerms) {
-        NSRange found = [self rangeOfCString:[searchFor cStringUsingEncoding:NSASCIIStringEncoding] //IOS-1303: maybe
+        NSRange found = [self rangeOfCString:[searchFor cStringUsingEncoding:NSASCIIStringEncoding]
                                      options:0
                                        range:range];
         if (found.location == NSNotFound) {
