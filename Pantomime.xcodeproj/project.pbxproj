@@ -31,6 +31,9 @@
 		1568FEA31FB11C5000993EA3 /* NSData+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */; };
 		156926E31FA1E02A00D5F396 /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
 		156926E41FA1E03200D5F396 /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
+		156B82B4214289D10087D8ED /* NSData+CWParsingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */; };
+		156B82B621428A810087D8ED /* NSData+CWParsingUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 156B82B521428A810087D8ED /* NSData+CWParsingUtilsTest.m */; };
+		156B82BA21428BF80087D8ED /* NSData+CWParsingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */; };
 		1594C1D8212B141E00CB06E2 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
 		1594C1D9212B157300CB06E2 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
 		1598B22A1F6812FC00582157 /* CWInternetAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598B2291F6812FC00582157 /* CWInternetAddressTest.m */; };
@@ -172,6 +175,9 @@
 		155C96AA2021CB4000F5EB6F /* NSString+PEPDataUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+PEPDataUtils.m"; sourceTree = "<group>"; };
 		155C96AC2021CDB100F5EB6F /* CWMessageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWMessageTest.m; sourceTree = "<group>"; };
 		1568FEA21FB11C5000993EA3 /* NSData+ExtensionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+ExtensionsTest.m"; sourceTree = "<group>"; };
+		156B82B2214289D00087D8ED /* NSData+CWParsingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+CWParsingUtils.h"; sourceTree = "<group>"; };
+		156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+CWParsingUtils.m"; sourceTree = "<group>"; };
+		156B82B521428A810087D8ED /* NSData+CWParsingUtilsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+CWParsingUtilsTest.m"; sourceTree = "<group>"; };
 		1594C1D6212B141E00CB06E2 /* NSMutableString+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+Extension.h"; sourceTree = "<group>"; };
 		1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+Extension.m"; sourceTree = "<group>"; };
 		1598B2291F6812FC00582157 /* CWInternetAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWInternetAddressTest.m; sourceTree = "<group>"; };
@@ -349,6 +355,7 @@
 			isa = PBXGroup;
 			children = (
 				15208D622009190500455F70 /* CWOAuthUtilsTest.m */,
+				156B82B521428A810087D8ED /* NSData+CWParsingUtilsTest.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -362,6 +369,8 @@
 				15208D5C2009187600455F70 /* CWThreadSafeArray.m */,
 				15208D5E2009187600455F70 /* CWThreadSafeData.h */,
 				15208D5B2009187600455F70 /* CWThreadSafeData.m */,
+				156B82B2214289D00087D8ED /* NSData+CWParsingUtils.h */,
+				156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -776,6 +785,7 @@
 				43980E731CBD1B5D00A7FC3C /* CWFlags.m in Sources */,
 				43980E751CBD1B5D00A7FC3C /* CWFolder.m in Sources */,
 				43980E771CBD1B5D00A7FC3C /* CWFolderInformation.m in Sources */,
+				156B82B4214289D10087D8ED /* NSData+CWParsingUtils.m in Sources */,
 				43980E791CBD1B5D00A7FC3C /* CWIMAPFolder.m in Sources */,
 				43980E7B1CBD1B5D00A7FC3C /* CWIMAPMessage.m in Sources */,
 				43980E7D1CBD1B5D00A7FC3C /* CWIMAPStore.m in Sources */,
@@ -830,6 +840,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				156B82BA21428BF80087D8ED /* NSData+CWParsingUtils.m in Sources */,
 				15208D632009190500455F70 /* CWOAuthUtilsTest.m in Sources */,
 				433C51C81E658C9E00272E19 /* CWISO8859_8.m in Sources */,
 				433C51C61E658C9800272E19 /* CWISO8859_6.m in Sources */,
@@ -852,6 +863,7 @@
 				433C51C11E658C8900272E19 /* CWISO8859_15.m in Sources */,
 				433C51C01E658C8500272E19 /* CWISO8859_14.m in Sources */,
 				433C51CF1E658CC800272E19 /* CWWINDOWS_1253.m in Sources */,
+				156B82B621428A810087D8ED /* NSData+CWParsingUtilsTest.m in Sources */,
 				4338E3881DF1BDA00070176B /* CWConstants.m in Sources */,
 				433C51CE1E658CC500272E19 /* CWWINDOWS_1252.m in Sources */,
 				15E019A01FE2B65300DA2973 /* CWParserTest.m in Sources */,
