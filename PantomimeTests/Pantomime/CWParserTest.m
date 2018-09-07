@@ -232,14 +232,6 @@
     [self assertFileNameCanBeParsedWithLine: testee mustSucceed:YES];
 }
 
-- (void)testRf2231_noContinuation_noCharset_noLanguage_nonSemicolonSeperated_quotes_semicolonInName {
-    self.contentName = @"yes please!";
-    NSString *rfc2231Exapmle =
-    @"Content-Type: image/jpeg\nfilename=\"yes ;please!\"\n";
-    NSString *testee = rfc2231Exapmle;
-    [self assertFileNameCanBeParsedWithLine: testee mustSucceed:YES];
-}
-
 - (void)testRf2231_noContinuation_noCharset_noLanguage_nonSemicolonSeperated_quotes_shouldFail {
     self.contentName = @"THIS IS WRONG - SHOULD FAIL!";
     NSString *rfc2231Exapmle =

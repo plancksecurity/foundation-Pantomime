@@ -23,14 +23,13 @@
 - (NSRange)firstSemicolonOrNewlineInRange:(NSRange)range ignoreQuoted:(BOOL)ignoreQuoted;
 {
     NSArray *seachFor = @[@";", @"\n"];
-    return [self firstOccurrenceOfOneIn:seachFor inRange:range ignoreQuoted:ignoreQuoted];
+    return [self firstOccurrenceOfOneIn:seachFor inRange:range];
 }
 
 #pragma mark - Other
 
 - (NSRange)firstOccurrenceOfOneIn:(NSArray<NSString*> *)searchTerms
                           inRange:(NSRange)range
-                     ignoreQuoted:(BOOL)ignoreQuoted;
 {
     NSRange nearestRange = NSMakeRange(NSNotFound, 0);
     for (NSString *searchFor in searchTerms) {
@@ -46,35 +45,6 @@
         }
     }
     return nearestRange;
-}
-
-- (NSArray<NSNumber*> *)locationsOfQuotes;
-{
-    return [self locationsOfChar:'\"'];
-}
-
-- (NSArray<NSNumber*> *)locationsOfChar:(char)seachChar
-{
-    return [self locationsOfChar:seachChar inRange:NSMakeRange(0, 1)];
-
-}
-
-- (NSArray<NSNumber*> *)locationsOfChar:(char)seachChar inRange:(NSRange)range
-{
-    NSMutableArray<NSNumber*> *locations = @[];
-    NSInteger oneChar = 1;
-    NSRange curRange = range;
-    while (curRange.location < self.length && (curRange.location + curRange.length < self.length) ) {
-        NSRange found = [self rangeOfCString: &seachChar options:0 range: range];
-        if (found.location == NSNotFound) {
-            break;
-        }
-        [locations addObject:@(found.location)];
-        NSInteger nextLocation = curRange.location + oneChar;
-        curRange = NSMakeRange(nextLocation, self.length - nextLocation);
-    }
-
-    return locations;
 }
 
 @end
