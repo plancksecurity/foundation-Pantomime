@@ -11,7 +11,6 @@
 #import "NSData+CWParsingUtils.h"
 
 @interface NSData_CWParsingUtilsTest : XCTestCase
-
 @end
 
 @implementation NSData_CWParsingUtilsTest
@@ -23,6 +22,56 @@
     NSString *testee = @"Test string ; goes on";
     NSInteger expectedLocation = 12;
     [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee expectedLocation:expectedLocation];
+}
+
+- (void)testFirstSemicolonOrNewlineInRangeOfData_shouldFind_inRangeTo
+{
+    NSString *testee = @"Test string ; goes on";
+    NSRange range = NSMakeRange(12, testee.length);
+    NSInteger expectedLocation = 12;
+    [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee
+                                        expectedLocation:expectedLocation
+                                                 inRange:range];
+}
+
+- (void)testFirstSemicolonOrNewlineInRangeOfData_shouldFind_inRangeFrom
+{
+    NSString *testee = @"Test string ; goes on";
+    NSRange range = NSMakeRange(12, testee.length);
+    NSInteger expectedLocation = 12;
+    [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee
+                                        expectedLocation:expectedLocation
+                                                 inRange:range];
+}
+
+- (void)testFirstSemicolonOrNewlineInRangeOfData_shouldFind_inRangeFrom_off
+{
+    NSString *testee = @"Test string ; goes on";
+    NSRange range = NSMakeRange(13, testee.length);
+    NSInteger expectedLocation = NSNotFound;
+    [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee
+                                        expectedLocation:expectedLocation
+                                                 inRange:range];
+}
+
+- (void)testFirstSemicolonOrNewlineInRangeOfData_shouldFind_edgeZero
+{
+    NSString *testee = @";Test string ; goes on";
+    NSRange range = NSMakeRange(0, 12);
+    NSInteger expectedLocation = 0;
+    [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee
+                                        expectedLocation:expectedLocation
+                                                 inRange:range];
+}
+
+- (void)testFirstSemicolonOrNewlineInRangeOfData_shouldFind_edgeEnd
+{
+    NSString *testee = @";Test string ; goes on;";
+     NSRange range = NSMakeRange(15, testee.length);
+    NSInteger expectedLocation = 22;
+    [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee
+                                        expectedLocation:expectedLocation
+                                                 inRange:range];
 }
 
 - (void)testFirstSemicolonOrNewlineInRangeOfData_shouldNotFind
@@ -102,9 +151,18 @@
 - (void)assertFirstSemicolonOrNewlineInRangeWithTestee:(NSString *)input
                                       expectedLocation:(NSInteger)expectedLocation
 {
+    NSRange testRange = NSMakeRange(0, [input dataUsingEncoding:NSASCIIStringEncoding].length);
+    [self assertFirstSemicolonOrNewlineInRangeWithTestee:input
+                                        expectedLocation:expectedLocation
+                                                 inRange:testRange];
+}
+
+- (void)assertFirstSemicolonOrNewlineInRangeWithTestee:(NSString *)input
+                                      expectedLocation:(NSInteger)expectedLocation
+                                               inRange:(NSRange)range
+{
     NSData *testee = [input dataUsingEncoding:NSASCIIStringEncoding];
-    NSRange testRange = NSMakeRange(0, testee.length);
-    NSRange foundRange = [testee firstSemicolonOrNewlineInRange:testRange];
+    NSRange foundRange = [testee firstSemicolonOrNewlineInRange:range];
     XCTAssertEqual(foundRange.location, expectedLocation);
 }
 
