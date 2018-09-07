@@ -22,7 +22,7 @@
 
 - (NSRange)firstSemicolonOrNewlineInRange:(NSRange)range ignoreQuoted:(BOOL)ignoreQuoted;
 {
-    NSArray *seachFor = @[@";", @"\n"];
+    NSArray *seachFor = @[@";", @"\n", @"\r\n"];
     return [self firstOccurrenceOfOneIn:seachFor inRange:range];
 }
 

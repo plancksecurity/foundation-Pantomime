@@ -95,6 +95,13 @@
     [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee expectedLocation:expectedLocation];
 }
 
+- (void)testFirstSemicolonOrNewlineInRangeOfData_inQuotes_CRLF
+{
+    NSString *testee = @"\"Test string \r\n goes on\"";
+    NSInteger expectedLocation = 13;
+    [self assertFirstSemicolonOrNewlineInRangeWithTestee:testee expectedLocation:expectedLocation];
+}
+
 - (void)testFirstSemicolonOrNewlineInRangeOfData_semicolonFirst
 {
     NSString *testee = @"Test string ; goes \n on";
