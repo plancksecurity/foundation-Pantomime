@@ -1348,7 +1348,8 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 	  if (theRecord && [self originationDate]) theRecord.date = [[self originationDate] timeIntervalSince1970]; 
 	}
       else if ([aLine hasCaseInsensitiveCPrefix: "From"] &&
-	       ![aLine hasCaseInsensitiveCPrefix: "From "])
+               ![aLine hasCaseInsensitiveCPrefix: "From "] &&
+               ![aLine hasCaseInsensitiveCPrefix: "From-"]) //ignore: from-name: from-address:
 	{
 	  aData = [CWParser parseFrom: aLine  inMessage: self  quick: NO];
 	  if (theRecord) theRecord.from = aData;
