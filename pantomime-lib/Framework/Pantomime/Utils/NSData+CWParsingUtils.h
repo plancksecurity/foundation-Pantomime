@@ -10,6 +10,12 @@
 
 @interface NSData (CWParsingUtils)
 
+/**
+ First occurrence of ";" or "\n"
+
+ @param range range to search in
+ @return range of first occurence if found, NSNotFond otherwize
+ */
 - (NSRange)firstSemicolonOrNewlineInRange:(NSRange)range;
 
 @end
