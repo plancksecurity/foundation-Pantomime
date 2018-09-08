@@ -69,14 +69,12 @@
 }
 
 //IOS-1225
-/*
 - (void)testFromAddressIgnored
 {
     CWIMAPMessage *msg = [self parseEmailFilePath:@"IOS-1225_from-address_not_ignored.txt"];
     XCTAssertEqualObjects(msg.from.address, @"ebay@ebay.com");
     XCTAssertEqualObjects(msg.from.personal, @"\"eBay\"");
 }
- */
 
 /**
  IOS-1300
