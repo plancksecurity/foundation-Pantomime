@@ -1,0 +1,69 @@
+From - Fri Sep 07 19:03:39 2018
+X-Mozilla-Status: 0005
+X-Mozilla-Status2: 00000000
+X-Mozilla-Keys:                                                                                 
+X-Mozilla-Keys: $label2                                                                         
+Return-Path: <ebay@ebay.com>
+Received: from mxslcpool71.ebay.com ([66.135.215.173]) by mx-ha.gmx.net
+ (mxgmx014 [212.227.15.9]) with ESMTPS (Nemesis) id 1MvZOG-1g3JG53xGI-00suYX
+ for <someone@gmx.de>; Wed, 01 Aug 2018 22:21:52 +0200
+Received: from slckirk0-1815354.stratus.slc.ebay.com (slckirk0-1815354.stratus.slc.ebay.com [10.189.164.164])
+	by mxslcpool71.ebay.com (8.14.7/8.14.7) with ESMTP id w71KLmoH031603
+	for <someone@gmx.de>; Wed, 1 Aug 2018 13:21:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.10.3 mxslcpool71.ebay.com w71KLmoH031603
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=ebay.com; s=dkim1k;
+	t=1533154910; bh=LV2ElHr1ziwtz1R7chq1hMYrTGU=;
+	h=Date:From:To:Subject;
+	b=jA6FzzSvUmEx4qoNAmEXjmjMKVCt8aKbtZomRLtsjQvX17GnTFWZSXkXBP5NIHDBV
+	 2Oo0DpEY4YxPC8SmQl/juz0nYQV7MhgKz4hGwjjWqMzVa14Sc5Gm24PpktNsTvGGY8
+	 KW27bY0x/RJ9NWVLjmsLwuhbIq3ieaYuT0he6FZo=
+Date: Wed, 1 Aug 2018 13:21:50 -0700 (GMT-07:00)
+From: eBay <ebay@ebay.com>
+To: someone@gmx.de
+Message-ID: <0AD78433-D74A36B7A24-0163C93B5521-00000000074B63E2@starship>
+Subject: =?UTF-8?Q?Some Subject?=
+MIME-Version: 1.0
+Content-Type: text/html;charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+from-name: eBay
+X-eBay-MailTracker: 12011.000.77.0.1bde8f180b0249e2a15bb0f679ebdb25
+from-address: ebay@ebay.com
+Envelope-To: <someone@gmx.de>
+X-GMX-Antispam: 0 (Mail was not recognized as spam); Detail=V3;
+X-UI-Filterresults: notjunk:1;V01:K0:ic6O3Cq7HfA=:W+ZByIz8jycHTBXQm4BLI2QeVj
+ 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
+ FL/FqQ4Xw==
+
+<!DOCTYPE html>
+<!--8b0f8adb-9f8c-4b6e-abf4-511b1347091d_v895-->
+<html>
+  some HTML body
+</html>
+
+

@@ -34,6 +34,7 @@
 		156B82B4214289D10087D8ED /* NSData+CWParsingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */; };
 		156B82B621428A810087D8ED /* NSData+CWParsingUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 156B82B521428A810087D8ED /* NSData+CWParsingUtilsTest.m */; };
 		156B82BA21428BF80087D8ED /* NSData+CWParsingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */; };
+		156B82CD21465B850087D8ED /* IOS-1225_from-address_not_ignored.txt in Resources */ = {isa = PBXBuildFile; fileRef = 156B82CC21465B850087D8ED /* IOS-1225_from-address_not_ignored.txt */; };
 		1594C1D8212B141E00CB06E2 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
 		1594C1D9212B157300CB06E2 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
 		1598B22A1F6812FC00582157 /* CWInternetAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1598B2291F6812FC00582157 /* CWInternetAddressTest.m */; };
@@ -178,6 +179,7 @@
 		156B82B2214289D00087D8ED /* NSData+CWParsingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+CWParsingUtils.h"; sourceTree = "<group>"; };
 		156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+CWParsingUtils.m"; sourceTree = "<group>"; };
 		156B82B521428A810087D8ED /* NSData+CWParsingUtilsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+CWParsingUtilsTest.m"; sourceTree = "<group>"; };
+		156B82CC21465B850087D8ED /* IOS-1225_from-address_not_ignored.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1225_from-address_not_ignored.txt"; sourceTree = "<group>"; };
 		1594C1D6212B141E00CB06E2 /* NSMutableString+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+Extension.h"; sourceTree = "<group>"; };
 		1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+Extension.m"; sourceTree = "<group>"; };
 		1598B2291F6812FC00582157 /* CWInternetAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWInternetAddressTest.m; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 				431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */,
 				432D7322212ACF6D0007604F /* Reference_Parsing_Orig.txt */,
 				432D7324212AD30F0007604F /* Reference_Parsing_Cleaned.txt */,
+				156B82CC21465B850087D8ED /* IOS-1225_from-address_not_ignored.txt */,
 				43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */,
 			);
 			path = Resources;
@@ -699,6 +702,7 @@
 			files = (
 				431AD43B1F7E4D8F000247A7 /* MailWithDocAttached.txt in Resources */,
 				431AD4391F7E479B000247A7 /* MailWithJpgAttached.txt in Resources */,
+				156B82CD21465B850087D8ED /* IOS-1225_from-address_not_ignored.txt in Resources */,
 				432D7325212AD30F0007604F /* Reference_Parsing_Cleaned.txt in Resources */,
 				1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */,
 				432D7323212ACF6D0007604F /* Reference_Parsing_Orig.txt in Resources */,
