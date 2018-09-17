@@ -1,0 +1,75 @@
+Return-Path: <iostest001@peptest.ch>
+X-Original-To: iostest002@peptest.ch
+Delivered-To: iostest002@peptest.ch
+Received: from pretty.Easy.privacy (77.red-83-53-133.dynamicip.rima-tde.net [83.53.133.77])
+by peptest.ch (Postfix) with ESMTPSA id 2D8CB9FBC0
+for <iostest002@peptest.ch>; Mon, 17 Sep 2018 08:08:42 +0200 (CEST)
+Authentication-Results: plesk.peptest.ch;
+spf=pass (sender IP is 83.53.133.77) smtp.mailfrom=iostest001@peptest.ch smtp.helo=pretty.Easy.privacy
+Received-SPF: pass (plesk.peptest.ch: connection is authenticated)
+Date: Mon, 17 Sep 2018 08:08:41 +0200
+Subject: Re: test 001
+Message-ID: <DA01CDA7.7E65.43AF.B142.144D16ED1DE7@pretty.Easy.privacy>
+MIME-Version: 1.0
+From: "Rick Deckard" <iostest001@peptest.ch>
+To: "Harry Bryant" <iostest002@peptest.ch>
+References: <a6c6c82b-9137-93f8-d381-1f492e873ecd@peptest.ch>
+X-pEp-Version: 2.0
+Content-Transfer-Encoding: 8bit
+Content-Type: multipart/related; charset="UTF-8";
+boundary="=_0070e6eefc158704d2c61deef970e423"
+Content-Disposition: inline
+
+--=_0070e6eefc158704d2c61deef970e423
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Answer
+
+Sent with pâ‰¡p
+
+Harry Bryant wrote on September 17, 2018 at 8:07:52 AM GMT+2:
+
+> 001
+
+
+--=_0070e6eefc158704d2c61deef970e423
+Content-Transfer-Encoding: base64
+Content-Type: application/pgp-keys; charset="UTF-8"; name="pEpkey.asc"
+Content-Disposition: attachment; filename="pEpkey.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tDQpWZXJzaW9uOiBOZXRQR1Ag
+Zm9yIHBFcCAzLjk5Ljk5L1tiZXRhMF0NCg0KeHNGTkJGdWZSS01CRUFEUWt2NkxjTzROZEZL
+NGxwdEJxQVBBTTArY1YxbjhpWlNxazI3Z3J2Vi82VXVoV3o3WVZpTFU4ZnVhSjlQNQ0KbEVx
+M3BORXQyVTllTzh6d1N1cEJURlhFaFVzTlBVcGV2Mi9GL3R6RW0xZnUzUjV6RnZrTFk3cFF1
+U3NzeDVFVFN4NmhlcW5RaG5jMg0KNjVXQ280UEFUajVnSkVTdmJxMWlzb1RPK1FvOFBBeTBn
+U0U2TVZHc2x1Sk5pU0V2TitOeTE5d2k5R3dvU0huREpyWjZtNGJCOENoOA0KOHN3bUdQbXJG
+bnlud3FtRzVhaTlMc0o2cG42V1U3VnZqRy9qeHZMOVMwOXFSZGJUMVA0eDhpOVM0aHl3cU9X
+T1RkeTlLemViODJXYw0KaXNxVzQ0TjRNWG9WRW1acmIvWWd0eE05c2VlOEpERWxzVWcxQ1Mr
+QnpiWWdWS2YvVHFYb3JWTjA0K1ZTOW0raEJONDh1VEdMQVZMWQ0KTlJCSnpUY3NHaE1oRzh1
+VGNFdVVPZXlFZ1pjQi80Y3kzSG1IODVOejB0WDI3SjJzUUVIcG5JWkc5SnVkMTROS0FGNmc4
+cUp1THNxSQ0KS2tkamJkN1N5eEFIeGhiWi9ubXFDbklBYjJOV2ZOa3NHU3FaUkxwdTUvS2tZ
+WmltUVl5TTdabnlmdnRySmZ6cVNTVUQ3WFVvdkg5OQ0KUExvZU1VbURlVWI4TzBRc0lHaC9k
+K2VkWmJNSytRVno4VzF6YWtzeHFXL01LUUhBSEtGTUFzVXdCREo5QXJqME9qVHFJUTh2elo1
+Wg0KcEErSkFLSFNsMEx6RWhzTHd4dkdtRFRzMXBoOE9LTzFOZGdsc2ZZLzFMWXNvdGoxOU9G
+dHB4c25JYnRGam1IZnVyZWhDbGJ2UFZJcw0Kd1JJc3VPSXQyWWxkQVFBUkFRQUJ6U1JTYVdO
+cklFUmxZMnRoY21RZ1BHbHZjM1JsYzNRd01ERkFjR1Z3ZEdWemRDNWphRDdDd1gwRQ0KRXdF
+Q0FERUZBbHVmUktNRkNRSGhNNEFKRUd1cXJBT2ZzVFNIQWhrQkFoc0dCZ3NKQndNQ0FRWVZD
+QUlKQ2dzREZnSURBaDRCQUFEbA0KZkJBQW12MTVvandPOUVtYmRBNHZwR1liWldmaG9EQVg2
+OHdyUGZWQTdtcTBtaldocnhwenFLaktLQjlKZkNsSVpMR2VtNnNyZ01pMg0KVXY2c2pEeENL
+YVRRcUh0VWR6M2x6VHR0ZFdodjZPcWhhRVJZaTBKczVmQTVGbEQvbWhDeExIbGxvZmlPM2c2
+ak00M1JpcVRYNEZkbg0KaStobkdzZCtPYTh0UHdyUFlWS2xUY2N3NFgxNTFtcG5lNUR1Vzda
+S2pFei9TRXdsNFVpQWRKcmkxT1lVVXhsUlo1QW5QQ0VVYzhkTg0KSDB2V1JZTVUzQUwrOS9l
+T2hobXg1UTJZUHRCNnFnaCtJQW1sWldQQitRYmlHa2xHVE9CV1I1TVgzbjZoUnk3QlI4d1cx
+VkpmSVJVWg0KZUVUZmpPdFNGQVl4eWovVWdvVWVrdmt4dnhuTnp0R041R2ZGc1RoK05IU0Fz
+ZjFlWWRkMnd5TGJGclV1Rjl0VFZWTUpQZU15ZThVVg0KVVVBQ0hMQW8zZ0wxTHlNMFYxaHB6
+NmxSOTlGcnYzRFVhSFNKcit2KzlxUk44U0NJTFdIY2RwTHdYRGRhWStyT1ZIYVpoK2NsbUNl
+Ug0KVkxsZ3RtWW0waTF2Y0hXcWJJUCs5Z2pobSswNURLV3ZHRU4xV0ZoWFptMDdMYVZhRlpL
+cUttYURiMjh0NDlqUDFpNFFzSFl6Y01IdA0KWDhYR2ZPUFU4akcwRjczcE9oSVdaa1NJMlZO
+d2Rwc3Fodm0rSDZiVkZpa3NkWCtXY0pUR3NrK2JkSHNkS1kzNStEUzJqVmpWK3JwOA0KMG5u
+dFBTamowN2tpVW1UMjN4STZxbUZWd2dXNklyZ3JYK3hVcnRVNkRMRnE3RVU3SCtBYlpxQWJD
+dVMra2t1Z3BMdGROZXArK2xqcQ0KTU40PQ0KPWhhK3cNCi0tLS0tRU5EIFBHUCBQVUJMSUMg
+S0VZIEJMT0NLLS0tLS0NCg==
+--=_0070e6eefc158704d2c61deef970e423--
+
