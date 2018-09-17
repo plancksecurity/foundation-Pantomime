@@ -131,32 +131,32 @@
                       expectedReferences:refsThatShouldBeContained];
 }
 
-    // IOS-1340
+// IOS-1340
 - (void)testNilAttachment
-    {
-        CWIMAPMessage *cwMsg = [self parseEmailFilePath:@"IOS-1340_NilAttachmentMail.txt"];
-        XCTAssertTrue([cwMsg.content isKindOfClass:CWMIMEMultipart.class]);
-        XCTAssertEqualObjects(cwMsg.contentType, @"multipart/related");
-        XCTAssertEqualObjects(cwMsg.subject, @"Re: test 001");
-        XCTAssertEqualObjects(cwMsg.from.address, @"iostest001@peptest.ch");
-        XCTAssertEqualObjects(cwMsg.from.personal, @"\"Rick Deckard\"");
+{
+    CWIMAPMessage *cwMsg = [self parseEmailFilePath:@"IOS-1340_NilAttachmentMail.txt"];
+    XCTAssertTrue([cwMsg.content isKindOfClass:CWMIMEMultipart.class]);
+    XCTAssertEqualObjects(cwMsg.contentType, @"multipart/related");
+    XCTAssertEqualObjects(cwMsg.subject, @"Re: test 001");
+    XCTAssertEqualObjects(cwMsg.from.address, @"iostest001@peptest.ch");
+    XCTAssertEqualObjects(cwMsg.from.personal, @"\"Rick Deckard\"");
 
-        id theContent = cwMsg.content;
-        XCTAssertNotNil(theContent);
-        CWMIMEMultipart *part = (CWMIMEMultipart *) theContent;
-        XCTAssertEqual(part.count, 2);
+    id theContent = cwMsg.content;
+    XCTAssertNotNil(theContent);
+    CWMIMEMultipart *part = (CWMIMEMultipart *) theContent;
+    XCTAssertEqual(part.count, 2);
 
-        for (int i = 0; i < part.count; ++i) {
-            CWPart *subPart = [part partAtIndex:i];
-            if (i == 0) {
-                XCTAssertEqualObjects(subPart.contentType, @"text/plain");
-            } else if (i == 1) {
-                XCTAssertEqualObjects(subPart.contentType, @"application/pgp-keys");
-            } else {
-                XCTFail(@"Unexpected attachment: %@", subPart);
-            }
+    for (int i = 0; i < part.count; ++i) {
+        CWPart *subPart = [part partAtIndex:i];
+        if (i == 0) {
+            XCTAssertEqualObjects(subPart.contentType, @"text/plain");
+        } else if (i == 1) {
+            XCTAssertEqualObjects(subPart.contentType, @"application/pgp-keys");
+        } else {
+            XCTFail(@"Unexpected attachment: %@", subPart);
         }
     }
+}
 
 #pragma mark - HELPER
 
