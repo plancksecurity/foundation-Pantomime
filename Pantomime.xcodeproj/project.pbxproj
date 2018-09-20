@@ -456,19 +456,11 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		43980E5C1CBD1B3E00A7FC3C /* PantomimeStatic */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PantomimeStatic;
-			sourceTree = "<group>";
-		};
 		43E854B21CB7EA9A006867C0 = {
 			isa = PBXGroup;
 			children = (
 				43E854BD1CB7EA9A006867C0 /* Pantomime */,
 				43E854D21CB7EA9B006867C0 /* PantomimeTests */,
-				43980E5C1CBD1B3E00A7FC3C /* PantomimeStatic */,
 				43E854BC1CB7EA9A006867C0 /* Products */,
 			);
 			sourceTree = "<group>";
