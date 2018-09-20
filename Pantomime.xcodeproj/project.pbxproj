@@ -674,7 +674,7 @@
 					};
 					43E854CE1CB7EA9B006867C0 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = SBPJ2E4G5X;
+						DevelopmentTeam = NQLYU6MGPN;
 						LastSwiftMigration = 0830;
 					};
 				};
@@ -1057,7 +1057,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = SBPJ2E4G5X;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
 				INFOPLIST_FILE = PantomimeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = "$(inherited)";
@@ -1073,7 +1073,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = SBPJ2E4G5X;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
 				INFOPLIST_FILE = PantomimeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = "$(inherited)";
