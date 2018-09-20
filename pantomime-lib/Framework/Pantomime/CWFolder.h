@@ -365,7 +365,6 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
     __weak id _store;
 
     NSMutableArray *_allVisibleMessages;
-    NSMutableArray *_allContainers;
    
     BOOL _show_deleted;
     BOOL _show_read;
@@ -587,31 +586,6 @@ extern NSString * _Nonnull const PantomimeFolderSeparatorKey;
               the messages having the flag PantomimeFlagDeleted will still be visible.
 */
 - (void) updateCache;
-
-/*!
-  @method allContainers
-  @discussion This method returns the list of root containers when using
-              message threading.
-  @result Root containers if using message threading, nil otherwise.
-*/
-- (NSArray * _Nullable) allContainers;
-
-/*!
-  @method thread
-  @discussion This method implements Jamie Zawinski's message threading algorithm.
-              The full algorithm is available here: http://www.jwz.org/doc/threading.html
-	      After calling this method, -allContainers can be called to obtain the
-	      root set of CWContainer instances.
-*/
-- (void) thread;
-
-/*!
-  @method unthread
-  @discussion This method is used to release all resources taken by the
-              message threading code. After calling this method,
-	      -allContainers will return nil.
-*/
-- (void) unthread;
 
 /*!
   @method search: mask: options:

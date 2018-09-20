@@ -1741,9 +1741,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     // its view and does NOT have to issue any command to update the state
     // of the messages (since it has been done).
     if (_lastCommand != IMAP_EXPUNGE) {
-        if ([_selectedFolder allContainers]) {
-            [_selectedFolder thread];
-        }
         if ([_selectedFolder cacheManager]) {
             [[_selectedFolder cacheManager] expunge];
         }
@@ -2660,15 +2657,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
 
             case IMAP_EXPUNGE:
-                //
-                // No need to synchronize our IMAP cache here since, at worst, the
-                // expunged messages will get removed once we reopen the mailbox.
-                //
-                if ([_selectedFolder allContainers])
-                {
-                    [_selectedFolder thread];
-                }
-
                 if ([_selectedFolder cacheManager])
                 {
                     [[_selectedFolder cacheManager] expunge];
