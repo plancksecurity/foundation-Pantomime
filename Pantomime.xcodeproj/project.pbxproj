@@ -43,6 +43,7 @@
 		15B3F0C61F5ED64900BF531F /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
 		15B3F0CA1F5EE35E00BF531F /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
 		15E019A01FE2B65300DA2973 /* CWParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 15E0199F1FE2B65300DA2973 /* CWParserTest.m */; };
+		4303DADE215E00D20027D9F2 /* 1364_Mail_missing_attached_image.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4303DADD215E00D20027D9F2 /* 1364_Mail_missing_attached_image.txt */; };
 		431AD4391F7E479B000247A7 /* MailWithJpgAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */; };
 		431AD43B1F7E4D8F000247A7 /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */; };
 		432D7323212ACF6D0007604F /* Reference_Parsing_Orig.txt in Resources */ = {isa = PBXBuildFile; fileRef = 432D7322212ACF6D0007604F /* Reference_Parsing_Orig.txt */; };
@@ -195,6 +196,7 @@
 		15B3F0C81F5EE35E00BF531F /* CWIMAPStore+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWIMAPStore+Protected.h"; sourceTree = "<group>"; };
 		15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPStore+Protected.m"; sourceTree = "<group>"; };
 		15E0199F1FE2B65300DA2973 /* CWParserTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWParserTest.m; sourceTree = "<group>"; };
+		4303DADD215E00D20027D9F2 /* 1364_Mail_missing_attached_image.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1364_Mail_missing_attached_image.txt; sourceTree = "<group>"; };
 		431AD4381F7E479B000247A7 /* MailWithJpgAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithJpgAttached.txt; sourceTree = "<group>"; };
 		431AD43A1F7E4D8F000247A7 /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
 		432D7322212ACF6D0007604F /* Reference_Parsing_Orig.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reference_Parsing_Orig.txt; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 				156B82CC21465B850087D8ED /* IOS-1225_from-address_not_ignored.txt */,
 				43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */,
 				438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */,
+				4303DADD215E00D20027D9F2 /* 1364_Mail_missing_attached_image.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -703,6 +706,7 @@
 				1505D6061F3CB1B100A04A0B /* IOS-421_MessageHeapOverflow.txt in Resources */,
 				432D7323212ACF6D0007604F /* Reference_Parsing_Orig.txt in Resources */,
 				433C51A81E647EBD00272E19 /* MailParsingAttachments.txt in Resources */,
+				4303DADE215E00D20027D9F2 /* 1364_Mail_missing_attached_image.txt in Resources */,
 				43628764213D5FE90066CD03 /* IOS-1300_odt_attachment.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

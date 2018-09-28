@@ -158,6 +158,33 @@
     }
 }
 
+/**
+ IOS-1364
+ */
+- (void)testUndisplayedImageAttached
+{
+    CWIMAPMessage *cwMsg = [self parseEmailFilePath:@"1364_Mail_missing_attached_image.txt"];
+    XCTAssertTrue([cwMsg.content isKindOfClass:CWMIMEMultipart.class]);
+    XCTAssertEqualObjects(cwMsg.contentType, @"multipart/mixed");
+    XCTAssertEqualObjects(cwMsg.subject, @"blah");
+    XCTAssertEqualObjects(cwMsg.from.address, @"blah@example.com");
+    XCTAssertEqualObjects(cwMsg.from.personal, @"\"Oh Noes\"");
+
+    id theContent = cwMsg.content;
+    XCTAssertNotNil(theContent);
+    CWMIMEMultipart *part = (CWMIMEMultipart *) theContent;
+    XCTAssertEqual(part.count, 3);
+
+    for (int i = 0; i < part.count; ++i) {
+        CWPart *subPart = [part partAtIndex:i];
+        if (i == 0 || i == 2) {
+            XCTAssertEqualObjects(subPart.contentType, @"text/plain");
+        } else if (i == 1) {
+            XCTAssertEqualObjects(subPart.contentType, @"image/jpeg");
+        }
+    }
+}
+
 #pragma mark - HELPER
 
 - (void)assureReferenceParsingFilename:(NSString *)filename
