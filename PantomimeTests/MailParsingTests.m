@@ -179,8 +179,6 @@
         CWPart *subPart = [part partAtIndex:i];
         if (i == 0 || i == 2) {
             XCTAssertEqualObjects(subPart.contentType, @"text/plain");
-            NSString *theContent = [subPart.dataValue asciiString];
-            XCTAssertEqualObjects(theContent, @"Version: 1");
         } else if (i == 1) {
             XCTAssertEqualObjects(subPart.contentType, @"image/jpeg");
         }
