@@ -188,7 +188,6 @@
 /**
  IOS-1351
  */
-/*
 - (void)testClassicPGPMime
 {
     CWIMAPMessage *cwMsg = [self
@@ -208,17 +207,16 @@
         CWPart *subPart = [part partAtIndex:i];
         if (i == 0) {
             XCTAssertEqualObjects(subPart.contentType, @"application/pgp-encrypted");
-            NSString *theContent = [subPart.dataValue asciiString];
-            XCTAssertEqualObjects(theContent, @"Version: 1");
+            NSString *theContent = [((NSData *) subPart.content) asciiString];
+            XCTAssertEqualObjects(theContent, @"Version: 1\n");
         } else if (i == 1) {
             XCTAssertEqualObjects(subPart.contentType, @"application/octet-stream");
-            NSString *theContent = [subPart.dataValue asciiString];
+            NSString *theContent = [((NSData *) subPart.content) asciiString];
             NSString *pgpBoilerPlate = [theContent substringToIndex:27];
             XCTAssertEqualObjects(pgpBoilerPlate, @"-----BEGIN PGP MESSAGE-----");
         }
     }
 }
- */
 
 #pragma mark - HELPER
 
