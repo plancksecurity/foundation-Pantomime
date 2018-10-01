@@ -190,6 +190,7 @@
 /**
  IOS-1351
  */
+/*
 - (void)testClassicPGPMime
 {
     CWIMAPMessage *cwMsg = [self
@@ -219,6 +220,7 @@
         }
     }
 }
+ */
 
 #pragma mark - HELPER
 
