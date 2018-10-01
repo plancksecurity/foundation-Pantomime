@@ -179,8 +179,43 @@
         CWPart *subPart = [part partAtIndex:i];
         if (i == 0 || i == 2) {
             XCTAssertEqualObjects(subPart.contentType, @"text/plain");
+            NSString *theContent = [subPart.dataValue asciiString];
+            XCTAssertEqualObjects(theContent, @"Version: 1");
         } else if (i == 1) {
             XCTAssertEqualObjects(subPart.contentType, @"image/jpeg");
+        }
+    }
+}
+
+/**
+ IOS-1351
+ */
+- (void)testClassicPGPMime
+{
+    CWIMAPMessage *cwMsg = [self
+                            parseEmailFilePath:@"SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt"];
+    XCTAssertTrue([cwMsg.content isKindOfClass:CWMIMEMultipart.class]);
+    XCTAssertEqualObjects(cwMsg.contentType, @"multipart/encrypted");
+    XCTAssertEqualObjects(cwMsg.subject, @"Simplified Key Import");
+    XCTAssertEqualObjects(cwMsg.from.address, @"iostest002@peptest.ch");
+    XCTAssertEqualObjects(cwMsg.from.personal, @"\"Harry Bryant\"");
+
+    id theContent = cwMsg.content;
+    XCTAssertNotNil(theContent);
+    CWMIMEMultipart *part = (CWMIMEMultipart *) theContent;
+    XCTAssertEqual(part.count, 2);
+
+    for (int i = 0; i < part.count; ++i) {
+        CWPart *subPart = [part partAtIndex:i];
+        if (i == 0) {
+            XCTAssertEqualObjects(subPart.contentType, @"application/pgp-encrypted");
+            NSString *theContent = [subPart.dataValue asciiString];
+            XCTAssertEqualObjects(theContent, @"Version: 1");
+        } else if (i == 1) {
+            XCTAssertEqualObjects(subPart.contentType, @"application/octet-stream");
+            NSString *theContent = [subPart.dataValue asciiString];
+            NSString *pgpBoilerPlate = [theContent substringToIndex:27];
+            XCTAssertEqualObjects(pgpBoilerPlate, @"-----BEGIN PGP MESSAGE-----");
         }
     }
 }
