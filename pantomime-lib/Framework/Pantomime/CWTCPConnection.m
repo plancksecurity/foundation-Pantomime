@@ -30,6 +30,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
 @property (nonatomic, strong) NSError *streamError;
 @property (nullable, strong) NSThread *backgroundThread;
 @property (atomic) BOOL gettingClosed;
+@property (atomic) NSTimeInterval timeout;
+
 
 @end
 
@@ -43,12 +45,20 @@ static NSInteger s_numberOfConnectionThreads = 0;
 - (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
 {
+    self = [self initWithName:theName port:thePort transport:transport background:theBOOL timeout:-1];
+    return self;
+}
+
+- (id)initWithName:(NSString *)theName port:(unsigned int)thePort
+         transport:(ConnectionTransport)transport background:(BOOL)theBOOL
+           timeout:(NSTimeInterval)timeout {
     if (self = [super init]) {
         _openConnections = [[NSMutableSet alloc] init];
         _connected = NO;
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
+        self.timeout = timeout;
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
     return self;
@@ -71,6 +81,22 @@ static NSInteger s_numberOfConnectionThreads = 0;
                           forKey:NSStreamSocketSecurityLevelKey];
     [self.writeStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
                            forKey:NSStreamSocketSecurityLevelKey];
+}
+
+- (void) setUpTimeout{
+    if (self.timeout > 0) {
+        NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout
+                                         target:self
+                                       selector:@selector(timeout:)
+                                       userInfo:nil
+                                        repeats:NO];
+        [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSDefaultRunLoopMode];
+    }
+}
+- (void) timeout:(NSTimer*) timer {
+    [timer invalidate];
+    [self close];
+    [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
 }
 
 - (void)setupStream:(NSStream *)stream
@@ -114,7 +140,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
     CFDataRef nativeSocket = CFReadStreamCopyProperty(cfStream,
                                                       kCFStreamPropertySocketNativeHandle);
     CFSocketNativeHandle *cfSock = (CFSocketNativeHandle *) CFDataGetBytePtr(nativeSocket);
-
     NSUInteger originalValue = 500;
     NSUInteger newValue = 501;
     socklen_t originalValueSize = sizeof(originalValue);
@@ -175,6 +200,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
         self.writeStream = CFBridgingRelease(writeStream);
         [self setupStream:self.readStream];
         [self setupStream:self.writeStream];
+        [self setUpTimeout];
     }
 
     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];

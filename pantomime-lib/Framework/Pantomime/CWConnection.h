@@ -53,7 +53,7 @@
 @property (nonatomic, readonly) NSError * _Nullable streamError;
 
 /*!
-  @method initWithName: port: background:
+ @method initWithName: port: transport: background:
   @discussion This method is use to initialize a new connection
               instance at the specified port. It can connect
 	      in background if needed and use the default timeout
@@ -71,6 +71,28 @@
                         port: (unsigned int) thePort
                    transport:(ConnectionTransport)transport
                   background: (BOOL) theBOOL;
+
+/*!
+ @method initWithName: port: transport: background: timeout:
+ @discussion This method is use to initialize a new connection
+ instance at the specified port. It can connect
+ in background if needed and use the default timeout
+ (60 seconds) when connecting.
+ @param theName The host name to connect to.
+ @param thePort The port to connect to.
+ @param transport The connection transport to use.
+ @param theBOOL YES if we want to connect in background (non-blocking
+ way), NO if we want this call to be blocking until
+ we successfully connected to the host.
+ @param timeout The number of seconds where the connection will timeout
+ @result An instance implementing the CWConnection protocol, nil
+ if an error occurred, like DNS resolution.
+ */
+- (id _Nonnull) initWithName: (NSString * _Nonnull) theName
+                        port: (unsigned int) thePort
+                   transport:(ConnectionTransport)transport
+                  background: (BOOL) theBOOL
+                     timeout: (NSTimeInterval) timeout;
 
 - (void)startTLS;
 
