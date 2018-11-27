@@ -1361,7 +1361,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                                   dictionaryWithObject: theMessage  forKey: @"Message"];
         PERFORM_SELECTOR_2(_delegate, @selector(messageChanged:), PantomimeMessageChanged,
                            userInfo, PantomimeMessageChanged);
-    }
+        }
 }
 
 
@@ -2468,6 +2468,10 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             case IMAP_SELECT:
                 _connection_state.opening_mailbox = NO;
+                if (!_selectedFolder) {
+                    PERFORM_SELECTOR_1(_delegate, @selector(folderOpenFailed:), PantomimeFolderOpenFailed);
+                    return;
+                }
                 if ([_selectedFolder.name isEqualToString:PantomimeFolderNameToIgnore]) {
                     // PantomimeFolderNameToIgnore is used as a workaround to close a mailbox (aka. folder)
                     // without calling CLOSE.
