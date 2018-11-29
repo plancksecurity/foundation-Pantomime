@@ -83,7 +83,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
                            forKey:NSStreamSocketSecurityLevelKey];
 }
 
-- (void) setUpTimeout{
+- (void) setUpTimeout
+{
     if (self.timeout > 0) {
         NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:self.timeout
                                          target:self
@@ -93,7 +94,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
         [[NSRunLoop currentRunLoop] addTimer: timer forMode: NSDefaultRunLoopMode];
     }
 }
-- (void) timeout:(NSTimer*) timer {
+- (void)timeout:(NSTimer *)timer
+{
     [timer invalidate];
     [self close];
     [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
