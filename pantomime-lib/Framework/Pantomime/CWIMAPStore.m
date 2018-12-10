@@ -1410,11 +1410,13 @@ static inline int has_literal(char *buf, NSUInteger c)
 // This method parses a SEARCH response in order to decode
 // all UIDs in the result.
 //
-// Example: "* 5 FETCH (UID 905)"
+// Examples:
+//  "* 5 FETCH (UID 905)"
+//  "* 39 FETCH (FLAGS (\Seen NonJunk))"
 //
 - (NSArray *)_uniqueIdentifiersFromFetchUidsResponseData:(NSData *)response
 {
-    NSString *searchResponsePrefix = @"* 5 FETCH";
+    NSString *searchResponsePrefix = @"* X FETCH";
     return [self _uniqueIdentifiersFromData: response
                  skippingFirstNumberOfChars: searchResponsePrefix.length];
 }
@@ -1454,7 +1456,9 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSUInteger value = 0;
     while (![scanner isAtEnd]) {
         [scanner scanUnsignedInt: &value];
-        [results addObject: [NSNumber numberWithInteger: value]];
+        if (value != 0) {
+            [results addObject: [NSNumber numberWithInteger: value]];
+        }
     }
     RELEASE(aScanner);
 
