@@ -255,7 +255,11 @@ static NSString *CRLF = @"\r\n";
 {
     NSDictionary *testInputs = @{@"* 5 FETCH (UID 905)": @[@905],
                                  @"* 7 FETCH (UID 3819)": @[@3819],                                
-                                 @"": @[]};
+                                 @"": @[],
+                                 @"* 39 FETCH (FLAGS (\\Seen NonJunk))": @[],
+                                 @"* 39 FETCH (UID 666)": @[@(666)]
+                                 }
+    ;
     CWIMAPStore *store = [CWIMAPStore new];
     for (int i = 0; i < testInputs.count; ++i) {
         NSString *testee = testInputs.allKeys[i];
