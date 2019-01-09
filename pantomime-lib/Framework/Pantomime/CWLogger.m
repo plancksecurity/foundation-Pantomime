@@ -8,11 +8,16 @@
 
 #import "CWLogger.h"
 
-#if OS_LOG_TARGET_HAS_10_13_FEATURES
+static os_log_t s_theLog;
 
-static os_log_t s_theLog = os_log_create("pep.security.imap", "pantomime");
-
-#endif
+os_log_t theLog(void)
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_theLog = os_log_create("pep.security.app.imap", "pantomime");
+    });
+    return s_theLog;
+}
 
 static id<CWLogging> s_logger;
 
