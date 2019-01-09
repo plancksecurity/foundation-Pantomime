@@ -314,7 +314,7 @@
 {
     // Invalid input. Do nothing.
     if (fromUid == 0 || fromUid > toUid) {
-        WARN(NSStringFromClass([self class]), @"Invalid input.");
+        WARN("Invalid input.");
         // Inform the client
         [_store signalFolderFetchCompleted];
         return;
@@ -409,8 +409,7 @@
         [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
                   arguments: @"UID FETCH %u:%u (FLAGS)", firstUID, lastUID];
     } else {
-        ERROR(NSStringFromClass([self class]),
-              @"UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
+        ERROR("UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
         [_store signalFolderSyncError];
     }
 }

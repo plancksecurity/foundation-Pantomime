@@ -81,7 +81,7 @@
                             withObject: [_wbuf subdataToIndex: (int) count]];
         }
 
-        //INFO(NSStringFromClass([self class]), @"count = %d, len = %d", count, len);
+        //INFO("count = %d, len = %d", count, len);
 
         // If we have been able to write everything...
         if (count == len)
@@ -316,7 +316,7 @@
             [self updateWrite];
             break;
         case ET_EDESC:
-            //INFO(NSStringFromClass([self class]), @"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+            //INFO("GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
                 [self close];

@@ -136,7 +136,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) dealloc
 {
-  //INFO(NSStringFromClass([self class]), @"SMTP: -dealloc");
+  //INFO("SMTP: -dealloc");
   RELEASE(_message);
   RELEASE(_data);
   RELEASE(_recipients);
@@ -236,7 +236,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     char *buf;
     NSUInteger count;
 
-    //INFO(NSStringFromClass([self class]), @"IN UPDATE READ");
+    //INFO("IN UPDATE READ");
 
     [super updateRead];
 
@@ -552,8 +552,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
   else
     {
-        INFO(NSStringFromClass([self class]),
-             @"Authentification response: |%@|",
+        INFO("Authentification response: |%@|",
              [aData asciiString]);
         AUTHENTICATION_FAILED(_delegate, @"LOGIN");
     }
@@ -986,7 +985,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   if ([aData hasCPrefix: "421"])
     {
       //!  - lost connection
-      //INFO(NSStringFromClass([self class]), @"LOST CONNECTION TO THE SERVER");
+      //INFO("LOST CONNECTION TO THE SERVER");
       [super close];
     }
   else

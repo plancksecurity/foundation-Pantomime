@@ -381,7 +381,7 @@ NSRange shrinkRange(NSRange range)
       word = malloc(256);
       *word = '\0';
 
-      //INFO(NSStringFromClass([self class]), @"Have to parse |%@|", [aData asciiString]);
+      //INFO("Have to parse |%@|", [aData asciiString]);
 
       bytes = (unsigned char*)[aData bytes];
       tot = [aData length];
@@ -431,7 +431,7 @@ NSRange shrinkRange(NSRange range)
 
       if (isalpha(*word))
 	{
-	  //INFO(NSStringFromClass([self class]), @"UNIX DATE");
+	  //INFO("UNIX DATE");
 	  
 	  // We skip the first word, no need for it.
 	  i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
@@ -443,7 +443,7 @@ NSRange shrinkRange(NSRange range)
       // We got a RFC 822 date. The syntax is:
       // day month year hh:mm:ss zone
       // For example: 03 Apr 2003 17:27:06 +0200
-      //INFO(NSStringFromClass([self class]), @"RFC-822 time");
+      //INFO("RFC-822 time");
       day = atoi((const char*)word);
       
       //printf("len = %d |%s| day = %d\n", len, word, day);

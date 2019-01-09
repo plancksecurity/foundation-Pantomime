@@ -111,7 +111,7 @@
 //
 - (void) dealloc
 {
-  //INFO(NSStringFromClass([self class]), @"Service: -dealloc");
+  //INFO("Service: -dealloc");
   [self setDelegate: nil];
 
   RELEASE(_supportedMechanisms);
@@ -239,7 +239,7 @@
 
         PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
     } else {
-        INFO(NSStringFromClass(self.class), @"CWService.close: Double invocation");
+        INFO("CWService.close: Double invocation");
     }
 
     [_connection setDelegate:nil];
@@ -341,7 +341,7 @@
 		      type: (RunLoopEventType) theType
 		   forMode: (NSString *) theMode
 {
-  //INFO(NSStringFromClass([self class]), @"timed out event!");
+  //INFO("timed out event!");
   return nil;
 }
 

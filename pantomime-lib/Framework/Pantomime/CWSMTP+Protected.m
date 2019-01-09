@@ -85,12 +85,11 @@
                 // We dequeue the first inserted command from the queue.
                 aQueueObject = [_queue lastObject];
                 if (!aQueueObject) {
-                    INFO(NSStringFromClass([self class]),
-                         @"_queue has %lu objects", (unsigned long) _queue.count);
+                    INFO("_queue has %lu objects", (unsigned long) _queue.count);
                     for (NSObject *obj in _queue) {
-                        INFO(NSStringFromClass([self class]), @"obj %@", obj);
+                        INFO("obj %@", obj);
                     }
-                    INFO(NSStringFromClass([self class]), @"aQueueObject nil");
+                    INFO("aQueueObject nil");
                 }
             } else {
                 // The queue is empty, we have nothing more to do...
@@ -122,16 +121,16 @@
                 isPrivate = YES;
             }
             if (isPrivate) {
-                INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
+                INFO("Sending private data |*******|");
             } else {
-                INFO(NSStringFromClass([self class]), @"Sending |%@|", aQueueObject->arguments);
+                INFO("Sending |%@|", aQueueObject->arguments);
             }
             _lastCommand = aQueueObject->command;
             [self bulkWriteData:@[[aQueueObject->arguments
                                    dataUsingEncoding: _defaultCStringEncoding],
                                   _crlf]];
         } else {
-            INFO(NSStringFromClass([self class]), @"Sending with nil queue object");
+            INFO("Sending with nil queue object");
         }
     }
 }
