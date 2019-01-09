@@ -35,20 +35,14 @@ extern os_log_t theLog(void);
 #define INFO(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log_info(theLog(), format, ##__VA_ARGS__);\
-} else {\
-  NSLog([NSString stringWithCString:format encoding:NSUTF8StringEncoding], ##__VA_ARGS__);\
 }
 
 #define WARN(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log(theLog(), format, ##__VA_ARGS__);\
-} else {\
-  NSLog([NSString stringWithCString:format encoding:NSUTF8StringEncoding], ##__VA_ARGS__);\
 }
 
 #define ERROR(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log_error(theLog(), format, ##__VA_ARGS__);\
-} else {\
-  NSLog([NSString stringWithCString:format encoding:NSUTF8StringEncoding], ##__VA_ARGS__);\
 }
