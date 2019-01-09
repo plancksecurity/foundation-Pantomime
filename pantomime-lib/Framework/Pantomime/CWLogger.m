@@ -8,6 +8,12 @@
 
 #import "CWLogger.h"
 
+#if OS_LOG_TARGET_HAS_10_13_FEATURES
+
+static os_log_t s_theLog = os_log_create("pep.security.imap", "pantomime");
+
+#endif
+
 static id<CWLogging> s_logger;
 
 @implementation CWLogger
