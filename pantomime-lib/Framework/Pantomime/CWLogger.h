@@ -8,7 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-#if OS_LOG_TARGET_HAS_10_13_FEATURES
+// all those os/* for OS_LOG_TARGET_HAS_10_12_FEATURES
+#include <os/availability.h>
+#include <os/base.h>
+#include <os/object.h>
+#include <os/trace.h>
+
+#if OS_LOG_TARGET_HAS_10_12_FEATURES
 #import <os/log.h>
 #endif
 
@@ -32,8 +38,7 @@
 
 @end
 
-#if OS_LOG_TARGET_HAS_10_13_FEATURES
-
+#if OS_LOG_TARGET_HAS_10_12_FEATURES
 static os_log_t s_theLog;
 
 #define INFO(format, ...) \
@@ -48,18 +53,12 @@ os_log_with_type(s_theLog, OS_LOG_TYPE_ERROR, format, ##__VA_ARGS__);
 #else
 
 #define INFO(format, ...) \
-fprintf(stderr, "INFO %s ", __FUNCTION__);\
-fprintf(stderr, format, ##__VA_ARGS__);\
-fprintf(stderr, "\n");
+NSLog([NSString stringWithCString:format encoding:NSUTF8StringEncoding], ##__VA_ARGS__);
 
 #define WARN(format, ...) \
-fprintf(stderr, "WARN %s ", __FUNCTION__);\
-/*fprintf(stderr, format, ##__VA_ARGS__);*/\
-fprintf(stderr, "\n");
+NSLog([NSString stringWithCString:format encoding:NSUTF8StringEncoding], ##__VA_ARGS__);
 
 #define ERROR(format, ...) \
-fprintf(stderr, "ERROR %s ", __FUNCTION__);\
-/*fprintf(stderr, format, ##__VA_ARGS__);*/\
-fprintf(stderr, "\n");
+NSLog([NSString stringWithCString:format encoding:NSUTF8StringEncoding], ##__VA_ARGS__);
 
 #endif
