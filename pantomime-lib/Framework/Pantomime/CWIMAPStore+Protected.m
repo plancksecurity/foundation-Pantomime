@@ -186,7 +186,7 @@
             else
             {
                 // The queue is empty, we have nothing more to do...
-                INFO(NSStringFromClass([self class]), @"sendCommand currentQueueObject = nil");
+                INFO("sendCommand currentQueueObject = nil");
                 self.currentQueueObject = nil;
                 return;
             }
@@ -205,7 +205,7 @@
                 if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
                     [aQueueObject.arguments isEqualToString: theString])
                 {
-                    //INFO(NSStringFromClass([self class]), @"A COMMAND ALREADY EXIST!!!!");
+                    //INFO("A COMMAND ALREADY EXIST!!!!");
                     return;
                 }
             }
@@ -217,13 +217,13 @@
             [_queue insertObject: aQueueObject  atIndex: 0];
             RELEASE(aQueueObject);
             
-            INFO(NSStringFromClass([self class]), @"queue size = %lul", (unsigned long) [_queue count]);
+            INFO("queue size = %lul", (unsigned long) [_queue count]);
             
             // If we had queued commands, we return since we'll eventually
             // dequeue them one by one. Otherwise, we run it immediately.
             if ([_queue count] > 1)
             {
-                //INFO(NSStringFromClass([self class]), @"QUEUED |%@|", theString);
+                //INFO("QUEUED |%@|", theString);
                 return;
             }
             
@@ -236,9 +236,9 @@
         }
         
         if (isPrivate) {
-            INFO(NSStringFromClass([self class]), @"Sending private data |*******|");
+            INFO("Sending private data |*******|");
         } else {
-            INFO(NSStringFromClass([self class]), @"Sending |%@|", self.currentQueueObject.arguments);
+            INFO("Sending |%@|", self.currentQueueObject.arguments);
         }
         
         _lastCommand = self.currentQueueObject.command;
@@ -275,7 +275,7 @@
     [folder setStore:self];
     folder.mode = mode;
 
-    //INFO(NSStringFromClass([self class]), @"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
+    //INFO("_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
 
     // If we are already opening a mailbox, we must interrupt the process
     // and open the preferred one instead.
@@ -322,7 +322,7 @@
 //
 - (void)signalFolderFetchCompleted
 {
-    //INFO(NSStringFromClass([self class]), @"DONE PREFETCHING FOLDER");
+    //INFO("DONE PREFETCHING FOLDER");
     NSMutableDictionary *info = [NSMutableDictionary new];
     if (_selectedFolder) {
         info[@"Folder"] = _selectedFolder;
@@ -347,7 +347,7 @@
 {
     self = [super init];
 
-    INFO(NSStringFromClass([self class]), @"CWIMAPQueueObject.init %@\n", self);
+    INFO("CWIMAPQueueObject.init %@\n", self);
     _command = theCommand;
     _literal = 0;
 
@@ -372,8 +372,8 @@
 //
 - (void) dealloc
 {
-    INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
-    INFO(NSStringFromClass([self class]), @"dealloc done");
+    INFO("dealloc %@\n", self);
+    INFO("dealloc done");
 }
 
 

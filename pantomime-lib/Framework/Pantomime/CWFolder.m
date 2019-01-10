@@ -71,7 +71,7 @@
 //
 - (void) dealloc
 {
-  //INFO(NSStringFromClass([self class]), @"Folder: -dealloc");
+  //INFO("Folder: -dealloc");
   RELEASE(_properties);
   RELEASE(_name);
 

@@ -93,7 +93,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             s--;
         }
 
-        //INFO(NSStringFromClass([self class]), @"LITERAL = %d", value);
+        //INFO("LITERAL = %d", value);
 
         return value;
     }
@@ -177,7 +177,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     self = [super initWithName: theName  port: thePort transport: transport];
 
-    INFO(NSStringFromClass([self class]), @"CWIMAPStore.init %@\n", self);
+    INFO("CWIMAPStore.init %@", self);
 
     _folderSeparator = 0;
     _selectedFolder = nil;
@@ -206,7 +206,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) dealloc
 {
-    INFO(NSStringFromClass([self class]), @"dealloc %@\n", self);
+    INFO("dealloc %@", self);
     RELEASE(_folders);
     RELEASE(_folderStatus);
     RELEASE(_openFolders);
@@ -353,13 +353,13 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         [super updateRead];
 
-        //INFO(NSStringFromClass([self class]), @"_rbul len == %d |%@|", [_rbuf length], [_rbuf asciiString]);
+        //INFO("_rbul len == %d |%@|", [_rbuf length], [_rbuf asciiString]);
 
         if (![_rbuf length]) return;
 
         while ((aData = [_rbuf dropFirstLine]))
         {
-            //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
+            //INFO("aLine = |%@|", [aData asciiString]);
             buf = (char *)[aData bytes];
             count = [aData length];
 
@@ -367,7 +367,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             if (self.currentQueueObject && self.currentQueueObject.literal)
             {
                 self.currentQueueObject.literal -= (int) (count+2);
-                //INFO(NSStringFromClass([self class]), @"literal = %d, count = %d", self.currentQueueObject.literal, count);
+                //INFO("literal = %d, count = %d", self.currentQueueObject.literal, count);
 
                 if (self.currentQueueObject.literal < 0)
                 {
@@ -376,7 +376,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     x = -2-self.currentQueueObject.literal;
                     [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: [aData subdataToIndex: x]];
                     [_responsesFromServer addObject: [aData subdataFromIndex: x]];
-                    //INFO(NSStringFromClass([self class]), @"orig = |%@|, chooped = |%@|   |%@|", [aData asciiString], [[aData subdataToIndex: x] asciiString], [[aData subdataFromIndex: x] asciiString]);
+                    //INFO("orig = |%@|, chooped = |%@|   |%@|", [aData asciiString], [[aData subdataToIndex: x] asciiString], [[aData subdataFromIndex: x] asciiString]);
                 }
                 else
                 {
@@ -387,7 +387,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 // to see if we got a full response.
                 if (self.currentQueueObject.literal <= 0)
                 {
-                    //INFO(NSStringFromClass([self class]), @"DONE ACCUMULATING LITTERAL!\nread = |%@|", [[self.currentQueueObject.info objectForKey: @"NSData"] asciiString]);
+                    //INFO("DONE ACCUMULATING LITTERAL!\nread = |%@|", [[self.currentQueueObject.info objectForKey: @"NSData"] asciiString]);
                     //
                     // Let's see, if we can, what does the next line contain. If we got
                     // something, we add this to the remaining _responsesFromServer
@@ -439,7 +439,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 }
                 else
                 {
-                    //INFO(NSStringFromClass([self class]), @"Accumulating... %d remaining...", self.currentQueueObject.literal);
+                    //INFO("Accumulating... %d remaining...", self.currentQueueObject.literal);
                     //
                     // We are still accumulating bytes of the literal. Once we have appended
                     // our CRLF, we just continue the loop since there's no need to try to
@@ -451,12 +451,12 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
             else
             {
-                //INFO(NSStringFromClass([self class]), @"aLine = |%@|", [aData asciiString]);
+                //INFO("aLine = |%@|", [aData asciiString]);
                 [_responsesFromServer addObject: aData];
 
                 if (self.currentQueueObject && (self.currentQueueObject.literal = has_literal(buf, count)))
                 {
-                    //INFO(NSStringFromClass([self class]), @"literal = %d", self.currentQueueObject.literal);
+                    //INFO("literal = %d", self.currentQueueObject.literal);
                     [self.currentQueueObject.info setObject: [NSMutableData dataWithCapacity: self.currentQueueObject.literal]
                                                      forKey: @"NSData"];
                 }
@@ -469,7 +469,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 buf++; i++;
             }
 
-            //INFO(NSStringFromClass([self class]), @"i = %d  count = %d", i, count);
+            //INFO("i = %d  count = %d", i, count);
 
             //
             // We got an untagged response or a command continuation request.
@@ -528,12 +528,12 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                     else if (self.currentQueueObject && _lastCommand == IMAP_LOGIN)
                     {
-                        //INFO(NSStringFromClass([self class]), @"writing password |%s|", [[self.currentQueueObject.info objectForKey: @"Password"] cString]);
+                        //INFO("writing password |%s|", [[self.currentQueueObject.info objectForKey: @"Password"] cString]);
                         [self bulkWriteData:@[[self.currentQueueObject.info objectForKey: @"Password"],
                                               _crlf]];
                         break;
                     } else if (_lastCommand == IMAP_IDLE) {
-                        INFO(NSStringFromClass([self class]), @"entering IDLE");
+                        INFO("entering IDLE");
                         PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
                     }
                 }
@@ -548,7 +548,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     buf++; j++;
                 }
 
-                //INFO(NSStringFromClass([self class]), @"j = %d, b = %d", j, b);
+                //INFO("j = %d, b = %d", j, b);
 
                 //
                 // The token following our "*" is all-digit. Let's
@@ -570,12 +570,12 @@ static inline int has_literal(char *buf, NSUInteger c)
                     while (k > i+1)
                     {
                         buf--; k--;
-                        //INFO(NSStringFromClass([self class]), @"msn c = %c", *buf);
+                        //INFO("msn c = %c", *buf);
                         msn += ((*buf-48) * d);
                         d *= 10;
                     }
 
-                    //INFO(NSStringFromClass([self class]), @"Done computing the msn = %d  k = %d", msn, k);
+                    //INFO("Done computing the msn = %d  k = %d", msn, k);
 
                     // We now get what kind of response we read (FETCH, etc?)
                     buf += (j-i);
@@ -583,11 +583,11 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                     while (k < count && isalpha((int)(unsigned char)*buf))
                     {
-                        //INFO(NSStringFromClass([self class]), @"response after c = %c", *buf);
+                        //INFO("response after c = %c", *buf);
                         buf++; k++;
                     }
 
-                    //INFO(NSStringFromClass([self class]), @"Done reading response: i = %d  j = %d  k = %d", i, j, k);
+                    //INFO("Done reading response: i = %d  j = %d  k = %d", i, j, k);
 
                     buf = buf-k+j+1;
                     len = k-j-1;
@@ -603,8 +603,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                 //NSData *foo;
                 //foo = [NSData dataWithBytes: buf  length: len];
-                //INFO(NSStringFromClass([self class]), @"DONE!!! foo after * = |%@| b = %d, msn = %d", [foo asciiString], b, msn);
-                //INFO(NSStringFromClass([self class]), @"len = %d", len);
+                //INFO("DONE!!! foo after * = |%@| b = %d, msn = %d", [foo asciiString], b, msn);
+                //INFO("len = %d", len);
 
                 //
                 // We got an untagged OK response. We handle only the one used in the IMAP authorization
@@ -739,7 +739,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                 //NSData *foo;
                 //foo = [NSData dataWithBytes: buf-i  length: i];
-                //INFO(NSStringFromClass([self class]), @"tag = |%@|", [foo asciiString]);
+                //INFO("tag = |%@|", [foo asciiString]);
 
                 j = i+1;
                 buf++;
@@ -748,11 +748,11 @@ static inline int has_literal(char *buf, NSUInteger c)
                 // the type of response (OK/NO/BAD).
                 while (j < count && *buf != ' ')
                 {
-                    //INFO(NSStringFromClass([self class]), @"IN OK: %c", *buf);
+                    //INFO("IN OK: %c", *buf);
                     buf++; j++;
                 }
 
-                //INFO(NSStringFromClass([self class]), @"OK/NO/BAD response = |%@|", [[NSData dataWithBytes: buf-j+i+1  length: j-i-1] asciiString]);
+                //INFO("OK/NO/BAD response = |%@|", [[NSData dataWithBytes: buf-j+i+1  length: j-i-1] asciiString]);
                 buf = buf-j+i+1;
 
                 // From RFC3501:
@@ -790,7 +790,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
         } // while ((aData = split_lines...
         
-        //INFO(NSStringFromClass([self class]), @"While loop broken!");
+        //INFO("While loop broken!");
 }
 
 
@@ -813,7 +813,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
         typeof(self) strongSelf = weakSelf;
-        //INFO(NSStringFromClass([self class]), @"CWIMAPStore: -reconnect");
+        //INFO("CWIMAPStore: -reconnect");
 
         [strongSelf->_connection_state.previous_queue addObjectsFromArray: [strongSelf->_queue array]];
         strongSelf->_connection_state.reconnecting = YES;
@@ -826,11 +826,11 @@ static inline int has_literal(char *buf, NSUInteger c)
         // We first empty our queue and set again our _lastCommand ivar to
         // the IMAP_AUTHORIZATION command
         //
-        //INFO(NSStringFromClass([self class]), @"queue count = %d", [_queue count]);
-        //INFO(NSStringFromClass([self class]), @"%@", [_queue description]);
+        //INFO("queue count = %d", [_queue count]);
+        //INFO("%@", [_queue description]);
         [strongSelf->_queue removeAllObjects];
         strongSelf->_lastCommand = IMAP_AUTHORIZATION;
-        INFO(NSStringFromClass([strongSelf class]), @"reconnect currentQueueObject = nil");
+        INFO("reconnect currentQueueObject = nil");
         strongSelf.currentQueueObject = nil;
         strongSelf->_counter = 0;
 
@@ -1487,7 +1487,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         // We trim the "+ " and we keep the challenge phrase
         aData = [aData subdataFromIndex: 2];
 
-        //INFO(NSStringFromClass([self class]), @"Challenge phrase = |%@|", [aData asciiString]);
+        //INFO("Challenge phrase = |%@|", [aData asciiString]);
         aMD5 = [[CWMD5 alloc] initWithData: [aData decodeBase64]];
         [aMD5 computeDigest];
 
@@ -1553,7 +1553,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         aData = [_responsesFromServer lastObject];
 
-        INFO(NSStringFromClass([self class]), @"IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
+        INFO("IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
 
         switch (_lastCommand)
         {
@@ -1670,7 +1670,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aData = [_responsesFromServer lastObject];
     sscanf([aData cString], "* %d EXISTS", &n);
     _selectedFolder.existsCount = n;
-    INFO(NSStringFromClass([self class]), @"EXISTS %d", n);
+    INFO("EXISTS %d", n);
     if (_lastCommand == IMAP_IDLE) {
         PERFORM_SELECTOR_1(_delegate, @selector(idleNewMessages:), PantomimeIdleNewMessages);
     }
@@ -1698,7 +1698,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     // It looks like some servers send untagged expunge reponses
     // _after_ the selected folder has been closed.
     if (!_selectedFolder) {
-        INFO(NSStringFromClass([self class]), @"EXPUNGE %d on already closed folder", msn);
+        INFO("EXPUNGE %d on already closed folder", msn);
         return;
     }
     // The conditions for being able to react safely to expunges have to be verified.
@@ -1707,7 +1707,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         return;
     }
 
-    // INFO(NSStringFromClass([self class]), @"EXPUNGE %d", msn);
+    //INFO("EXPUNGE %d", msn);
 
     // Messages CAN be expunged before we really had time to FETCH them.
     // We simply proceed by skipping over MSN that are bigger than we
@@ -1750,7 +1750,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
         PERFORM_SELECTOR_1(_delegate, @selector(messageExpunged:), PantomimeMessageExpunged);
     }
-    //    INFO(NSStringFromClass([self class]), @"Expunged %d", msn);
+    INFO("Expunged %d", msn);
 }
 
 /**
@@ -1775,7 +1775,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     /*
      for (NSData *data in datas) {
      NSString *aString = [data asciiString];
-     INFO(NSStringFromClass([self class]), @"extractUID: '%@'", aString);
+     INFO("extractUID: '%@'", aString);
      }
      */
     return 0;
@@ -1895,7 +1895,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     count = [_responsesFromServer count]-1;
 
-    //INFO(NSStringFromClass([self class]), @"RESPONSES FROM SERVER: %d", count);
+    //INFO("RESPONSES FROM SERVER: %d", count);
 
     aMutableString = [[NSMutableString alloc] init];
     aMutableArray = [[NSMutableArray alloc] init];
@@ -1922,16 +1922,16 @@ static inline int has_literal(char *buf, NSUInteger c)
         theUID = [_selectedFolder uidForMSN:theMSN];
     }
 
-    INFO(NSStringFromClass([self class]), @"parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
+    INFO("parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
 
     // Try to retrieve the message by UID
     if (theUID > 0) {
-        INFO(NSStringFromClass([self class]), @"Trying existing message for UID %lu", (unsigned long)theUID);
+        INFO("Trying existing message for UID %lu", (unsigned long)theUID);
         aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
     }
 
     if (aMessage == nil) {
-        INFO(NSStringFromClass([self class]), @"New message");
+        INFO("New message");
         aMessage = [[CWIMAPMessage alloc] init];
         // We set some initial properties to our message;
         [aMessage setInitialized: NO];
@@ -1964,7 +1964,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     for (i = 0; i <= count; i++) {
         aString = [[_responsesFromServer objectAtIndex: i] asciiString];
 
-        //INFO(NSStringFromClass([self class]), @"%i: %@", i, aString);
+        //INFO("%i: %@", i, aString);
         if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)theMSN]])
         {
             seen_fetch = YES;
@@ -1979,7 +1979,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
     }
 
-    //INFO(NSStringFromClass([self class]), @"GOT TO PARSE: |%@|", aMutableString);
+    //INFO("GOT TO PARSE: |%@|", aMutableString);
 
     aCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     len = [aMutableString length];
@@ -1997,7 +1997,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         j = [aScanner scanLocation];
         aWord = [[aMutableString substringWithRange: NSMakeRange(i,j-i)] stringByTrimmingWhiteSpaces];
 
-        //INFO(NSStringFromClass([self class]), @"WORD |%@|", aWord);
+        //INFO("WORD |%@|", aWord);
 
         if ([aWord characterAtIndex: 0] == '(') {
             aWord = [aWord substringFromIndex: 1];
@@ -2010,7 +2010,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             int msn;
 
             [aScanner scanInt: &msn];
-            //INFO(NSStringFromClass([self class]), @"*** msn = %d", msn);
+            //INFO("*** msn = %d", msn);
             if (aMessage.messageNumber != msn) {
                 [aMessage setMessageNumber: msn];
                 messageUpdate.msn = YES;
@@ -2029,7 +2029,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             NSUInteger uid;
 
             [aScanner scanUnsignedInt: &uid];
-            //INFO(NSStringFromClass([self class]), @"uid %d j = %d, scanLoc = %d", uid, j, [aScanner scanLocation]);
+            //INFO("uid %d j = %d, scanLoc = %d", uid, j, [aScanner scanLocation]);
 
             if ([aMessage UID] == 0)
             {
@@ -2046,7 +2046,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         else if ([aWord caseInsensitiveCompare: @"FLAGS"] == NSOrderedSame) {
             // We get the substring inside our ( )
             aRange = [aMutableString rangeOfString: @")"  options: 0  range: NSMakeRange(j,len-j)];
-            //INFO(NSStringFromClass([self class]), @"Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
+            //INFO("Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
             CWFlags *flagsBefore = aMessage.flags.copy;
             [self _parseFlags: [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]
                       message: aMessage
@@ -2067,7 +2067,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             int size;
 
             [aScanner scanInt: &size];
-            //INFO(NSStringFromClass([self class]), @"size = %d", size);
+            //INFO("size = %d", size);
             [aMessage setSize: size];
             cacheRecord.size = size;
 
@@ -2439,7 +2439,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         aData = [_responsesFromServer lastObject];
 
-        INFO(NSStringFromClass([self class]), @"IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
+        INFO("IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
 
         switch (_lastCommand)
         {
@@ -2544,7 +2544,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 }
                 break;
             default:
-                INFO(NSStringFromClass([self class]), @"Unhandled \"NO\" response!");
+                INFO("Unhandled \"NO\" response!");
                 NSAssert(false, @"");
                 break;
         }
@@ -2555,7 +2555,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         if (![aData hasCPrefix: "*"])//|| _lastCommand == IMAP_AUTHORIZATION)
         {
-            //INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
+            //INFO("REMOVING QUEUE OBJECT");
 
             [self.currentQueueObject.info setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
             PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
@@ -2575,7 +2575,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseNOOP
 {
-    //INFO(NSStringFromClass([self class]), @"Parsing noop responses...");
+    //INFO("Parsing noop responses...");
     //!
 }
 
@@ -2589,7 +2589,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         NSData *aData;
         aData = [_responsesFromServer lastObject];
 
-        //INFO(NSStringFromClass([self class]), @"IN _parseOK: |%@|", [aData asciiString]);
+        //INFO("IN _parseOK: |%@|", [aData asciiString]);
 
         switch (_lastCommand)
         {
@@ -2727,7 +2727,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 {
                     [[_selectedFolder cacheManager] synchronize];
                 }
-                //INFO(NSStringFromClass([self class]), @"DONE FETCHING FOLDER");
+                //INFO("DONE FETCHING FOLDER");
                 PERFORM_SELECTOR_2(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, _selectedFolder, @"Folder");
                 break;
 
@@ -2808,13 +2808,13 @@ static inline int has_literal(char *buf, NSUInteger c)
         //
         if (![aData hasCPrefix: "*"])// || _lastCommand == IMAP_AUTHORIZATION)
         {
-            //        INFO(NSStringFromClass([self class]), @"REMOVING QUEUE OBJECT");
+            //INFO("REMOVING QUEUE OBJECT");
             if (self.currentQueueObject && self.currentQueueObject.info) {
                 [self.currentQueueObject.info
                  setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
                 PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
             } else {
-                INFO(NSStringFromClass([self class]), @"self.currentQueueObject == nil");
+                INFO("self.currentQueueObject == nil");
             }
 
             [_queue removeLastObject];
@@ -2863,8 +2863,8 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
         else
         {
-            //INFO(NSStringFromClass([self class]), @"Message with UID = %u not found in cache.",
-            //	[[allResults objectAtIndex: i] unsignedIntValue]);
+            //INFO("Message with UID = %u not found in cache.",
+            //[[allResults objectAtIndex: i] unsignedIntValue]);
         }
     }
 
@@ -2920,7 +2920,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             // good ones to our folder.
             //
             //for (i = ([theCache count]-1); i >= 0; i--)
-            //INFO(NSStringFromClass([self class]), @"Folder count (to remove UID) = %d", [_selectedFolder->allMessages count]);
+            //INFO("Folder count (to remove UID) = %d", [_selectedFolder->allMessages count]);
             b = NO;
 
             for (i = ([_selectedFolder count]-1); i >= 0; i--)
@@ -2931,7 +2931,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 if ([aMessage folder] == nil)
                 {
                     [[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]];
-                    //INFO(NSStringFromClass([self class]), @"Removed message |%@| UID = %d", [aMessage subject], [aMessage UID]);
+                    //INFO("Removed message |%@| UID = %d", [aMessage subject], [aMessage UID]);
                     [_selectedFolder removeMessage: aMessage];
                     b = YES;
                 }
@@ -2980,13 +2980,13 @@ static inline int has_literal(char *buf, NSUInteger c)
             //
             for (i = 0; i < count; i++)
             {
-                //INFO(NSStringFromClass([self class]), @"removing for UID %d", [[allResults objectAtIndex: i] unsignedIntValue]);
+                //INFO("removing for UID %d", [[allResults objectAtIndex: i] unsignedIntValue]);
                 [[[[_selectedFolder cacheManager] messageWithUID: [[allResults objectAtIndex: i] unsignedIntValue]] flags] remove: PantomimeFlagSeen];
             }
             break;
 
         default:
-            //INFO(NSStringFromClass([self class]), @"Unknown command for updating the cache file. Ignored.");
+            //INFO("Unknown command for updating the cache file. Ignored.");
             break;
     }
 }
@@ -3017,7 +3017,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     {
         aData = [[_responsesFromServer objectAtIndex: i] dataByTrimmingWhiteSpaces];
 
-        //INFO(NSStringFromClass([self class]), @"|%@|", [aData asciiString]);
+        //INFO("|%@|", [aData asciiString]);
         // * OK [UIDVALIDITY 1052146864]
         if ([aData hasCPrefix: "* OK [UIDVALIDITY"])
         {

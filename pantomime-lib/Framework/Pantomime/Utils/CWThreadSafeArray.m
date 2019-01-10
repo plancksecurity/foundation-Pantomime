@@ -23,7 +23,7 @@
 {
     self = [super init];
     if (self) {
-        INFO(NSStringFromClass([self class]), @"CWThreadSafeArray.init %@\n", self);
+        INFO("CWThreadSafeArray.init %@", self);
         _backgroundQueue = dispatch_queue_create("ThreadSafeArray", DISPATCH_QUEUE_SERIAL);
         _elements = [[NSMutableOrderedSet alloc] init];
     }
@@ -41,7 +41,7 @@
 
 - (void)dealloc
 {
-    INFO(NSStringFromClass([self class]), @"CWThreadSafeArray.dealloc %@\n", self);
+    INFO("CWThreadSafeArray.dealloc %@", self);
 }
 
 - (void)removeAllObjects
@@ -66,9 +66,9 @@
     dispatch_sync(self.backgroundQueue, ^{
         id theLast = [self.elements lastObject];
         if (!theLast) {
-            INFO(NSStringFromClass([self class]), @"self.count %lu", (unsigned long) self.elements.count);
+            INFO("self.count %lu", (unsigned long) self.elements.count);
             for (id o in self.elements) {
-                INFO(NSStringFromClass([self class]), @"Element %@", o);
+                INFO("Element %@", o);
             }
         }
         obj = theLast;
@@ -80,7 +80,7 @@
 {
     dispatch_sync(self.backgroundQueue, ^{
         if (!obj) {
-            INFO(NSStringFromClass([self class]), @"There: Trying to add nil!");
+            INFO("There: Trying to add nil!");
         }
         [self.elements addObject:obj];
     });

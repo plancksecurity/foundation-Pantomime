@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <os/log.h>
+
 @protocol CWLogging <NSObject>
 
 /** Log a verbose message */
@@ -28,11 +30,19 @@
 
 @end
 
-#define INFO(COMP, FORMAT, ...)\
-[[CWLogger logger] infoComponent:COMP message:[NSString stringWithFormat:FORMAT, ##__VA_ARGS__]];
+extern os_log_t theLog(void);
 
-#define WARN(COMP, FORMAT, ...)\
-[[CWLogger logger] warnComponent:COMP message:[NSString stringWithFormat:FORMAT, ##__VA_ARGS__]];
+#define INFO(format, ...) \
+if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
+  os_log_info(theLog(), format, ##__VA_ARGS__);\
+}
 
-#define ERROR(COMP, FORMAT, ...)\
-[[CWLogger logger] errorComponent:COMP message:[NSString stringWithFormat:FORMAT, ##__VA_ARGS__]];
+#define WARN(format, ...) \
+if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
+  os_log(theLog(), format, ##__VA_ARGS__);\
+}
+
+#define ERROR(format, ...) \
+if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
+  os_log_error(theLog(), format, ##__VA_ARGS__);\
+}

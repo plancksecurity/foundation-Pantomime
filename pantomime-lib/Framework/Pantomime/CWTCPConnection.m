@@ -56,7 +56,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)dealloc
 {
-    INFO(NSStringFromClass([self class]), @"dealloc %@", self);
+    INFO("dealloc %@", self);
     [self close];
 }
 
@@ -122,7 +122,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
     getsockopt(*cfSock, SOL_SOCKET, optionName, &originalValue, &originalValueSize);
     setsockopt(*cfSock, SOL_SOCKET, optionName, &optionValue, sizeof(optionValue));
     getsockopt(*cfSock, SOL_SOCKET, optionName, &newValue, &newValueSize);
-    INFO(NSStringFromClass([self class]), @"%@: %lu (%d bytes) -> %lu (%d bytes)",
+    INFO("%@: %lu (%d bytes) -> %lu (%d bytes)",
          optionNameString,
          (unsigned long) originalValue, originalValueSize,
          (unsigned long) newValue, newValueSize);
