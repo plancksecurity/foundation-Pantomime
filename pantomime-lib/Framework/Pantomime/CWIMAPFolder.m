@@ -369,12 +369,14 @@
         // We already fetched mails before, so lets fetch all newer ones by UID
         NSInteger fromUid = [self lastUID] + 1;
         fromUid = fromUid <= 0 ? 1 : fromUid;
+        LOG("no messages, fetching from scratch");
         [self fetchFrom:fromUid to:UNLIMITED];
     } else {
         // case 7
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
+        LOG("existsCount %d", upperMessageSequenceNumber);
         if (upperMessageSequenceNumber == 0) {
             // nothing to fetch
             [_store signalFolderFetchCompleted];
@@ -406,6 +408,7 @@
 - (void)syncExistingFirstUID:(NSUInteger)firstUID lastUID:(NSUInteger)lastUID
 {
     if (firstUID <= lastUID && firstUID > 0) {
+        LOG("sync existing %lu:%lu", (unsigned long) firstUID, (unsigned long) lastUID);
         [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
                   arguments: @"UID FETCH %u:%u (FLAGS)", firstUID, lastUID];
     } else {
