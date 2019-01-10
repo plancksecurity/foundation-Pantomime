@@ -37,9 +37,20 @@ if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log_info(theLog(), format, ##__VA_ARGS__);\
 }
 
+/**
+ There is no WARN for os_log, the closest is just using `default`, which we do.
+ */
 #define WARN(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log(theLog(), format, ##__VA_ARGS__);\
+}
+
+/**
+ This uses os_log's `default`, like WARN does.
+ */
+#define LOG(format, ...) \
+if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
+os_log(theLog(), format, ##__VA_ARGS__);\
 }
 
 #define ERROR(format, ...) \
