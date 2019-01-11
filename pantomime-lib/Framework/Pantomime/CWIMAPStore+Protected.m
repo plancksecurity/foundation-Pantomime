@@ -258,6 +258,7 @@
 {
     CWIMAPFolder *folder = [_openFolders objectForKey:name];
 
+    LOG("select folder %{public}@", name);
     if (folder) {
         if ([_selectedFolder.name isEqualToString:name]) {
             // We have the folder already and it is already selected.
