@@ -158,7 +158,7 @@
 		4363AEF22216E69800CCC988 /* CWPart.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEF12216E69800CCC988 /* CWPart.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AEFE2216F07F00CCC988 /* CWService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEFD2216F07F00CCC988 /* CWService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AF102216F44300CCC988 /* CWStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF0F2216F44300CCC988 /* CWStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4363AF122216F54B00CCC988 /* CWIMAPStore+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF112216F54B00CCC988 /* CWIMAPStore+Protected.h */; };
+		4363AF122216F54B00CCC988 /* CWIMAPStore+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF112216F54B00CCC988 /* CWIMAPStore+Protected.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AF1A2216F81100CCC988 /* CWConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF192216F81100CCC988 /* CWConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		438BA0ED214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */; };
 		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
