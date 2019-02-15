@@ -157,6 +157,7 @@
 		4363AEF02216E59100CCC988 /* CWMacOSXGlue.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEEF2216E59100CCC988 /* CWMacOSXGlue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AEF22216E69800CCC988 /* CWPart.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEF12216E69800CCC988 /* CWPart.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AEFE2216F07F00CCC988 /* CWService.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEFD2216F07F00CCC988 /* CWService.h */; };
+		4363AF102216F44300CCC988 /* CWStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF0F2216F44300CCC988 /* CWStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		438BA0ED214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */; };
 		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
 		43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
@@ -286,6 +287,7 @@
 		4363AEEF2216E59100CCC988 /* CWMacOSXGlue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWMacOSXGlue.h; sourceTree = "<group>"; };
 		4363AEF12216E69800CCC988 /* CWPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWPart.h; sourceTree = "<group>"; };
 		4363AEFD2216F07F00CCC988 /* CWService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWService.h; sourceTree = "<group>"; };
+		4363AF0F2216F44300CCC988 /* CWStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWStore.h; sourceTree = "<group>"; };
 		438A29EA1CBCF037000E48F7 /* CWTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTCPConnection.h; sourceTree = "<group>"; };
 		438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
 		438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1340_NilAttachmentMail.txt"; sourceTree = "<group>"; };
@@ -361,7 +363,6 @@
 		43E8554D1CB7EBDD006867C0 /* CWService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWService.m; sourceTree = "<group>"; };
 		43E8554E1CB7EBDD006867C0 /* CWSMTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWSMTP.h; sourceTree = "<group>"; };
 		43E8554F1CB7EBDD006867C0 /* CWSMTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWSMTP.m; sourceTree = "<group>"; };
-		43E855501CB7EBDD006867C0 /* CWStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWStore.h; sourceTree = "<group>"; };
 		43E855531CB7EBDD006867C0 /* CWTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTransport.h; sourceTree = "<group>"; };
 		43E855541CB7EBDD006867C0 /* CWURLName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWURLName.h; sourceTree = "<group>"; };
 		43E855551CB7EBDD006867C0 /* CWURLName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWURLName.m; sourceTree = "<group>"; };
@@ -547,6 +548,7 @@
 				4363AEEF2216E59100CCC988 /* CWMacOSXGlue.h */,
 				4363AEF12216E69800CCC988 /* CWPart.h */,
 				4363AEFD2216F07F00CCC988 /* CWService.h */,
+				4363AF0F2216F44300CCC988 /* CWStore.h */,
 				4363AE932216CCBB00CCC988 /* Info.plist */,
 			);
 			path = PantomimeFramework;
@@ -671,7 +673,6 @@
 				43E855491CB7EBDD006867C0 /* CWRegEx.m */,
 				15B3F0C71F5EE31A00BF531F /* CWService */,
 				15B3F0CF1F604F2500BF531F /* CWSMTP */,
-				43E855501CB7EBDD006867C0 /* CWStore.h */,
 				43E855531CB7EBDD006867C0 /* CWTransport.h */,
 				43E855541CB7EBDD006867C0 /* CWURLName.h */,
 				43E855551CB7EBDD006867C0 /* CWURLName.m */,
@@ -716,6 +717,7 @@
 				4363AEF02216E59100CCC988 /* CWMacOSXGlue.h in Headers */,
 				4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */,
 				4363AEF22216E69800CCC988 /* CWPart.h in Headers */,
+				4363AF102216F44300CCC988 /* CWStore.h in Headers */,
 				4363AEFE2216F07F00CCC988 /* CWService.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
