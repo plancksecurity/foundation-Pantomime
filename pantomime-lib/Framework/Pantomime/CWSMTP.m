@@ -23,7 +23,7 @@
 #import "Pantomime/CWSMTP.h"
 #import "CWSMTP+Protected.h"
 
-#import "Pantomime/CWConnection.h"
+#import "CWConnection.h"
 #import "CWConstants.h"
 #import "Pantomime/CWInternetAddress.h"
 #import "Pantomime/CWMD5.h"

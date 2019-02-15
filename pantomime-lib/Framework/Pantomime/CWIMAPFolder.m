@@ -22,7 +22,7 @@
 
 #import "CWIMAPFolder+CWProtected.h"
 
-#import "Pantomime/CWConnection.h"
+#import "CWConnection.h"
 #import "CWConstants.h"
 #import "Pantomime/CWFlags.h"
 #import "CWIMAPStore+Protected.h"

@@ -23,7 +23,7 @@
 #ifndef _Pantomime_H_CWService
 #define _Pantomime_H_CWService
 
-#import "Pantomime/CWConnection.h"
+#import "CWConnection.h"
 
 #import "CWConstants.h"
 #import "Pantomime/CWLogger.h"
