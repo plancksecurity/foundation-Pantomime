@@ -26,7 +26,6 @@
 #import "CWConnection.h"
 
 #import "CWConstants.h"
-#import "Pantomime/NSData+Extensions.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSObject.h>

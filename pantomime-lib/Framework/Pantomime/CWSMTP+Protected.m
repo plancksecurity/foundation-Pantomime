@@ -13,6 +13,7 @@
 #import "CWThreadSafeArray.h"
 
 #import "Pantomime/CWLogger.h"
+#import "Pantomime/NSData+Extensions.h"
 
 @implementation CWSMTP (Protected)
 
