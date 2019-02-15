@@ -376,7 +376,7 @@
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
-        LOG("existsCount %d", upperMessageSequenceNumber);
+        LOG("existsCount %ld", (long) upperMessageSequenceNumber);
         if (upperMessageSequenceNumber == 0) {
             // nothing to fetch
             [_store signalFolderFetchCompleted];
