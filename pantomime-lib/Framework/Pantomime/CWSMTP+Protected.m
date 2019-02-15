@@ -12,6 +12,8 @@
 #import "CWMessage.h"
 #import "CWThreadSafeArray.h"
 
+#import "Pantomime/CWLogger.h"
+
 @implementation CWSMTP (Protected)
 
 //

@@ -40,6 +40,8 @@
 #import "CWOAuthUtils.h"
 #import "CWService+Protected.h"
 
+#import "Pantomime/CWLogger.h"
+
 // The hostname/domain used to do EHLO/HELO
 static NSString *pEpEHLOBase = @"pretty.Easy.privacy";
 
