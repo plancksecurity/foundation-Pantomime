@@ -151,7 +151,8 @@
 		4363AED12216CCD700CCC988 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; };
 		4363AED22216CCD700CCC988 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */; };
 		4363AED32216CCD700CCC988 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
-		4363AEDC2216D1AB00CCC988 /* CWFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEDB2216D1AB00CCC988 /* CWFolder.h */; };
+		4363AEDC2216D1AB00CCC988 /* CWFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEDB2216D1AB00CCC988 /* CWFolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4363AEE12216D7C000CCC988 /* CWIMAPFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AEE02216D7C000CCC988 /* CWIMAPFolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		438BA0ED214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */; };
 		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
 		43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
@@ -276,6 +277,7 @@
 		4363AE922216CCBB00CCC988 /* PantomimeFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PantomimeFramework.h; sourceTree = "<group>"; };
 		4363AE932216CCBB00CCC988 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4363AEDB2216D1AB00CCC988 /* CWFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWFolder.h; sourceTree = "<group>"; };
+		4363AEE02216D7C000CCC988 /* CWIMAPFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWIMAPFolder.h; sourceTree = "<group>"; };
 		438A29EA1CBCF037000E48F7 /* CWTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTCPConnection.h; sourceTree = "<group>"; };
 		438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
 		438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1340_NilAttachmentMail.txt"; sourceTree = "<group>"; };
@@ -296,7 +298,6 @@
 		43E854F71CB7EBDD006867C0 /* CWFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CWFolder.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		43E854F81CB7EBDD006867C0 /* CWFolderInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWFolderInformation.h; sourceTree = "<group>"; };
 		43E854F91CB7EBDD006867C0 /* CWFolderInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWFolderInformation.m; sourceTree = "<group>"; };
-		43E854FC1CB7EBDD006867C0 /* CWIMAPFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWIMAPFolder.h; sourceTree = "<group>"; };
 		43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPFolder.m; sourceTree = "<group>"; };
 		43E854FE1CB7EBDD006867C0 /* CWIMAPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWIMAPMessage.h; sourceTree = "<group>"; };
 		43E854FF1CB7EBDD006867C0 /* CWIMAPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPMessage.m; sourceTree = "<group>"; };
@@ -475,7 +476,6 @@
 		15ADD2BC1FA1047000BA1B9B /* CWIMAPFolder */ = {
 			isa = PBXGroup;
 			children = (
-				43E854FC1CB7EBDD006867C0 /* CWIMAPFolder.h */,
 				43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */,
 				15ADD2BE1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.h */,
 				15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */,
@@ -539,6 +539,7 @@
 			children = (
 				4363AE922216CCBB00CCC988 /* PantomimeFramework.h */,
 				4363AEDB2216D1AB00CCC988 /* CWFolder.h */,
+				4363AEE02216D7C000CCC988 /* CWIMAPFolder.h */,
 				4363AE932216CCBB00CCC988 /* Info.plist */,
 			);
 			path = PantomimeFramework;
@@ -705,6 +706,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4363AEE12216D7C000CCC988 /* CWIMAPFolder.h in Headers */,
 				4363AEDC2216D1AB00CCC988 /* CWFolder.h in Headers */,
 				4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */,
 			);
