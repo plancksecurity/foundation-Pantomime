@@ -8,7 +8,7 @@
 
 #import "CWIMAPFolder+CWProtected.h"
 
-#import "Pantomime/CWIMAPStore+Protected.h"
+#import "CWIMAPStore+Protected.h"
 
 #pragma mark - Private Methods
 

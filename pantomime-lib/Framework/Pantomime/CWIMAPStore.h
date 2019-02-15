@@ -25,7 +25,7 @@
 
 #import "CWConstants.h"
 #import "CWService.h"
-#import "Pantomime/CWStore.h"
+#import "CWStore.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>
