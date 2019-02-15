@@ -25,7 +25,7 @@
 
 #import "CWConstants.h"
 #import "Pantomime/CWCacheManager.h"
-#import "Pantomime/CWPart.h"
+#import "CWPart.h"
 
 #import "Pantomime/CWCacheRecord.h"
 

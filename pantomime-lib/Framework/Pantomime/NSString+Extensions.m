@@ -27,7 +27,7 @@
 #import "Pantomime/CWCharset.h"
 #import "CWConstants.h"
 #import "Pantomime/CWInternetAddress.h"
-#import "Pantomime/CWPart.h"
+#import "CWPart.h"
 #import "Pantomime/NSData+Extensions.h"
 
 #import <Foundation/NSBundle.h>
