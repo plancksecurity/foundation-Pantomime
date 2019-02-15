@@ -23,7 +23,7 @@
 #ifndef _Pantomime_H_CWIMAPStore
 #define _Pantomime_H_CWIMAPStore
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/CWService.h"
 #import "Pantomime/CWStore.h"
 

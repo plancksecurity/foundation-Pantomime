@@ -22,7 +22,7 @@
 
 #import "Pantomime/CWMIMEMultipart.h"
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 
 //
 //

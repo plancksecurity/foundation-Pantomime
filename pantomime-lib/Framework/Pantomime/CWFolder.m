@@ -25,7 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/CWContainer.h"
 #import "Pantomime/CWFlags.h"
 #import "Pantomime/CWMessage.h"

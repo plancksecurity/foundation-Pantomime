@@ -21,7 +21,7 @@
 */
 
 #import "Pantomime/CWMD5.h"
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/NSData+Extensions.h"
 
 #import <string.h>

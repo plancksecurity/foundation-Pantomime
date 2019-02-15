@@ -24,7 +24,7 @@
 #import "CWSMTP+Protected.h"
 
 #import "Pantomime/CWConnection.h"
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/CWInternetAddress.h"
 #import "Pantomime/CWMD5.h"
 #import "Pantomime/CWMessage.h"

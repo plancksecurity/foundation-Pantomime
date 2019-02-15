@@ -25,7 +25,7 @@
 #import "Pantomime/NSString+Extensions.h"
 
 #import "Pantomime/CWCharset.h"
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/CWInternetAddress.h"
 #import "Pantomime/CWPart.h"
 #import "Pantomime/NSData+Extensions.h"

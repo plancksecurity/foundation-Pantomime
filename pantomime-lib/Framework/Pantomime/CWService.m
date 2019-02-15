@@ -23,7 +23,7 @@
 #import "Pantomime/CWService.h"
 #import "CWService+Protected.h"
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/NSData+Extensions.h"
 #import "Pantomime/CWLogger.h"
 

@@ -29,7 +29,7 @@
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 
 /*!
   @const PantomimeMessagesCopyCompleted

@@ -28,7 +28,7 @@
 #import <Foundation/NSException.h>
 #import <Foundation/NSString.h>
 
-#include "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 
 #import <stdlib.h>
 #import <string.h>

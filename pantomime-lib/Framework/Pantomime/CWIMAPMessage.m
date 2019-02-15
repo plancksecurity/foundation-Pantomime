@@ -23,7 +23,7 @@
 
 #import "Pantomime/CWIMAPMessage.h"
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/CWFlags.h"
 #import "CWIMAPFolder.h"
 #import "Pantomime/CWIMAPStore.h"

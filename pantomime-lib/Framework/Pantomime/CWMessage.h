@@ -23,7 +23,7 @@
 #ifndef _Pantomime_H_CWMessage
 #define _Pantomime_H_CWMessage
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 #import "Pantomime/CWCacheManager.h"
 #import "Pantomime/CWPart.h"
 
