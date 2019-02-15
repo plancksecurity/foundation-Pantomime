@@ -90,6 +90,67 @@
 		433C51CF1E658CC800272E19 /* CWWINDOWS_1253.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */; };
 		433C51D01E658CCA00272E19 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; };
 		43628764213D5FE90066CD03 /* IOS-1300_odt_attachment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */; };
+		4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AE922216CCBB00CCC988 /* PantomimeFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4363AE982216CCD700CCC988 /* CWOAuthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5D2009187600455F70 /* CWOAuthUtils.m */; };
+		4363AE992216CCD700CCC988 /* CWThreadSafeArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5C2009187600455F70 /* CWThreadSafeArray.m */; };
+		4363AE9A2216CCD700CCC988 /* CWThreadSafeData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5B2009187600455F70 /* CWThreadSafeData.m */; };
+		4363AE9B2216CCD700CCC988 /* NSData+CWParsingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 156B82B3214289D00087D8ED /* NSData+CWParsingUtils.m */; };
+		4363AE9C2216CCD700CCC988 /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
+		4363AE9D2216CCD700CCC988 /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
+		4363AE9E2216CCD700CCC988 /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149351CBCECE200AFC030 /* NSDate+RFC2822.m */; };
+		4363AE9F2216CCD700CCC988 /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3B0F91F5DA3B600EF9D9E /* CWLogger.m */; };
+		4363AEA02216CCD700CCC988 /* CWCharset.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EC1CB7EBDD006867C0 /* CWCharset.m */; };
+		4363AEA12216CCD700CCC988 /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854EF1CB7EBDD006867C0 /* CWConstants.m */; };
+		4363AEA22216CCD700CCC988 /* CWContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F11CB7EBDD006867C0 /* CWContainer.m */; };
+		4363AEA32216CCD700CCC988 /* CWFlags.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F51CB7EBDD006867C0 /* CWFlags.m */; };
+		4363AEA42216CCD700CCC988 /* CWFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F71CB7EBDD006867C0 /* CWFolder.m */; };
+		4363AEA52216CCD700CCC988 /* CWFolderInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854F91CB7EBDD006867C0 /* CWFolderInformation.m */; };
+		4363AEA62216CCD700CCC988 /* CWIMAPFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */; };
+		4363AEA72216CCD700CCC988 /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15ADD2BF1FA104FD00BA1B9B /* CWIMAPFolder+CWProtected.m */; };
+		4363AEA82216CCD700CCC988 /* CWIMAPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E854FF1CB7EBDD006867C0 /* CWIMAPMessage.m */; };
+		4363AEA92216CCD700CCC988 /* CWIMAPStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855011CB7EBDD006867C0 /* CWIMAPStore.m */; };
+		4363AEAA2216CCD700CCC988 /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
+		4363AEAB2216CCD700CCC988 /* CWInternetAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855031CB7EBDD006867C0 /* CWInternetAddress.m */; };
+		4363AEAC2216CCD700CCC988 /* CWISO8859_1.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855051CB7EBDD006867C0 /* CWISO8859_1.m */; };
+		4363AEAD2216CCD700CCC988 /* CWISO8859_10.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855071CB7EBDD006867C0 /* CWISO8859_10.m */; };
+		4363AEAE2216CCD700CCC988 /* CWISO8859_11.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855091CB7EBDD006867C0 /* CWISO8859_11.m */; };
+		4363AEAF2216CCD700CCC988 /* CWISO8859_13.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8550B1CB7EBDD006867C0 /* CWISO8859_13.m */; };
+		4363AEB02216CCD700CCC988 /* CWISO8859_14.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8550D1CB7EBDD006867C0 /* CWISO8859_14.m */; };
+		4363AEB12216CCD700CCC988 /* CWISO8859_15.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8550F1CB7EBDD006867C0 /* CWISO8859_15.m */; };
+		4363AEB22216CCD700CCC988 /* CWISO8859_2.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855111CB7EBDD006867C0 /* CWISO8859_2.m */; };
+		4363AEB32216CCD700CCC988 /* CWISO8859_3.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855131CB7EBDD006867C0 /* CWISO8859_3.m */; };
+		4363AEB42216CCD700CCC988 /* CWISO8859_4.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855151CB7EBDD006867C0 /* CWISO8859_4.m */; };
+		4363AEB52216CCD700CCC988 /* CWISO8859_5.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855171CB7EBDD006867C0 /* CWISO8859_5.m */; };
+		4363AEB62216CCD700CCC988 /* CWISO8859_6.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855191CB7EBDD006867C0 /* CWISO8859_6.m */; };
+		4363AEB72216CCD700CCC988 /* CWISO8859_7.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8551B1CB7EBDD006867C0 /* CWISO8859_7.m */; };
+		4363AEB82216CCD700CCC988 /* CWISO8859_8.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8551D1CB7EBDD006867C0 /* CWISO8859_8.m */; };
+		4363AEB92216CCD700CCC988 /* CWISO8859_9.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8551F1CB7EBDD006867C0 /* CWISO8859_9.m */; };
+		4363AEBA2216CCD700CCC988 /* CWKOI8_R.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855211CB7EBDD006867C0 /* CWKOI8_R.m */; };
+		4363AEBB2216CCD700CCC988 /* CWKOI8_U.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855231CB7EBDD006867C0 /* CWKOI8_U.m */; };
+		4363AEBC2216CCD700CCC988 /* CWMacOSXGlue.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855311CB7EBDD006867C0 /* CWMacOSXGlue.m */; };
+		4363AEBD2216CCD700CCC988 /* CWMD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855331CB7EBDD006867C0 /* CWMD5.m */; };
+		4363AEBE2216CCD700CCC988 /* CWMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855351CB7EBDD006867C0 /* CWMessage.m */; };
+		4363AEBF2216CCD700CCC988 /* CWMIMEMultipart.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855371CB7EBDD006867C0 /* CWMIMEMultipart.m */; };
+		4363AEC02216CCD700CCC988 /* CWMIMEUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855391CB7EBDD006867C0 /* CWMIMEUtility.m */; };
+		4363AEC12216CCD700CCC988 /* CWParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8553B1CB7EBDD006867C0 /* CWParser.m */; };
+		4363AEC22216CCD700CCC988 /* CWPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8553D1CB7EBDD006867C0 /* CWPart.m */; };
+		4363AEC32216CCD700CCC988 /* CWRegEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855491CB7EBDD006867C0 /* CWRegEx.m */; };
+		4363AEC42216CCD700CCC988 /* CWService.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8554D1CB7EBDD006867C0 /* CWService.m */; };
+		4363AEC52216CCD700CCC988 /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C51F5ED64900BF531F /* CWService+Protected.m */; };
+		4363AEC62216CCD700CCC988 /* CWSMTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8554F1CB7EBDD006867C0 /* CWSMTP.m */; };
+		4363AEC72216CCD700CCC988 /* CWSMTP+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B35D241F60728D00EA57E2 /* CWSMTP+Protected.m */; };
+		4363AEC82216CCD700CCC988 /* CWURLName.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855551CB7EBDD006867C0 /* CWURLName.m */; };
+		4363AEC92216CCD700CCC988 /* CWUUFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855571CB7EBDD006867C0 /* CWUUFile.m */; };
+		4363AECA2216CCD700CCC988 /* CWVirtualFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855591CB7EBDD006867C0 /* CWVirtualFolder.m */; };
+		4363AECB2216CCD700CCC988 /* CWWINDOWS_1250.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555B1CB7EBDD006867C0 /* CWWINDOWS_1250.m */; };
+		4363AECC2216CCD700CCC988 /* CWWINDOWS_1251.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555D1CB7EBDD006867C0 /* CWWINDOWS_1251.m */; };
+		4363AECD2216CCD700CCC988 /* CWWINDOWS_1252.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555F1CB7EBDD006867C0 /* CWWINDOWS_1252.m */; };
+		4363AECE2216CCD700CCC988 /* CWWINDOWS_1253.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */; };
+		4363AECF2216CCD700CCC988 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; };
+		4363AED02216CCD700CCC988 /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855681CB7EBDD006867C0 /* NSData+Extensions.m */; };
+		4363AED12216CCD700CCC988 /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; };
+		4363AED22216CCD700CCC988 /* NSString+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556E1CB7EBDD006867C0 /* NSString+Extensions.m */; };
+		4363AED32216CCD700CCC988 /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 1594C1D7212B141E00CB06E2 /* NSMutableString+Extension.m */; };
 		438BA0ED214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */; };
 		43980E651CBD1B5D00A7FC3C /* CWTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */; };
 		43980E671CBD1B5D00A7FC3C /* CWCacheRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 433149321CBCEA1100AFC030 /* CWCacheRecord.m */; };
@@ -210,6 +271,9 @@
 		433C51A41E647A1300272E19 /* MailParsingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MailParsingTests.m; sourceTree = "<group>"; };
 		433C51A71E647EBD00272E19 /* MailParsingAttachments.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailParsingAttachments.txt; sourceTree = "<group>"; };
 		43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1300_odt_attachment.txt"; sourceTree = "<group>"; };
+		4363AE902216CCBB00CCC988 /* PantomimeFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PantomimeFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4363AE922216CCBB00CCC988 /* PantomimeFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PantomimeFramework.h; sourceTree = "<group>"; };
+		4363AE932216CCBB00CCC988 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		438A29EA1CBCF037000E48F7 /* CWTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTCPConnection.h; sourceTree = "<group>"; };
 		438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
 		438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1340_NilAttachmentMail.txt"; sourceTree = "<group>"; };
@@ -319,6 +383,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4363AE8D2216CCBB00CCC988 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		43980E581CBD1B3E00A7FC3C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -462,11 +533,21 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		4363AE912216CCBB00CCC988 /* PantomimeFramework */ = {
+			isa = PBXGroup;
+			children = (
+				4363AE922216CCBB00CCC988 /* PantomimeFramework.h */,
+				4363AE932216CCBB00CCC988 /* Info.plist */,
+			);
+			path = PantomimeFramework;
+			sourceTree = "<group>";
+		};
 		43E854B21CB7EA9A006867C0 = {
 			isa = PBXGroup;
 			children = (
 				43E854BD1CB7EA9A006867C0 /* Pantomime */,
 				43E854D21CB7EA9B006867C0 /* PantomimeTests */,
+				4363AE912216CCBB00CCC988 /* PantomimeFramework */,
 				43E854BC1CB7EA9A006867C0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -476,6 +557,7 @@
 			children = (
 				43E854CF1CB7EA9B006867C0 /* PantomimeTests.xctest */,
 				43980E5B1CBD1B3E00A7FC3C /* libPantomimeStatic.a */,
+				4363AE902216CCBB00CCC988 /* PantomimeFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -617,7 +699,36 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		4363AE8B2216CCBB00CCC988 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		4363AE8F2216CCBB00CCC988 /* PantomimeFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4363AE972216CCBB00CCC988 /* Build configuration list for PBXNativeTarget "PantomimeFramework" */;
+			buildPhases = (
+				4363AE8B2216CCBB00CCC988 /* Headers */,
+				4363AE8C2216CCBB00CCC988 /* Sources */,
+				4363AE8D2216CCBB00CCC988 /* Frameworks */,
+				4363AE8E2216CCBB00CCC988 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PantomimeFramework;
+			productName = PantomimeFramework;
+			productReference = 4363AE902216CCBB00CCC988 /* PantomimeFramework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		43980E5A1CBD1B3E00A7FC3C /* PantomimeStatic */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43980E631CBD1B3E00A7FC3C /* Build configuration list for PBXNativeTarget "PantomimeStatic" */;
@@ -666,6 +777,11 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "pEp Security S.A.";
 				TargetAttributes = {
+					4363AE8F2216CCBB00CCC988 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = NQLYU6MGPN;
+						ProvisioningStyle = Automatic;
+					};
 					43980E5A1CBD1B3E00A7FC3C = {
 						CreatedOnToolsVersion = 7.3;
 						LastSwiftMigration = 0810;
@@ -692,11 +808,19 @@
 			targets = (
 				43E854CE1CB7EA9B006867C0 /* PantomimeTests */,
 				43980E5A1CBD1B3E00A7FC3C /* PantomimeStatic */,
+				4363AE8F2216CCBB00CCC988 /* PantomimeFramework */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4363AE8E2216CCBB00CCC988 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		43E854CD1CB7EA9B006867C0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -777,6 +901,73 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4363AE8C2216CCBB00CCC988 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4363AEC72216CCD700CCC988 /* CWSMTP+Protected.m in Sources */,
+				4363AE9A2216CCD700CCC988 /* CWThreadSafeData.m in Sources */,
+				4363AEB82216CCD700CCC988 /* CWISO8859_8.m in Sources */,
+				4363AED12216CCD700CCC988 /* NSScanner+Extensions.m in Sources */,
+				4363AEBC2216CCD700CCC988 /* CWMacOSXGlue.m in Sources */,
+				4363AEBB2216CCD700CCC988 /* CWKOI8_U.m in Sources */,
+				4363AEB72216CCD700CCC988 /* CWISO8859_7.m in Sources */,
+				4363AEBA2216CCD700CCC988 /* CWKOI8_R.m in Sources */,
+				4363AECA2216CCD700CCC988 /* CWVirtualFolder.m in Sources */,
+				4363AEA72216CCD700CCC988 /* CWIMAPFolder+CWProtected.m in Sources */,
+				4363AEB42216CCD700CCC988 /* CWISO8859_4.m in Sources */,
+				4363AE992216CCD700CCC988 /* CWThreadSafeArray.m in Sources */,
+				4363AEB12216CCD700CCC988 /* CWISO8859_15.m in Sources */,
+				4363AEB22216CCD700CCC988 /* CWISO8859_2.m in Sources */,
+				4363AEA52216CCD700CCC988 /* CWFolderInformation.m in Sources */,
+				4363AEAC2216CCD700CCC988 /* CWISO8859_1.m in Sources */,
+				4363AEC32216CCD700CCC988 /* CWRegEx.m in Sources */,
+				4363AECC2216CCD700CCC988 /* CWWINDOWS_1251.m in Sources */,
+				4363AE9E2216CCD700CCC988 /* NSDate+RFC2822.m in Sources */,
+				4363AEAA2216CCD700CCC988 /* CWIMAPStore+Protected.m in Sources */,
+				4363AECF2216CCD700CCC988 /* CWWINDOWS_1254.m in Sources */,
+				4363AEC92216CCD700CCC988 /* CWUUFile.m in Sources */,
+				4363AEA82216CCD700CCC988 /* CWIMAPMessage.m in Sources */,
+				4363AEBF2216CCD700CCC988 /* CWMIMEMultipart.m in Sources */,
+				4363AEB92216CCD700CCC988 /* CWISO8859_9.m in Sources */,
+				4363AEC12216CCD700CCC988 /* CWParser.m in Sources */,
+				4363AEBE2216CCD700CCC988 /* CWMessage.m in Sources */,
+				4363AEAE2216CCD700CCC988 /* CWISO8859_11.m in Sources */,
+				4363AEC62216CCD700CCC988 /* CWSMTP.m in Sources */,
+				4363AEB02216CCD700CCC988 /* CWISO8859_14.m in Sources */,
+				4363AEB62216CCD700CCC988 /* CWISO8859_6.m in Sources */,
+				4363AECD2216CCD700CCC988 /* CWWINDOWS_1252.m in Sources */,
+				4363AEAB2216CCD700CCC988 /* CWInternetAddress.m in Sources */,
+				4363AE982216CCD700CCC988 /* CWOAuthUtils.m in Sources */,
+				4363AED02216CCD700CCC988 /* NSData+Extensions.m in Sources */,
+				4363AEC22216CCD700CCC988 /* CWPart.m in Sources */,
+				4363AED32216CCD700CCC988 /* NSMutableString+Extension.m in Sources */,
+				4363AEA22216CCD700CCC988 /* CWContainer.m in Sources */,
+				4363AEC42216CCD700CCC988 /* CWService.m in Sources */,
+				4363AEC02216CCD700CCC988 /* CWMIMEUtility.m in Sources */,
+				4363AE9B2216CCD700CCC988 /* NSData+CWParsingUtils.m in Sources */,
+				4363AEBD2216CCD700CCC988 /* CWMD5.m in Sources */,
+				4363AED22216CCD700CCC988 /* NSString+Extensions.m in Sources */,
+				4363AEA02216CCD700CCC988 /* CWCharset.m in Sources */,
+				4363AE9C2216CCD700CCC988 /* CWTCPConnection.m in Sources */,
+				4363AECE2216CCD700CCC988 /* CWWINDOWS_1253.m in Sources */,
+				4363AEC52216CCD700CCC988 /* CWService+Protected.m in Sources */,
+				4363AEB52216CCD700CCC988 /* CWISO8859_5.m in Sources */,
+				4363AEC82216CCD700CCC988 /* CWURLName.m in Sources */,
+				4363AEAF2216CCD700CCC988 /* CWISO8859_13.m in Sources */,
+				4363AE9D2216CCD700CCC988 /* CWCacheRecord.m in Sources */,
+				4363AECB2216CCD700CCC988 /* CWWINDOWS_1250.m in Sources */,
+				4363AEA92216CCD700CCC988 /* CWIMAPStore.m in Sources */,
+				4363AEB32216CCD700CCC988 /* CWISO8859_3.m in Sources */,
+				4363AEAD2216CCD700CCC988 /* CWISO8859_10.m in Sources */,
+				4363AEA42216CCD700CCC988 /* CWFolder.m in Sources */,
+				4363AE9F2216CCD700CCC988 /* CWLogger.m in Sources */,
+				4363AEA12216CCD700CCC988 /* CWConstants.m in Sources */,
+				4363AEA62216CCD700CCC988 /* CWIMAPFolder.m in Sources */,
+				4363AEA32216CCD700CCC988 /* CWFlags.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		43980E571CBD1B3E00A7FC3C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -917,6 +1108,69 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		4363AE952216CCBB00CCC988 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = PantomimeFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = security.pEp.app.framework.PantomimeFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		4363AE962216CCBB00CCC988 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = PantomimeFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = security.pEp.app.framework.PantomimeFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		43980E611CBD1B3E00A7FC3C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1087,6 +1341,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4363AE972216CCBB00CCC988 /* Build configuration list for PBXNativeTarget "PantomimeFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4363AE952216CCBB00CCC988 /* Debug */,
+				4363AE962216CCBB00CCC988 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		43980E631CBD1B3E00A7FC3C /* Build configuration list for PBXNativeTarget "PantomimeStatic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
