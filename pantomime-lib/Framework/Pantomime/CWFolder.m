@@ -21,7 +21,7 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import "Pantomime/CWFolder.h"
+#import "CWFolder.h"
 
 #import <Foundation/Foundation.h>
 
