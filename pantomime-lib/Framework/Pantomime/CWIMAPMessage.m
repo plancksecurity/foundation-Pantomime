@@ -26,7 +26,7 @@
 #import "CWConstants.h"
 #import "Pantomime/CWFlags.h"
 #import "CWIMAPFolder.h"
-#import "Pantomime/CWIMAPStore.h"
+#import "CWIMAPStore.h"
 #import "CWIMAPStore+Protected.h"
 
 #import <Foundation/NSException.h>
