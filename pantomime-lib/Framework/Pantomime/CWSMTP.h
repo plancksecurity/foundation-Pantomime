@@ -24,7 +24,7 @@
 #define _Pantomime_H_CWSMTP
 
 #import "CWService.h"
-#import "Pantomime/CWTransport.h"
+#import "CWTransport.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSData.h>
