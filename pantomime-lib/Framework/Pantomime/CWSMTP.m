@@ -25,7 +25,7 @@
 
 #import "CWConnection.h"
 #import "CWConstants.h"
-#import "Pantomime/CWInternetAddress.h"
+#import "CWInternetAddress.h"
 #import "Pantomime/CWMD5.h"
 #import "CWMessage.h"
 #import "Pantomime/NSData+Extensions.h"
