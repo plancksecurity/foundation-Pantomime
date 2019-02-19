@@ -24,7 +24,7 @@
 
 #import "Pantomime/CWLogger.h"
 #import "CWConstants.h"
-#import "Pantomime/CWFlags.h"
+#import "CWFlags.h"
 #import "Pantomime/CWFolderInformation.h"
 #import "CWIMAPFolder.h"
 #import "CWIMAPMessage.h"

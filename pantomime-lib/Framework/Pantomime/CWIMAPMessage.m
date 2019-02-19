@@ -24,7 +24,7 @@
 #import "CWIMAPMessage.h"
 
 #import "CWConstants.h"
-#import "Pantomime/CWFlags.h"
+#import "CWFlags.h"
 #import "CWIMAPFolder.h"
 #import "CWIMAPStore.h"
 #import "CWIMAPStore+Protected.h"

@@ -27,7 +27,7 @@
 
 #import "CWConstants.h"
 #import "Pantomime/CWContainer.h"
-#import "Pantomime/CWFlags.h"
+#import "CWFlags.h"
 #import "CWMessage.h"
 #import "Pantomime/NSString+Extensions.h"
 
