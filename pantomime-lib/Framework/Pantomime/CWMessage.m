@@ -24,7 +24,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "CWFlags.h"
+#import <PantomimeFramework/CWFlags.h>
 #import "CWFolder.h"
 #import "CWInternetAddress.h"
 #import "Pantomime/CWMIMEMultipart.h"

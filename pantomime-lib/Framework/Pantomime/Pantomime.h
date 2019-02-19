@@ -30,7 +30,7 @@
 #import "CWConstants.h"
 #import "CWContainer.h"
 #import "CWRegEx.h"
-#import "CWFlags.h"
+#import <PantomimeFramework/CWFlags.h>
 #import "CWFolder.h"
 #import "CWFolderInformation.h"
 #import "CWIMAPFolder.h"
