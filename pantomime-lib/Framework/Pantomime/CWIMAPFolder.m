@@ -26,7 +26,7 @@
 #import "CWConstants.h"
 #import "Pantomime/CWFlags.h"
 #import "CWIMAPStore+Protected.h"
-#import "Pantomime/CWIMAPMessage.h"
+#import "CWIMAPMessage.h"
 #import "Pantomime/CWLogger.h"
 #import "Pantomime/NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"

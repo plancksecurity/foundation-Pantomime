@@ -27,7 +27,7 @@
 #import "Pantomime/CWFlags.h"
 #import "Pantomime/CWFolderInformation.h"
 #import "CWIMAPFolder.h"
-#import "Pantomime/CWIMAPMessage.h"
+#import "CWIMAPMessage.h"
 #import "Pantomime/CWMD5.h"
 #import "Pantomime/CWMIMEUtility.h"
 #import "Pantomime/CWURLName.h"

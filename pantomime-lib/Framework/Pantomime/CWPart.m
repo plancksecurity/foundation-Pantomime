@@ -30,7 +30,7 @@
 #import "Pantomime/NSString+Extensions.h"
 #import "Pantomime/CWParser.h"
 #import "Pantomime/CWFlags.h"
-#import "Pantomime/CWIMAPMessage.h"
+#import "CWIMAPMessage.h"
 
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSException.h>
