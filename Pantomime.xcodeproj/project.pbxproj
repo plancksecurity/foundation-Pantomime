@@ -89,6 +89,7 @@
 		433C51CE1E658CC500272E19 /* CWWINDOWS_1252.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555F1CB7EBDD006867C0 /* CWWINDOWS_1252.m */; };
 		433C51CF1E658CC800272E19 /* CWWINDOWS_1253.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */; };
 		433C51D01E658CCA00272E19 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; };
+		433DD7FE221BF9D2002FF037 /* CWIMAPMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */; };
 		43628764213D5FE90066CD03 /* IOS-1300_odt_attachment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */; };
 		4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AE922216CCBB00CCC988 /* PantomimeFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AE982216CCD700CCC988 /* CWOAuthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5D2009187600455F70 /* CWOAuthUtils.m */; };
@@ -280,6 +281,7 @@
 		4338E3841DF1BC880070176B /* CWIMAPFolderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CWIMAPFolderTests.m; path = ../CWIMAPFolderTests.m; sourceTree = "<group>"; };
 		433C51A41E647A1300272E19 /* MailParsingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MailParsingTests.m; sourceTree = "<group>"; };
 		433C51A71E647EBD00272E19 /* MailParsingAttachments.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailParsingAttachments.txt; sourceTree = "<group>"; };
+		433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWIMAPMessage.h; sourceTree = "<group>"; };
 		43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1300_odt_attachment.txt"; sourceTree = "<group>"; };
 		4363AE902216CCBB00CCC988 /* PantomimeFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PantomimeFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4363AE922216CCBB00CCC988 /* PantomimeFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PantomimeFramework.h; sourceTree = "<group>"; };
@@ -315,7 +317,6 @@
 		43E854F81CB7EBDD006867C0 /* CWFolderInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWFolderInformation.h; sourceTree = "<group>"; };
 		43E854F91CB7EBDD006867C0 /* CWFolderInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWFolderInformation.m; sourceTree = "<group>"; };
 		43E854FD1CB7EBDD006867C0 /* CWIMAPFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPFolder.m; sourceTree = "<group>"; };
-		43E854FE1CB7EBDD006867C0 /* CWIMAPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWIMAPMessage.h; sourceTree = "<group>"; };
 		43E854FF1CB7EBDD006867C0 /* CWIMAPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPMessage.m; sourceTree = "<group>"; };
 		43E855011CB7EBDD006867C0 /* CWIMAPStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CWIMAPStore.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		43E855021CB7EBDD006867C0 /* CWInternetAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWInternetAddress.h; sourceTree = "<group>"; };
@@ -544,6 +545,7 @@
 			isa = PBXGroup;
 			children = (
 				4363AE922216CCBB00CCC988 /* PantomimeFramework.h */,
+				433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */,
 				4363AEDB2216D1AB00CCC988 /* CWFolder.h */,
 				4363AEE02216D7C000CCC988 /* CWIMAPFolder.h */,
 				4363AEED2216DE3900CCC988 /* CWConstants.h */,
@@ -625,7 +627,6 @@
 				43E854F81CB7EBDD006867C0 /* CWFolderInformation.h */,
 				43E854F91CB7EBDD006867C0 /* CWFolderInformation.m */,
 				15ADD2BC1FA1047000BA1B9B /* CWIMAPFolder */,
-				43E854FE1CB7EBDD006867C0 /* CWIMAPMessage.h */,
 				43E854FF1CB7EBDD006867C0 /* CWIMAPMessage.m */,
 				15B3F0CB1F5EE3D100BF531F /* CWIMAPStore */,
 				43E855021CB7EBDD006867C0 /* CWInternetAddress.h */,
@@ -724,6 +725,7 @@
 				4363AEF02216E59100CCC988 /* CWMacOSXGlue.h in Headers */,
 				4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */,
 				4372E303221AA5DE008DE6E0 /* CWSMTP.h in Headers */,
+				433DD7FE221BF9D2002FF037 /* CWIMAPMessage.h in Headers */,
 				4363AEF22216E69800CCC988 /* CWPart.h in Headers */,
 				4363AF102216F44300CCC988 /* CWStore.h in Headers */,
 				4363AEFE2216F07F00CCC988 /* CWService.h in Headers */,
