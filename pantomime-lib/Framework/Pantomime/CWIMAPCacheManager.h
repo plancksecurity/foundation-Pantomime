@@ -25,7 +25,7 @@
 
 #import <Foundation/NSMapTable.h>
 
-#include "Pantomime/CWCacheManager.h"
+#import "CWCacheManager.h"
 
 @class CWFolder;
 @class CWIMAPMessage;

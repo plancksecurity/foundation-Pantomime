@@ -91,6 +91,7 @@
 		433C51D01E658CCA00272E19 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; };
 		433DD7FE221BF9D2002FF037 /* CWIMAPMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		433DD809221BFCD4002FF037 /* CWMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 433DD808221BFCD4002FF037 /* CWMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		433DD80E221BFE78002FF037 /* CWCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 433DD80D221BFE78002FF037 /* CWCacheManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		43628764213D5FE90066CD03 /* IOS-1300_odt_attachment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */; };
 		4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AE922216CCBB00CCC988 /* PantomimeFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AE982216CCD700CCC988 /* CWOAuthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5D2009187600455F70 /* CWOAuthUtils.m */; };
@@ -284,6 +285,7 @@
 		433C51A71E647EBD00272E19 /* MailParsingAttachments.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailParsingAttachments.txt; sourceTree = "<group>"; };
 		433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWIMAPMessage.h; sourceTree = "<group>"; };
 		433DD808221BFCD4002FF037 /* CWMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWMessage.h; sourceTree = "<group>"; };
+		433DD80D221BFE78002FF037 /* CWCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheManager.h; sourceTree = "<group>"; };
 		43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1300_odt_attachment.txt"; sourceTree = "<group>"; };
 		4363AE902216CCBB00CCC988 /* PantomimeFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PantomimeFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4363AE922216CCBB00CCC988 /* PantomimeFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PantomimeFramework.h; sourceTree = "<group>"; };
@@ -546,6 +548,7 @@
 			isa = PBXGroup;
 			children = (
 				4363AE922216CCBB00CCC988 /* PantomimeFramework.h */,
+				433DD80D221BFE78002FF037 /* CWCacheManager.h */,
 				433DD808221BFCD4002FF037 /* CWMessage.h */,
 				433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */,
 				4363AEDB2216D1AB00CCC988 /* CWFolder.h */,
@@ -723,6 +726,7 @@
 				4363AF3222170DA100CCC988 /* CWTransport.h in Headers */,
 				4363AEDC2216D1AB00CCC988 /* CWFolder.h in Headers */,
 				4363AF3622170EDD00CCC988 /* CWIMAPStore.h in Headers */,
+				433DD80E221BFE78002FF037 /* CWCacheManager.h in Headers */,
 				4363AEEE2216DE3900CCC988 /* CWConstants.h in Headers */,
 				4363AEF02216E59100CCC988 /* CWMacOSXGlue.h in Headers */,
 				4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */,

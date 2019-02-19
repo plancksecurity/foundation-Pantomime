@@ -24,7 +24,7 @@
 #define _Pantomime_H_CWMessage
 
 #import "CWConstants.h"
-#import "Pantomime/CWCacheManager.h"
+#import "CWCacheManager.h"
 #import "CWPart.h"
 
 #import "Pantomime/CWCacheRecord.h"
