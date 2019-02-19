@@ -22,7 +22,7 @@
 
 #import "Pantomime/CWCharset.h"
 
-#import "CWConstants.h"
+#import <PantomimeFramework/CWConstants.h>
 #import "Pantomime/CWISO8859_1.h"
 #import "Pantomime/CWISO8859_2.h"
 #import "Pantomime/CWISO8859_3.h"

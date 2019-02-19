@@ -6,7 +6,7 @@
 //  Copyright © 2017 pEp Security S.A. All rights reserved.
 //
 
-#import "CWIMAPStore.h"
+#import <PantomimeFramework/CWIMAPStore.h>
 #import "CWService+Protected.h"
 
 NS_ASSUME_NONNULL_BEGIN

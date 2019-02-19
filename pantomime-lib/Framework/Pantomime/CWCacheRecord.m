@@ -6,7 +6,7 @@
 //  Copyright © 2016 p≡p Security S.A. All rights reserved.
 //
 
-#import "CWCacheRecord.h"
+#import <PantomimeFramework/CWCacheRecord.h>
 
 @implementation CWCacheRecord
 

@@ -23,11 +23,11 @@
 #import "CWIMAPStore+Protected.h"
 
 #import "Pantomime/CWLogger.h"
-#import "CWConstants.h"
+#import <PantomimeFramework/CWConstants.h>
 #import <PantomimeFramework/CWFlags.h>
 #import "Pantomime/CWFolderInformation.h"
-#import "CWIMAPFolder.h"
-#import "CWIMAPMessage.h"
+#import <PantomimeFramework/CWIMAPFolder.h>
+#import <PantomimeFramework/CWIMAPMessage.h>
 #import "Pantomime/CWMD5.h"
 #import "Pantomime/CWMIMEUtility.h"
 #import "Pantomime/CWURLName.h"

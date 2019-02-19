@@ -23,12 +23,12 @@
 
 #import "Pantomime/CWMIMEUtility.h"
 
-#import "CWConstants.h"
+#import <PantomimeFramework/CWConstants.h>
 #import "CWMessage.h"
 #import "Pantomime/CWMIMEMultipart.h"
 #import "Pantomime/NSString+Extensions.h"
 #import "Pantomime/NSData+Extensions.h"
-#import "CWPart.h"
+#import <PantomimeFramework/CWPart.h>
 #import "Pantomime/CWMD5.h"
 #import "Pantomime/CWUUFile.h"
 

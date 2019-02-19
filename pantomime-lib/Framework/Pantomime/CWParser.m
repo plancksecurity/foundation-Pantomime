@@ -26,9 +26,9 @@
 
 #import "Pantomime/CWLogger.h"
 
-#import "CWConstants.h"
+#import <PantomimeFramework/CWConstants.h>
 #import <PantomimeFramework/CWFlags.h>
-#import "CWInternetAddress.h"
+#import <PantomimeFramework/CWInternetAddress.h>
 #import "CWMessage.h"
 #import "Pantomime/CWMIMEUtility.h"
 #import "NSMutableString+Extension.h"

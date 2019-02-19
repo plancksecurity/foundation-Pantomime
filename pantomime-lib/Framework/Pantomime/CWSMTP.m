@@ -20,12 +20,12 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import "CWSMTP.h"
+#import <PantomimeFramework/CWSMTP.h>
 #import "CWSMTP+Protected.h"
 
-#import "CWConnection.h"
-#import "CWConstants.h"
-#import "CWInternetAddress.h"
+#import <PantomimeFramework/CWConnection.h>
+#import <PantomimeFramework/CWConstants.h>
+#import <PantomimeFramework/CWInternetAddress.h>
 #import "Pantomime/CWMD5.h"
 #import "CWMessage.h"
 #import "Pantomime/NSData+Extensions.h"
@@ -33,7 +33,7 @@
 #import <Foundation/NSEnumerator.h>
 #import <Foundation/NSNotification.h>
 
-#import "CWConnection.h"
+#import <PantomimeFramework/CWConnection.h>
 #import "CWThreadSafeArray.h"
 #import "CWThreadSafeData.h"
 

@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "CWMIMEUtility.h"
-#import "CWInternetAddress.h"
+#import <PantomimeFramework/CWInternetAddress.h>
 #import "CWMessage.h"
 #import "NSString+Extensions.h"
 

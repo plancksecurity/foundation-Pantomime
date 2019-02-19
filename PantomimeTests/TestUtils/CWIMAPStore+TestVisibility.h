@@ -6,7 +6,7 @@
 //  Copyright © 2018 pEp Security S.A. All rights reserved.
 //
 
-#import "CWIMAPStore.h"
+#import <PantomimeFramework/CWIMAPStore.h>
 
 /**
  Makes private methods visible for test target

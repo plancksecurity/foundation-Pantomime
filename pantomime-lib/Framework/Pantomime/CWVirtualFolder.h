@@ -23,7 +23,7 @@
 #ifndef _Pantomime_H_CWVirtualFolder
 #define _Pantomime_H_CWVirtualFolder
 
-#import "CWFolder.h"
+#import <PantomimeFramework/CWFolder.h>
 
 #import <Foundation/NSArray.h>
 

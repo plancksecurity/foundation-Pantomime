@@ -21,12 +21,12 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import "CWIMAPMessage.h"
+#import <PantomimeFramework/CWIMAPMessage.h>
 
-#import "CWConstants.h"
+#import <PantomimeFramework/CWConstants.h>
 #import <PantomimeFramework/CWFlags.h>
-#import "CWIMAPFolder.h"
-#import "CWIMAPStore.h"
+#import <PantomimeFramework/CWIMAPFolder.h>
+#import <PantomimeFramework/CWIMAPStore.h>
 #import "CWIMAPStore+Protected.h"
 
 #import <Foundation/NSException.h>
