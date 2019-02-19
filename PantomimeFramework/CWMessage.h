@@ -27,7 +27,7 @@
 #import "CWCacheManager.h"
 #import "CWPart.h"
 
-#import "Pantomime/CWCacheRecord.h"
+#import "CWCacheRecord.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSCoder.h>
