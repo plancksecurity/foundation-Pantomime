@@ -32,7 +32,7 @@
 #import "CWMessage.h"
 #import "Pantomime/CWMIMEUtility.h"
 #import "NSMutableString+Extension.h"
-#import "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 #import "NSData+CWParsingUtils.h"
 #import "Pantomime/NSString+Extensions.h"
 

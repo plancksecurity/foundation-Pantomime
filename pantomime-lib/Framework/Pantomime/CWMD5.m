@@ -22,7 +22,7 @@
 
 #import "Pantomime/CWMD5.h"
 #import <PantomimeFramework/CWConstants.h>
-#import "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 
 #import <string.h>
 #import <sys/types.h>  // For byte order on Mac OS X.

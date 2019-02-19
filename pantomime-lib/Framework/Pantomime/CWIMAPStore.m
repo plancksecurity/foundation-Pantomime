@@ -31,7 +31,7 @@
 #import "Pantomime/CWMD5.h"
 #import "Pantomime/CWMIMEUtility.h"
 #import "Pantomime/CWURLName.h"
-#import "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 #import "Pantomime/NSScanner+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 

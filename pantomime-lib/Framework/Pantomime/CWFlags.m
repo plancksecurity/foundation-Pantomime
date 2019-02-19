@@ -22,7 +22,7 @@
 
 #import <PantomimeFramework/CWFlags.h>
 
-#import "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 #import "Pantomime/NSString+Extensions.h"
 
 #define CHECK_FLAG(c, value) \

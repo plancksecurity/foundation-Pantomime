@@ -156,6 +156,7 @@
 		4363AF1A2216F81100CCC988 /* CWConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF192216F81100CCC988 /* CWConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AF3222170DA100CCC988 /* CWTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF3122170DA100CCC988 /* CWTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AF3622170EDD00CCC988 /* CWIMAPStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AF3522170EDD00CCC988 /* CWIMAPStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		436A5564221C253100CA088C /* NSData+Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 436A5563221C253100CA088C /* NSData+Extensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4372E303221AA5DE008DE6E0 /* CWSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 4372E302221AA5DE008DE6E0 /* CWSMTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		438BA0ED214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */; };
 		43BC942C2162053500CAE2A7 /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt in Resources */ = {isa = PBXBuildFile; fileRef = 43BC942B2162053500CAE2A7 /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt */; };
@@ -233,6 +234,7 @@
 		4363AF1F2217029A00CCC988 /* CWIMAPStore+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWIMAPStore+Protected.h"; sourceTree = "<group>"; };
 		4363AF3122170DA100CCC988 /* CWTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTransport.h; sourceTree = "<group>"; };
 		4363AF3522170EDD00CCC988 /* CWIMAPStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWIMAPStore.h; sourceTree = "<group>"; };
+		436A5563221C253100CA088C /* NSData+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Extensions.h"; sourceTree = "<group>"; };
 		4372E302221AA5DE008DE6E0 /* CWSMTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWSMTP.h; sourceTree = "<group>"; };
 		438A29EA1CBCF037000E48F7 /* CWTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTCPConnection.h; sourceTree = "<group>"; };
 		438A29EB1CBCF037000E48F7 /* CWTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTCPConnection.m; sourceTree = "<group>"; };
@@ -317,7 +319,6 @@
 		43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWWINDOWS_1253.m; sourceTree = "<group>"; };
 		43E855621CB7EBDD006867C0 /* CWWINDOWS_1254.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWWINDOWS_1254.h; sourceTree = "<group>"; };
 		43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWWINDOWS_1254.m; sourceTree = "<group>"; };
-		43E855671CB7EBDD006867C0 /* NSData+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Extensions.h"; sourceTree = "<group>"; };
 		43E855681CB7EBDD006867C0 /* NSData+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Extensions.m"; sourceTree = "<group>"; };
 		43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+Extensions.h"; sourceTree = "<group>"; };
 		43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+Extensions.m"; sourceTree = "<group>"; };
@@ -469,6 +470,7 @@
 			isa = PBXGroup;
 			children = (
 				4363AE922216CCBB00CCC988 /* PantomimeFramework.h */,
+				436A5563221C253100CA088C /* NSData+Extensions.h */,
 				433DD816221C033B002FF037 /* CWInternetAddress.h */,
 				433DD814221C0265002FF037 /* CWFlags.h */,
 				433DD80F221BFF77002FF037 /* CWCacheRecord.h */,
@@ -619,7 +621,6 @@
 				43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */,
 				43E855621CB7EBDD006867C0 /* CWWINDOWS_1254.h */,
 				43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */,
-				43E855671CB7EBDD006867C0 /* NSData+Extensions.h */,
 				43E855681CB7EBDD006867C0 /* NSData+Extensions.m */,
 				43E8556B1CB7EBDD006867C0 /* NSScanner+Extensions.h */,
 				43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */,
@@ -658,6 +659,7 @@
 				4363AEF22216E69800CCC988 /* CWPart.h in Headers */,
 				4363AF102216F44300CCC988 /* CWStore.h in Headers */,
 				4363AEFE2216F07F00CCC988 /* CWService.h in Headers */,
+				436A5564221C253100CA088C /* NSData+Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

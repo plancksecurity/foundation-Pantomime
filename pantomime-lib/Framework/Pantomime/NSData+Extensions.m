@@ -22,7 +22,7 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSException.h>

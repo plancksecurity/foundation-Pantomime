@@ -24,7 +24,7 @@
 #import "CWService+Protected.h"
 
 #import <PantomimeFramework/CWConstants.h>
-#import "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 #import "Pantomime/CWLogger.h"
 
 #import <Foundation/NSBundle.h>

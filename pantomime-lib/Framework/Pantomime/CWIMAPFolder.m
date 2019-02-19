@@ -28,7 +28,7 @@
 #import "CWIMAPStore+Protected.h"
 #import <PantomimeFramework/CWIMAPMessage.h>
 #import "Pantomime/CWLogger.h"
-#import "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 #import "Pantomime/NSString+Extensions.h"
 
 #import "NSDate+RFC2822.h"

@@ -27,7 +27,7 @@
 #import "CWMessage.h"
 #import "Pantomime/CWMIMEMultipart.h"
 #import "Pantomime/NSString+Extensions.h"
-#import "Pantomime/NSData+Extensions.h"
+#import <PantomimeFramework/NSData+Extensions.h>
 #import <PantomimeFramework/CWPart.h>
 #import "Pantomime/CWMD5.h"
 #import "Pantomime/CWUUFile.h"
