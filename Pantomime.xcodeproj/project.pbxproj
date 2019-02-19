@@ -89,7 +89,7 @@
 		433C51CE1E658CC500272E19 /* CWWINDOWS_1252.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8555F1CB7EBDD006867C0 /* CWWINDOWS_1252.m */; };
 		433C51CF1E658CC800272E19 /* CWWINDOWS_1253.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855611CB7EBDD006867C0 /* CWWINDOWS_1253.m */; };
 		433C51D01E658CCA00272E19 /* CWWINDOWS_1254.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E855631CB7EBDD006867C0 /* CWWINDOWS_1254.m */; };
-		433DD7FE221BF9D2002FF037 /* CWIMAPMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */; };
+		433DD7FE221BF9D2002FF037 /* CWIMAPMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 433DD7FD221BF9D2002FF037 /* CWIMAPMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		43628764213D5FE90066CD03 /* IOS-1300_odt_attachment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 43628763213D5FE80066CD03 /* IOS-1300_odt_attachment.txt */; };
 		4363AE942216CCBB00CCC988 /* PantomimeFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 4363AE922216CCBB00CCC988 /* PantomimeFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4363AE982216CCD700CCC988 /* CWOAuthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5D2009187600455F70 /* CWOAuthUtils.m */; };
