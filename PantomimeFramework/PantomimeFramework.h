@@ -28,3 +28,7 @@ FOUNDATION_EXPORT const unsigned char PantomimeFrameworkVersionString[];
 #import <PantomimeFramework/CWIMAPStore.h>
 #import <PantomimeFramework/CWSMTP.h>
 #import <PantomimeFramework/CWIMAPMessage.h>
+#import <PantomimeFramework/CWInternetAddress.h>
+#import <PantomimeFramework/CWFlags.h>
+#import <PantomimeFramework/CWCacheRecord.h>
+#import <PantomimeFramework/CWCacheManager.h>
