@@ -27,7 +27,7 @@
 #import <PantomimeFramework/CWConstants.h>
 #import <PantomimeFramework/CWInternetAddress.h>
 #import "Pantomime/CWMD5.h"
-#import "CWMessage.h"
+#import <PantomimeFramework/CWMessage.h>
 #import <PantomimeFramework/NSData+Extensions.h>
 
 #import <Foundation/NSEnumerator.h>

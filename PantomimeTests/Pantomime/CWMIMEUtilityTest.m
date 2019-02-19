@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "CWMIMEUtility.h"
 #import <PantomimeFramework/CWInternetAddress.h>
-#import "CWMessage.h"
+#import <PantomimeFramework/CWMessage.h>
 #import "NSString+Extensions.h"
 
 @interface CWMIMEUtilityTest : XCTestCase
