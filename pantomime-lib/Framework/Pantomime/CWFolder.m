@@ -28,7 +28,7 @@
 #import "CWConstants.h"
 #import "Pantomime/CWContainer.h"
 #import "Pantomime/CWFlags.h"
-#import "Pantomime/CWMessage.h"
+#import "CWMessage.h"
 #import "Pantomime/NSString+Extensions.h"
 
 #if __APPLE__

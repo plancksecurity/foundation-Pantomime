@@ -23,7 +23,7 @@
 #import "CWPart.h"
 
 #import "CWConstants.h"
-#import "Pantomime/CWMessage.h"
+#import "CWMessage.h"
 #import "Pantomime/CWMIMEMultipart.h"
 #import "Pantomime/CWMIMEUtility.h"
 #import "Pantomime/NSData+Extensions.h"

@@ -24,7 +24,7 @@
 
 #import "CWConstants.h"
 #import "Pantomime/CWInternetAddress.h"
-#import "Pantomime/CWMessage.h"
+#import "CWMessage.h"
 
 
 //
