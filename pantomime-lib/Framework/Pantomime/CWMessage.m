@@ -27,7 +27,7 @@
 #import <PantomimeFramework/CWFlags.h>
 #import <PantomimeFramework/CWFolder.h>
 #import <PantomimeFramework/CWInternetAddress.h>
-#import "Pantomime/CWMIMEMultipart.h"
+#import <PantomimeFramework/CWMIMEMultipart.h>
 #import "Pantomime/CWMIMEUtility.h"
 #import "Pantomime/CWRegEx.h"
 #import <PantomimeFramework/NSData+Extensions.h>
