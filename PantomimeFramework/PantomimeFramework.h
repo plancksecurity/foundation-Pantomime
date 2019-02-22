@@ -33,3 +33,4 @@ FOUNDATION_EXPORT const unsigned char PantomimeFrameworkVersionString[];
 #import <PantomimeFramework/CWCacheRecord.h>
 #import <PantomimeFramework/CWCacheManager.h>
 #import <PantomimeFramework/NSData+Extensions.h>
+#import <PantomimeFramework/CWIMAPCacheManager.h>

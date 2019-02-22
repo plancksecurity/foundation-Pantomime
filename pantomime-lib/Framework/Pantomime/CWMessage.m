@@ -40,7 +40,7 @@
 #import <Foundation/NSTimeZone.h>
 #import <Foundation/NSUserDefaults.h>
 
-#import "Pantomime/CWIMAPCacheManager.h"
+#import <PantomimeFramework/CWIMAPCacheManager.h>
 
 #import "NSDate+RFC2822.h"
 
