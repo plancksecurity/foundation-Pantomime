@@ -13,7 +13,6 @@
 		150BC3E62088D8FF00C4850B /* NSScanner+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 150BC3E52088D8FF00C4850B /* NSScanner+ExtensionsTest.m */; };
 		150BC3E72088DDC800C4850B /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E8556C1CB7EBDD006867C0 /* NSScanner+Extensions.m */; };
 		1519EA4B1F2F3A1500B269A8 /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1519EA4A1F2F3A1500B269A8 /* CWIMAPStoreTest.m */; };
-		151DE7DD1FC586D700CDC273 /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B3F0C91F5EE35E00BF531F /* CWIMAPStore+Protected.m */; };
 		15208D54200917CB00455F70 /* NSString+PantomimeTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D50200917CB00455F70 /* NSString+PantomimeTestHelper.m */; };
 		15208D55200917CB00455F70 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D51200917CB00455F70 /* TestUtil.m */; };
 		15208D5F2009187600455F70 /* CWThreadSafeData.m in Sources */ = {isa = PBXBuildFile; fileRef = 15208D5B2009187600455F70 /* CWThreadSafeData.m */; };
@@ -892,7 +891,6 @@
 				433C51BD1E658C7D00272E19 /* CWISO8859_10.m in Sources */,
 				433C51B21E6480F800272E19 /* CWPart.m in Sources */,
 				4338E37D1DF1BC050070176B /* CWFolder.m in Sources */,
-				151DE7DD1FC586D700CDC273 /* CWIMAPStore+Protected.m in Sources */,
 				1502BA812029AB6700E13501 /* CWService+Protected.m in Sources */,
 				433C51BE1E658C7F00272E19 /* CWISO8859_11.m in Sources */,
 				433C51B31E64810400272E19 /* CWMIMEUtility.m in Sources */,
