@@ -162,6 +162,7 @@
 		4372E303221AA5DE008DE6E0 /* CWSMTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 4372E302221AA5DE008DE6E0 /* CWSMTP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		438BA0ED214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 438BA0EC214F810B001A4A82 /* IOS-1340_NilAttachmentMail.txt */; };
 		43B1A27722326D0000BEAA44 /* CWMIMEUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 43B1A27622326D0000BEAA44 /* CWMIMEUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		43B1A2822232703400BEAA44 /* PantomimeFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4363AE902216CCBB00CCC988 /* PantomimeFramework.framework */; };
 		43BC942C2162053500CAE2A7 /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt in Resources */ = {isa = PBXBuildFile; fileRef = 43BC942B2162053500CAE2A7 /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt */; };
 /* End PBXBuildFile section */
 
@@ -343,6 +344,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43B1A2822232703400BEAA44 /* PantomimeFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,6 +502,13 @@
 			path = PantomimeFramework;
 			sourceTree = "<group>";
 		};
+		43B1A2812232703400BEAA44 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		43E854B21CB7EA9A006867C0 = {
 			isa = PBXGroup;
 			children = (
@@ -507,6 +516,7 @@
 				43E854D21CB7EA9B006867C0 /* PantomimeTests */,
 				4363AE912216CCBB00CCC988 /* PantomimeFramework */,
 				43E854BC1CB7EA9A006867C0 /* Products */,
+				43B1A2812232703400BEAA44 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
