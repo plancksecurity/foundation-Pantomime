@@ -29,7 +29,7 @@
 #import <PantomimeFramework/CWIMAPFolder.h>
 #import <PantomimeFramework/CWIMAPMessage.h>
 #import "Pantomime/CWMD5.h"
-#import "Pantomime/CWMIMEUtility.h"
+#import <PantomimeFramework/CWMIMEUtility.h>
 #import "Pantomime/CWURLName.h"
 #import <PantomimeFramework/NSData+Extensions.h>
 #import "Pantomime/NSScanner+Extensions.h"

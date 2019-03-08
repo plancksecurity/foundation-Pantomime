@@ -35,3 +35,4 @@ FOUNDATION_EXPORT const unsigned char PantomimeFrameworkVersionString[];
 #import <PantomimeFramework/NSData+Extensions.h>
 #import <PantomimeFramework/CWIMAPCacheManager.h>
 #import <PantomimeFramework/CWMIMEMultipart.h>
+#import <PantomimeFramework/CWMIMEUtility.h>

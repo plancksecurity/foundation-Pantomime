@@ -30,7 +30,7 @@
 #import <PantomimeFramework/CWFlags.h>
 #import <PantomimeFramework/CWInternetAddress.h>
 #import <PantomimeFramework/CWMessage.h>
-#import "Pantomime/CWMIMEUtility.h"
+#import <PantomimeFramework/CWMIMEUtility.h>
 #import "NSMutableString+Extension.h"
 #import <PantomimeFramework/NSData+Extensions.h>
 #import "NSData+CWParsingUtils.h"

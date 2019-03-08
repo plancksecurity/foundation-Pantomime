@@ -22,7 +22,7 @@
 #import <PantomimeFramework/CWInternetAddress.h>
 
 #import <PantomimeFramework/CWConstants.h>
-#import "Pantomime/CWMIMEUtility.h"
+#import <PantomimeFramework/CWMIMEUtility.h>
 #import "Pantomime/NSString+Extensions.h"
 
 //#import "Pantomime/elm_defs.h>
