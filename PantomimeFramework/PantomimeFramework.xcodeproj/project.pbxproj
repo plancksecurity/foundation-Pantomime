@@ -135,6 +135,33 @@
 		4329CB622238FDBB007D377E /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAF82238FDBB007D377E /* NSScanner+Extensions.m */; };
 		4329CB632238FDBB007D377E /* CWISO8859_5.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAF92238FDBB007D377E /* CWISO8859_5.m */; };
 		4329CB8C22391DBD007D377E /* PantomimeFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4329CA582238FCBF007D377E /* PantomimeFramework.framework */; };
+		4329CBB622391EA1007D377E /* CWIMAPFolderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CB9222391EA1007D377E /* CWIMAPFolderTests.m */; };
+		4329CBB722391EA1007D377E /* NSString+PEPDataUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CB9522391EA1007D377E /* NSString+PEPDataUtils.m */; };
+		4329CBB822391EA1007D377E /* NSString+PantomimeTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CB9622391EA1007D377E /* NSString+PantomimeTestHelper.m */; };
+		4329CBB922391EA1007D377E /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CB9722391EA1007D377E /* TestUtil.m */; };
+		4329CBBA22391EA1007D377E /* NSData+CWParsingUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CB9C22391EA1007D377E /* NSData+CWParsingUtilsTest.m */; };
+		4329CBBB22391EA1007D377E /* CWOAuthUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CB9D22391EA1007D377E /* CWOAuthUtilsTest.m */; };
+		4329CBBC22391EA1007D377E /* CWMessageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CB9F22391EA1007D377E /* CWMessageTest.m */; };
+		4329CBBD22391EA1007D377E /* CWParserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA022391EA1007D377E /* CWParserTest.m */; };
+		4329CBBE22391EA1007D377E /* CWIMAPStoreTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA122391EA1007D377E /* CWIMAPStoreTest.m */; };
+		4329CBBF22391EA1007D377E /* NSScanner+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA222391EA1007D377E /* NSScanner+ExtensionsTest.m */; };
+		4329CBC022391EA1007D377E /* NSData+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA322391EA1007D377E /* NSData+ExtensionsTest.m */; };
+		4329CBC122391EA1007D377E /* CWInternetAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA422391EA1007D377E /* CWInternetAddressTest.m */; };
+		4329CBC222391EA1007D377E /* NSString+ExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA522391EA1007D377E /* NSString+ExtensionsTest.m */; };
+		4329CBC322391EA1007D377E /* CWMIMEUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA622391EA1007D377E /* CWMIMEUtilityTest.m */; };
+		4329CBC422391EA1007D377E /* NSData+PantomimeExtensionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA722391EA1007D377E /* NSData+PantomimeExtensionsTest.m */; };
+		4329CBC522391EA1007D377E /* MailParsingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CBA822391EA1007D377E /* MailParsingTests.m */; };
+		4329CBC622391EA1007D377E /* IOS-1225_from-address_not_ignored.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBAA22391EA1007D377E /* IOS-1225_from-address_not_ignored.txt */; };
+		4329CBC722391EA1007D377E /* MailWithJpgAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBAB22391EA1007D377E /* MailWithJpgAttached.txt */; };
+		4329CBC822391EA1007D377E /* Reference_Parsing_Orig.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBAC22391EA1007D377E /* Reference_Parsing_Orig.txt */; };
+		4329CBC922391EA1007D377E /* IOS-1340_NilAttachmentMail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBAD22391EA1007D377E /* IOS-1340_NilAttachmentMail.txt */; };
+		4329CBCA22391EA1007D377E /* IOS-421_MessageHeapOverflow.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBAF22391EA1007D377E /* IOS-421_MessageHeapOverflow.txt */; };
+		4329CBCB22391EA1007D377E /* 1364_Mail_missing_attached_image.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB022391EA1007D377E /* 1364_Mail_missing_attached_image.txt */; };
+		4329CBCC22391EA1007D377E /* MailParsingAttachments.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB122391EA1007D377E /* MailParsingAttachments.txt */; };
+		4329CBCD22391EA1007D377E /* Reference_Parsing_Cleaned.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB222391EA1007D377E /* Reference_Parsing_Cleaned.txt */; };
+		4329CBCE22391EA1007D377E /* IOS-1300_odt_attachment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB322391EA1007D377E /* IOS-1300_odt_attachment.txt */; };
+		4329CBCF22391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB422391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt */; };
+		4329CBD022391EA1007D377E /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB522391EA1007D377E /* MailWithDocAttached.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -279,6 +306,37 @@
 		4329CAF92238FDBB007D377E /* CWISO8859_5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWISO8859_5.m; sourceTree = "<group>"; };
 		4329CB8722391DBD007D377E /* PantomimeFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PantomimeFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4329CB8B22391DBD007D377E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4329CB9222391EA1007D377E /* CWIMAPFolderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPFolderTests.m; sourceTree = "<group>"; };
+		4329CB9422391EA1007D377E /* CWIMAPStore+TestVisibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWIMAPStore+TestVisibility.h"; sourceTree = "<group>"; };
+		4329CB9522391EA1007D377E /* NSString+PEPDataUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PEPDataUtils.m"; sourceTree = "<group>"; };
+		4329CB9622391EA1007D377E /* NSString+PantomimeTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PantomimeTestHelper.m"; sourceTree = "<group>"; };
+		4329CB9722391EA1007D377E /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUtil.m; sourceTree = "<group>"; };
+		4329CB9822391EA1007D377E /* NSString+PEPDataUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PEPDataUtils.h"; sourceTree = "<group>"; };
+		4329CB9922391EA1007D377E /* TestUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUtil.h; sourceTree = "<group>"; };
+		4329CB9A22391EA1007D377E /* NSString+PantomimeTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PantomimeTestHelper.h"; sourceTree = "<group>"; };
+		4329CB9C22391EA1007D377E /* NSData+CWParsingUtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CWParsingUtilsTest.m"; sourceTree = "<group>"; };
+		4329CB9D22391EA1007D377E /* CWOAuthUtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWOAuthUtilsTest.m; sourceTree = "<group>"; };
+		4329CB9F22391EA1007D377E /* CWMessageTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMessageTest.m; sourceTree = "<group>"; };
+		4329CBA022391EA1007D377E /* CWParserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWParserTest.m; sourceTree = "<group>"; };
+		4329CBA122391EA1007D377E /* CWIMAPStoreTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStoreTest.m; sourceTree = "<group>"; };
+		4329CBA222391EA1007D377E /* NSScanner+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+ExtensionsTest.m"; sourceTree = "<group>"; };
+		4329CBA322391EA1007D377E /* NSData+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ExtensionsTest.m"; sourceTree = "<group>"; };
+		4329CBA422391EA1007D377E /* CWInternetAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWInternetAddressTest.m; sourceTree = "<group>"; };
+		4329CBA522391EA1007D377E /* NSString+ExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ExtensionsTest.m"; sourceTree = "<group>"; };
+		4329CBA622391EA1007D377E /* CWMIMEUtilityTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEUtilityTest.m; sourceTree = "<group>"; };
+		4329CBA722391EA1007D377E /* NSData+PantomimeExtensionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+PantomimeExtensionsTest.m"; sourceTree = "<group>"; };
+		4329CBA822391EA1007D377E /* MailParsingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MailParsingTests.m; sourceTree = "<group>"; };
+		4329CBAA22391EA1007D377E /* IOS-1225_from-address_not_ignored.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1225_from-address_not_ignored.txt"; sourceTree = "<group>"; };
+		4329CBAB22391EA1007D377E /* MailWithJpgAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithJpgAttached.txt; sourceTree = "<group>"; };
+		4329CBAC22391EA1007D377E /* Reference_Parsing_Orig.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reference_Parsing_Orig.txt; sourceTree = "<group>"; };
+		4329CBAD22391EA1007D377E /* IOS-1340_NilAttachmentMail.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1340_NilAttachmentMail.txt"; sourceTree = "<group>"; };
+		4329CBAF22391EA1007D377E /* IOS-421_MessageHeapOverflow.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-421_MessageHeapOverflow.txt"; sourceTree = "<group>"; };
+		4329CBB022391EA1007D377E /* 1364_Mail_missing_attached_image.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 1364_Mail_missing_attached_image.txt; sourceTree = "<group>"; };
+		4329CBB122391EA1007D377E /* MailParsingAttachments.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailParsingAttachments.txt; sourceTree = "<group>"; };
+		4329CBB222391EA1007D377E /* Reference_Parsing_Cleaned.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reference_Parsing_Cleaned.txt; sourceTree = "<group>"; };
+		4329CBB322391EA1007D377E /* IOS-1300_odt_attachment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1300_odt_attachment.txt"; sourceTree = "<group>"; };
+		4329CBB422391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt; sourceTree = "<group>"; };
+		4329CBB522391EA1007D377E /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -481,9 +539,80 @@
 		4329CB8822391DBD007D377E /* PantomimeFrameworkTests */ = {
 			isa = PBXGroup;
 			children = (
+				4329CB9222391EA1007D377E /* CWIMAPFolderTests.m */,
+				4329CBA822391EA1007D377E /* MailParsingTests.m */,
+				4329CB9E22391EA1007D377E /* Pantomime */,
+				4329CBA922391EA1007D377E /* Resources */,
+				4329CB9322391EA1007D377E /* TestUtils */,
+				4329CB9B22391EA1007D377E /* Utils */,
 				4329CB8B22391DBD007D377E /* Info.plist */,
 			);
 			path = PantomimeFrameworkTests;
+			sourceTree = "<group>";
+		};
+		4329CB9322391EA1007D377E /* TestUtils */ = {
+			isa = PBXGroup;
+			children = (
+				4329CB9422391EA1007D377E /* CWIMAPStore+TestVisibility.h */,
+				4329CB9522391EA1007D377E /* NSString+PEPDataUtils.m */,
+				4329CB9622391EA1007D377E /* NSString+PantomimeTestHelper.m */,
+				4329CB9722391EA1007D377E /* TestUtil.m */,
+				4329CB9822391EA1007D377E /* NSString+PEPDataUtils.h */,
+				4329CB9922391EA1007D377E /* TestUtil.h */,
+				4329CB9A22391EA1007D377E /* NSString+PantomimeTestHelper.h */,
+			);
+			path = TestUtils;
+			sourceTree = "<group>";
+		};
+		4329CB9B22391EA1007D377E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4329CB9C22391EA1007D377E /* NSData+CWParsingUtilsTest.m */,
+				4329CB9D22391EA1007D377E /* CWOAuthUtilsTest.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		4329CB9E22391EA1007D377E /* Pantomime */ = {
+			isa = PBXGroup;
+			children = (
+				4329CB9F22391EA1007D377E /* CWMessageTest.m */,
+				4329CBA022391EA1007D377E /* CWParserTest.m */,
+				4329CBA122391EA1007D377E /* CWIMAPStoreTest.m */,
+				4329CBA222391EA1007D377E /* NSScanner+ExtensionsTest.m */,
+				4329CBA322391EA1007D377E /* NSData+ExtensionsTest.m */,
+				4329CBA422391EA1007D377E /* CWInternetAddressTest.m */,
+				4329CBA522391EA1007D377E /* NSString+ExtensionsTest.m */,
+				4329CBA622391EA1007D377E /* CWMIMEUtilityTest.m */,
+				4329CBA722391EA1007D377E /* NSData+PantomimeExtensionsTest.m */,
+			);
+			path = Pantomime;
+			sourceTree = "<group>";
+		};
+		4329CBA922391EA1007D377E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4329CBAA22391EA1007D377E /* IOS-1225_from-address_not_ignored.txt */,
+				4329CBAB22391EA1007D377E /* MailWithJpgAttached.txt */,
+				4329CBAC22391EA1007D377E /* Reference_Parsing_Orig.txt */,
+				4329CBAD22391EA1007D377E /* IOS-1340_NilAttachmentMail.txt */,
+				4329CBAE22391EA1007D377E /* validMultipartEmails */,
+				4329CBB022391EA1007D377E /* 1364_Mail_missing_attached_image.txt */,
+				4329CBB122391EA1007D377E /* MailParsingAttachments.txt */,
+				4329CBB222391EA1007D377E /* Reference_Parsing_Cleaned.txt */,
+				4329CBB322391EA1007D377E /* IOS-1300_odt_attachment.txt */,
+				4329CBB422391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt */,
+				4329CBB522391EA1007D377E /* MailWithDocAttached.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4329CBAE22391EA1007D377E /* validMultipartEmails */ = {
+			isa = PBXGroup;
+			children = (
+				4329CBAF22391EA1007D377E /* IOS-421_MessageHeapOverflow.txt */,
+			);
+			path = validMultipartEmails;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -649,6 +778,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4329CBCE22391EA1007D377E /* IOS-1300_odt_attachment.txt in Resources */,
+				4329CBCD22391EA1007D377E /* Reference_Parsing_Cleaned.txt in Resources */,
+				4329CBC822391EA1007D377E /* Reference_Parsing_Orig.txt in Resources */,
+				4329CBC622391EA1007D377E /* IOS-1225_from-address_not_ignored.txt in Resources */,
+				4329CBCC22391EA1007D377E /* MailParsingAttachments.txt in Resources */,
+				4329CBCB22391EA1007D377E /* 1364_Mail_missing_attached_image.txt in Resources */,
+				4329CBCA22391EA1007D377E /* IOS-421_MessageHeapOverflow.txt in Resources */,
+				4329CBC922391EA1007D377E /* IOS-1340_NilAttachmentMail.txt in Resources */,
+				4329CBCF22391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt in Resources */,
+				4329CBC722391EA1007D377E /* MailWithJpgAttached.txt in Resources */,
+				4329CBD022391EA1007D377E /* MailWithDocAttached.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,6 +866,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4329CBBD22391EA1007D377E /* CWParserTest.m in Sources */,
+				4329CBBF22391EA1007D377E /* NSScanner+ExtensionsTest.m in Sources */,
+				4329CBB622391EA1007D377E /* CWIMAPFolderTests.m in Sources */,
+				4329CBB722391EA1007D377E /* NSString+PEPDataUtils.m in Sources */,
+				4329CBB822391EA1007D377E /* NSString+PantomimeTestHelper.m in Sources */,
+				4329CBBA22391EA1007D377E /* NSData+CWParsingUtilsTest.m in Sources */,
+				4329CBC422391EA1007D377E /* NSData+PantomimeExtensionsTest.m in Sources */,
+				4329CBC522391EA1007D377E /* MailParsingTests.m in Sources */,
+				4329CBC222391EA1007D377E /* NSString+ExtensionsTest.m in Sources */,
+				4329CBBC22391EA1007D377E /* CWMessageTest.m in Sources */,
+				4329CBB922391EA1007D377E /* TestUtil.m in Sources */,
+				4329CBBE22391EA1007D377E /* CWIMAPStoreTest.m in Sources */,
+				4329CBC322391EA1007D377E /* CWMIMEUtilityTest.m in Sources */,
+				4329CBBB22391EA1007D377E /* CWOAuthUtilsTest.m in Sources */,
+				4329CBC022391EA1007D377E /* NSData+ExtensionsTest.m in Sources */,
+				4329CBC122391EA1007D377E /* CWInternetAddressTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
