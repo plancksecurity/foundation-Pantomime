@@ -1080,6 +1080,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = security.pEp.app.framework.PantomimeFrameworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../pantomime-lib/Framework";
 			};
 			name = Debug;
 		};
@@ -1097,6 +1098,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = security.pEp.app.framework.PantomimeFrameworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../pantomime-lib/Framework";
 			};
 			name = Release;
 		};
