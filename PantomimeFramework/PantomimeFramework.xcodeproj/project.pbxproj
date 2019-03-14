@@ -134,7 +134,18 @@
 		4329CB612238FDBB007D377E /* CWKOI8_R.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAF72238FDBB007D377E /* CWKOI8_R.m */; };
 		4329CB622238FDBB007D377E /* NSScanner+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAF82238FDBB007D377E /* NSScanner+Extensions.m */; };
 		4329CB632238FDBB007D377E /* CWISO8859_5.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAF92238FDBB007D377E /* CWISO8859_5.m */; };
+		4329CB8C22391DBD007D377E /* PantomimeFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4329CA582238FCBF007D377E /* PantomimeFramework.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4329CB8D22391DBD007D377E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4329CA4F2238FCBF007D377E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4329CA572238FCBF007D377E;
+			remoteInfo = PantomimeFramework;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4329CA582238FCBF007D377E /* PantomimeFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PantomimeFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -266,6 +277,8 @@
 		4329CAF72238FDBB007D377E /* CWKOI8_R.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWKOI8_R.m; sourceTree = "<group>"; };
 		4329CAF82238FDBB007D377E /* NSScanner+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+Extensions.m"; sourceTree = "<group>"; };
 		4329CAF92238FDBB007D377E /* CWISO8859_5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWISO8859_5.m; sourceTree = "<group>"; };
+		4329CB8722391DBD007D377E /* PantomimeFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PantomimeFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4329CB8B22391DBD007D377E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,6 +286,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4329CB8422391DBD007D377E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4329CB8C22391DBD007D377E /* PantomimeFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +305,7 @@
 			children = (
 				4329CA8D2238FDBB007D377E /* Pantomime */,
 				4329CA5A2238FCBF007D377E /* PantomimeFramework */,
+				4329CB8822391DBD007D377E /* PantomimeFrameworkTests */,
 				4329CA592238FCBF007D377E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -292,6 +314,7 @@
 			isa = PBXGroup;
 			children = (
 				4329CA582238FCBF007D377E /* PantomimeFramework.framework */,
+				4329CB8722391DBD007D377E /* PantomimeFrameworkTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -455,6 +478,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		4329CB8822391DBD007D377E /* PantomimeFrameworkTests */ = {
+			isa = PBXGroup;
+			children = (
+				4329CB8B22391DBD007D377E /* Info.plist */,
+			);
+			path = PantomimeFrameworkTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -553,6 +584,24 @@
 			productReference = 4329CA582238FCBF007D377E /* PantomimeFramework.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		4329CB8622391DBD007D377E /* PantomimeFrameworkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4329CB9122391DBD007D377E /* Build configuration list for PBXNativeTarget "PantomimeFrameworkTests" */;
+			buildPhases = (
+				4329CB8322391DBD007D377E /* Sources */,
+				4329CB8422391DBD007D377E /* Frameworks */,
+				4329CB8522391DBD007D377E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4329CB8E22391DBD007D377E /* PBXTargetDependency */,
+			);
+			name = PantomimeFrameworkTests;
+			productName = PantomimeFrameworkTests;
+			productReference = 4329CB8722391DBD007D377E /* PantomimeFrameworkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -563,6 +612,9 @@
 				ORGANIZATIONNAME = "pEp Security";
 				TargetAttributes = {
 					4329CA572238FCBF007D377E = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					4329CB8622391DBD007D377E = {
 						CreatedOnToolsVersion = 10.1;
 					};
 				};
@@ -580,12 +632,20 @@
 			projectRoot = "";
 			targets = (
 				4329CA572238FCBF007D377E /* PantomimeFramework */,
+				4329CB8622391DBD007D377E /* PantomimeFrameworkTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4329CA562238FCBF007D377E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4329CB8522391DBD007D377E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -662,7 +722,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4329CB8322391DBD007D377E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4329CB8E22391DBD007D377E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4329CA572238FCBF007D377E /* PantomimeFramework */;
+			targetProxy = 4329CB8D22391DBD007D377E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4329CA5E2238FCBF007D377E /* Debug */ = {
@@ -835,6 +910,40 @@
 			};
 			name = Release;
 		};
+		4329CB8F22391DBD007D377E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
+				INFOPLIST_FILE = PantomimeFrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = security.pEp.app.framework.PantomimeFrameworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4329CB9022391DBD007D377E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = NQLYU6MGPN;
+				INFOPLIST_FILE = PantomimeFrameworkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = security.pEp.app.framework.PantomimeFrameworkTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -852,6 +961,15 @@
 			buildConfigurations = (
 				4329CA612238FCBF007D377E /* Debug */,
 				4329CA622238FCBF007D377E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4329CB9122391DBD007D377E /* Build configuration list for PBXNativeTarget "PantomimeFrameworkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4329CB8F22391DBD007D377E /* Debug */,
+				4329CB9022391DBD007D377E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
