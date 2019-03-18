@@ -455,7 +455,6 @@
 				4329CAC12238FDBB007D377E /* CWISO8859_1.h */,
 				4329CAC22238FDBB007D377E /* CWMIMEUtility.m */,
 				4329CAC32238FDBB007D377E /* CWISO8859_13.h */,
-				4329CAC42238FDBB007D377E /* Extensions */,
 				4329CAC52238FDBB007D377E /* CWURLName.h */,
 				4329CAC62238FDBB007D377E /* CWRegEx.m */,
 				4329CAC72238FDBB007D377E /* CWContainer.h */,
@@ -527,13 +526,6 @@
 				4329CAB92238FDBB007D377E /* CWThreadSafeData.h */,
 			);
 			path = Utils;
-			sourceTree = "<group>";
-		};
-		4329CAC42238FDBB007D377E /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		4329CB8822391DBD007D377E /* PantomimeFrameworkTests */ = {
