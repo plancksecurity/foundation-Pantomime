@@ -28,7 +28,7 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSValue.h>
 
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 
 /*!
   @class CWFlags

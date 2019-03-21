@@ -22,7 +22,7 @@
 
 #import "Pantomime/CWURLName.h"
 
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 #import <Foundation/NSPathUtilities.h>
 
 //

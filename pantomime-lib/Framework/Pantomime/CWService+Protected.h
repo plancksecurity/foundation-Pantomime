@@ -6,7 +6,7 @@
 //  Copyright © 2017 pEp Security S.A. All rights reserved.
 //
 
-#import <PantomimeFramework/CWService.h>
+#import "CWService.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

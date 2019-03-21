@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "CWParser.h"
-#import <PantomimeFramework/CWPart.h>
+#import "CWPart.h"
 #import "NSString+PantomimeTestHelper.h"
 
 @interface CWParserTest : XCTestCase

@@ -23,8 +23,8 @@
 #ifndef _Pantomime_H_CWSMTP
 #define _Pantomime_H_CWSMTP
 
-#import <PantomimeFramework/CWService.h>
-#import <PantomimeFramework/CWTransport.h>
+#import "CWService.h"
+#import "CWTransport.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSData.h>

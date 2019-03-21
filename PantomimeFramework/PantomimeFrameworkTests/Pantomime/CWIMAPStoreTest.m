@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <PantomimeFramework/CWIMAPStore.h>
+#import "CWIMAPStore.h"
 #import "CWIMAPStore+TestVisibility.h"
 
 #pragma mark - HELPER

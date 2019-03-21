@@ -20,11 +20,11 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import <PantomimeFramework/CWService.h>
+#import "CWService.h"
 #import "CWService+Protected.h"
 
-#import <PantomimeFramework/CWConstants.h>
-#import <PantomimeFramework/NSData+Extensions.h>
+#import "CWConstants.h"
+#import "NSData+Extensions.h"
 #import "Pantomime/CWLogger.h"
 
 #import <Foundation/NSBundle.h>

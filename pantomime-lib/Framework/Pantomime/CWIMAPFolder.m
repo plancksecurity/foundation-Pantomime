@@ -22,13 +22,13 @@
 
 #import "CWIMAPFolder+CWProtected.h"
 
-#import <PantomimeFramework/CWConnection.h>
-#import <PantomimeFramework/CWConstants.h>
-#import <PantomimeFramework/CWFlags.h>
+#import "CWConnection.h"
+#import "CWConstants.h"
+#import "CWFlags.h"
 #import "CWIMAPStore+Protected.h"
-#import <PantomimeFramework/CWIMAPMessage.h>
+#import "CWIMAPMessage.h"
 #import "Pantomime/CWLogger.h"
-#import <PantomimeFramework/NSData+Extensions.h>
+#import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
 #import "NSDate+RFC2822.h"

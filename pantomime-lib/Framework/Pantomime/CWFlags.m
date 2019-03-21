@@ -20,9 +20,9 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import <PantomimeFramework/CWFlags.h>
+#import "CWFlags.h"
 
-#import <PantomimeFramework/NSData+Extensions.h>
+#import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
 #define CHECK_FLAG(c, value) \

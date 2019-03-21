@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <PantomimeFramework/CWInternetAddress.h>
+#import "CWInternetAddress.h"
 
 @interface CWInternetAddressTest : XCTestCase
 

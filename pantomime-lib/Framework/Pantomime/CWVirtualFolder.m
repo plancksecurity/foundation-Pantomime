@@ -22,7 +22,7 @@
 
 #import "Pantomime/CWVirtualFolder.h"
 
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 
 //
 //

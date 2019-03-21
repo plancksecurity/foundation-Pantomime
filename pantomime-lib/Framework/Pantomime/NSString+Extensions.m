@@ -25,10 +25,10 @@
 #import "Pantomime/NSString+Extensions.h"
 
 #import "Pantomime/CWCharset.h"
-#import <PantomimeFramework/CWConstants.h>
-#import <PantomimeFramework/CWInternetAddress.h>
-#import <PantomimeFramework/CWPart.h>
-#import <PantomimeFramework/NSData+Extensions.h>
+#import "CWConstants.h"
+#import "CWInternetAddress.h"
+#import "CWPart.h"
+#import "NSData+Extensions.h"
 
 #import <Foundation/NSBundle.h>
 

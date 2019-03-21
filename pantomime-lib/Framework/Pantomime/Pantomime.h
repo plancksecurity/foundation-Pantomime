@@ -25,18 +25,18 @@
 
 #import <Foundation/Foundation.h>
 
-#import <PantomimeFramework/CWCacheManager.h>
+#import "CWCacheManager.h"
 #import "CWCharset.h"
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 #import "CWContainer.h"
 #import "CWRegEx.h"
-#import <PantomimeFramework/CWFlags.h>
-#import <PantomimeFramework/CWFolder.h>
+#import "CWFlags.h"
+#import "CWFolder.h"
 #import "CWFolderInformation.h"
-#import <PantomimeFramework/CWIMAPFolder.h>
-#import <PantomimeFramework/CWIMAPMessage.h>
-#import <PantomimeFramework/CWIMAPStore.h>
-#import <PantomimeFramework/CWInternetAddress.h>
+#import "CWIMAPFolder.h"
+#import "CWIMAPMessage.h"
+#import "CWIMAPStore.h"
+#import "CWInternetAddress.h"
 #import "CWISO8859_1.h"
 #import "CWISO8859_10.h"
 #import "CWISO8859_11.h"
@@ -63,12 +63,12 @@
 #import "NSData+Extensions.h"
 #import "NSString+Extensions.h"
 #import "CWParser.h"
-#import <PantomimeFramework/CWPart.h>
-#import <PantomimeFramework/CWService.h>
-#import <PantomimeFramework/CWSMTP.h>
-#import <PantomimeFramework/CWStore.h>
+#import "CWPart.h"
+#import "CWService.h"
+#import "CWSMTP.h"
+#import "CWStore.h"
 #import "CWTCPConnection.h"
-#import <PantomimeFramework/CWTransport.h>
+#import "CWTransport.h"
 #import "CWUUFile.h"
 #import "CWVirtualFolder.h"
 #import "CWWINDOWS_1250.h"

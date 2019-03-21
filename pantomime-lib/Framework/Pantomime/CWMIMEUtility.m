@@ -21,14 +21,14 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import <PantomimeFramework/CWMIMEUtility.h>
+#import "CWMIMEUtility.h"
 
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 #import <PantomimeFramework/CWMessage.h>
-#import <PantomimeFramework/CWMIMEMultipart.h>
+#import "CWMIMEMultipart.h"
 #import "Pantomime/NSString+Extensions.h"
-#import <PantomimeFramework/NSData+Extensions.h>
-#import <PantomimeFramework/CWPart.h>
+#import "NSData+Extensions.h"
+#import "CWPart.h"
 #import "Pantomime/CWMD5.h"
 #import "Pantomime/CWUUFile.h"
 

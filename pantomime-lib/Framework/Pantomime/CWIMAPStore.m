@@ -23,15 +23,15 @@
 #import "CWIMAPStore+Protected.h"
 
 #import "Pantomime/CWLogger.h"
-#import <PantomimeFramework/CWConstants.h>
-#import <PantomimeFramework/CWFlags.h>
+#import "CWConstants.h"
+#import "CWFlags.h"
 #import "Pantomime/CWFolderInformation.h"
-#import <PantomimeFramework/CWIMAPFolder.h>
-#import <PantomimeFramework/CWIMAPMessage.h>
+#import "CWIMAPFolder.h"
+#import "CWIMAPMessage.h"
 #import "Pantomime/CWMD5.h"
-#import <PantomimeFramework/CWMIMEUtility.h>
+#import "CWMIMEUtility.h"
 #import "Pantomime/CWURLName.h"
-#import <PantomimeFramework/NSData+Extensions.h>
+#import "NSData+Extensions.h"
 #import "Pantomime/NSScanner+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 

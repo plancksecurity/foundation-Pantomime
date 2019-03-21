@@ -26,7 +26,7 @@
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 
 @protocol CWConnectionDelegate
 

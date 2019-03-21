@@ -7,7 +7,7 @@
 //
 
 #import "CWService+Protected.h"
-#import <PantomimeFramework/CWService.h>
+#import "CWService.h"
 
 #import "CWThreadSafeData.h"
 #import "CWTCPConnection.h"

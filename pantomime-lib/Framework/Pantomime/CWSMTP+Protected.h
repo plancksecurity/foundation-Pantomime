@@ -6,7 +6,7 @@
 //  Copyright © 2017 pEp Security S.A. All rights reserved.
 //
 
-#import <PantomimeFramework/CWSMTP.h>
+#import "CWSMTP.h"
 
 @interface CWSMTP (Protected)
 

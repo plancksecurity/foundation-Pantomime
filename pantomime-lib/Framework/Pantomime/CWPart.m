@@ -20,17 +20,17 @@
 **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#import <PantomimeFramework/CWPart.h>
+#import "CWPart.h"
 
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 #import <PantomimeFramework/CWMessage.h>
-#import <PantomimeFramework/CWMIMEMultipart.h>
-#import <PantomimeFramework/CWMIMEUtility.h>
-#import <PantomimeFramework/NSData+Extensions.h>
+#import "CWMIMEMultipart.h"
+#import "CWMIMEUtility.h"
+#import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 #import "Pantomime/CWParser.h"
-#import <PantomimeFramework/CWFlags.h>
-#import <PantomimeFramework/CWIMAPMessage.h>
+#import "CWFlags.h"
+#import "CWIMAPMessage.h"
 
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSException.h>

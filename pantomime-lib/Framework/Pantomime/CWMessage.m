@@ -24,13 +24,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import <PantomimeFramework/CWFlags.h>
-#import <PantomimeFramework/CWFolder.h>
-#import <PantomimeFramework/CWInternetAddress.h>
-#import <PantomimeFramework/CWMIMEMultipart.h>
-#import <PantomimeFramework/CWMIMEUtility.h>
+#import "CWFlags.h"
+#import "CWFolder.h"
+#import "CWInternetAddress.h"
+#import "CWMIMEMultipart.h"
+#import "CWMIMEUtility.h"
 #import "Pantomime/CWRegEx.h"
-#import <PantomimeFramework/NSData+Extensions.h>
+#import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 #import "Pantomime/CWParser.h"
 
@@ -40,7 +40,7 @@
 #import <Foundation/NSTimeZone.h>
 #import <Foundation/NSUserDefaults.h>
 
-#import <PantomimeFramework/CWIMAPCacheManager.h>
+#import "CWIMAPCacheManager.h"
 
 #import "NSDate+RFC2822.h"
 

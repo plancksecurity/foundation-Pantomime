@@ -23,9 +23,9 @@
 #ifndef _Pantomime_H_CWIMAPStore
 #define _Pantomime_H_CWIMAPStore
 
-#import <PantomimeFramework/CWConstants.h>
-#import <PantomimeFramework/CWService.h>
-#import <PantomimeFramework/CWStore.h>
+#import "CWConstants.h"
+#import "CWService.h"
+#import "CWStore.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>

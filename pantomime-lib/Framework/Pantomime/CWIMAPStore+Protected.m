@@ -8,7 +8,7 @@
 
 #import "CWIMAPStore+Protected.h"
 
-#import <PantomimeFramework/CWIMAPFolder.h>
+#import "CWIMAPFolder.h"
 #import "Pantomime/NSString+Extensions.h"
 #import "CWThreadSafeArray.h"
 

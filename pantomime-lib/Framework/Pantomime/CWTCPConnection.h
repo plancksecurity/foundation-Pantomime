@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <PantomimeFramework/CWConnection.h>
+#import "CWConnection.h"
 
 #import "Pantomime/CWLogger.h"
 

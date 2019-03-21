@@ -6,7 +6,7 @@
 //  Copyright © 2017 pEp Security S.A. All rights reserved.
 //
 
-#import <PantomimeFramework/CWIMAPFolder.h>
+#import "CWIMAPFolder.h"
 
 @interface CWIMAPFolder(CWProtected)
 

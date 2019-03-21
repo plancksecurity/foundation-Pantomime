@@ -28,7 +28,7 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSString.h>
 
-#import <PantomimeFramework/CWConstants.h>
+#import "CWConstants.h"
 
 /*!
   @class CWInternetAddress

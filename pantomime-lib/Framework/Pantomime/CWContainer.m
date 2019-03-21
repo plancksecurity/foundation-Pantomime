@@ -22,8 +22,8 @@
 
 #import "Pantomime/CWContainer.h"
 
-#import <PantomimeFramework/CWConstants.h>
-#import <PantomimeFramework/CWInternetAddress.h>
+#import "CWConstants.h"
+#import "CWInternetAddress.h"
 #import <PantomimeFramework/CWMessage.h>
 
 
