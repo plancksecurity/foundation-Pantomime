@@ -9,8 +9,11 @@
 #import "CWSMTP+Protected.h"
 #import "CWService+Protected.h"
 
-#import "CWMessage.h"
+#import <PantomimeFramework/CWMessage.h>
 #import "CWThreadSafeArray.h"
+
+#import "Pantomime/CWLogger.h"
+#import "NSData+Extensions.h"
 
 @implementation CWSMTP (Protected)
 

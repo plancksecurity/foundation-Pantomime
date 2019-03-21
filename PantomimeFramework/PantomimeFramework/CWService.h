@@ -23,11 +23,9 @@
 #ifndef _Pantomime_H_CWService
 #define _Pantomime_H_CWService
 
-#import "Pantomime/CWConnection.h"
+#import "CWConnection.h"
 
-#import "Pantomime/CWConstants.h"
-#import "Pantomime/CWLogger.h"
-#import "Pantomime/NSData+Extensions.h"
+#import "CWConstants.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSObject.h>

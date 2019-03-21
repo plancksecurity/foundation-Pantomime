@@ -26,7 +26,7 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSData.h>
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 
 @class CWPart;
 

@@ -22,7 +22,7 @@
 
 #import "Pantomime/CWUUFile.h"
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSFileManager.h>

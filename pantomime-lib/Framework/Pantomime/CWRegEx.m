@@ -23,7 +23,7 @@
 
 #import "Pantomime/CWRegEx.h"
 
-#import "Pantomime/CWConstants.h"
+#import "CWConstants.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSValue.h>

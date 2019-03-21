@@ -25,7 +25,7 @@
 
 #import <Foundation/NSCoder.h>
 
-#import "Pantomime/CWMessage.h"
+#import <PantomimeFramework/CWMessage.h>
 
 /*!
   @class CWIMAPMessage
