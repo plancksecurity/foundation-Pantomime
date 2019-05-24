@@ -2112,10 +2112,14 @@ static inline int has_literal(char *buf, NSUInteger c)
                 [self.currentQueueObject.info setObject: aMessage  forKey: @"Message"];
 
                 messageUpdate.bodyText = YES;
-                [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+                [[_selectedFolder cacheManager] writeRecord: cacheRecord
+                                                    message: aMessage
                                               messageUpdate: messageUpdate];
 
-                PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:), PantomimeMessagePrefetchCompleted, aMessage, @"Message");
+                PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:),
+                                   PantomimeMessagePrefetchCompleted,
+                                   aMessage,
+                                   @"Message");
             }
             break;
         }
@@ -2147,7 +2151,8 @@ static inline int has_literal(char *buf, NSUInteger c)
             [self.currentQueueObject.info setObject: aMessage  forKey: @"Message"];
 
             messageUpdate.rfc822 = YES;
-            [[_selectedFolder cacheManager] writeRecord: cacheRecord  message: aMessage
+            [[_selectedFolder cacheManager] writeRecord: cacheRecord
+                                                message: aMessage
                                           messageUpdate: messageUpdate];
 
             PERFORM_SELECTOR_2(_delegate, @selector(messagePrefetchCompleted:),
