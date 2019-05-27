@@ -369,6 +369,7 @@
         // We already fetched mails before, so lets fetch all newer ones by UID
         NSInteger fromUid = [self lastUID] + 1;
         fromUid = fromUid <= 0 ? 1 : fromUid;
+        LOG("no messages, fetching from scratch");
         [self fetchFrom:fromUid to:UNLIMITED];
     } else {
         // case 7
