@@ -26,13 +26,13 @@
 
 #import "Pantomime/CWLogger.h"
 
-#import "Pantomime/CWConstants.h"
-#import "Pantomime/CWFlags.h"
-#import "Pantomime/CWInternetAddress.h"
-#import "Pantomime/CWMessage.h"
-#import "Pantomime/CWMIMEUtility.h"
+#import "CWConstants.h"
+#import "CWFlags.h"
+#import "CWInternetAddress.h"
+#import <PantomimeFramework/CWMessage.h>
+#import "CWMIMEUtility.h"
 #import "NSMutableString+Extension.h"
-#import "Pantomime/NSData+Extensions.h"
+#import "NSData+Extensions.h"
 #import "NSData+CWParsingUtils.h"
 #import "Pantomime/NSString+Extensions.h"
 

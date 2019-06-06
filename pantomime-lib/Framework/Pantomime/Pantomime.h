@@ -57,7 +57,7 @@
 #import "CWMacOSXGlue.h"
 #endif
 #import "CWMD5.h"
-#import "CWMessage.h"
+#import <PantomimeFramework/CWMessage.h>
 #import "CWMIMEMultipart.h"
 #import "CWMIMEUtility.h"
 #import "NSData+Extensions.h"

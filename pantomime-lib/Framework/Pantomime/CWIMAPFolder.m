@@ -22,13 +22,13 @@
 
 #import "CWIMAPFolder+CWProtected.h"
 
-#import "Pantomime/CWConnection.h"
-#import "Pantomime/CWConstants.h"
-#import "Pantomime/CWFlags.h"
-#import "Pantomime/CWIMAPStore+Protected.h"
-#import "Pantomime/CWIMAPMessage.h"
+#import "CWConnection.h"
+#import "CWConstants.h"
+#import "CWFlags.h"
+#import "CWIMAPStore+Protected.h"
+#import "CWIMAPMessage.h"
 #import "Pantomime/CWLogger.h"
-#import "Pantomime/NSData+Extensions.h"
+#import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
 #import "NSDate+RFC2822.h"
@@ -376,7 +376,7 @@
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
-        LOG("existsCount %d", upperMessageSequenceNumber);
+        LOG("existsCount %ld", (long) upperMessageSequenceNumber);
         if (upperMessageSequenceNumber == 0) {
             // nothing to fetch
             [_store signalFolderFetchCompleted];

@@ -23,11 +23,11 @@
 #ifndef _Pantomime_H_CWMessage
 #define _Pantomime_H_CWMessage
 
-#import "Pantomime/CWConstants.h"
-#import "Pantomime/CWCacheManager.h"
-#import "Pantomime/CWPart.h"
+#import "CWConstants.h"
+#import "CWCacheManager.h"
+#import "CWPart.h"
 
-#import "Pantomime/CWCacheRecord.h"
+#import "CWCacheRecord.h"
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSCoder.h>

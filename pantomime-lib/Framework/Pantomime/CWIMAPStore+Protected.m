@@ -12,6 +12,8 @@
 #import "Pantomime/NSString+Extensions.h"
 #import "CWThreadSafeArray.h"
 
+#import "Pantomime/CWLogger.h"
+
 @implementation CWIMAPStore (Protected)
 
 //

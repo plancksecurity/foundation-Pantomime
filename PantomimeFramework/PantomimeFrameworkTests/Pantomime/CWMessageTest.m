@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "CWMessage.h"
+#import <PantomimeFramework/CWMessage.h>
 #import "TestUtil.h"
 
 @interface CWMessageTest : XCTestCase

@@ -21,8 +21,8 @@
 */
 
 #import "Pantomime/CWMD5.h"
-#import "Pantomime/CWConstants.h"
-#import "Pantomime/NSData+Extensions.h"
+#import "CWConstants.h"
+#import "NSData+Extensions.h"
 
 #import <string.h>
 #import <sys/types.h>  // For byte order on Mac OS X.
