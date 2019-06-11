@@ -30,7 +30,7 @@
 
 @end
 
-extern os_log_t theLog(void);
+extern os_log_t _Nonnull theLog(void);
 
 #define INFO(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
