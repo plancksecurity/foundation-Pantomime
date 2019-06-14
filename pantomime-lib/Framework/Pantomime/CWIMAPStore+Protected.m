@@ -225,7 +225,7 @@
             // dequeue them one by one. Otherwise, we run it immediately.
             if ([_queue count] > 1)
             {
-                //INFO("QUEUED |%@|", theString);
+                //INFO("QUEUED |%{public}@|", theString);
                 return;
             }
             
@@ -240,7 +240,7 @@
         if (isPrivate) {
             INFO("Sending private data |*******|");
         } else {
-            INFO("Sending |%@|", self.currentQueueObject.arguments);
+            INFO("Sending |%{public}@|", self.currentQueueObject.arguments);
         }
         
         _lastCommand = self.currentQueueObject.command;
@@ -350,7 +350,7 @@
 {
     self = [super init];
 
-    INFO("CWIMAPQueueObject.init %@\n", self);
+    INFO("CWIMAPQueueObject.init %{public}@\n", self);
     _command = theCommand;
     _literal = 0;
 
@@ -375,7 +375,7 @@
 //
 - (void) dealloc
 {
-    INFO("dealloc %@\n", self);
+    INFO("dealloc %{public}@\n", self);
     INFO("dealloc done");
 }
 

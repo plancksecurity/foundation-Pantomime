@@ -23,7 +23,7 @@
 {
     self = [super init];
     if (self) {
-        INFO("CWThreadSafeArray.init %@", self);
+        INFO("CWThreadSafeArray.init %{public}@", self);
         _backgroundQueue = dispatch_queue_create("ThreadSafeArray", DISPATCH_QUEUE_SERIAL);
         _elements = [[NSMutableOrderedSet alloc] init];
     }
@@ -41,7 +41,7 @@
 
 - (void)dealloc
 {
-    INFO("CWThreadSafeArray.dealloc %@", self);
+    INFO("CWThreadSafeArray.dealloc %{public}@", self);
 }
 
 - (void)removeAllObjects
@@ -68,7 +68,7 @@
         if (!theLast) {
             INFO("self.count %lu", (unsigned long) self.elements.count);
             for (id o in self.elements) {
-                INFO("Element %@", o);
+                INFO("Element %{public}@", o);
             }
         }
         obj = theLast;

@@ -381,7 +381,7 @@ NSRange shrinkRange(NSRange range)
       word = malloc(256);
       *word = '\0';
 
-      //INFO("Have to parse |%@|", [aData asciiString]);
+      //INFO("Have to parse |%{public}@|", [aData asciiString]);
 
       bytes = (unsigned char*)[aData bytes];
       tot = [aData length];

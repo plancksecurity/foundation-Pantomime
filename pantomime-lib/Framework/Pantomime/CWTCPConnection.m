@@ -56,7 +56,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)dealloc
 {
-    INFO("dealloc %@", self);
+    INFO("dealloc %{public}@", self);
     [self close];
 }
 

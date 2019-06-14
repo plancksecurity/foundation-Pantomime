@@ -90,7 +90,7 @@
                 if (!aQueueObject) {
                     INFO("_queue has %lu objects", (unsigned long) _queue.count);
                     for (NSObject *obj in _queue) {
-                        INFO("obj %@", obj);
+                        INFO("obj %{public}@", obj);
                     }
                     INFO("aQueueObject nil");
                 }
@@ -126,7 +126,7 @@
             if (isPrivate) {
                 INFO("Sending private data |*******|");
             } else {
-                INFO("Sending |%@|", aQueueObject->arguments);
+                INFO("Sending |%{public}@|", aQueueObject->arguments);
             }
             _lastCommand = aQueueObject->command;
             [self bulkWriteData:@[[aQueueObject->arguments

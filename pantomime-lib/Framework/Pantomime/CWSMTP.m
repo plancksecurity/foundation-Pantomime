@@ -554,7 +554,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
   else
     {
-        INFO("Authentification response: |%@|",
+        INFO("Authentification response: |%{public}@|",
              [aData asciiString]);
         AUTHENTICATION_FAILED(_delegate, @"LOGIN");
     }
