@@ -1491,7 +1491,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         aMD5 = [[CWMD5 alloc] initWithData: [aData decodeBase64]];
         [aMD5 computeDigest];
 
-        aString = [NSString stringWithFormat: @"%{public}@ %@", _username, [aMD5 hmacAsStringUsingPassword: _password]];
+        aString = [NSString stringWithFormat: @"%@ %@", _username, [aMD5 hmacAsStringUsingPassword: _password]];
         aString = [[NSString alloc] initWithData: [[aString dataUsingEncoding: NSASCIIStringEncoding] encodeBase64WithLineLength: 0]
                                         encoding: NSASCIIStringEncoding];
 
