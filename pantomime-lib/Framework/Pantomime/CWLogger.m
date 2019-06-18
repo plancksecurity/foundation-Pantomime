@@ -14,7 +14,7 @@ os_log_t theLog(void)
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        s_theLog = os_log_create("pep.security.app.imap", "pantomime");
+        s_theLog = os_log_create("security.pEp.app.pEpForiOS.pantomime", "general");
     });
     return s_theLog;
 }
