@@ -177,7 +177,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     self = [super initWithName: theName  port: thePort transport: transport];
 
-    INFO("CWIMAPStore.init %@", self);
+    INFO("CWIMAPStore.init %{public}@", self);
 
     _folderSeparator = 0;
     _selectedFolder = nil;
@@ -206,7 +206,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) dealloc
 {
-    INFO("dealloc %@", self);
+    INFO("dealloc %{public}@", self);
     RELEASE(_folders);
     RELEASE(_folderStatus);
     RELEASE(_openFolders);
@@ -353,13 +353,13 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         [super updateRead];
 
-        //INFO("_rbul len == %d |%@|", [_rbuf length], [_rbuf asciiString]);
+        //INFO("_rbul len == %d |%{public}@|", [_rbuf length], [_rbuf asciiString]);
 
         if (![_rbuf length]) return;
 
         while ((aData = [_rbuf dropFirstLine]))
         {
-            //INFO("aLine = |%@|", [aData asciiString]);
+            //INFO("aLine = |%{public}@|", [aData asciiString]);
             buf = (char *)[aData bytes];
             count = [aData length];
 
@@ -376,7 +376,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     x = -2-self.currentQueueObject.literal;
                     [[self.currentQueueObject.info objectForKey: @"NSData"] appendData: [aData subdataToIndex: x]];
                     [_responsesFromServer addObject: [aData subdataFromIndex: x]];
-                    //INFO("orig = |%@|, chooped = |%@|   |%@|", [aData asciiString], [[aData subdataToIndex: x] asciiString], [[aData subdataFromIndex: x] asciiString]);
+                    //INFO("orig = |%{public}@|, chooped = |%{public}@| |%{public}@|", [aData asciiString], [[aData subdataToIndex: x] asciiString], [[aData subdataFromIndex: x] asciiString]);
                 }
                 else
                 {
@@ -387,7 +387,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 // to see if we got a full response.
                 if (self.currentQueueObject.literal <= 0)
                 {
-                    //INFO("DONE ACCUMULATING LITTERAL!\nread = |%@|", [[self.currentQueueObject.info objectForKey: @"NSData"] asciiString]);
+                    //INFO("DONE ACCUMULATING LITTERAL!\nread = |%{public}@|", [[self.currentQueueObject.info objectForKey: @"NSData"] asciiString]);
                     //
                     // Let's see, if we can, what does the next line contain. If we got
                     // something, we add this to the remaining _responsesFromServer
@@ -451,7 +451,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
             else
             {
-                //INFO("aLine = |%@|", [aData asciiString]);
+                //INFO("aLine = |%{public}@|", [aData asciiString]);
                 [_responsesFromServer addObject: aData];
 
                 if (self.currentQueueObject && (self.currentQueueObject.literal = has_literal(buf, count)))
@@ -603,7 +603,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                 //NSData *foo;
                 //foo = [NSData dataWithBytes: buf  length: len];
-                //INFO("DONE!!! foo after * = |%@| b = %d, msn = %d", [foo asciiString], b, msn);
+                //INFO("DONE!!! foo after * = |%{public}@| b = %d, msn = %d", [foo asciiString], b, msn);
                 //INFO("len = %d", len);
 
                 //
@@ -739,7 +739,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
                 //NSData *foo;
                 //foo = [NSData dataWithBytes: buf-i  length: i];
-                //INFO("tag = |%@|", [foo asciiString]);
+                //INFO("tag = |%{public}@|", [foo asciiString]);
 
                 j = i+1;
                 buf++;
@@ -752,7 +752,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     buf++; j++;
                 }
 
-                //INFO("OK/NO/BAD response = |%@|", [[NSData dataWithBytes: buf-j+i+1  length: j-i-1] asciiString]);
+                //INFO("OK/NO/BAD response = |%{public}@|", [[NSData dataWithBytes: buf-j+i+1  length: j-i-1] asciiString]);
                 buf = buf-j+i+1;
 
                 // From RFC3501:
@@ -1487,7 +1487,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         // We trim the "+ " and we keep the challenge phrase
         aData = [aData subdataFromIndex: 2];
 
-        //INFO("Challenge phrase = |%@|", [aData asciiString]);
+        //INFO("Challenge phrase = |%{public}@|", [aData asciiString]);
         aMD5 = [[CWMD5 alloc] initWithData: [aData decodeBase64]];
         [aMD5 computeDigest];
 
@@ -1553,7 +1553,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         aData = [_responsesFromServer lastObject];
 
-        INFO("IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
+        INFO("IN _parseBAD: |%{public}@| %d", [aData asciiString], _lastCommand);
 
         switch (_lastCommand)
         {
@@ -1775,7 +1775,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     /*
      for (NSData *data in datas) {
      NSString *aString = [data asciiString];
-     INFO("extractUID: '%@'", aString);
+     INFO("extractUID: '%{public}@'", aString);
      }
      */
     return 0;
@@ -1964,7 +1964,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     for (i = 0; i <= count; i++) {
         aString = [[_responsesFromServer objectAtIndex: i] asciiString];
 
-        //INFO("%i: %@", i, aString);
+        //INFO("%i: %{public}@", i, aString);
         if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)theMSN]])
         {
             seen_fetch = YES;
@@ -1979,7 +1979,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         }
     }
 
-    //INFO("GOT TO PARSE: |%@|", aMutableString);
+    //INFO("GOT TO PARSE: |%{public}@|", aMutableString);
 
     aCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     len = [aMutableString length];
@@ -1997,7 +1997,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         j = [aScanner scanLocation];
         aWord = [[aMutableString substringWithRange: NSMakeRange(i,j-i)] stringByTrimmingWhiteSpaces];
 
-        //INFO("WORD |%@|", aWord);
+        //INFO("WORD |%{public}@|", aWord);
 
         if ([aWord characterAtIndex: 0] == '(') {
             aWord = [aWord substringFromIndex: 1];
@@ -2046,7 +2046,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         else if ([aWord caseInsensitiveCompare: @"FLAGS"] == NSOrderedSame) {
             // We get the substring inside our ( )
             aRange = [aMutableString rangeOfString: @")"  options: 0  range: NSMakeRange(j,len-j)];
-            //INFO("Flags = |%@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
+            //INFO("Flags = |%{public}@|", [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]);
             CWFlags *flagsBefore = aMessage.flags.copy;
             [self _parseFlags: [aMutableString substringWithRange: NSMakeRange(j+2, aRange.location-j-2)]
                       message: aMessage
@@ -2439,7 +2439,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         aData = [_responsesFromServer lastObject];
 
-        INFO("IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
+        INFO("IN _parseNO: |%{public}@| %d", [aData asciiString], _lastCommand);
 
         switch (_lastCommand)
         {
@@ -2589,7 +2589,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         NSData *aData;
         aData = [_responsesFromServer lastObject];
 
-        //INFO("IN _parseOK: |%@|", [aData asciiString]);
+        //INFO("IN _parseOK: |%{public}@|", [aData asciiString]);
 
         switch (_lastCommand)
         {
@@ -2931,7 +2931,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 if ([aMessage folder] == nil)
                 {
                     [[_selectedFolder cacheManager] removeMessageWithUID: [aMessage UID]];
-                    //INFO("Removed message |%@| UID = %d", [aMessage subject], [aMessage UID]);
+                    //INFO("Removed message |%{public}@| UID = %d", [aMessage subject], [aMessage UID]);
                     [_selectedFolder removeMessage: aMessage];
                     b = YES;
                 }
@@ -3017,7 +3017,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     {
         aData = [[_responsesFromServer objectAtIndex: i] dataByTrimmingWhiteSpaces];
 
-        //INFO("|%@|", [aData asciiString]);
+        //INFO("|%{public}@|", [aData asciiString]);
         // * OK [UIDVALIDITY 1052146864]
         if ([aData hasCPrefix: "* OK [UIDVALIDITY"])
         {
