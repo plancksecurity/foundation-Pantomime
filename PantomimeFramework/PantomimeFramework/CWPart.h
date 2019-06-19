@@ -180,7 +180,7 @@
  file, if any.
  @result The name of the file, nil if none was specified.
  */
-- (NSString *)filename;
+- (NSString *_Nullable)filename;
 
 /**
  This method is used to set the name of the receiver's file.
@@ -188,7 +188,7 @@
  the length of the string is 0, "unknown" will
  be set as the filename.
  */
-- (void)setFilename:(NSString *)theFilename;
+- (void)setFilename:(NSString *_Nullable)theFilename;
 
 /*!
   @method format
