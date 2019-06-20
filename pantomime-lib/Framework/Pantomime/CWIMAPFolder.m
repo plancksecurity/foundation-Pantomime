@@ -106,8 +106,8 @@
 }
 
 - (void)appendMessageFromRawSource:(NSData *)rawSource
-                             flags:(CWFlags *)flags
-                      internalDate:(NSDate *)date
+                             flags:(CWFlags * _Nullable)flags
+                      internalDate:(NSDate * _Nullable)date;
 {
     NSString *flagsAsString = @"";
     if (flags) {

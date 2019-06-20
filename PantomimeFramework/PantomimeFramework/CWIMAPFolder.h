@@ -31,6 +31,8 @@
 
 #import "CWConstants.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
   @const PantomimeMessagesCopyCompleted
   @discussion This notification is posted when CWIMAPFolder: -copyMessages:
@@ -113,8 +115,8 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
   @param date The INTERNALDATE of the message, or nil to use the current date.
 */
 - (void)appendMessageFromRawSource:(NSData *)rawSource
-                             flags:(CWFlags *)flags
-                      internalDate:(NSDate *)date;
+                             flags:(CWFlags * _Nullable)flags
+                      internalDate:(NSDate * _Nullable)date;
 
 #pragma mark - UID COPY
 
@@ -314,3 +316,5 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 @end
 
 #endif // _Pantomime_H_CWIMAPFolder
+
+NS_ASSUME_NONNULL_END

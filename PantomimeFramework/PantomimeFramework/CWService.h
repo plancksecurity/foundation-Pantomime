@@ -38,6 +38,8 @@
 #import <CoreFoundation/CoreFoundation.h>
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class CWService;
 @class CWThreadSafeArray;
 @class CWThreadSafeData;
@@ -473,5 +475,6 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (void) updateRead;
 
 @end
-
 #endif // _Pantomime_H_CWService
+
+NS_ASSUME_NONNULL_END

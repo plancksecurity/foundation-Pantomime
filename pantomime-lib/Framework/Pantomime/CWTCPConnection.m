@@ -14,6 +14,8 @@
 
 #import "Pantomime/CWLogger.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString *comp = @"CWTCPConnection";
 
 static NSInteger s_numberOfConnectionThreads = 0;
@@ -24,8 +26,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
 @property (atomic, strong) NSString *name;
 @property (atomic) uint32_t port;
 @property (atomic) ConnectionTransport transport;
-@property (atomic, strong) NSInputStream *readStream;
-@property (atomic, strong) NSOutputStream *writeStream;
+@property (atomic, strong, nullable) NSInputStream *readStream;
+@property (atomic, strong, nullable) NSOutputStream *writeStream;
 @property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
 @property (nullable, strong) NSThread *backgroundThread;
@@ -323,3 +325,5 @@ static NSInteger s_numberOfConnectionThreads = 0;
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

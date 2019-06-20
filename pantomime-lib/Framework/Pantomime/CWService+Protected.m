@@ -303,10 +303,10 @@
  //  @param theExtra Additional information.
  //  @param theMode The runloop modes.
  //*/
-- (void)receivedEvent:(void *)theData
+- (void)receivedEvent:(void * _Nullable)theData
                  type:(RunLoopEventType)theType
-                 extra:(void *)theExtra
-               forMode:(NSString *)theMode
+                extra:(void * _Nullable)theExtra
+              forMode:(NSString * _Nullable)theMode;
 {
     switch (theType) {
         case ET_RDESC:

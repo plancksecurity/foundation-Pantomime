@@ -1100,6 +1100,9 @@ NSRange shrinkRange(NSRange range)
         [resultData replaceBytesInRange: NSMakeRange(0, NSMaxRange(r2))
                               withBytes: NULL
                                  length: 0];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+// Suppress warning. We need to be able to pass the specified charset
         if (decode) {
             NSString *result = [[NSString alloc] initWithData: resultData
                                                      encoding: NSASCIIStringEncoding];
@@ -1110,6 +1113,7 @@ NSRange shrinkRange(NSRange range)
                 return result;
             }
         }
+#pragma clang diagnostic pop
     } else {
         if (decode) {
             return [CWMIMEUtility decodeHeader: resultData  charset: charset];

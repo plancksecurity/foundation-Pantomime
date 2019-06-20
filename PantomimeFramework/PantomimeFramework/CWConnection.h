@@ -28,14 +28,16 @@
 
 #import "CWConstants.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol CWConnectionDelegate
 
 - (void)connectionEstablished;
 
-- (void)receivedEvent:(void *)theData
+- (void)receivedEvent:(void * _Nullable)theData
                  type:(RunLoopEventType)theType
-                extra:(void *)theExtra
-              forMode:(NSString *)theMode;
+                extra:(void * _Nullable)theExtra
+              forMode:(NSString * _Nullable)theMode;
 
 @end
 
@@ -115,4 +117,5 @@
 
 @end
 
+NS_ASSUME_NONNULL_END
 #endif // _Pantomime_H_CWConnection
