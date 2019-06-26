@@ -62,11 +62,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
     [self close];
 }
 
-- (id<CWLogging>)logger
-{
-    return [CWLogger logger];
-}
-
 - (void)startTLS
 {
     [self.readStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
@@ -228,12 +223,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.readStream read:buf maxLength:len];
 
-    /*[self.logger infoComponent:comp
-                       message:[NSString
-                                stringWithFormat:@"< %@:%d %ld: \"%@\"",
-                                self.name, self.port,
-                                (long)count,
-                                [self bufferToString:buf length:count]]];*/
+    INFO("< %@:%d %ld: \"%@\"",
+         self.name, self.port,
+         (long)count,
+         [self bufferToString:buf length:count]);
 
     return count;
 }
@@ -245,12 +238,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.writeStream write:buf maxLength:len];
 
-    /*[self.logger infoComponent:comp
-                       message:[NSString
-                                stringWithFormat:@"> %@:%d %ld: \"%@\"",
-                                self.name, self.port,
-                                (long)count,
-                                [self bufferToString:buf length:len]]];*/
+    INFO("> %@:%d %ld: \"%@\"",
+         self.name, self.port,
+         (long)count,
+         [self bufferToString:buf length:len]);
 
     return count;
 }
@@ -277,32 +268,29 @@ static NSInteger s_numberOfConnectionThreads = 0;
 {
     switch (eventCode) {
         case NSStreamEventNone:
-            [self.logger infoComponent:comp message:@"NSStreamEventNone"];
+            INFO("NSStreamEventNone");
             break;
         case NSStreamEventOpenCompleted:
-            [self.logger infoComponent:comp message:@"NSStreamEventOpenCompleted"];
+            INFO("NSStreamEventOpenCompleted");
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
-                [self.logger infoComponent:comp message:@"connectionEstablished"];
+                INFO("connectionEstablished");
                 self.connected = YES;
                 [self.delegate connectionEstablished];
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            //[self.logger infoComponent:comp message:@"NSStreamEventHasBytesAvailable"];
+            INFO("NSStreamEventHasBytesAvailable");
             [self.delegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
-            //[self.logger infoComponent:comp message:@"NSStreamEventHasSpaceAvailable"];
+            INFO("NSStreamEventHasSpaceAvailable");
             [self.delegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            [self.logger
-             infoComponent:comp
-             message:[NSString
-                      stringWithFormat:@"NSStreamEventErrorOccurred: read: %@, write: %@",
-                      [self.readStream.streamError localizedDescription],
-                      [self.writeStream.streamError localizedDescription]]];
+            INFO("NSStreamEventErrorOccurred: read: %@, write: %@",
+                 [self.readStream.streamError localizedDescription],
+                 [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
                 self.streamError = self.readStream.streamError;
             } else if (self.writeStream.streamError) {
@@ -315,7 +303,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
             break;
         case NSStreamEventEndEncountered:
-            [self.logger infoComponent:comp message:@"NSStreamEventEndEncountered"];
+            INFO("NSStreamEventEndEncountered");
 
             [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self cancelBackgroundThead];
