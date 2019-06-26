@@ -223,10 +223,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.readStream read:buf maxLength:len];
 
-    INFO("< %@:%d %ld: \"%@\"",
+    /*INFO("< %@:%d %ld: \"%@\"",
          self.name, self.port,
          (long)count,
-         [self bufferToString:buf length:count]);
+         [self bufferToString:buf length:count]);*/
 
     return count;
 }
@@ -238,10 +238,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.writeStream write:buf maxLength:len];
 
-    INFO("> %@:%d %ld: \"%@\"",
+    /*INFO("> %@:%d %ld: \"%@\"",
          self.name, self.port,
          (long)count,
-         [self bufferToString:buf length:len]);
+         [self bufferToString:buf length:len]);*/
 
     return count;
 }
@@ -288,7 +288,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
             [self.delegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            INFO("NSStreamEventErrorOccurred: read: %@, write: %@",
+            WARN("NSStreamEventErrorOccurred: read: %@, write: %@",
                  [self.readStream.streamError localizedDescription],
                  [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
@@ -303,7 +303,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
             break;
         case NSStreamEventEndEncountered:
-            INFO("NSStreamEventEndEncountered");
+            WARN("NSStreamEventEndEncountered");
 
             [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self cancelBackgroundThead];
