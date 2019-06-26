@@ -51,6 +51,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
+        INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
     return self;
@@ -58,7 +59,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)dealloc
 {
-    INFO("dealloc %{public}@", self);
+    INFO("dealloc %{public}@:%d (%{public}@)", self.name, self.port, self);
     [self close];
 }
 
