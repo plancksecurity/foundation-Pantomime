@@ -292,9 +292,9 @@ static NSInteger s_numberOfConnectionThreads = 0;
             [self.delegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            WARN("NSStreamEventErrorOccurred: read: %@, write: %@",
-                 [self.readStream.streamError localizedDescription],
-                 [self.writeStream.streamError localizedDescription]);
+            ERROR("NSStreamEventErrorOccurred: read: %@, write: %@",
+                  [self.readStream.streamError localizedDescription],
+                  [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
                 self.streamError = self.readStream.streamError;
             } else if (self.writeStream.streamError) {
