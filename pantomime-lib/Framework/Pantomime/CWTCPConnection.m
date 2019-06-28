@@ -280,16 +280,16 @@ static NSInteger s_numberOfConnectionThreads = 0;
             if (self.openConnections.count == 2) {
                 INFO("connectionEstablished");
                 self.connected = YES;
-                [self.delegate connectionEstablished];
+                [self.forceDelegate connectionEstablished];
             }
             break;
         case NSStreamEventHasBytesAvailable:
             INFO("NSStreamEventHasBytesAvailable");
-            [self.delegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
+            [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
             INFO("NSStreamEventHasSpaceAvailable");
-            [self.delegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
+            [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
             ERROR("NSStreamEventErrorOccurred: read: %@, write: %@",
@@ -302,18 +302,34 @@ static NSInteger s_numberOfConnectionThreads = 0;
             }
 
             // We abuse ET_EDESC for error indicication.
-            [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self cancelBackgroundThead];
 
             break;
         case NSStreamEventEndEncountered:
             WARN("NSStreamEventEndEncountered");
 
-            [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self cancelBackgroundThead];
 
             break;
     }
+}
+
+#pragma mark - Util
+
+/**
+ Makes sure there is still a non-nil delegate and returns it, if not,
+ warns about it.
+
+ @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
+ */
+- (id<CWConnectionDelegate>)forceDelegate
+{
+    if (self.delegate == nil) {
+        WARN("CWTCPConnection: No delegate.");
+    }
+    return self.delegate;
 }
 
 @end
