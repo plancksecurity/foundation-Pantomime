@@ -329,8 +329,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
 - (id<CWConnectionDelegate>)forceDelegate
 {
     if (self.delegate == nil) {
-        WARN("CWTCPConnection: No delegate.");
-        [self cancelBackgroundThread];
+        WARN("CWTCPConnection: No delegate. Will close");
+        if (!self.gettingClosed) {
+            [self close];
+        }
     }
     return self.delegate;
 }
