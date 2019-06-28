@@ -320,7 +320,9 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 /**
  Makes sure there is still a non-nil delegate and returns it, if not,
- warns about it.
+ warns about it, and shuts the connection down.
+
+ There's no point in going on without a live delegate.
 
  @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
  */
@@ -328,6 +330,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 {
     if (self.delegate == nil) {
         WARN("CWTCPConnection: No delegate.");
+        [self cancelBackgroundThread];
     }
     return self.delegate;
 }
