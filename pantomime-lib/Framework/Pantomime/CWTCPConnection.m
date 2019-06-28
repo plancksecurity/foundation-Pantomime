@@ -190,7 +190,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)cancelNoop {}
 
-- (void)cancelBackgroundThead
+- (void)cancelBackgroundThread
 {
     if (self.backgroundThread) {
         [self.backgroundThread cancel];
@@ -213,7 +213,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
         [self closeAndRemoveStream:self.writeStream];
         self.connected = NO;
         self.gettingClosed = YES;
-        [self cancelBackgroundThead];
+        [self cancelBackgroundThread];
     }
 }
 
@@ -303,14 +303,14 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
             // We abuse ET_EDESC for error indicication.
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self cancelBackgroundThead];
+            [self cancelBackgroundThread];
 
             break;
         case NSStreamEventEndEncountered:
             WARN("NSStreamEventEndEncountered");
 
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self cancelBackgroundThead];
+            [self cancelBackgroundThread];
 
             break;
     }
