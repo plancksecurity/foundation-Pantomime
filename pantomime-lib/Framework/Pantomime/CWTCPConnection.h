@@ -22,9 +22,4 @@
  */
 @property (nonatomic, readonly, nullable) NSThread *backgroundThread;
 
-/**
- For debugging the number of running connection threads.
- */
-+ (NSInteger)numberOfRunningConnections;
-
 @end

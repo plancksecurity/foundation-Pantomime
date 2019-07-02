@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSString *comp = @"CWTCPConnection";
 
-static NSInteger s_numberOfConnectionThreads = 0;
-
 @interface CWTCPConnection ()
 
 @property (atomic) BOOL connected;
@@ -36,11 +34,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
 @end
 
 @implementation CWTCPConnection
-
-+ (NSInteger)numberOfRunningConnections
-{
-    return s_numberOfConnectionThreads;
-}
 
 - (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
@@ -159,8 +152,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)connectInBackgroundAndStartRunLoop
 {
-    s_numberOfConnectionThreads++;
-
     CFReadStreamRef readStream = nil;
     CFWriteStreamRef writeStream = nil;
     CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
@@ -185,7 +176,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
             [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
         }
     }
-    s_numberOfConnectionThreads--;
     self.backgroundThread = nil;
 }
 
