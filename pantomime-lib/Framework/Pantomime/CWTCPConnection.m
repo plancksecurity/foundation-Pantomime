@@ -303,14 +303,14 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
             // We abuse ET_EDESC for error indicication.
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self cancelBackgroundThread];
+            [self close];
 
             break;
         case NSStreamEventEndEncountered:
             WARN("NSStreamEventEndEncountered");
 
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self cancelBackgroundThread];
+            [self close];
 
             break;
     }
