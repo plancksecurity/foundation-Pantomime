@@ -94,6 +94,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
     if (stream) {
         [stream close];
         [self.openConnections removeObject:stream];
+        [stream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         if (stream == self.readStream) {
             self.readStream = nil;
         } else if (stream == self.writeStream) {
