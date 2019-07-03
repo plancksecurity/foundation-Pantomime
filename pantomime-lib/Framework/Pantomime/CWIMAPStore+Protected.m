@@ -350,7 +350,7 @@
 {
     self = [super init];
 
-    INFO("CWIMAPQueueObject.init %{public}@\n", self);
+    //INFO("CWIMAPQueueObject.init %{public}@\n", self);
     _command = theCommand;
     _literal = 0;
 
@@ -368,16 +368,6 @@
 
     return self;
 }
-
-
-//
-//
-//
-- (void) dealloc
-{
-    INFO("dealloc %{public}@\n", self);
-}
-
 
 //
 //
