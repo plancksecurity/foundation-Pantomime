@@ -29,7 +29,7 @@ static NSString *comp = @"CWTCPConnection";
 @property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
 @property (nullable, strong) NSThread *backgroundThread;
-@property (atomic) BOOL gettingClosed;
+@property (atomic) BOOL isGettingClosed;
 
 @end
 
@@ -203,7 +203,7 @@ static NSString *comp = @"CWTCPConnection";
         [self closeAndRemoveStream:self.readStream];
         [self closeAndRemoveStream:self.writeStream];
         self.connected = NO;
-        self.gettingClosed = YES;
+        self.isGettingClosed = YES;
         [self cancelBackgroundThread];
     }
 }
@@ -321,7 +321,7 @@ static NSString *comp = @"CWTCPConnection";
 {
     if (self.delegate == nil) {
         WARN("CWTCPConnection: No delegate. Will close");
-        if (!self.gettingClosed) {
+        if (!self.isGettingClosed) {
             [self close];
         }
     }
