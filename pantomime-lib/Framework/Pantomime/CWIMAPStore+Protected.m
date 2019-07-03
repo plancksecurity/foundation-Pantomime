@@ -376,7 +376,6 @@
 - (void) dealloc
 {
     INFO("dealloc %{public}@\n", self);
-    INFO("dealloc done");
 }
 
 
