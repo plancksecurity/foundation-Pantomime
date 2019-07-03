@@ -292,7 +292,7 @@ static NSString *comp = @"CWTCPConnection";
                 self.streamError = self.writeStream.streamError;
             }
 
-            // We abuse ET_EDESC for error indicication.
+            // We abuse ET_EDESC for error indication.
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self close];
 
