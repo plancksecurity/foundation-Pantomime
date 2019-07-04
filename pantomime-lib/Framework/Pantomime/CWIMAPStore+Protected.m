@@ -219,13 +219,13 @@
             [_queue insertObject: aQueueObject  atIndex: 0];
             RELEASE(aQueueObject);
             
-            INFO("queue size = %lul", (unsigned long) [_queue count]);
+            INFO("%p queue size = %lul", self, (unsigned long) [_queue count]);
             
             // If we had queued commands, we return since we'll eventually
             // dequeue them one by one. Otherwise, we run it immediately.
             if ([_queue count] > 1)
             {
-                INFO("QUEUED |%{public}@|", theString);
+                INFO("%p QUEUED |%{public}@|", self, theString);
                 return;
             }
             
@@ -238,9 +238,9 @@
         }
         
         if (isPrivate) {
-            INFO("Sending private data |*******|");
+            INFO("%p Sending private data |*******|", self);
         } else {
-            INFO("Sending |%{public}@|", self.currentQueueObject.arguments);
+            INFO("%p Sending |%{public}@|", self, self.currentQueueObject.arguments);
         }
         
         _lastCommand = self.currentQueueObject.command;
