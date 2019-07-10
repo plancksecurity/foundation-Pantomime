@@ -340,6 +340,11 @@ extern NSString * _Nonnull PantomimeProtocolException;
 @interface CWService : NSObject <RunLoopEvents>
 #endif
 
+/**
+ Mirrors the state of the internal connection object.
+ */
+@property (nonatomic, readonly) BOOL isConnected;
+
 /*!
   @method initWithName: port:
   @discussion This is the designated initializer for the CWService class.

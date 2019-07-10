@@ -371,4 +371,9 @@
             [self class], self, _connection];
 }
 
+- (BOOL)isConnected
+{
+    return _connection.isConnected;
+}
+
 @end
