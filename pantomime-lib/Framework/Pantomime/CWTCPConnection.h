@@ -22,4 +22,13 @@
  */
 @property (nonatomic, readonly, nullable) NSThread *backgroundThread;
 
+/**
+ Is this connection connected to a server and alive?
+  A connection is not connected:
+   * Before the connection to the server is established.
+   * When there was an error.
+   * When the server closed the connection.
+ */
+@property (nonatomic, readonly) BOOL isConnected;
+
 @end
