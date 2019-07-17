@@ -263,10 +263,10 @@ static NSString *comp = @"CWTCPConnection";
 {
     switch (eventCode) {
         case NSStreamEventNone:
-            INFO("NSStreamEventNone");
+            //INFO("NSStreamEventNone");
             break;
         case NSStreamEventOpenCompleted:
-            INFO("NSStreamEventOpenCompleted");
+            //INFO("NSStreamEventOpenCompleted");
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
                 INFO("connectionEstablished");
@@ -275,11 +275,11 @@ static NSString *comp = @"CWTCPConnection";
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            INFO("NSStreamEventHasBytesAvailable");
+            //INFO("NSStreamEventHasBytesAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
-            INFO("NSStreamEventHasSpaceAvailable");
+            //INFO("NSStreamEventHasSpaceAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
