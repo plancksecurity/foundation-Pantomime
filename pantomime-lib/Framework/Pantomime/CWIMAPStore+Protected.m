@@ -225,7 +225,7 @@
             // dequeue them one by one. Otherwise, we run it immediately.
             if ([_queue count] > 1)
             {
-                INFO("%p QUEUED |%{public}@|", self, theString);
+                //INFO("%p QUEUED |%{public}@|", self, theString);
                 return;
             }
             
