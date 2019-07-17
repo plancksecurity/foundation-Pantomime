@@ -365,4 +365,10 @@
     }
 }
 
+- (NSString *)debugDescription
+{
+    return [NSString stringWithFormat:@"<%@: %p CWTCPConnection %p>",
+            [self class], self, _connection];
+}
+
 @end

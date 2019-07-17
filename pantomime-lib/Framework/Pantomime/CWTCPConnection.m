@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSString *comp = @"CWTCPConnection";
 
-static NSInteger s_numberOfConnectionThreads = 0;
-
 @interface CWTCPConnection ()
 
 @property (atomic) BOOL connected;
@@ -31,16 +29,11 @@ static NSInteger s_numberOfConnectionThreads = 0;
 @property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
 @property (nullable, strong) NSThread *backgroundThread;
-@property (atomic) BOOL gettingClosed;
+@property (atomic) BOOL isGettingClosed;
 
 @end
 
 @implementation CWTCPConnection
-
-+ (NSInteger)numberOfRunningConnections
-{
-    return s_numberOfConnectionThreads;
-}
 
 - (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
@@ -51,6 +44,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
+        INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
     return self;
@@ -58,13 +52,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)dealloc
 {
-    INFO("dealloc %{public}@", self);
+    INFO("dealloc %{public}@:%d (%{public}@)", self.name, self.port, self);
     [self close];
-}
-
-- (id<CWLogging>)logger
-{
-    return [CWLogger logger];
 }
 
 - (void)startTLS
@@ -98,6 +87,7 @@ static NSInteger s_numberOfConnectionThreads = 0;
     if (stream) {
         [stream close];
         [self.openConnections removeObject:stream];
+        [stream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         if (stream == self.readStream) {
             self.readStream = nil;
         } else if (stream == self.writeStream) {
@@ -162,8 +152,6 @@ static NSInteger s_numberOfConnectionThreads = 0;
 
 - (void)connectInBackgroundAndStartRunLoop
 {
-    s_numberOfConnectionThreads++;
-
     CFReadStreamRef readStream = nil;
     CFWriteStreamRef writeStream = nil;
     CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
@@ -188,13 +176,12 @@ static NSInteger s_numberOfConnectionThreads = 0;
             [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
         }
     }
-    s_numberOfConnectionThreads--;
     self.backgroundThread = nil;
 }
 
 - (void)cancelNoop {}
 
-- (void)cancelBackgroundThead
+- (void)cancelBackgroundThread
 {
     if (self.backgroundThread) {
         [self.backgroundThread cancel];
@@ -216,8 +203,8 @@ static NSInteger s_numberOfConnectionThreads = 0;
         [self closeAndRemoveStream:self.readStream];
         [self closeAndRemoveStream:self.writeStream];
         self.connected = NO;
-        self.gettingClosed = YES;
-        [self cancelBackgroundThead];
+        self.isGettingClosed = YES;
+        [self cancelBackgroundThread];
     }
 }
 
@@ -228,12 +215,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.readStream read:buf maxLength:len];
 
-    /*[self.logger infoComponent:comp
-                       message:[NSString
-                                stringWithFormat:@"< %@:%d %ld: \"%@\"",
-                                self.name, self.port,
-                                (long)count,
-                                [self bufferToString:buf length:count]]];*/
+    /*INFO("< %@:%d %ld: \"%@\"",
+         self.name, self.port,
+         (long)count,
+         [self bufferToString:buf length:count]);*/
 
     return count;
 }
@@ -245,12 +230,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
     }
     NSInteger count = [self.writeStream write:buf maxLength:len];
 
-    /*[self.logger infoComponent:comp
-                       message:[NSString
-                                stringWithFormat:@"> %@:%d %ld: \"%@\"",
-                                self.name, self.port,
-                                (long)count,
-                                [self bufferToString:buf length:len]]];*/
+    /*INFO("> %@:%d %ld: \"%@\"",
+         self.name, self.port,
+         (long)count,
+         [self bufferToString:buf length:len]);*/
 
     return count;
 }
@@ -261,7 +244,10 @@ static NSInteger s_numberOfConnectionThreads = 0;
                              initWithTarget:self
                              selector:@selector(connectInBackgroundAndStartRunLoop)
                              object:nil];
-    self.backgroundThread.name = [NSString stringWithFormat:@"CWTCPConnection 0x%lu",
+    self.backgroundThread.name = [NSString
+                                  stringWithFormat:@"CWTCPConnection %@:%d 0x%lu",
+                                  self.name,
+                                  self.port,
                                   (unsigned long) self.backgroundThread];
     [self.backgroundThread start];
 }
@@ -277,51 +263,69 @@ static NSInteger s_numberOfConnectionThreads = 0;
 {
     switch (eventCode) {
         case NSStreamEventNone:
-            [self.logger infoComponent:comp message:@"NSStreamEventNone"];
+            //INFO("NSStreamEventNone");
             break;
         case NSStreamEventOpenCompleted:
-            [self.logger infoComponent:comp message:@"NSStreamEventOpenCompleted"];
+            //INFO("NSStreamEventOpenCompleted");
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
-                [self.logger infoComponent:comp message:@"connectionEstablished"];
+                INFO("connectionEstablished");
                 self.connected = YES;
-                [self.delegate connectionEstablished];
+                [self.forceDelegate connectionEstablished];
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            //[self.logger infoComponent:comp message:@"NSStreamEventHasBytesAvailable"];
-            [self.delegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
+            //INFO("NSStreamEventHasBytesAvailable");
+            [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
-            //[self.logger infoComponent:comp message:@"NSStreamEventHasSpaceAvailable"];
-            [self.delegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
+            //INFO("NSStreamEventHasSpaceAvailable");
+            [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            [self.logger
-             infoComponent:comp
-             message:[NSString
-                      stringWithFormat:@"NSStreamEventErrorOccurred: read: %@, write: %@",
-                      [self.readStream.streamError localizedDescription],
-                      [self.writeStream.streamError localizedDescription]]];
+            ERROR("NSStreamEventErrorOccurred: read: %@, write: %@",
+                  [self.readStream.streamError localizedDescription],
+                  [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
                 self.streamError = self.readStream.streamError;
             } else if (self.writeStream.streamError) {
                 self.streamError = self.writeStream.streamError;
             }
 
-            // We abuse ET_EDESC for error indicication.
-            [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self cancelBackgroundThead];
+            // We abuse ET_EDESC for error indication.
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self close];
 
             break;
         case NSStreamEventEndEncountered:
-            [self.logger infoComponent:comp message:@"NSStreamEventEndEncountered"];
+            WARN("NSStreamEventEndEncountered");
 
-            [self.delegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self cancelBackgroundThead];
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self close];
 
             break;
     }
+}
+
+#pragma mark - Util
+
+/**
+ Makes sure there is still a non-nil delegate and returns it, if not,
+ warns about it, and shuts the connection down.
+
+ There's no point in going on without a live delegate.
+
+ @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
+ */
+- (id<CWConnectionDelegate>)forceDelegate
+{
+    if (self.delegate == nil) {
+        WARN("CWTCPConnection: No delegate. Will close");
+        if (!self.isGettingClosed) {
+            [self close];
+        }
+    }
+    return self.delegate;
 }
 
 @end
