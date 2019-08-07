@@ -1460,11 +1460,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             [results addObject: [NSNumber numberWithInteger: value]];
         }
     }
-    RELEASE(aScanner);
 
-    //BUFF:
-    NSLog(@"BUFF: results: %@", results);
-    //
     return results;
 }
 
