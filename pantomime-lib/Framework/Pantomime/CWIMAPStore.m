@@ -122,7 +122,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseCAPABILITY;
 - (void) _parseEXISTS;
 - (void) _parseEXPUNGE;
-- (void) _parseFETCH_UIDS;
+- (void) _parseFETCH_UIDS_IGNORING_HEADERS;
 - (void) _parseFETCH: (NSInteger) theMSN;
 - (void) _parseLIST;
 - (void) _parseLSUB;
@@ -668,8 +668,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                 {
                     switch (_lastCommand)
                     {
-                        case IMAP_UID_FETCH_UIDS:
-                            [self _parseFETCH_UIDS];
+                        case IMAP_UID_FETCH_UIDS_IGNORING_HEADERS:
+                            [self _parseFETCH_UIDS_IGNORING_HEADERS];
                             break;
                         default:
                             [self _parseFETCH: msn];
@@ -1460,7 +1460,6 @@ static inline int has_literal(char *buf, NSUInteger c)
             [results addObject: [NSNumber numberWithInteger: value]];
         }
     }
-    RELEASE(aScanner);
 
     return results;
 }
@@ -1783,12 +1782,28 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 
 /**
- Example: "* 5 FETCH (UID 905)"
+ Examples:
+ Message without the given header (pEp-auto-consume) defined:
+ "* 9 FETCH (UID 9 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}"
+
+ Message with the given header (pEp-auto-consume) defined:
+ "* 10 FETCH (UID 10 BODY[HEADER.FIELDS (pEp-auto-consume)] {23}"
+
+ Note: Regarding the "{x}":
+    - The x is the lenght of the data of the fetched headers
+    - In case none of headersToIgnore is defined in the message, {0} is returned.
+    - Otherwize x > 0 is returned.
  */
-- (void) _parseFETCH_UIDS
+- (void) _parseFETCH_UIDS_IGNORING_HEADERS
 {
     NSArray *uidsFromResponse =
     [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]];
+    if (uidsFromResponse.count > 1) {
+        // A message with one ore more of the headers to ignore defined results in a server response with "{x}" where x > 0. This is then results in *two* ints parsed by _uniqueIdentifiersFromFetchUidsResponseData.
+        // Ignore the message.
+        return;
+    }
+
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
     if (!alreadyParsedUids) {
         alreadyParsedUids = uidsFromResponse;
@@ -2737,7 +2752,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
             }
 
-            case IMAP_UID_FETCH_UIDS: {
+            case IMAP_UID_FETCH_UIDS_IGNORING_HEADERS: {
                 _connection_state.opening_mailbox = NO;
                 NSMutableDictionary *info = [NSMutableDictionary new];
                 if (_selectedFolder) {
