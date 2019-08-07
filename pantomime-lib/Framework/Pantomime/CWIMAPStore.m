@@ -1800,14 +1800,14 @@ static inline int has_literal(char *buf, NSUInteger c)
  */
 - (void) _parseFETCH_UIDS_IGNORING_HEADERS
 {
-    //BUFF:
-    NSLog(@"BUFF: _responsesFromServer: %@", [[NSString alloc] initWithData:[_responsesFromServer lastObject] encoding:NSUTF8StringEncoding]);
-    //
-
-    // A message with one ore more of the headers to ignore defined results in a server response with
-
     NSArray *uidsFromResponse =
     [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]];
+    if (uidsFromResponse.count > 1) {
+        // A message with one ore more of the headers to ignore defined results in a server response with "{x}" where x > 0. This is then results in *two* ints parsed by _uniqueIdentifiersFromFetchUidsResponseData.
+        // Ignore the message.
+        return;
+    }
+
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
     if (!alreadyParsedUids) {
         alreadyParsedUids = uidsFromResponse;
