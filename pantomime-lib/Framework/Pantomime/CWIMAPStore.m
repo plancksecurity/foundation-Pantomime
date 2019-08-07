@@ -1786,10 +1786,25 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 
 /**
- Example: "* 5 FETCH (UID 905)"
+ Examples:
+ Message without the given header (pEp-auto-consume) defined:
+ "* 9 FETCH (UID 9 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}"
+
+ Message with the given header (pEp-auto-consume) defined:
+ "* 10 FETCH (UID 10 BODY[HEADER.FIELDS (pEp-auto-consume)] {23}"
+
+ Note: Regarding the "{x}":
+    - The x is the lenght of the data of the fetched headers
+    - In case none of headersToIgnore is defined in the message, {0} is returned.
+    - Otherwize x > 0 is returned.
  */
 - (void) _parseFETCH_UIDS_IGNORING_HEADERS
 {
+    //BUFF:
+    NSLog(@"BUFF: _responsesFromServer: %@", [[NSString alloc] initWithData:[_responsesFromServer lastObject] encoding:NSUTF8StringEncoding]);
+    //
+
+    // A message with one ore more of the headers to ignore defined results in a server response with
 
     NSArray *uidsFromResponse =
     [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]];
