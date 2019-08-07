@@ -122,7 +122,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseCAPABILITY;
 - (void) _parseEXISTS;
 - (void) _parseEXPUNGE;
-- (void) _parseFETCH_UIDS;
+- (void) _parseFETCH_UIDS_IGNORING_HEADERS;
 - (void) _parseFETCH: (NSInteger) theMSN;
 - (void) _parseLIST;
 - (void) _parseLSUB;
@@ -668,8 +668,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                 {
                     switch (_lastCommand)
                     {
-                        case IMAP_UID_FETCH_UIDS:
-                            [self _parseFETCH_UIDS];
+                        case IMAP_UID_FETCH_UIDS_IGNORING_HEADERS:
+                            [self _parseFETCH_UIDS_IGNORING_HEADERS];
                             break;
                         default:
                             [self _parseFETCH: msn];
@@ -1462,6 +1462,9 @@ static inline int has_literal(char *buf, NSUInteger c)
     }
     RELEASE(aScanner);
 
+    //BUFF:
+    NSLog(@"BUFF: results: %@", results);
+    //
     return results;
 }
 
@@ -1785,8 +1788,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 /**
  Example: "* 5 FETCH (UID 905)"
  */
-- (void) _parseFETCH_UIDS
+- (void) _parseFETCH_UIDS_IGNORING_HEADERS
 {
+
     NSArray *uidsFromResponse =
     [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]];
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
@@ -2737,7 +2741,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
             }
 
-            case IMAP_UID_FETCH_UIDS: {
+            case IMAP_UID_FETCH_UIDS_IGNORING_HEADERS: {
                 _connection_state.opening_mailbox = NO;
                 NSMutableDictionary *info = [NSMutableDictionary new];
                 if (_selectedFolder) {

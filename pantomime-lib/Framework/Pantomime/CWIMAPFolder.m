@@ -396,11 +396,28 @@
 //
 //
 //
-- (void) fetchUidsForNewMails
+- (void)
+fetchUidsForNewMailsIgnoringMessagesWithHeaderDefined:(NSArray<NSString*> *_Nullable)headersToIgnore;
 {
     NSInteger lastUid = [self lastUID] ? [self lastUID] : 0;
     NSInteger from = lastUid + 1;
-    [_store sendCommand: IMAP_UID_FETCH_UIDS  info:nil arguments:@"UID FETCH %u:* (UID)", from];
+    if (!headersToIgnore || headersToIgnore.count == 0) {
+        [_store sendCommand: IMAP_UID_FETCH_UIDS_IGNORING_HEADERS  info:nil arguments:@"UID FETCH %u:* (UID)", from];
+    } else {
+        NSMutableString *headers = [NSMutableString stringWithString:@""];
+        NSString *delimiter = @" ";
+        for (NSString *header in headersToIgnore) {
+            if (![headers isEqualToString:@""]) {
+                [headers appendString:delimiter];
+            }
+            [headers appendString:header];
+        }
+
+        [_store sendCommand: IMAP_UID_FETCH_UIDS_IGNORING_HEADERS
+                       info:nil
+                  arguments:@"UID FETCH %u:* (UID BODY.PEEK[HEADER.FIELDS (%@)])", from, headers];
+    }
+
 }
 
 #pragma mark -

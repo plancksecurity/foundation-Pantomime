@@ -185,7 +185,7 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
  If there are new messages: list of UIDs of the new messages
  Otherwize:                 the UID of the last message that exists on server (that is already fetched)
  */
-- (void) fetchUidsForNewMails;
+- (void)fetchUidsForNewMailsIgnoringMessagesWithHeaderDefined:(NSArray<NSString*> *_Nullable)headersToIgnore;
 
 #pragma mark - FLAGS
 

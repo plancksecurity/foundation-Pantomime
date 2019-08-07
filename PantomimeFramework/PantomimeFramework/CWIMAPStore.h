@@ -61,6 +61,7 @@
   @constant IMAP_UID_FETCH_HEADER_FIELDS The IMAP FETCH command - see 6.4.5. FETCH Command of RFC 3501.
   @constant IMAP_UID_FETCH_HEADER_FIELDS_NOT The IMAP FETCH command - see 6.4.5. FETCH Command of RFC 3501.
   @constant IMAP_UID_FETCH_RFC822 The IMAP FETCH command - see 6.4.5. FETCH Command of RFC 3501.
+  @constant IMAP_UID_FETCH_UIDS_IGNORING_HEADERS Fetches UIDs of all messages that do not have one of the specified header fields defined.
   @constant IMAP_UID_SEARCH The IMAP SEARCH command - see 6.4.4. SEARCH Command of RFC 3501.
                             Used to update the IMAP Folder cache.
   @constant IMAP_UID_SEARCH_ALL The IMAP SEARCH command - see 6.4.4. SEARCH Command of RFC 3501.
@@ -100,7 +101,7 @@ typedef enum {
     IMAP_UID_FETCH_FLAGS, //26
     IMAP_UID_FETCH_HEADER_FIELDS_NOT, //27
     IMAP_UID_FETCH_RFC822, //28
-    IMAP_UID_FETCH_UIDS, //29
+    IMAP_UID_FETCH_UIDS_IGNORING_HEADERS, //29
     IMAP_UID_SEARCH, //30
     IMAP_UID_SEARCH_ALL, //31
     IMAP_UID_SEARCH_ANSWERED, //32
