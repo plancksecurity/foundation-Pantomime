@@ -3065,7 +3065,11 @@ static inline int has_literal(char *buf, NSUInteger c)
     else
     {
         [_selectedFolder setSelected: YES];
-        PERFORM_SELECTOR_2(_delegate, @selector(folderOpenCompleted:), PantomimeFolderOpenCompleted, _selectedFolder, @"Folder");
+        if (_selectedFolder) {
+            PERFORM_SELECTOR_2(_delegate, @selector(folderOpenCompleted:), PantomimeFolderOpenCompleted, _selectedFolder, @"Folder");
+        } else {
+            PERFORM_SELECTOR_1(_delegate, @selector(folderOpenCompleted:), PantomimeFolderOpenCompleted);
+        }
     }
 }
 
