@@ -367,6 +367,12 @@ NSRange shrinkRange(NSRange range)
 + (void) parseDate: (NSData *) theLine
 	 inMessage: (CWMessage *) theMessage
 {
+    if ([[theLine asciiString] containsString:@"__Smtpdate"]) {
+        // We have seen spammer to use this date: "Date: __Smtpdate", which we consider invalid.
+        // Do nothing.
+        return;
+    }
+
   if ([theLine length] > 6)
     {
       NSData *aData;
