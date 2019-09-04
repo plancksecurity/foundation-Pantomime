@@ -125,13 +125,31 @@ if (del && [del respondsToSelector: sel]) \
 zBOOL; \
 })
 
+/**
+ Sends a message to the delegate.
+
+ If the given info obj is nil, behaves as PERFORM_SELECTOR_1.
+
+ @param del The delegate to send the message to.
+ @param sel The selector to invoke on the delegate.
+ @param name The name of the notification.
+ @param obj The obj of the one dictionary entry that will be put as the notification info.
+ @param key The value of the one dictionary entry that will be put as the notification info.
+ @return Nothing returned.
+ */
 #define PERFORM_SELECTOR_2(del, sel, name, obj, key) \
 if (del && [del respondsToSelector: sel]) \
 { \
-  [del performSelector: sel \
-       withObject: [NSNotification notificationWithName: name \
-			   	   object: self \
-				   userInfo: [NSDictionary dictionaryWithObject: obj forKey: key]]]; \
+  if (obj) {\
+    [del performSelector: sel \
+         withObject: [NSNotification notificationWithName: name \
+         object: self \
+		 userInfo: [NSDictionary dictionaryWithObject: obj forKey: key]]]; \
+  } else { \
+    [del performSelector: sel \
+         withObject: [NSNotification notificationWithName: name \
+         object: self]]; \
+  } \
 }
 
 #define PERFORM_SELECTOR_3(del, sel, name, info) \
