@@ -126,15 +126,15 @@ zBOOL; \
 })
 
 /**
- Sends a message to the delegate.
+ Sends a message to the delegate, with a notification as parameter.
 
  If the given info obj is nil, behaves as PERFORM_SELECTOR_1.
 
  @param del The delegate to send the message to.
  @param sel The selector to invoke on the delegate.
  @param name The name of the notification.
- @param obj The obj of the one dictionary entry that will be put as the notification info.
- @param key The value of the one dictionary entry that will be put as the notification info.
+ @param obj The keypair obj, value will be the content of the notification info dictionary.
+ @param key The keypair obj, value will be the content of the notification info dictionary.
  @return Nothing returned.
  */
 #define PERFORM_SELECTOR_2(del, sel, name, obj, key) \
