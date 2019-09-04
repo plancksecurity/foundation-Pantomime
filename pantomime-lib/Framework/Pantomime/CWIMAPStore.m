@@ -2558,13 +2558,15 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_UID_SEARCH_ANSWERED:
             case IMAP_UID_SEARCH_FLAGGED:
             case IMAP_UID_SEARCH_UNSEEN:
-            case IMAP_EMPTY_QUEUE:
-                if ([[self currentQueueObject] info]) {
+            case IMAP_EMPTY_QUEUE: {
+                id nameValue = [[[self currentQueueObject] info] objectForKey:@"Name"];
+                if (nameValue) {
                     PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed,
-                                       [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
+                                       nameValue, @"Name");
                 } else {
                     PERFORM_SELECTOR_1(_delegate, @selector(actionFailed:), PantomimeActionFailed);
                 }
+            }
                 break;
             default:
                 INFO("Unhandled \"NO\" response!");
