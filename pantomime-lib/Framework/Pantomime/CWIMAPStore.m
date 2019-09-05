@@ -2564,6 +2564,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     PERFORM_SELECTOR_2(_delegate, @selector(actionFailed:), PantomimeActionFailed,
                                        nameValue, @"Name");
                 } else {
+                    // Not all of the above commands have a name set, so fall back.
                     PERFORM_SELECTOR_1(_delegate, @selector(actionFailed:), PantomimeActionFailed);
                 }
             }
