@@ -66,7 +66,7 @@
     dispatch_sync(self.backgroundQueue, ^{
         id theLast = [self.elements lastObject];
         if (!theLast) {
-            INFO("self.count %lu", (unsigned long) self.elements.count);
+//            INFO("self.count %lu", (unsigned long) self.elements.count);
             for (id o in self.elements) {
                 INFO("Element %{public}@", o);
             }
