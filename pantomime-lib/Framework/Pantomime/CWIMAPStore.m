@@ -755,7 +755,9 @@ static inline int has_literal(char *buf, NSUInteger c)
                     // point to the response
                     response++;
 
-                    if (strncmp(response, "OK", 2) == 0) {
+                    long left = count - 1 - pos;
+
+                    if (strncmp(response, "OK", left) == 0) {
                         // From RFC3501:
                         //
                         // The server completion result response indicates the success or
@@ -768,7 +770,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                         // unrecognized command or command syntax error).
                         //
                         [self _parseOK];
-                    } else if (strncmp(response, "NO", 2) == 0) {
+                    } else if (strncmp(response, "NO", left) == 0) {
                         //
                         // RFC3501 says:
                         //
