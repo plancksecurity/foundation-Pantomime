@@ -748,7 +748,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     long pos = response - buf + 1;
 
                     // no space left for "OK" or "NO"?
-                    if (pos + 1 > (count - 1)) {
+                    if (pos + 2 > (count - 1)) {
                         [self _parseBAD];
                     }
 
