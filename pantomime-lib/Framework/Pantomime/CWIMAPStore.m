@@ -736,16 +736,14 @@ static inline int has_literal(char *buf, NSUInteger c)
             else
             {
                 buf -= i; // go back to the beginning
-                NSString *stringFromBuffer = [[NSString alloc]
-                                              initWithBytes:buf
-                                              length:count
-                                              encoding:NSUTF8StringEncoding];
-                NSArray *tokens = [stringFromBuffer componentsSeparatedByString:@" "];
-                if (tokens.count < 2) {
+
+                char response[count];
+                int itemsAssigned = sscanf(buf, "%*s %s", response);
+
+                if (itemsAssigned != 1) {
                     [self _parseBAD];
                 } else {
-                    NSString *response = [tokens objectAtIndex:1];
-                    if ([response isEqualToString:@"OK"]) {
+                    if (strncmp(response, "OK", 2) == 0) {
                         // From RFC3501:
                         //
                         // The server completion result response indicates the success or
@@ -758,7 +756,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                         // unrecognized command or command syntax error).
                         //
                         [self _parseOK];
-                    } else if ([response isEqualToString:@"NO"]) {
+                    } else if (strncmp(response, "NO", 2) == 0) {
                         //
                         // RFC3501 says:
                         //
