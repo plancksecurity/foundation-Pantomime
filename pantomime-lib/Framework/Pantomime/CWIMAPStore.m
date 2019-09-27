@@ -737,13 +737,19 @@ static inline int has_literal(char *buf, NSUInteger c)
             {
                 buf -= i; // go back to the beginning
 
-                char response[count];
-                int itemsAssigned = sscanf(buf, "%*s %s", response);
+                // convert buf into \0-terminated string
+                char *tmpBuffer = malloc(count + 1);
+                memcpy(tmpBuffer, buf, count);
+                tmpBuffer[count] = '\0';
+
+                char *response = malloc(count + 1);
+
+                int itemsAssigned = sscanf(tmpBuffer, "%*s %s", response);
 
                 if (itemsAssigned != 1) {
                     [self _parseBAD];
                 } else {
-                    if (strncmp(response, "OK", 2) == 0) {
+                    if (strcmp(response, "OK") == 0) {
                         // From RFC3501:
                         //
                         // The server completion result response indicates the success or
@@ -756,7 +762,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                         // unrecognized command or command syntax error).
                         //
                         [self _parseOK];
-                    } else if (strncmp(response, "NO", 2) == 0) {
+                    } else if (strcmp(response, "NO") == 0) {
                         //
                         // RFC3501 says:
                         //
@@ -770,6 +776,9 @@ static inline int has_literal(char *buf, NSUInteger c)
                     } else {
                         [self _parseBAD];
                     }
+
+                    free(tmpBuffer);
+                    free(response);
                 }
             }
         } // while ((aData = split_lines...
