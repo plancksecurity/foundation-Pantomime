@@ -735,57 +735,43 @@ static inline int has_literal(char *buf, NSUInteger c)
             //
             else
             {
-                NSInteger j;
-
-                //NSData *foo;
-                //foo = [NSData dataWithBytes: buf-i  length: i];
-                //INFO("tag = |%{public}@|", [foo asciiString]);
-
-                j = i+1;
-                buf++;
-
-                // We read past our tag, in order to find
-                // the type of response (OK/NO/BAD).
-                while (j < count && *buf != ' ')
-                {
-                    //INFO("IN OK: %c", *buf);
-                    buf++; j++;
-                }
-
-                //INFO("OK/NO/BAD response = |%{public}@|", [[NSData dataWithBytes: buf-j+i+1  length: j-i-1] asciiString]);
-                buf = buf-j+i+1;
-
-                // From RFC3501:
-                //
-                // The server completion result response indicates the success or
-                // failure of the operation.  It is tagged with the same tag as the
-                // client command which began the operation.  Thus, if more than one
-                // command is in progress, the tag in a server completion response
-                // identifies the command to which the response applies.  There are
-                // three possible server completion responses: OK (indicating success),
-                // NO (indicating failure), or BAD (indicating a protocol error such as
-                // unrecognized command or command syntax error).
-                //
-                if (strncasecmp("OK", buf, 2) == 0)
-                {
-                    [self _parseOK];
-                }
-                //
-                // RFC3501 says:
-                //
-                // The NO response indicates an operational error message from the
-                // server.  When tagged, it indicates unsuccessful completion of the
-                // associated command.  The untagged form indicates a warning; the
-                // command can still complete successfully.  The human-readable text
-                // describes the condition.
-                //
-                else if (strncasecmp("NO", buf, 2) == 0)
-                {
-                    [self _parseNO];
-                }
-                else
-                {
+                buf -= i; // go back to the beginning
+                NSString *stringFromBuffer = [[NSString alloc]
+                                              initWithBytes:buf
+                                              length:count
+                                              encoding:NSUTF8StringEncoding];
+                NSArray *tokens = [stringFromBuffer componentsSeparatedByString:@" "];
+                if (tokens.count < 2) {
                     [self _parseBAD];
+                } else {
+                    NSString *response = [tokens objectAtIndex:1];
+                    if ([response isEqualToString:@"OK"]) {
+                        // From RFC3501:
+                        //
+                        // The server completion result response indicates the success or
+                        // failure of the operation.  It is tagged with the same tag as the
+                        // client command which began the operation.  Thus, if more than one
+                        // command is in progress, the tag in a server completion response
+                        // identifies the command to which the response applies.  There are
+                        // three possible server completion responses: OK (indicating success),
+                        // NO (indicating failure), or BAD (indicating a protocol error such as
+                        // unrecognized command or command syntax error).
+                        //
+                        [self _parseOK];
+                    } else if ([response isEqualToString:@"NO"]) {
+                        //
+                        // RFC3501 says:
+                        //
+                        // The NO response indicates an operational error message from the
+                        // server.  When tagged, it indicates unsuccessful completion of the
+                        // associated command.  The untagged form indicates a warning; the
+                        // command can still complete successfully.  The human-readable text
+                        // describes the condition.
+                        //
+                        [self _parseNO];
+                    } else {
+                        [self _parseBAD];
+                    }
                 }
             }
         } // while ((aData = split_lines...
