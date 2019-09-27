@@ -1135,7 +1135,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
     }
 
     // We set the In-Reply-To header if we need to
-    if ([self headerValueForName:@"In-Reply-To"]) {
+    if ([self inReplyTo]) {
         [newMessageRawData appendCFormat:@"In-Reply-To: %@%s", [[self inReplyTo] wrapped], LF];
     }
 
