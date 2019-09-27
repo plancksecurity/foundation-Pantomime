@@ -737,24 +737,12 @@ static inline int has_literal(char *buf, NSUInteger c)
             {
                 buf -= i; // go back to the beginning
 
-                // Find the first space
-                char *response = strnstr(buf, " ", count);
+                char response[count];
+                int itemsAssigned = sscanf(buf, "%*s %s", response);
 
-                // No space -> no tagged response
-                if (response == NULL) {
+                if (itemsAssigned != 1) {
                     [self _parseBAD];
                 } else {
-                    // pos is the index of the response, after the tag and the space
-                    long pos = response - buf + 1;
-
-                    // no space left for "OK" or "NO"?
-                    if (pos + 2 > (count - 1)) {
-                        [self _parseBAD];
-                    }
-
-                    // point to the response
-                    response++;
-
                     if (strncmp(response, "OK", 2) == 0) {
                         // From RFC3501:
                         //
