@@ -48,7 +48,8 @@
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSDictionary.h>
 
-static NSMutableDictionary *charset_instance_cache = nil;
+static NSDictionary *charset_instance_cache = nil;
+static NSString *default_charset = @"iso-8859-1";
 
 //
 //
@@ -59,7 +60,29 @@ static NSMutableDictionary *charset_instance_cache = nil;
 {
   if (!charset_instance_cache)
     {
-      charset_instance_cache = [[NSMutableDictionary alloc] init];
+        charset_instance_cache = [NSDictionary
+                                  dictionaryWithObjectsAndKeys:[CWISO8859_2 new], @"iso-8859-2",
+                                  [CWISO8859_3 new], @"iso-8859-3",
+                                  [CWISO8859_4 new], @"iso-8859-4",
+                                  [CWISO8859_5 new], @"iso-8859-5",
+                                  [CWISO8859_6 new], @"iso-8859-6",
+                                  [CWISO8859_7 new], @"iso-8859-7",
+                                  [CWISO8859_8 new], @"iso-8859-8",
+                                  [CWISO8859_9 new], @"iso-8859-9",
+                                  [CWISO8859_10 new], @"iso-8859-10",
+                                  [CWISO8859_11 new], @"iso-8859-11",
+                                  [CWISO8859_13 new], @"iso-8859-13",
+                                  [CWISO8859_14 new], @"iso-8859-14",
+                                  [CWISO8859_15 new], @"iso-8859-15",
+                                  [CWKOI8_R new], @"koi8-r",
+                                  [CWKOI8_U new], @"koi8-u",
+                                  [CWWINDOWS_1250 new], @"windows-1250",
+                                  [CWWINDOWS_1251 new], @"windows-1251",
+                                  [CWWINDOWS_1252 new], @"windows-1252",
+                                  [CWWINDOWS_1253 new], @"windows-1253",
+                                  [CWWINDOWS_1254 new], @"windows-1254",
+                                  [CWISO8859_1 new], default_charset,
+                                  nil];
     }
 } 
 
@@ -148,107 +171,11 @@ static NSMutableDictionary *charset_instance_cache = nil;
 //
 + (CWCharset *) charsetForName: (NSString *) theName
 {
-  CWCharset *theCharset;
-
-  theCharset = [charset_instance_cache objectForKey: [theName lowercaseString]];
-
-  if (!theCharset)
-    {
-      CWCharset *aCharset;
-      
-      if ([[theName lowercaseString] isEqualToString: @"iso-8859-2"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_2 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-3"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_3 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-4"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_4 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-5"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_5 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-6"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_6 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-7"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_7 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-8"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_8 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-9"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_9 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-10"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_10 alloc] init];
- 	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-11"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_11 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-13"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_13 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-14"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_14 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"iso-8859-15"])
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_15 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"koi8-r"])
-	{
-	  aCharset = (CWCharset *)[[CWKOI8_R alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"koi8-u"])
-	{
-	  aCharset = (CWCharset *)[[CWKOI8_U alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"windows-1250"])
-	{
-	  aCharset = (CWCharset *)[[CWWINDOWS_1250 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"windows-1251"])
-	{
-	  aCharset = (CWCharset *)[[CWWINDOWS_1251 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"windows-1252"])
-	{
-	  aCharset = (CWCharset *)[[CWWINDOWS_1252 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"windows-1253"])
-	{
-	  aCharset = (CWCharset *)[[CWWINDOWS_1253 alloc] init];
-	}
-      else if ([[theName lowercaseString] isEqualToString: @"windows-1254"])
-	{
-	  aCharset = (CWCharset *)[[CWWINDOWS_1254 alloc] init];
-	}
-      else
-	{
-	  aCharset = (CWCharset *)[[CWISO8859_1 alloc] init];
-	}
-      
-      [charset_instance_cache setObject: aCharset
-			      forKey: [theName lowercaseString]];
-      RELEASE(aCharset);
-
-      return aCharset;
+    CWCharset *theCharset = [charset_instance_cache objectForKey: [theName lowercaseString]];
+    if (theCharset == nil) {
+        theCharset = [charset_instance_cache objectForKey:default_charset];
     }
-
-  return theCharset;
+    return theCharset;
 }
 
 @end
