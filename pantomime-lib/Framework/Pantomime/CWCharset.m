@@ -147,62 +147,6 @@ static NSMutableDictionary *charset_instance_cache = nil;
   return nil;
 }
 
-
-//
-//
-//
-+ (NSDictionary *) allCharsets
-{
-  if (![charset_name_description count])
-    {
-      [charset_name_description setObject: _(@"Western European (ISO Latin 1)")     forKey: @"iso-8859-1"];
-      [charset_name_description setObject: _(@"Western European (ISO Latin 9)")     forKey: @"iso-8859-15"];
-      [charset_name_description setObject: _(@"Western European (Windows Latin 1)") forKey: @"windows-1252"];
-
-      [charset_name_description setObject: _(@"Japanese (ISO 2022-JP)")             forKey: @"iso-2022-jp"];
-      [charset_name_description setObject: _(@"Japanese (EUC-JP)")                  forKey: @"euc-jp"];
-
-      [charset_name_description setObject: _(@"Traditional Chinese (BIG5)")         forKey: @"big5"];
-  
-      [charset_name_description setObject: _(@"Arabic (ISO 8859-6)")                forKey: @"iso-8859-6"];
-  
-      [charset_name_description setObject: _(@"Greek (ISO 8859-7)")                 forKey: @"iso-8859-7"];
-      [charset_name_description setObject: _(@"Greek (Windows)")                    forKey: @"windows-1253"];
-
-      [charset_name_description setObject: _(@"Hebrew (ISO 8859-8)")                forKey: @"iso-8859-8"];
-  
-      [charset_name_description setObject: _(@"Cyrillic (ISO 8859-5)")              forKey: @"iso-8859-5"];
-      [charset_name_description setObject: _(@"Cyrillic (KOI8-R)")                  forKey: @"koi8-r"];
-      [charset_name_description setObject: _(@"Cyrillic (Windows)")                 forKey: @"windows-1251"];
-
-      [charset_name_description setObject: _(@"Thai (ISO 8859-11)")                 forKey: @"iso-8859-11"];
-
-      [charset_name_description setObject: _(@"Central European (ISO Latin 2)")     forKey: @"iso-8859-2"];
-      [charset_name_description setObject: _(@"Central European (Windows Latin 2)") forKey: @"windows-1250"];
-  
-      [charset_name_description setObject: _(@"Turkish (Latin 5)")                  forKey: @"iso-8859-9"];
-      [charset_name_description setObject: _(@"Turkish (Windows)")                  forKey: @"windows-1254"];
-  
-      [charset_name_description setObject: _(@"South European (ISO Latin 3)")       forKey: @"iso-8859-3"];
-      [charset_name_description setObject: _(@"North European (ISO Latin 4)")       forKey: @"iso-8859-4"];
- 
-      [charset_name_description setObject: _(@"Nordic (ISO Latin 6)")               forKey: @"iso-8859-10"];
-      [charset_name_description setObject: _(@"Baltic Rim (ISO Latin 7)")           forKey: @"iso-8859-13"];
-      [charset_name_description setObject: _(@"Celtic (ISO Latin 8)")               forKey: @"iso-8859-14"];
-
-      [charset_name_description setObject: _(@"Simplified Chinese (GB2312)")        forKey: @"gb2312"];
-      [charset_name_description setObject: _(@"UTF-8")                              forKey: @"utf-8"];
-
-#ifdef MACOSX
-      [charset_name_description setObject: _(@"Korean (EUC-KR/KS C 5601)")          forKey: @"euc-kr"];
-      [charset_name_description setObject: _(@"Japanese (Win/Mac)")                 forKey: @"shift_jis"];
-#endif
-    }
-
-  return charset_name_description;
-}
-
-
 //
 // This method is used to obtain a charset from the name
 // of this charset. It caches this charset for future
