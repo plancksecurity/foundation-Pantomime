@@ -85,16 +85,6 @@ struct charset_code
 - (NSString *) name;
 
 /*!
-  @method allCharsets
-  @discussion This method is used to obtain a dictionary of all supported
-              charsets by Pantomime. The keys are the name of the charsets
-	      (NSString instances) and the values are a description 
-	      of the charset (NSString instances).
-  @result The dictionary of all supported character sets.
-*/
-+ (NSDictionary *) allCharsets;
-
-/*!
   @method charsetForName:
   @discussion This method is used to obtain a CWCharset subclass instance
               from the Internet name of a charset.
