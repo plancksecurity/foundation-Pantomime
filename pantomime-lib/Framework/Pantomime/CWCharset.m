@@ -48,7 +48,6 @@
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSDictionary.h>
 
-static NSMutableDictionary *charset_name_description = nil;
 static NSMutableDictionary *charset_instance_cache = nil;
 
 //
@@ -61,11 +60,6 @@ static NSMutableDictionary *charset_instance_cache = nil;
   if (!charset_instance_cache)
     {
       charset_instance_cache = [[NSMutableDictionary alloc] init];
-    }
-
-  if (!charset_name_description)
-    {
-      charset_name_description = [[NSMutableDictionary alloc] init];
     }
 } 
 
