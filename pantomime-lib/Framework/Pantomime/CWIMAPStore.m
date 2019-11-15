@@ -1909,6 +1909,11 @@ static inline int has_literal(char *buf, NSUInteger c)
     //
     if (!_selectedFolder) return;
 
+    if (!_selectedFolder.selected) {
+        [NSException raise: PantomimeProtocolException
+                    format: @"Unable to fetch message content from unselected mailbox."];
+    }
+
     count = [_responsesFromServer count]-1;
 
     //INFO("RESPONSES FROM SERVER: %d", count);

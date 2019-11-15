@@ -42,22 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setCurrentQueueObject:(CWIMAPQueueObject * _Nullable)currentQueueObject;
 
-/*!
- @method folderForName:select:
- @discussion This method is used to obtain the folder with
- the specified name. If <i>aBOOL</i> is YES,
- the folder will be selected. Otherwise, a non-selected
- folder will be returned which is used to proceed with
- an append operation. Note that when <i>aBOOL</i> is
- equal to NO, the returned folder is NOT part of the
- list of opened folders.
- @param theName The name of the folder to obtain.
- @param aBOOL YES to select the folder, NO otherwise.
- @result A CWIMAPFolder instance.
- */
-- (CWIMAPFolder * _Nullable) folderForName: (NSString * _Nullable) theName
-                                    select: (BOOL) aBOOL;
-
 - (CWIMAPFolder *)folderWithName:(NSString *)name;
 
 /*!

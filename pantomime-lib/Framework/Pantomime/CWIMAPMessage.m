@@ -86,22 +86,16 @@
 //
 // This method is called to initialize the message if it wasn't.
 // If we set it to NO and we HAD a content, we release the content.
+// Note: There is no check to make sure that [self folder] is selected,
+//  the caller is responsible for that if desired.
 //
 - (void) setInitialized: (BOOL) theBOOL
 {
-  [super setInitialized: theBOOL];
+    [super setInitialized: theBOOL];
   
-  if (!theBOOL)
-    {
-      DESTROY(_content);
-      return;
-    }
-  else if (![(CWIMAPFolder *)[self folder] selected])
-    {
-      [super setInitialized: NO];
-      [NSException raise: PantomimeProtocolException
-		   format: @"Unable to fetch message content from unselected mailbox."];
-      return;
+    if (!theBOOL) {
+        DESTROY(_content);
+        return;
     }
 
     _headers_were_prefetched = YES;

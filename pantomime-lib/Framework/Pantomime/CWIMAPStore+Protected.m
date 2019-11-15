@@ -43,34 +43,6 @@
 //
 //
 //
-- (CWIMAPFolder *) folderForName: (NSString *) theName
-                          select: (BOOL) aBOOL
-{
-    if ([_openFolders objectForKey: theName])
-    {
-        return [_openFolders objectForKey: theName];
-    }
-
-    if (aBOOL)
-    {
-        return [self folderForName: theName updateExistsCount:aBOOL];
-    }
-    else
-    {
-        CWIMAPFolder *aFolder;
-
-        aFolder = [self folderWithName:theName];
-
-        [aFolder setStore: self];
-        [aFolder setSelected: NO];
-        return AUTORELEASE(aFolder);
-    }
-}
-
-
-//
-//
-//
 - (CWIMAPFolder *)folderWithName:(NSString *)name
 {
     if (self.folderBuilder) {
