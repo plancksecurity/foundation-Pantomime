@@ -219,7 +219,8 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
  @param theInfo The addition info to pass.
  @param string The parameter string
  */
-- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+- (void) sendCommand: (IMAPCommand) theCommand
+                info: (NSDictionary * _Nullable) theInfo
               string:(NSString * _Nonnull)theString;
 
 - (void)exitIDLE;
