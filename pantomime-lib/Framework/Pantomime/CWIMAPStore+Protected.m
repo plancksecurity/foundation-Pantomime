@@ -43,20 +43,6 @@
 //
 //
 //
-- (CWIMAPFolder *)folderWithName:(NSString *)name
-{
-    if (self.folderBuilder) {
-        CWFolder *folder = [self.folderBuilder folderWithName:name];
-        return (CWIMAPFolder *) folder;
-    } else {
-        return [[CWIMAPFolder alloc] initWithName:name];
-    }
-}
-
-
-//
-//
-//
 - (NSData *) nextTag
 {
     _tag++;

@@ -206,8 +206,6 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 */ 
 @interface CWIMAPStore : CWService  <CWStore>
 
-@property (nonatomic, nullable) __block id<CWFolderBuilding> folderBuilder;
-
 /**
  Maximum count of messages to fetch.
  */
@@ -221,10 +219,14 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
  @param theInfo The addition info to pass.
  @param string The parameter string
  */
-- (void) sendCommand: (IMAPCommand) theCommand  info: (NSDictionary * _Nullable) theInfo
+- (void) sendCommand: (IMAPCommand) theCommand
+                info: (NSDictionary * _Nullable) theInfo
               string:(NSString * _Nonnull)theString;
 
 - (void)exitIDLE;
+
+//BUFF: docs!
+- (CWIMAPFolder *_Nullable)folderWithName:(NSString *_Nonnull)name;
 
 #pragma mark - CWStore
 

@@ -42,8 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setCurrentQueueObject:(CWIMAPQueueObject * _Nullable)currentQueueObject;
 
-- (CWIMAPFolder *)folderWithName:(NSString *)name;
-
 /*!
   @method nextTag
   @discussion This method is used to obtain the next IMAP tag

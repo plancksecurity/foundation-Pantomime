@@ -61,19 +61,6 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
 @class CWFolder;
 @class CWURLName;
 
-@protocol CWFolderBuilding <NSObject>
-
-/**
- The strategy for "unselecting" a mailbox used by the client might be
- to select a folder that does not exist on the server.
- Since this folder should not be persisted, its name should be "black-listed" here.
- */
-@property (nonatomic, nullable) NSString *folderNameToIgnore;
-
-- (CWFolder * _Nonnull)folderWithName:(NSString * _Nonnull)name;
-
-@end
-
 /*!
   @protocol CWStore
   @discussion This protocol defines a basic set of methods that classes implementing
