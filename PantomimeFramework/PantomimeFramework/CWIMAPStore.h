@@ -206,8 +206,6 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 */ 
 @interface CWIMAPStore : CWService  <CWStore>
 
-@property (nonatomic, nullable) __block id<CWFolderBuilding> folderBuilder;
-
 /**
  Maximum count of messages to fetch.
  */
@@ -225,6 +223,9 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
               string:(NSString * _Nonnull)theString;
 
 - (void)exitIDLE;
+
+//BUFF: docs!
+- (CWIMAPFolder *_Nullable)folderWithName:(NSString *_Nonnull)name;
 
 #pragma mark - CWStore
 

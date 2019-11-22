@@ -145,8 +145,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 @implementation CWIMAPStore
 
-@synthesize folderBuilder = _folderBuilder;
-
 
 //
 //
@@ -313,7 +311,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     dispatch_sync(self.serviceQueue, ^{
         typeof(self) strongSelf = weakSelf;
         // ignore all subsequent messages from the servers
-        strongSelf->_folderBuilder = nil;
         strongSelf->_delegate = nil;
 
         [strongSelf->_openFolders removeAllObjects];
@@ -1176,6 +1173,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     // is serialized by folderForName:
     return [self folderForName: @"INBOX" updateExistsCount: NO];
+}
+
+//
+//
+//
+- (CWIMAPFolder *)folderWithName:(NSString *)name
+{
+    //BUFF: rm folder builder form pantomime
+    return [[CWIMAPFolder alloc] initWithName:name]; //!!!!: This is always wrong. We need it to be a PersistanFolder
 }
 
 
