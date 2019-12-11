@@ -1000,14 +1000,13 @@ static inline int has_literal(char *buf, NSUInteger c)
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
         typeof(self) strongSelf = weakSelf;
-        if (![strongSelf->_folders count]) {
-            // Only top level folders: LIST "" %
-            [strongSelf sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
-            returnee = nil;
 
-            return;
-        }
-        returnee = [strongSelf->_folders keyEnumerator];
+        // Throw away cached info about folders
+        _folders = [[NSMutableDictionary alloc] init];
+
+        // Only top level folders: LIST "" %
+        [strongSelf sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
+        returnee = nil;
     });
 
     return returnee;
