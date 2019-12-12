@@ -1001,7 +1001,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     dispatch_sync(self.serviceQueue, ^{
         typeof(self) strongSelf = weakSelf;
 
-        // Throw away cached info about folders
+        // Throw away cached info about folders, and always fetch from server
         _folders = [[NSMutableDictionary alloc] init];
 
         // Only top level folders: LIST "" %
