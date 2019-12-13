@@ -994,22 +994,18 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 //
 //
-- (NSEnumerator *) folderEnumerator
+- (void)listFolders
 {
-    __block NSEnumerator *returnee = nil;
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.serviceQueue, ^{
         typeof(self) strongSelf = weakSelf;
 
         // Throw away cached info about folders, and always fetch from server
-        _folders = [[NSMutableDictionary alloc] init];
+        strongSelf->_folders = [[NSMutableDictionary alloc] init];
 
         // Only top level folders: LIST "" %
         [strongSelf sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
-        returnee = nil;
     });
-
-    return returnee;
 }
 
 

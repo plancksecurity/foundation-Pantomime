@@ -230,13 +230,11 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 
 #pragma mark - CWStore
 
-//
-// When this method is invoked for the first time, it sends a LIST
-// command to the IMAP server and cache the results for subsequent
-// queries. The IMAPStore notifies the delegate once it has parsed
-// all server's responses.
-//
-- (NSEnumerator *_Nullable) folderEnumerator;
+/// Sends a LIST command to the IMAP server.
+/// The CWIMAPStore notifies the delegate once it has parsed all server's responses
+/// (`folderListCompleted`) and sends `folderNameParsed` for each folder name returned by the
+/// server.
+- (void)listFolders;
 
 @end
 
