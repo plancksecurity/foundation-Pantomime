@@ -215,8 +215,9 @@
 
 - (void) setPersonal: (NSString *) thePersonal
 {
-    // Only try to quote if !nil, otherwise we could end up with "(null)" is personal.
-    if (thePersonal) {
+    // Avoid quoting nil (leading to @"(null)", and also the empty string,
+    // which would produce @"\"".
+    if (thePersonal && thePersonal.length > 0) {
         // Assure the name is quoted
         if (![thePersonal hasPrefix: @"\""]) {
             thePersonal = [NSString stringWithFormat: @"\"%@", thePersonal];
