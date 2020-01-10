@@ -1738,9 +1738,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     // its view and does NOT have to issue any command to update the state
     // of the messages (since it has been done).
     if (_lastCommand != IMAP_EXPUNGE) {
-        if ([_selectedFolder cacheManager]) {
-            [[_selectedFolder cacheManager] expunge];
-        }
         PERFORM_SELECTOR_1(_delegate, @selector(messageExpunged:), PantomimeMessageExpunged);
     }
     INFO("Expunged %d", msn);
@@ -2690,10 +2687,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
 
             case IMAP_EXPUNGE:
-                if ([_selectedFolder cacheManager])
-                {
-                    [[_selectedFolder cacheManager] expunge];
-                }
                 PERFORM_SELECTOR_2(_delegate, @selector(folderExpungeCompleted:), PantomimeFolderExpungeCompleted, _selectedFolder, @"Folder");
                 break;
 
