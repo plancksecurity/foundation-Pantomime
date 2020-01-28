@@ -49,12 +49,12 @@ static NSURLSession *s_session;
     [self.task startSecureConnection];
 }
 
-- (BOOL) isConnected
+- (BOOL)isConnected
 {
     return NO;
 }
 
-- (void) close
+- (void)close
 {
 }
 
