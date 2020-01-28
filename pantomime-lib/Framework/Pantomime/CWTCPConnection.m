@@ -20,7 +20,8 @@ static NSURLSession *s_session;
 
 @interface CWTCPConnection ()
 
-@property (nonatomic, strong) NSError *streamError;
+@property (nonatomic) NSError *streamError;
+@property (nonatomic) NSURLSessionStreamTask *task;
 
 @end
 
@@ -30,6 +31,7 @@ static NSURLSession *s_session;
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
 {
     if (self = [super init]) {
+        _task = [[self session] streamTaskWithHostName:theName port:thePort];
     }
     return self;
 }
