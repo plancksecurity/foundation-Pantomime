@@ -63,6 +63,9 @@ static NSURLSession *s_session;
 
 - (void)close
 {
+    [self.task closeRead];
+    [self.task closeWrite];
+    [self.task cancel];
 }
 
 - (NSInteger)read:(unsigned char * _Nonnull)buf length:(NSInteger)len
