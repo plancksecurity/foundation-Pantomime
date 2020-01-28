@@ -51,7 +51,14 @@ static NSURLSession *s_session;
 
 - (BOOL)isConnected
 {
-    return NO;
+    switch (self.task.state) {
+        case NSURLSessionTaskStateRunning:
+            return YES;
+        case NSURLSessionTaskStateSuspended:
+        case NSURLSessionTaskStateCanceling:
+        case NSURLSessionTaskStateCompleted:
+            return NO;
+    }
 }
 
 - (void)close
