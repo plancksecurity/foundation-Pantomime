@@ -36,10 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
 {
 }
 
-- (void)startTLS
-{
-}
-
 - (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
 {
     static NSInteger maxLength = 200;
@@ -57,21 +53,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - CWConnection
 
-- (BOOL)isConnected
+- (void)startTLS
+{
+}
+
+- (BOOL) isConnected
 {
     return NO;
 }
 
-- (void)close
+- (void) close
 {
 }
 
-- (NSInteger)read:(unsigned char *)buf length:(NSInteger)len
+- (NSInteger)read:(unsigned char * _Nonnull)buf length:(NSInteger)len
 {
     return 0;
 }
 
-- (NSInteger) write:(unsigned char *)buf length:(NSInteger)len
+- (NSInteger)write:(unsigned char * _Nonnull)buf length:(NSInteger)len
 {
     return 0;
 }
