@@ -22,6 +22,7 @@ static NSURLSession *s_session;
 
 @property (nonatomic) NSError *streamError;
 @property (nonatomic) NSURLSessionStreamTask *task;
+@property (nonatomic) ConnectionTransport transport;
 
 @end
 
@@ -31,6 +32,7 @@ static NSURLSession *s_session;
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
 {
     if (self = [super init]) {
+        _transport = transport;
         _task = [[self session] streamTaskWithHostName:theName port:thePort];
     }
     return self;
@@ -44,6 +46,7 @@ static NSURLSession *s_session;
 
 - (void)startTLS
 {
+    [self.task startSecureConnection];
 }
 
 - (BOOL) isConnected
@@ -67,6 +70,10 @@ static NSURLSession *s_session;
 
 - (void)connect
 {
+    [_task resume];
+    if (self.transport == ConnectionTransportTLS) {
+        [self.task startSecureConnection];
+    }
 }
 
 - (BOOL)canWrite
