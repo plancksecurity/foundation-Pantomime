@@ -17,4 +17,10 @@
 /// Required from CWConnection
 @property (nonatomic, nullable, weak) id<CWConnectionDelegate> delegate;
 
+/// The timeout for reading data
+@property (nonatomic) NSTimeInterval readTimeout;
+
+/// The timeout for writing data
+@property (nonatomic) NSTimeInterval writeTimeout;
+
 @end

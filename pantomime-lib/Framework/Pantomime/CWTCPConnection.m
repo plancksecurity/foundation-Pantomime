@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSURLSession *s_session;
 
+/// The default waiting time (in seconds) for reading or writing data.
+static NSTimeInterval s_defaultTimeout = 30;
+
 @interface CWTCPConnection ()
 
 @property (nonatomic) NSError *streamError;
@@ -32,6 +35,8 @@ static NSURLSession *s_session;
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
 {
     if (self = [super init]) {
+        _readTimeout = s_defaultTimeout;
+        _writeTimeout = s_defaultTimeout;
         _transport = transport;
         _task = [[self session] streamTaskWithHostName:theName port:thePort];
     }
