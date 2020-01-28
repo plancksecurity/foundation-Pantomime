@@ -16,6 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSURLSession *s_session;
+
 @interface CWTCPConnection ()
 
 @property (nonatomic, strong) NSError *streamError;
@@ -34,21 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)dealloc
 {
-}
-
-- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
-{
-    static NSInteger maxLength = 200;
-    if (length) {
-        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (length >= maxLength) {
-            return [string stringByAppendingString:@"..."];
-        }
-        return string;
-    } else {
-        return @"";
-    }
 }
 
 #pragma mark - CWConnection
@@ -87,14 +74,37 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Util
 
-/**
- Makes sure there is still a non-nil delegate and returns it, if not,
- warns about it, and shuts the connection down.
+- (NSURLSession *)session
+{
+    if (s_session == nil) {
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration
+                                                    defaultSessionConfiguration];
+        s_session = [NSURLSession sessionWithConfiguration:configuration];
+    }
+    return s_session;
+}
 
- There's no point in going on without a live delegate.
+- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
+{
+    static NSInteger maxLength = 200;
+    if (length) {
+        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (length >= maxLength) {
+            return [string stringByAppendingString:@"..."];
+        }
+        return string;
+    } else {
+        return @"";
+    }
+}
 
- @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
- */
+/// Makes sure there is still a non-nil delegate and returns it, if not,
+/// warns about it.
+///
+/// There's no point in going on without a live delegate.
+///
+/// @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
 - (id<CWConnectionDelegate>)forceDelegate
 {
     if (self.delegate == nil) {
