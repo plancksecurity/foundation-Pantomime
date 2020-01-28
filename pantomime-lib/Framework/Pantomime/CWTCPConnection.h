@@ -14,7 +14,7 @@
 
 @interface CWTCPConnection : NSObject<CWConnection, NSStreamDelegate>
 
-/** Required from CWConnection */
+/// Required from CWConnection
 @property (nonatomic, nullable, weak) id<CWConnectionDelegate> delegate;
 
 @end
