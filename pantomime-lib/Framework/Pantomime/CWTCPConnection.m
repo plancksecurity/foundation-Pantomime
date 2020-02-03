@@ -65,7 +65,6 @@ static NSURLSession *s_session;
 
 - (void)startTLS
 {
-    [self.task startSecureConnection];
 }
 
 - (BOOL)isConnected
@@ -126,9 +125,7 @@ static NSURLSession *s_session;
 - (void)connect
 {
     [_task resume];
-    if (self.transport == ConnectionTransportTLS) {
-        [self.task startSecureConnection];
-    }
+    [self.task startSecureConnection];
     [self.task captureStreams];
 }
 
