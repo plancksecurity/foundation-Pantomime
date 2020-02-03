@@ -240,55 +240,6 @@ static NSTimeInterval s_defaultTimeout = 30;
     return [self.writeStream hasSpaceAvailable];
 }
 
-#pragma mark - NSStreamDelegate
-
-- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
-{
-    switch (eventCode) {
-        case NSStreamEventNone:
-            //INFO("NSStreamEventNone");
-            break;
-        case NSStreamEventOpenCompleted:
-            //INFO("NSStreamEventOpenCompleted");
-            [self.openConnections addObject:aStream];
-            if (self.openConnections.count == 2) {
-                INFO("connectionEstablished");
-                [self.forceDelegate connectionEstablished];
-            }
-            break;
-        case NSStreamEventHasBytesAvailable:
-            //INFO("NSStreamEventHasBytesAvailable");
-            [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
-            break;
-        case NSStreamEventHasSpaceAvailable:
-            //INFO("NSStreamEventHasSpaceAvailable");
-            [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
-            break;
-        case NSStreamEventErrorOccurred:
-            ERROR("NSStreamEventErrorOccurred: read: %@, write: %@",
-                  [self.readStream.streamError localizedDescription],
-                  [self.writeStream.streamError localizedDescription]);
-            if (self.readStream.streamError) {
-                self.streamError = self.readStream.streamError;
-            } else if (self.writeStream.streamError) {
-                self.streamError = self.writeStream.streamError;
-            }
-
-            // We abuse ET_EDESC for error indication.
-            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self close];
-
-            break;
-        case NSStreamEventEndEncountered:
-            WARN("NSStreamEventEndEncountered");
-
-            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self close];
-
-            break;
-    }
-}
-
 #pragma mark - Run Loop
 
 - (void)startRunLoopReadStream:(NSInputStream * _Nonnull)readStream
@@ -358,6 +309,61 @@ static NSTimeInterval s_defaultTimeout = 30;
 }
 
 @end
+
+#pragma mark - NSStreamDelegate
+
+@implementation CWTCPConnection (NSStreamDelegate)
+
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
+{
+    switch (eventCode) {
+        case NSStreamEventNone:
+            //INFO("NSStreamEventNone");
+            break;
+        case NSStreamEventOpenCompleted:
+            //INFO("NSStreamEventOpenCompleted");
+            [self.openConnections addObject:aStream];
+            if (self.openConnections.count == 2) {
+                INFO("connectionEstablished");
+                [self.forceDelegate connectionEstablished];
+            }
+            break;
+        case NSStreamEventHasBytesAvailable:
+            //INFO("NSStreamEventHasBytesAvailable");
+            [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
+            break;
+        case NSStreamEventHasSpaceAvailable:
+            //INFO("NSStreamEventHasSpaceAvailable");
+            [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
+            break;
+        case NSStreamEventErrorOccurred:
+            ERROR("NSStreamEventErrorOccurred: read: %@, write: %@",
+                  [self.readStream.streamError localizedDescription],
+                  [self.writeStream.streamError localizedDescription]);
+            if (self.readStream.streamError) {
+                self.streamError = self.readStream.streamError;
+            } else if (self.writeStream.streamError) {
+                self.streamError = self.writeStream.streamError;
+            }
+
+            // We abuse ET_EDESC for error indication.
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self close];
+
+            break;
+        case NSStreamEventEndEncountered:
+            WARN("NSStreamEventEndEncountered");
+
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self close];
+
+            break;
+    }
+}
+
+@end
+
+#pragma mark - NSURLSessionDelegate
 
 @implementation CWTCPConnection (NSURLSessionDelegate)
 
