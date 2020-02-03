@@ -162,6 +162,18 @@ static NSTimeInterval s_defaultTimeout = 30;
     self.backgroundThread = nil;
 }
 
+- (void)cancelNoop {}
+
+- (void)cancelBackgroundThread
+{
+    if (self.backgroundThread) {
+        [self.backgroundThread cancel];
+        [self performSelector:@selector(cancelNoop)
+                     onThread:self.backgroundThread withObject:nil
+                waitUntilDone:NO];
+    }
+}
+
 #pragma mark - Util
 
 - (NSURLSession *)session
