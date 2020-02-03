@@ -224,6 +224,11 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 - (void)connect
 {
+    [_task resume];
+    if (self.transport == ConnectionTransportTLS) {
+        [self.task startSecureConnection];
+    }
+    [self.task captureStreams];
 }
 
 - (BOOL)canWrite
@@ -347,6 +352,18 @@ static NSTimeInterval s_defaultTimeout = 30;
         }
     }
     return self.delegate;
+}
+
+@end
+
+@implementation CWTCPConnection (NSURLSessionDelegate)
+
+- (void)URLSession:(NSURLSession *)session
+        streamTask:(NSURLSessionStreamTask *)streamTask
+didBecomeInputStream:(NSInputStream *)inputStream
+      outputStream:(NSOutputStream *)outputStream
+{
+    [self startRunLoopReadStream:inputStream writeStream:outputStream];
 }
 
 @end
