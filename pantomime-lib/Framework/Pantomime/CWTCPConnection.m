@@ -112,6 +112,7 @@ static NSTimeInterval s_defaultTimeout = 30;
     if (self.transport == ConnectionTransportTLS) {
         [self.task startSecureConnection];
     }
+    [self.task captureStreams];
 }
 
 - (BOOL)canWrite
@@ -143,14 +144,28 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 #pragma mark - Run Loop
 
-- (void)connectInBackgroundAndStartRunLoopReadStream:(NSInputStream * _Nonnull)readStream
-                                         writeStream:(NSOutputStream * _Nonnull)writeStream
+- (void)startThreadReadStream:(NSInputStream * _Nonnull)readStream
+                  writeStream:(NSOutputStream * _Nonnull)writeStream
 {
     self.readStream = readStream;
     self.writeStream = writeStream;
     [self setupStream:self.readStream];
     [self setupStream:self.writeStream];
 
+    self.backgroundThread = [[NSThread alloc]
+                             initWithTarget:self
+                             selector:@selector(connectInBackgroundAndStartRunLoop)
+                             object:nil];
+    self.backgroundThread.name = [NSString
+                                  stringWithFormat:@"CWTCPConnection %@:%d 0x%lu",
+                                  self.name,
+                                  self.port,
+                                  (unsigned long) self.backgroundThread];
+    [self.backgroundThread start];
+}
+
+- (void)connectInBackgroundAndStartRunLoop
+{
     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
     while (1) {
         if ( [NSThread currentThread].isCancelled ) {
@@ -269,6 +284,14 @@ static NSTimeInterval s_defaultTimeout = 30;
 @end
 
 @implementation CWTCPConnection (NSURLSessionDelegate)
+
+- (void)URLSession:(NSURLSession *)session
+        streamTask:(NSURLSessionStreamTask *)streamTask
+didBecomeInputStream:(NSInputStream *)inputStream
+      outputStream:(NSOutputStream *)outputStream
+{
+    [self startThreadReadStream:inputStream writeStream:outputStream];
+}
 
 @end
 
