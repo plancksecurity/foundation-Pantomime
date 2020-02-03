@@ -18,12 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSURLSession *s_session;
 
-/// The size (in bytes) of the read buffer.
-static NSUInteger s_defaultReadBufferSize = 1024;
-
-/// The default waiting time (in seconds) for reading or writing data.
-static NSTimeInterval s_defaultTimeout = 30;
-
 @interface CWTCPConnection ()
 
 @property (atomic, strong) NSString *name;
