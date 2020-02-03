@@ -82,34 +82,6 @@ static NSURLSession *s_session;
     }
 }
 
-- (void)connectInBackgroundAndStartRunLoop
-{
-    [self setupStream:self.readStream];
-    [self setupStream:self.writeStream];
-
-    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-    while (1) {
-        if ( [NSThread currentThread].isCancelled ) {
-            break;
-        }
-        @autoreleasepool {
-            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
-        }
-    }
-    self.backgroundThread = nil;
-}
-
-- (void)cancelNoop {}
-
-- (void)cancelBackgroundThread
-{
-    if (self.backgroundThread) {
-        [self.backgroundThread cancel];
-        [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
-                waitUntilDone:NO];
-    }
-}
-
 #pragma mark - CWConnection
 
 - (void)startTLS
@@ -185,6 +157,34 @@ static NSURLSession *s_session;
 }
 
 #pragma mark - Run Loop
+
+- (void)connectInBackgroundAndStartRunLoop
+{
+    [self setupStream:self.readStream];
+    [self setupStream:self.writeStream];
+
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    while (1) {
+        if ( [NSThread currentThread].isCancelled ) {
+            break;
+        }
+        @autoreleasepool {
+            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
+        }
+    }
+    self.backgroundThread = nil;
+}
+
+- (void)cancelNoop {}
+
+- (void)cancelBackgroundThread
+{
+    if (self.backgroundThread) {
+        [self.backgroundThread cancel];
+        [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
+                waitUntilDone:NO];
+    }
+}
 
 - (void)startRunLoopReadStream:(NSInputStream * _Nonnull)readStream
                    writeStream:(NSOutputStream * _Nonnull)writeStream
