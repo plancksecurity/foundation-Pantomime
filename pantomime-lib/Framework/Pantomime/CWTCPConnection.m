@@ -137,6 +137,8 @@ static NSTimeInterval s_defaultTimeout = 30;
     }
 }
 
+#pragma mark - Run Loop
+
 #pragma mark - Util
 
 - (NSURLSession *)session
