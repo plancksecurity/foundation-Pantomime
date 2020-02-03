@@ -61,11 +61,6 @@ static NSURLSession *s_session;
     [self close];
 }
 
-- (void)startTLS
-{
-    // TODO: Must be handled via the task object
-}
-
 - (void)setupStream:(NSStream *)stream
 {
     stream.delegate = self;
@@ -116,6 +111,11 @@ static NSURLSession *s_session;
 }
 
 #pragma mark - CWConnection
+
+- (void)startTLS
+{
+    // TODO: Must be handled via the task object
+}
 
 - (BOOL)isConnected
 {
