@@ -78,6 +78,10 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 - (void)close
 {
+    [self closeAndRemoveStream:self.readStream];
+    [self closeAndRemoveStream:self.writeStream];
+    [self cancelBackgroundThread];
+
     [self.task closeRead];
     [self.task closeWrite];
     [self.task cancel];
