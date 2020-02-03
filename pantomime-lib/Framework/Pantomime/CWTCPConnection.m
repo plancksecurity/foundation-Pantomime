@@ -26,16 +26,20 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 @interface CWTCPConnection ()
 
-@property (atomic) BOOL connected;
 @property (atomic, strong) NSString *name;
 @property (atomic) uint32_t port;
 @property (atomic) ConnectionTransport transport;
+
+@property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
+@property (atomic) BOOL connected;
+@property (atomic) BOOL isGettingClosed;
+
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
-@property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
 @property (nullable, strong) NSThread *backgroundThread;
-@property (atomic) BOOL isGettingClosed;
+
+@property (nonatomic) NSURLSessionStreamTask *task;
 
 @end
 
@@ -50,6 +54,7 @@ static NSTimeInterval s_defaultTimeout = 30;
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
+        _task = [[self session] streamTaskWithHostName:theName port:thePort];
         INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
