@@ -29,6 +29,7 @@ static NSTimeInterval s_defaultTimeout = 30;
 @property (atomic, strong) NSString *name;
 
 @property (nonatomic) ConnectionTransport transport;
+@property (nonatomic) NSUInteger port;
 
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
@@ -47,6 +48,7 @@ static NSTimeInterval s_defaultTimeout = 30;
 {
     if (self = [super init]) {
         _name = theName;
+        _port = thePort;
         _readTimeout = s_defaultTimeout;
         _writeTimeout = s_defaultTimeout;
         _readBufferSize = s_defaultReadBufferSize;
