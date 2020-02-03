@@ -124,6 +124,19 @@ static NSTimeInterval s_defaultTimeout = 30;
     [stream open];
 }
 
+- (void)closeAndRemoveStream:(NSStream *)stream
+{
+    if (stream) {
+        [stream close];
+        [stream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        if (stream == self.readStream) {
+            self.readStream = nil;
+        } else if (stream == self.writeStream) {
+            self.writeStream = nil;
+        }
+    }
+}
+
 #pragma mark - Util
 
 - (NSURLSession *)session
