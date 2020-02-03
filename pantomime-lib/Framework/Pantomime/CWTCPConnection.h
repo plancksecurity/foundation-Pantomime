@@ -12,18 +12,14 @@
 
 #import "Pantomime/CWLogger.h"
 
-@interface CWTCPConnection : NSObject<CWConnection, NSStreamDelegate, NSURLSessionDelegate>
+@interface CWTCPConnection : NSObject<CWConnection, NSStreamDelegate>
 
-/// Required from CWConnection
+/** Required from CWConnection */
 @property (nonatomic, nullable, weak) id<CWConnectionDelegate> delegate;
 
-/// The timeout for reading data
-@property (nonatomic) NSTimeInterval readTimeout;
-
-/// The timeout for writing data
-@property (nonatomic) NSTimeInterval writeTimeout;
-
-/// The size of the read buffer
-@property (nonatomic) NSUInteger readBufferSize;
+/**
+ The thread where the read- and write streams are scheduled on.
+ */
+@property (nonatomic, readonly, nullable) NSThread *backgroundThread;
 
 @end
