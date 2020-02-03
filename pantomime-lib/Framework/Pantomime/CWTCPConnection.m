@@ -30,6 +30,8 @@ static NSURLSession *s_session;
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
 @property (nonatomic, strong) NSError *streamError;
+
+/// The thread where the read- and write streams are scheduled on.
 @property (nullable, strong) NSThread *backgroundThread;
 
 @property (nonatomic) NSURLSessionStreamTask *task;
