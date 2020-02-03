@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSURLSession *s_session;
 
+/// The size (in bytes) of the read buffer.
+static NSUInteger s_defaultReadBufferSize = 1024;
+
 /// The default waiting time (in seconds) for reading or writing data.
 static NSTimeInterval s_defaultTimeout = 30;
 
@@ -37,6 +40,7 @@ static NSTimeInterval s_defaultTimeout = 30;
     if (self = [super init]) {
         _readTimeout = s_defaultTimeout;
         _writeTimeout = s_defaultTimeout;
+        _readBufferSize = s_defaultReadBufferSize;
         _transport = transport;
         _task = [[self session] streamTaskWithHostName:theName port:thePort];
     }

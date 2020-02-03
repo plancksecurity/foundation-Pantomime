@@ -23,4 +23,7 @@
 /// The timeout for writing data
 @property (nonatomic) NSTimeInterval writeTimeout;
 
+/// The size of the read buffer
+@property (nonatomic) NSUInteger readBufferSize;
+
 @end
