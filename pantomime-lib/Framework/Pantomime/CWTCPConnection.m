@@ -87,45 +87,6 @@ static NSURLSession *s_session;
     }
 }
 
-/**
- Sets a socket option (the SOL_SOCKET layer) for a given stream.
- */
-- (NSInteger)setSocketOption:(int)optionName optionNameString:(NSString *)optionNameString
-                 optionValue:(NSInteger)optionValue onStream:(NSStream *)stream
-{
-    CFReadStreamRef cfStream = (__bridge CFReadStreamRef) (NSInputStream *) stream;
-    CFDataRef nativeSocket = CFReadStreamCopyProperty(cfStream,
-                                                      kCFStreamPropertySocketNativeHandle);
-    CFSocketNativeHandle *cfSock = (CFSocketNativeHandle *) CFDataGetBytePtr(nativeSocket);
-
-    NSUInteger originalValue = 500;
-    NSUInteger newValue = 501;
-    socklen_t originalValueSize = sizeof(originalValue);
-    socklen_t newValueSize = sizeof(newValue);
-    getsockopt(*cfSock, SOL_SOCKET, optionName, &originalValue, &originalValueSize);
-    setsockopt(*cfSock, SOL_SOCKET, optionName, &optionValue, sizeof(optionValue));
-    getsockopt(*cfSock, SOL_SOCKET, optionName, &newValue, &newValueSize);
-    INFO("%@: %lu (%d bytes) -> %lu (%d bytes)",
-         optionNameString,
-         (unsigned long) originalValue, originalValueSize,
-         (unsigned long) newValue, newValueSize);
-
-    CFRelease(nativeSocket);
-    return newValue;
-}
-
-/**
- Set SO_RCVLOWAT for the read stream socket, which is not needed because the default (1)
- is already the desired value.
- */
-- (void)setupSocketForStream:(NSStream *)stream
-{
-    if (stream == self.readStream) {
-        [self setSocketOption:SO_RCVLOWAT optionNameString:@"SO_RCVLOWAT" optionValue:1
-                     onStream: stream];
-    }
-}
-
 - (void)connectInBackgroundAndStartRunLoop
 {
     [self setupStream:self.readStream];
