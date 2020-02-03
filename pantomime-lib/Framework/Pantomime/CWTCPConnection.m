@@ -40,8 +40,10 @@ static NSURLSession *s_session;
 
 @implementation CWTCPConnection
 
-- (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
-         transport:(ConnectionTransport)transport background:(BOOL)theBOOL
+- (instancetype)initWithName:(NSString *)theName
+                        port:(unsigned int)thePort
+                   transport:(ConnectionTransport)transport
+                  background:(BOOL)theBOOL
 {
     if (self = [super init]) {
         _openConnections = [[NSMutableSet alloc] init];
