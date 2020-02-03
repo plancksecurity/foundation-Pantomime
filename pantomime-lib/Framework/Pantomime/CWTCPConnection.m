@@ -31,7 +31,6 @@ static NSTimeInterval s_defaultTimeout = 30;
 @property (atomic) ConnectionTransport transport;
 
 @property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
-@property (atomic) BOOL connected;
 @property (atomic) BOOL isGettingClosed;
 
 @property (atomic, strong, nullable) NSInputStream *readStream;
@@ -50,7 +49,6 @@ static NSTimeInterval s_defaultTimeout = 30;
 {
     if (self = [super init]) {
         _openConnections = [[NSMutableSet alloc] init];
-        _connected = NO;
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
@@ -178,7 +176,14 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 - (BOOL)isConnected
 {
-    return _connected;
+    switch (self.task.state) {
+        case NSURLSessionTaskStateRunning:
+            return YES;
+        case NSURLSessionTaskStateSuspended:
+        case NSURLSessionTaskStateCanceling:
+        case NSURLSessionTaskStateCompleted:
+            return NO;
+    }
 }
 
 - (void)close
@@ -186,7 +191,6 @@ static NSTimeInterval s_defaultTimeout = 30;
     @synchronized(self) {
         [self closeAndRemoveStream:self.readStream];
         [self closeAndRemoveStream:self.writeStream];
-        self.connected = NO;
         self.isGettingClosed = YES;
         [self cancelBackgroundThread];
     }
@@ -249,7 +253,6 @@ static NSTimeInterval s_defaultTimeout = 30;
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
                 INFO("connectionEstablished");
-                self.connected = YES;
                 [self.forceDelegate connectionEstablished];
             }
             break;
