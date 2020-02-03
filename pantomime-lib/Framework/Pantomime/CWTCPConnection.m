@@ -61,27 +61,6 @@ static NSURLSession *s_session;
     [self close];
 }
 
-- (void)setupStream:(NSStream *)stream
-{
-    stream.delegate = self;
-    [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [stream open];
-}
-
-- (void)closeAndRemoveStream:(NSStream *)stream
-{
-    if (stream) {
-        [stream close];
-        [self.openConnections removeObject:stream];
-        [stream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        if (stream == self.readStream) {
-            self.readStream = nil;
-        } else if (stream == self.writeStream) {
-            self.writeStream = nil;
-        }
-    }
-}
-
 #pragma mark - CWConnection
 
 - (void)startTLS
@@ -202,6 +181,29 @@ static NSURLSession *s_session;
                                   self.port,
                                   (unsigned long) self.backgroundThread];
     [self.backgroundThread start];
+}
+
+#pragma mark - Stream Handling
+
+- (void)setupStream:(NSStream *)stream
+{
+    stream.delegate = self;
+    [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [stream open];
+}
+
+- (void)closeAndRemoveStream:(NSStream *)stream
+{
+    if (stream) {
+        [stream close];
+        [self.openConnections removeObject:stream];
+        [stream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        if (stream == self.readStream) {
+            self.readStream = nil;
+        } else if (stream == self.writeStream) {
+            self.writeStream = nil;
+        }
+    }
 }
 
 #pragma mark - Util
