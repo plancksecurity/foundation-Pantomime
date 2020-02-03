@@ -157,9 +157,9 @@ static NSTimeInterval s_defaultTimeout = 30;
                              selector:@selector(connectInBackgroundAndStartRunLoop)
                              object:nil];
     self.backgroundThread.name = [NSString
-                                  stringWithFormat:@"CWTCPConnection %@:%d 0x%lu",
+                                  stringWithFormat:@"CWTCPConnection %@:%lu 0x%lu",
                                   self.name,
-                                  self.port,
+                                  (unsigned long) self.port,
                                   (unsigned long) self.backgroundThread];
     [self.backgroundThread start];
 }
