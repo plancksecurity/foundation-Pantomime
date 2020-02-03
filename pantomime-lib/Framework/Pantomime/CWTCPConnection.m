@@ -89,24 +89,20 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 - (NSInteger)read:(unsigned char * _Nonnull)buf length:(NSInteger)len
 {
-    [self.task readDataOfMinLength:1
-                         maxLength:len
-                           timeout:self.readTimeout
-                 completionHandler:^(NSData *data, BOOL atEOF, NSError *error) {
-        if (error) {
-            // We abuse ET_EDESC for error indication.
-            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-        } else {
-
-        }
-
-    }];
-    return 0;
+    if (![self.readStream hasBytesAvailable]) {
+        return -1;
+    }
+    NSInteger count = [self.readStream read:buf maxLength:len];
+    return count;
 }
 
 - (NSInteger)write:(unsigned char * _Nonnull)buf length:(NSInteger)len
 {
-    return 0;
+    if (![self.writeStream hasSpaceAvailable]) {
+        return -1;
+    }
+    NSInteger count = [self.writeStream write:buf maxLength:len];
+    return count;
 }
 
 - (void)connect
