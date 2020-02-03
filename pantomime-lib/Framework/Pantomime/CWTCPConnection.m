@@ -63,6 +63,7 @@ static NSURLSession *s_session;
 
 - (void)startTLS
 {
+    // TODO: Must be handled via the task object
     [self.readStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
                           forKey:NSStreamSocketSecurityLevelKey];
     [self.writeStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
