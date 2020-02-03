@@ -26,6 +26,8 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 @interface CWTCPConnection ()
 
+@property (atomic, strong) NSString *name;
+
 @property (nonatomic) ConnectionTransport transport;
 
 @property (atomic, strong, nullable) NSInputStream *readStream;
@@ -44,6 +46,7 @@ static NSTimeInterval s_defaultTimeout = 30;
          transport:(ConnectionTransport)transport background:(BOOL)theBOOL
 {
     if (self = [super init]) {
+        _name = theName;
         _readTimeout = s_defaultTimeout;
         _writeTimeout = s_defaultTimeout;
         _readBufferSize = s_defaultReadBufferSize;
