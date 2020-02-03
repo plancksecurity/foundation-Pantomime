@@ -187,6 +187,7 @@ static NSURLSession *s_session;
         [self closeAndRemoveStream:self.writeStream];
         self.isGettingClosed = YES;
         [self cancelBackgroundThread];
+        [self.task cancel];
     }
 }
 
