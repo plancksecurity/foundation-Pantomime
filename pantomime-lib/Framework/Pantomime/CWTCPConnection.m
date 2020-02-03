@@ -26,9 +26,13 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 @interface CWTCPConnection ()
 
+@property (nonatomic) ConnectionTransport transport;
+
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
 @property (nonatomic) NSError *streamError;
+
+@property (nullable, strong) NSThread *backgroundThread;
 
 @property (nonatomic) NSURLSessionStreamTask *task;
 @property (nonatomic) ConnectionTransport transport;
