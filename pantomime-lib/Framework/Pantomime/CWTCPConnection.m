@@ -35,7 +35,6 @@ static NSTimeInterval s_defaultTimeout = 30;
 @property (nullable, strong) NSThread *backgroundThread;
 
 @property (nonatomic) NSURLSessionStreamTask *task;
-@property (nonatomic) ConnectionTransport transport;
 
 @end
 
@@ -142,6 +141,26 @@ static NSTimeInterval s_defaultTimeout = 30;
 }
 
 #pragma mark - Run Loop
+
+- (void)connectInBackgroundAndStartRunLoopReadStream:(NSInputStream * _Nonnull)readStream
+                                         writeStream:(NSOutputStream * _Nonnull)writeStream
+{
+    self.readStream = readStream;
+    self.writeStream = writeStream;
+    [self setupStream:self.readStream];
+    [self setupStream:self.writeStream];
+
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    while (1) {
+        if ( [NSThread currentThread].isCancelled ) {
+            break;
+        }
+        @autoreleasepool {
+            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
+        }
+    }
+    self.backgroundThread = nil;
+}
 
 #pragma mark - Util
 
