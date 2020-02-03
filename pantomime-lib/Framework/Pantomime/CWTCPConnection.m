@@ -16,7 +16,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *comp = @"CWTCPConnection";
+static NSURLSession *s_session;
+
+/// The size (in bytes) of the read buffer.
+static NSUInteger s_defaultReadBufferSize = 1024;
+
+/// The default waiting time (in seconds) for reading or writing data.
+static NSTimeInterval s_defaultTimeout = 30;
 
 @interface CWTCPConnection ()
 
@@ -132,21 +138,6 @@ static NSString *comp = @"CWTCPConnection";
     if (stream == self.readStream) {
         [self setSocketOption:SO_RCVLOWAT optionNameString:@"SO_RCVLOWAT" optionValue:1
                      onStream: stream];
-    }
-}
-
-- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
-{
-    static NSInteger maxLength = 200;
-    if (length) {
-        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (length >= maxLength) {
-            return [string stringByAppendingString:@"..."];
-        }
-        return string;
-    } else {
-        return @"";
     }
 }
 
@@ -308,6 +299,33 @@ static NSString *comp = @"CWTCPConnection";
 }
 
 #pragma mark - Util
+
+- (NSURLSession *)session
+{
+    if (s_session == nil) {
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration
+                                                    defaultSessionConfiguration];
+        s_session = [NSURLSession sessionWithConfiguration:configuration
+                                                  delegate:self
+                                             delegateQueue:nil];
+    }
+    return s_session;
+}
+
+- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
+{
+    static NSInteger maxLength = 200;
+    if (length) {
+        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (length >= maxLength) {
+            return [string stringByAppendingString:@"..."];
+        }
+        return string;
+    } else {
+        return @"";
+    }
+}
 
 /**
  Makes sure there is still a non-nil delegate and returns it, if not,
