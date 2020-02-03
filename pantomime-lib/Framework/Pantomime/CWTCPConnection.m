@@ -53,10 +53,6 @@ static NSTimeInterval s_defaultTimeout = 30;
     return self;
 }
 
-- (void)dealloc
-{
-}
-
 #pragma mark - CWConnection
 
 - (void)startTLS
