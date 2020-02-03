@@ -158,6 +158,9 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 @end
 
+@implementation CWTCPConnection (NSStreamDelegate)
+
+@end
 
 @implementation CWTCPConnection (NSURLSessionDelegate)
 
