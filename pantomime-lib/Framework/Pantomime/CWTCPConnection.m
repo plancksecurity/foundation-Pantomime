@@ -64,26 +64,11 @@ static NSURLSession *s_session;
 - (void)startTLS
 {
     // TODO: Must be handled via the task object
-    [self.readStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                          forKey:NSStreamSocketSecurityLevelKey];
-    [self.writeStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                           forKey:NSStreamSocketSecurityLevelKey];
 }
 
 - (void)setupStream:(NSStream *)stream
 {
     stream.delegate = self;
-    switch (self.transport) {
-        case ConnectionTransportPlain:
-        case ConnectionTransportStartTLS:
-            [stream setProperty:NSStreamSocketSecurityLevelNone
-                         forKey:NSStreamSocketSecurityLevelKey];
-            break;
-        case ConnectionTransportTLS:
-            [stream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                         forKey:NSStreamSocketSecurityLevelKey];
-            break;
-    }
     [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [stream open];
 }
