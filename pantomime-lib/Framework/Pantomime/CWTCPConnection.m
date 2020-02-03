@@ -226,6 +226,49 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 @implementation CWTCPConnection (NSStreamDelegate)
 
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
+{
+    switch (eventCode) {
+        case NSStreamEventNone:
+            //INFO("NSStreamEventNone");
+            break;
+        case NSStreamEventOpenCompleted:
+            //INFO("NSStreamEventOpenCompleted");
+            [self.forceDelegate connectionEstablished]; // TODO
+            break;
+        case NSStreamEventHasBytesAvailable:
+            //INFO("NSStreamEventHasBytesAvailable");
+            [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
+            break;
+        case NSStreamEventHasSpaceAvailable:
+            //INFO("NSStreamEventHasSpaceAvailable");
+            [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
+            break;
+        case NSStreamEventErrorOccurred:
+            ERROR("NSStreamEventErrorOccurred: read: %@, write: %@",
+                  [self.readStream.streamError localizedDescription],
+                  [self.writeStream.streamError localizedDescription]);
+            if (self.readStream.streamError) {
+                self.streamError = self.readStream.streamError;
+            } else if (self.writeStream.streamError) {
+                self.streamError = self.writeStream.streamError;
+            }
+
+            // We abuse ET_EDESC for error indication.
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self close];
+
+            break;
+        case NSStreamEventEndEncountered:
+            WARN("NSStreamEventEndEncountered");
+
+            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+            [self close];
+
+            break;
+    }
+}
+
 @end
 
 @implementation CWTCPConnection (NSURLSessionDelegate)
