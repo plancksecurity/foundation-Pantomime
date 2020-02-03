@@ -112,6 +112,15 @@ static NSTimeInterval s_defaultTimeout = 30;
     return NO;
 }
 
+#pragma mark - Stream Handling
+
+- (void)setupStream:(NSStream *)stream
+{
+    stream.delegate = self;
+    [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [stream open];
+}
+
 #pragma mark - Util
 
 - (NSURLSession *)session
