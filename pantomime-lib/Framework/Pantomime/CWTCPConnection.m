@@ -143,20 +143,8 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 - (void)connectInBackgroundAndStartRunLoop
 {
-    CFReadStreamRef readStream = nil;
-    CFWriteStreamRef writeStream = nil;
-    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
-                                       self.port, &readStream, &writeStream);
-
-    NSAssert(readStream != nil, @"Could not create input stream");
-    NSAssert(writeStream != nil, @"Could not create output stream");
-
-    if (readStream != nil && writeStream != nil) {
-        self.readStream = CFBridgingRelease(readStream);
-        self.writeStream = CFBridgingRelease(writeStream);
-        [self setupStream:self.readStream];
-        [self setupStream:self.writeStream];
-    }
+    [self setupStream:self.readStream];
+    [self setupStream:self.writeStream];
 
     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
     while (1) {
@@ -231,16 +219,6 @@ static NSTimeInterval s_defaultTimeout = 30;
 
 - (void)connect
 {
-    self.backgroundThread = [[NSThread alloc]
-                             initWithTarget:self
-                             selector:@selector(connectInBackgroundAndStartRunLoop)
-                             object:nil];
-    self.backgroundThread.name = [NSString
-                                  stringWithFormat:@"CWTCPConnection %@:%d 0x%lu",
-                                  self.name,
-                                  self.port,
-                                  (unsigned long) self.backgroundThread];
-    [self.backgroundThread start];
 }
 
 - (BOOL)canWrite
@@ -296,6 +274,26 @@ static NSTimeInterval s_defaultTimeout = 30;
 
             break;
     }
+}
+
+#pragma mark - Run Loop
+
+- (void)startRunLoopReadStream:(NSInputStream * _Nonnull)readStream
+                   writeStream:(NSOutputStream * _Nonnull)writeStream
+{
+    self.readStream = readStream;
+    self.writeStream = writeStream;
+
+    self.backgroundThread = [[NSThread alloc]
+                             initWithTarget:self
+                             selector:@selector(connectInBackgroundAndStartRunLoop)
+                             object:nil];
+    self.backgroundThread.name = [NSString
+                                  stringWithFormat:@"CWTCPConnection %@:%d 0x%lu",
+                                  self.name,
+                                  self.port,
+                                  (unsigned long) self.backgroundThread];
+    [self.backgroundThread start];
 }
 
 #pragma mark - Util
