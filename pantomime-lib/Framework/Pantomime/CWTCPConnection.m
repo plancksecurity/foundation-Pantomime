@@ -119,7 +119,9 @@ static NSTimeInterval s_defaultTimeout = 30;
     if (s_session == nil) {
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration
                                                     defaultSessionConfiguration];
-        s_session = [NSURLSession sessionWithConfiguration:configuration];
+        s_session = [NSURLSession sessionWithConfiguration:configuration
+                                                  delegate:self
+                                             delegateQueue:nil];
     }
     return s_session;
 }
@@ -153,6 +155,11 @@ static NSTimeInterval s_defaultTimeout = 30;
     }
     return self.delegate;
 }
+
+@end
+
+
+@implementation CWTCPConnection (NSURLSessionDelegate)
 
 @end
 

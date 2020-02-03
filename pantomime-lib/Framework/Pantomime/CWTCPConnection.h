@@ -12,7 +12,7 @@
 
 #import "Pantomime/CWLogger.h"
 
-@interface CWTCPConnection : NSObject<CWConnection, NSStreamDelegate>
+@interface CWTCPConnection : NSObject<CWConnection, NSURLSessionDelegate>
 
 /// Required from CWConnection
 @property (nonatomic, nullable, weak) id<CWConnectionDelegate> delegate;
