@@ -56,18 +56,16 @@
     return NO;
 }
 
-
-//
-//
-//
-- (id) init
+/// Designated initializer.
+- (instancetype) initWithName: (NSString *) theName
+                         port: (unsigned int) thePort
+                    transport: (ConnectionTransport) transport
 {
-  self = [super init];
-
+    self = [super init];
     if (self) {
         _crlf = [[NSData alloc] initWithBytes: "\r\n"  length: 2];
         _defaultCStringEncoding = [NSString defaultCStringEncoding];
-        
+
         _supportedMechanisms = [[CWThreadSafeArray alloc] init];
         _responsesFromServer = [[CWThreadSafeArray alloc] init];
         _capabilities = [[CWThreadSafeArray alloc] init];
@@ -84,25 +82,11 @@
 
         _connection_state.previous_queue = [[NSMutableArray alloc] init];
         _connection_state.reconnecting = _connection_state.opening_mailbox = NO;
+
+        _name = theName;
+        _port = thePort;
+        _connectionTransport = transport;
     }
-
-  return self;
-}
-
-
-//
-//
-//
-- (id) initWithName: (NSString *) theName
-               port: (unsigned int) thePort
-          transport: (ConnectionTransport) transport
-{
-    self = [self init];
-
-    _name = theName;
-    _port = thePort;
-    _connectionTransport = transport;
-
     return self;
 }
 
