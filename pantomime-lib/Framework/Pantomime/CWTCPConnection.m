@@ -94,21 +94,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
-{
-    static NSInteger maxLength = 200;
-    if (length) {
-        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (length >= maxLength) {
-            return [string stringByAppendingString:@"..."];
-        }
-        return string;
-    } else {
-        return @"";
-    }
-}
-
 - (void)connectInBackgroundAndStartRunLoop
 {
     CFReadStreamRef readStream = nil;
@@ -233,6 +218,21 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
     return self.delegate;
+}
+
+- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
+{
+    static NSInteger maxLength = 200;
+    if (length) {
+        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (length >= maxLength) {
+            return [string stringByAppendingString:@"..."];
+        }
+        return string;
+    } else {
+        return @"";
+    }
 }
 
 @end
