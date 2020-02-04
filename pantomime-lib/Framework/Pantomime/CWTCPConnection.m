@@ -100,20 +100,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)connectInBackgroundAndStartRunLoop
 {
-    CFReadStreamRef readStream = nil;
-    CFWriteStreamRef writeStream = nil;
-    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
-                                       self.port, &readStream, &writeStream);
+    NSInputStream *inputStream = nil;
+    NSOutputStream *outputStream = nil;
 
-    NSAssert(readStream != nil, @"Could not create input stream");
-    NSAssert(writeStream != nil, @"Could not create output stream");
+    [NSStream getStreamsToHostWithName:self.name
+                                  port:self.port
+                           inputStream:&inputStream
+                          outputStream:&outputStream];
 
-    if (readStream != nil && writeStream != nil) {
-        self.readStream = CFBridgingRelease(readStream);
-        self.writeStream = CFBridgingRelease(writeStream);
-        [self setupStream:self.readStream];
-        [self setupStream:self.writeStream];
+    if (inputStream == nil || outputStream == nil) {
+        [self signalErrorAndClose];
     }
+
+    self.readStream = inputStream;
+    self.writeStream = outputStream;
+
+    [self setupStream:self.readStream];
+    [self setupStream:self.writeStream];
 
     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
     while (1) {
