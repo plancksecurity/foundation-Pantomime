@@ -149,6 +149,73 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+#pragma mark - CWConnection
+
+- (BOOL)isConnected
+{
+    return _connected;
+}
+
+- (void)close
+{
+    @synchronized(self) {
+        [self closeAndRemoveStream:self.readStream];
+        [self closeAndRemoveStream:self.writeStream];
+        self.connected = NO;
+        self.isGettingClosed = YES;
+        [self cancelBackgroundThread];
+    }
+}
+
+- (NSInteger)read:(unsigned char *)buf length:(NSInteger)len
+{
+    if (![self.readStream hasBytesAvailable]) {
+        return -1;
+    }
+    NSInteger count = [self.readStream read:buf maxLength:len];
+
+    /*INFO("< %@:%d %ld: \"%@\"",
+         self.name, self.port,
+         (long)count,
+         [self bufferToString:buf length:count]);*/
+
+    return count;
+}
+
+- (NSInteger) write:(unsigned char *)buf length:(NSInteger)len
+{
+    if (![self.writeStream hasSpaceAvailable]) {
+        return -1;
+    }
+    NSInteger count = [self.writeStream write:buf maxLength:len];
+
+    /*INFO("> %@:%d %ld: \"%@\"",
+         self.name, self.port,
+         (long)count,
+         [self bufferToString:buf length:len]);*/
+
+    return count;
+}
+
+- (void)connect
+{
+    self.backgroundThread = [[NSThread alloc]
+                             initWithTarget:self
+                             selector:@selector(connectInBackgroundAndStartRunLoop)
+                             object:nil];
+    self.backgroundThread.name = [NSString
+                                  stringWithFormat:@"CWTCPConnection %@:%d 0x%lu",
+                                  self.name,
+                                  self.port,
+                                  (unsigned long) self.backgroundThread];
+    [self.backgroundThread start];
+}
+
+- (BOOL)canWrite
+{
+    return [self.writeStream hasSpaceAvailable];
+}
+
 #pragma mark - NSStreamDelegate
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
@@ -216,77 +283,6 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
     return self.delegate;
-}
-
-@end
-
-#pragma mark - CWConnection
-
-@implementation CWTCPConnection (CWConnection)
-
-- (BOOL)isConnected
-{
-    return _connected;
-}
-
-- (void)close
-{
-    @synchronized(self) {
-        [self closeAndRemoveStream:self.readStream];
-        [self closeAndRemoveStream:self.writeStream];
-        self.connected = NO;
-        self.isGettingClosed = YES;
-        [self cancelBackgroundThread];
-    }
-}
-
-- (NSInteger)read:(unsigned char *)buf length:(NSInteger)len
-{
-    if (![self.readStream hasBytesAvailable]) {
-        return -1;
-    }
-    NSInteger count = [self.readStream read:buf maxLength:len];
-
-    /*INFO("< %@:%d %ld: \"%@\"",
-         self.name, self.port,
-         (long)count,
-         [self bufferToString:buf length:count]);*/
-
-    return count;
-}
-
-- (NSInteger) write:(unsigned char *)buf length:(NSInteger)len
-{
-    if (![self.writeStream hasSpaceAvailable]) {
-        return -1;
-    }
-    NSInteger count = [self.writeStream write:buf maxLength:len];
-
-    /*INFO("> %@:%d %ld: \"%@\"",
-         self.name, self.port,
-         (long)count,
-         [self bufferToString:buf length:len]);*/
-
-    return count;
-}
-
-- (void)connect
-{
-    self.backgroundThread = [[NSThread alloc]
-                             initWithTarget:self
-                             selector:@selector(connectInBackgroundAndStartRunLoop)
-                             object:nil];
-    self.backgroundThread.name = [NSString
-                                  stringWithFormat:@"CWTCPConnection %@:%d 0x%lu",
-                                  self.name,
-                                  self.port,
-                                  (unsigned long) self.backgroundThread];
-    [self.backgroundThread start];
-}
-
-- (BOOL)canWrite
-{
-    return [self.writeStream hasSpaceAvailable];
 }
 
 @end
