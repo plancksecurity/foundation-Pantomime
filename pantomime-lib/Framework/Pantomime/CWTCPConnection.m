@@ -320,6 +320,17 @@ didBecomeInputStream:(NSInputStream *)inputStream
     [self startRunLoopReadStream:inputStream writeStream:outputStream];
 }
 
+- (void)URLSession:(NSURLSession *)session
+didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
+{
+    NSURLCredential *fakeCredentials = [[NSURLCredential alloc]
+                                        initWithUser:@""
+                                        password:@""
+                                        persistence:NSURLCredentialPersistenceNone];
+    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, fakeCredentials);
+}
+
 @end
 
 NS_ASSUME_NONNULL_END
