@@ -16,8 +16,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSString *comp = @"CWTCPConnection";
-
 @interface CWTCPConnection ()
 
 @property (atomic) BOOL connected;
