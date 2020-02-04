@@ -62,6 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
                            forKey:NSStreamSocketSecurityLevelKey];
 }
 
+#pragma mark - Stream Handling
+
 - (void)setupStream:(NSStream *)stream
 {
     stream.delegate = self;
