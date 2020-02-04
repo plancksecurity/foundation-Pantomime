@@ -314,6 +314,26 @@ NS_ASSUME_NONNULL_BEGIN
                              kCFStreamPropertySSLSettings, (CFTypeRef)settings);
 }
 
+- (void)nsStreamWithP12Certificate
+{
+    /*
+    let path = NSBundle.mainBundle().pathForResource("CERTNAME", ofType: "p12")
+    let certData = NSData(contentsOfFile: path!)
+    let passDictionary:NSMutableDictionary = NSMutableDictionary()
+    passDictionary.setValue("meetsapp", forKey: kSecImportExportPassphrase as String)
+    var items: CFArray?
+    let error = SecPKCS12Import(certData!, passDictionary, &items)
+    let unwrappedItems = items! as [AnyObject]
+    let certDict = unwrappedItems[0] as! [String:AnyObject]
+    var certs = [certDict["identity"]!]
+    for c in certDict["chain"]! as! [AnyObject]
+    {
+        certs.append(c as! SecCertificateRef)
+    }
+    items = certs
+     */
+}
+
 @end
 
 @implementation CWTCPConnection (NSStreamDelegate)
