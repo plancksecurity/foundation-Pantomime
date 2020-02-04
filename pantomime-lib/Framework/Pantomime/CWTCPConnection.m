@@ -216,6 +216,29 @@ NS_ASSUME_NONNULL_BEGIN
     return [self.writeStream hasSpaceAvailable];
 }
 
+#pragma mark - Util
+
+ /// Makes sure there is still a non-nil delegate and returns it, if not,
+ /// warns about it, and shuts the connection down.
+ ///
+ /// There's no point in going on without a live delegate.
+ ///
+ /// @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
+- (id<CWConnectionDelegate>)forceDelegate
+{
+    if (self.delegate == nil) {
+        WARN("CWTCPConnection: No delegate. Will close");
+        if (!self.isGettingClosed) {
+            [self close];
+        }
+    }
+    return self.delegate;
+}
+
+@end
+
+@implementation CWTCPConnection (NSStreamDelegate)
+
 #pragma mark - NSStreamDelegate
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
@@ -264,25 +287,6 @@ NS_ASSUME_NONNULL_BEGIN
 
             break;
     }
-}
-
-#pragma mark - Util
-
- /// Makes sure there is still a non-nil delegate and returns it, if not,
- /// warns about it, and shuts the connection down.
- ///
- /// There's no point in going on without a live delegate.
- ///
- /// @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
-- (id<CWConnectionDelegate>)forceDelegate
-{
-    if (self.delegate == nil) {
-        WARN("CWTCPConnection: No delegate. Will close");
-        if (!self.isGettingClosed) {
-            [self close];
-        }
-    }
-    return self.delegate;
 }
 
 @end
