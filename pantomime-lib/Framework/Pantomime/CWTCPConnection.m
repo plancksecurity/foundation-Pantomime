@@ -16,41 +16,34 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSURLSession *s_session;
+static NSString *comp = @"CWTCPConnection";
 
 @interface CWTCPConnection ()
 
+@property (atomic) BOOL connected;
 @property (atomic, strong) NSString *name;
 @property (atomic) uint32_t port;
 @property (atomic) ConnectionTransport transport;
-
-@property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
-@property (atomic) BOOL isGettingClosed;
-
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
+@property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
 @property (nonatomic, strong) NSError *streamError;
-
-/// The thread where the read- and write streams are scheduled on.
 @property (nullable, strong) NSThread *backgroundThread;
-
-@property (nonatomic) NSURLSessionStreamTask *task;
+@property (atomic) BOOL isGettingClosed;
 
 @end
 
 @implementation CWTCPConnection
 
-- (instancetype)initWithName:(NSString *)theName
-                        port:(unsigned int)thePort
-                   transport:(ConnectionTransport)transport
-                  background:(BOOL)theBOOL
+- (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
+         transport:(ConnectionTransport)transport background:(BOOL)theBOOL
 {
     if (self = [super init]) {
         _openConnections = [[NSMutableSet alloc] init];
+        _connected = NO;
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
-        _task = [[self session] streamTaskWithHostName:theName port:thePort];
         INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
@@ -63,22 +56,145 @@ static NSURLSession *s_session;
     [self close];
 }
 
-#pragma mark - CWConnection
-
 - (void)startTLS
 {
+    [self.readStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
+                          forKey:NSStreamSocketSecurityLevelKey];
+    [self.writeStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
+                           forKey:NSStreamSocketSecurityLevelKey];
 }
+
+- (void)setupStream:(NSStream *)stream
+{
+    stream.delegate = self;
+    switch (self.transport) {
+        case ConnectionTransportPlain:
+        case ConnectionTransportStartTLS:
+            [stream setProperty:NSStreamSocketSecurityLevelNone
+                         forKey:NSStreamSocketSecurityLevelKey];
+            break;
+        case ConnectionTransportTLS:
+            [stream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
+                         forKey:NSStreamSocketSecurityLevelKey];
+            break;
+    }
+    [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [stream open];
+}
+
+- (void)closeAndRemoveStream:(NSStream *)stream
+{
+    if (stream) {
+        [stream close];
+        [self.openConnections removeObject:stream];
+        [stream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        if (stream == self.readStream) {
+            self.readStream = nil;
+        } else if (stream == self.writeStream) {
+            self.writeStream = nil;
+        }
+    }
+}
+
+/**
+ Sets a socket option (the SOL_SOCKET layer) for a given stream.
+ */
+- (NSInteger)setSocketOption:(int)optionName optionNameString:(NSString *)optionNameString
+                 optionValue:(NSInteger)optionValue onStream:(NSStream *)stream
+{
+    CFReadStreamRef cfStream = (__bridge CFReadStreamRef) (NSInputStream *) stream;
+    CFDataRef nativeSocket = CFReadStreamCopyProperty(cfStream,
+                                                      kCFStreamPropertySocketNativeHandle);
+    CFSocketNativeHandle *cfSock = (CFSocketNativeHandle *) CFDataGetBytePtr(nativeSocket);
+
+    NSUInteger originalValue = 500;
+    NSUInteger newValue = 501;
+    socklen_t originalValueSize = sizeof(originalValue);
+    socklen_t newValueSize = sizeof(newValue);
+    getsockopt(*cfSock, SOL_SOCKET, optionName, &originalValue, &originalValueSize);
+    setsockopt(*cfSock, SOL_SOCKET, optionName, &optionValue, sizeof(optionValue));
+    getsockopt(*cfSock, SOL_SOCKET, optionName, &newValue, &newValueSize);
+    INFO("%@: %lu (%d bytes) -> %lu (%d bytes)",
+         optionNameString,
+         (unsigned long) originalValue, originalValueSize,
+         (unsigned long) newValue, newValueSize);
+
+    CFRelease(nativeSocket);
+    return newValue;
+}
+
+/**
+ Set SO_RCVLOWAT for the read stream socket, which is not needed because the default (1)
+ is already the desired value.
+ */
+- (void)setupSocketForStream:(NSStream *)stream
+{
+    if (stream == self.readStream) {
+        [self setSocketOption:SO_RCVLOWAT optionNameString:@"SO_RCVLOWAT" optionValue:1
+                     onStream: stream];
+    }
+}
+
+- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
+{
+    static NSInteger maxLength = 200;
+    if (length) {
+        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (length >= maxLength) {
+            return [string stringByAppendingString:@"..."];
+        }
+        return string;
+    } else {
+        return @"";
+    }
+}
+
+- (void)connectInBackgroundAndStartRunLoop
+{
+    CFReadStreamRef readStream = nil;
+    CFWriteStreamRef writeStream = nil;
+    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
+                                       self.port, &readStream, &writeStream);
+
+    NSAssert(readStream != nil, @"Could not create input stream");
+    NSAssert(writeStream != nil, @"Could not create output stream");
+
+    if (readStream != nil && writeStream != nil) {
+        self.readStream = CFBridgingRelease(readStream);
+        self.writeStream = CFBridgingRelease(writeStream);
+        [self setupStream:self.readStream];
+        [self setupStream:self.writeStream];
+    }
+
+    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+    while (1) {
+        if ( [NSThread currentThread].isCancelled ) {
+            break;
+        }
+        @autoreleasepool {
+            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
+        }
+    }
+    self.backgroundThread = nil;
+}
+
+- (void)cancelNoop {}
+
+- (void)cancelBackgroundThread
+{
+    if (self.backgroundThread) {
+        [self.backgroundThread cancel];
+        [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
+                waitUntilDone:NO];
+    }
+}
+
+#pragma mark - CWConnection
 
 - (BOOL)isConnected
 {
-    switch (self.task.state) {
-        case NSURLSessionTaskStateRunning:
-            return YES;
-        case NSURLSessionTaskStateSuspended:
-        case NSURLSessionTaskStateCanceling:
-        case NSURLSessionTaskStateCompleted:
-            return NO;
-    }
+    return _connected;
 }
 
 - (void)close
@@ -86,11 +202,9 @@ static NSURLSession *s_session;
     @synchronized(self) {
         [self closeAndRemoveStream:self.readStream];
         [self closeAndRemoveStream:self.writeStream];
+        self.connected = NO;
         self.isGettingClosed = YES;
         [self cancelBackgroundThread];
-        [self.task closeRead];
-        [self.task closeWrite];
-        [self.task cancel];
     }
 }
 
@@ -126,52 +240,6 @@ static NSURLSession *s_session;
 
 - (void)connect
 {
-    [_task resume];
-    [self.task startSecureConnection];
-    [self.task captureStreams];
-}
-
-- (BOOL)canWrite
-{
-    return [self.writeStream hasSpaceAvailable];
-}
-
-#pragma mark - Run Loop
-
-- (void)connectInBackgroundAndStartRunLoop
-{
-    [self setupStream:self.readStream];
-    [self setupStream:self.writeStream];
-
-    NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-    while (1) {
-        if ( [NSThread currentThread].isCancelled ) {
-            break;
-        }
-        @autoreleasepool {
-            [runLoop runMode:NSDefaultRunLoopMode beforeDate: [NSDate distantFuture]];
-        }
-    }
-    self.backgroundThread = nil;
-}
-
-- (void)cancelNoop {}
-
-- (void)cancelBackgroundThread
-{
-    if (self.backgroundThread) {
-        [self.backgroundThread cancel];
-        [self performSelector:@selector(cancelNoop) onThread:self.backgroundThread withObject:nil
-                waitUntilDone:NO];
-    }
-}
-
-- (void)startRunLoopReadStream:(NSInputStream * _Nonnull)readStream
-                   writeStream:(NSOutputStream * _Nonnull)writeStream
-{
-    self.readStream = readStream;
-    self.writeStream = writeStream;
-
     self.backgroundThread = [[NSThread alloc]
                              initWithTarget:self
                              selector:@selector(connectInBackgroundAndStartRunLoop)
@@ -184,80 +252,12 @@ static NSURLSession *s_session;
     [self.backgroundThread start];
 }
 
-#pragma mark - Stream Handling
-
-- (void)setupStream:(NSStream *)stream
+- (BOOL)canWrite
 {
-    stream.delegate = self;
-    [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [stream open];
+    return [self.writeStream hasSpaceAvailable];
 }
-
-- (void)closeAndRemoveStream:(NSStream *)stream
-{
-    if (stream) {
-        [stream close];
-        [self.openConnections removeObject:stream];
-        [stream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        if (stream == self.readStream) {
-            self.readStream = nil;
-        } else if (stream == self.writeStream) {
-            self.writeStream = nil;
-        }
-    }
-}
-
-#pragma mark - Util
-
-- (NSURLSession *)session
-{
-    if (s_session == nil) {
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration
-                                                    defaultSessionConfiguration];
-        s_session = [NSURLSession sessionWithConfiguration:configuration
-                                                  delegate:self
-                                             delegateQueue:nil];
-    }
-    return s_session;
-}
-
-- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
-{
-    static NSInteger maxLength = 200;
-    if (length) {
-        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (length >= maxLength) {
-            return [string stringByAppendingString:@"..."];
-        }
-        return string;
-    } else {
-        return @"";
-    }
-}
-
- /// Makes sure there is still a non-nil delegate and returns it, if not,
- /// warns about it, and shuts the connection down.
- ///
- /// There's no point in going on without a live delegate.
- ///
- /// @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
-- (id<CWConnectionDelegate>)forceDelegate
-{
-    if (self.delegate == nil) {
-        WARN("CWTCPConnection: No delegate. Will close");
-        if (!self.isGettingClosed) {
-            [self close];
-        }
-    }
-    return self.delegate;
-}
-
-@end
 
 #pragma mark - NSStreamDelegate
-
-@implementation CWTCPConnection (NSStreamDelegate)
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
 {
@@ -270,6 +270,7 @@ static NSURLSession *s_session;
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
                 INFO("connectionEstablished");
+                self.connected = YES;
                 [self.forceDelegate connectionEstablished];
             }
             break;
@@ -306,29 +307,25 @@ static NSURLSession *s_session;
     }
 }
 
-@end
+#pragma mark - Util
 
-#pragma mark - NSURLSessionDelegate
+/**
+ Makes sure there is still a non-nil delegate and returns it, if not,
+ warns about it, and shuts the connection down.
 
-@implementation CWTCPConnection (NSURLSessionDelegate)
+ There's no point in going on without a live delegate.
 
-- (void)URLSession:(NSURLSession *)session
-        streamTask:(NSURLSessionStreamTask *)streamTask
-didBecomeInputStream:(NSInputStream *)inputStream
-      outputStream:(NSOutputStream *)outputStream
+ @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
+ */
+- (id<CWConnectionDelegate>)forceDelegate
 {
-    [self startRunLoopReadStream:inputStream writeStream:outputStream];
-}
-
-- (void)URLSession:(NSURLSession *)session
-didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
-{
-    NSURLCredential *fakeCredentials = [[NSURLCredential alloc]
-                                        initWithUser:@""
-                                        password:@""
-                                        persistence:NSURLCredentialPersistenceNone];
-    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, fakeCredentials);
+    if (self.delegate == nil) {
+        WARN("CWTCPConnection: No delegate. Will close");
+        if (!self.isGettingClosed) {
+            [self close];
+        }
+    }
+    return self.delegate;
 }
 
 @end
