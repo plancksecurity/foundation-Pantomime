@@ -291,6 +291,29 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+- (void)setOptionsHostname:(NSString *)hostname
+               inputStream:(NSInputStream *)inputStream
+              outputStream:(NSOutputStream *)outputStream
+{
+    NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithCapacity:1];
+    [settings setObject:(NSString *)NSStreamSocketSecurityLevelTLSv1 forKey:(NSString *)kCFStreamSSLLevel];
+    [settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+    [settings setObject:hostname forKey:(NSString *)kCFStreamSSLPeerName];
+    [settings setObject:NSStreamSocketSecurityLevelTLSv1 forKey:NSStreamSocketSecurityLevelKey];
+    inputStream.delegate  = self;
+    outputStream.delegate = self;
+
+    [inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop]
+                               forMode:NSDefaultRunLoopMode];
+    [outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop]
+                            forMode:NSDefaultRunLoopMode];
+
+    CFReadStreamSetProperty((CFReadStreamRef)inputStream,
+                            kCFStreamPropertySSLSettings, (CFTypeRef)settings);
+    CFWriteStreamSetProperty((CFWriteStreamRef)outputStream,
+                             kCFStreamPropertySSLSettings, (CFTypeRef)settings);
+}
+
 @end
 
 @implementation CWTCPConnection (NSStreamDelegate)
