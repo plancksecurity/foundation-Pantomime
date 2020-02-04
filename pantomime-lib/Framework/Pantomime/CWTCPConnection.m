@@ -268,14 +268,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Util
 
-/**
- Makes sure there is still a non-nil delegate and returns it, if not,
- warns about it, and shuts the connection down.
-
- There's no point in going on without a live delegate.
-
- @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
- */
+ /// Makes sure there is still a non-nil delegate and returns it, if not,
+ /// warns about it, and shuts the connection down.
+ ///
+ /// There's no point in going on without a live delegate.
+ ///
+ /// @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
 - (id<CWConnectionDelegate>)forceDelegate
 {
     if (self.delegate == nil) {
