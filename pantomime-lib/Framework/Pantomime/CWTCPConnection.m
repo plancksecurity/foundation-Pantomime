@@ -249,6 +249,48 @@ NS_ASSUME_NONNULL_BEGIN
     [self close];
 }
 
+#pragma mark - Certificate Handling
+
+- (void)handleCertificateForStream:(NSStream *)aStream
+{
+    // #1
+    // NO for client, YES for server.  In this example, we are a client
+    // replace "localhost" with the name of the server to which you are connecting
+    SecPolicyRef policy = SecPolicyCreateSSL(NO, CFSTR("192.168.178.14"));
+    SecTrustRef trust = NULL;
+    // #2
+    // Deprecated: The peer certificates are available as part of the SecTrustRef object.  See <Security/SecTrust.h>
+    CFArrayRef streamCertificates =
+    (__bridge CFArrayRef)([aStream propertyForKey:(NSString *) kCFStreamPropertySSLPeerCertificates]);
+    // #3
+    SecTrustCreateWithCertificates(streamCertificates,
+                                   policy,
+                                   &trust);
+    // #4
+    //SecTrustSetAnchorCertificates(trust,
+                                  //(__bridge CFArrayRef) [NSArray arrayWithObject:(__bridge id)certificate]);            // #5
+    SecTrustResultType trustResultType = kSecTrustResultInvalid;
+    OSStatus status = SecTrustEvaluate(trust, &trustResultType);
+    if (status == errSecSuccess) {
+        // expect trustResultType == kSecTrustResultUnspecified
+        // until my cert exists in the keychain see technote for more detail.
+        if (trustResultType == kSecTrustResultUnspecified) {
+            NSLog(@"We can trust this certificate! TrustResultType: %d", trustResultType);
+        } else {
+            NSLog(@"Cannot trust certificate. TrustResultType: %d", trustResultType);
+        }
+    } else {
+        NSLog(@"Creating trust failed: %d", status);
+        [aStream close];
+    }
+    if (trust) {
+        CFRelease(trust);
+    }
+    if (policy) {
+        CFRelease(policy);
+    }
+}
+
 @end
 
 @implementation CWTCPConnection (NSStreamDelegate)
