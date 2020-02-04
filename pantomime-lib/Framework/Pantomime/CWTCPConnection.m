@@ -94,6 +94,8 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+#pragma mark - Run Loop
+
 - (void)connectInBackgroundAndStartRunLoop
 {
     CFReadStreamRef readStream = nil;
