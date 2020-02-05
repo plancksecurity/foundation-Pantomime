@@ -96,6 +96,37 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+/// Setup the stream(s) with the given client certificate data.
+/// @param certificateData The data for the certificate as .p12 (PKCS12).
+/// @param passphrase The pass phrase to access the certificate,
+///  which may be nil, indicating no pass phrase is needed.
+/// @param error An optional pointer to an error if you are interested in that.
+///  This will be set (if given) on an unsuccessful return, that is when returning `NO`.
+/// - Returns: `YES` when successful, `NO` when an error occurred.
+- (BOOL)setupStreamWithClientCertificateData:(NSData *)certificateData
+                                  passphrase:(NSString * _Nullable)passphrase
+                                       error:(NSError ** _Nullable)error;
+{
+    NSMutableDictionary *options = [NSMutableDictionary new];
+    if (passphrase) {
+        [options setValue:passphrase forKey:(__bridge NSString *) kSecImportExportPassphrase];
+    }
+
+    NSArray *certificateItems;
+    CFArrayRef certificateItemsArrayRef = (__bridge CFArrayRef) certificateItems;
+    OSStatus status = SecPKCS12Import((__bridge CFDataRef) certificateData,
+                                      (__bridge CFDictionaryRef) options,
+                                      &certificateItemsArrayRef);
+    if (status != noErr) {
+        if (error) {
+            *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        }
+        return NO;
+    }
+
+    return NO;
+}
+
 #pragma mark - Run Loop
 
 - (void)connectInBackgroundAndStartRunLoop
