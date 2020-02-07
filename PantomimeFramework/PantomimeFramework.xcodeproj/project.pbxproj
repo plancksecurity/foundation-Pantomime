@@ -162,6 +162,8 @@
 		4329CBCE22391EA1007D377E /* IOS-1300_odt_attachment.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB322391EA1007D377E /* IOS-1300_odt_attachment.txt */; };
 		4329CBCF22391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB422391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt */; };
 		4329CBD022391EA1007D377E /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB522391EA1007D377E /* MailWithDocAttached.txt */; };
+		43ADEB8523EDC2CF002F4F9E /* CertificateLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 43ADEB8323EDC2CF002F4F9E /* CertificateLoader.m */; };
+		43ADEB8623EDC2CF002F4F9E /* CertificateLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 43ADEB8423EDC2CF002F4F9E /* CertificateLoader.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -337,6 +339,8 @@
 		4329CBB322391EA1007D377E /* IOS-1300_odt_attachment.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "IOS-1300_odt_attachment.txt"; sourceTree = "<group>"; };
 		4329CBB422391EA1007D377E /* SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimplifiedKeyImport_Harry_To_Rick_with_Leon.txt; sourceTree = "<group>"; };
 		4329CBB522391EA1007D377E /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
+		43ADEB8323EDC2CF002F4F9E /* CertificateLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CertificateLoader.m; sourceTree = "<group>"; };
+		43ADEB8423EDC2CF002F4F9E /* CertificateLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CertificateLoader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -410,6 +414,8 @@
 		4329CA8D2238FDBB007D377E /* Pantomime */ = {
 			isa = PBXGroup;
 			children = (
+				43ADEB8423EDC2CF002F4F9E /* CertificateLoader.h */,
+				43ADEB8323EDC2CF002F4F9E /* CertificateLoader.m */,
 				4329CA8E2238FDBB007D377E /* CWIMAPFolder+CWProtected.m */,
 				4329CA8F2238FDBB007D377E /* CWService+Protected.h */,
 				4329CA912238FDBB007D377E /* NSDate+RFC2822.m */,
@@ -641,6 +647,7 @@
 				4329CB172238FDBB007D377E /* CWKOI8_R.h in Headers */,
 				4329CB1F2238FDBB007D377E /* CWOAuthUtils.h in Headers */,
 				4329CB502238FDBB007D377E /* CWIMAPStore+Protected.h in Headers */,
+				43ADEB8623EDC2CF002F4F9E /* CertificateLoader.h in Headers */,
 				4329CA7E2238FD4A007D377E /* CWMIMEMultipart.h in Headers */,
 				4329CB362238FDBB007D377E /* Pantomime.h in Headers */,
 				4329CA7B2238FD4A007D377E /* CWMIMEUtility.h in Headers */,
@@ -850,6 +857,7 @@
 				4329CB3A2238FDBB007D377E /* CWIMAPMessage.m in Sources */,
 				4329CB302238FDBB007D377E /* CWRegEx.m in Sources */,
 				4329CB552238FDBB007D377E /* CWWINDOWS_1254.m in Sources */,
+				43ADEB8523EDC2CF002F4F9E /* CertificateLoader.m in Sources */,
 				4329CB462238FDBB007D377E /* CWPart.m in Sources */,
 				4329CB422238FDBB007D377E /* CWISO8859_14.m in Sources */,
 				4329CB222238FDBB007D377E /* CWThreadSafeArray.m in Sources */,
