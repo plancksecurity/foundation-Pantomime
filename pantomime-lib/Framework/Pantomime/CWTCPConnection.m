@@ -18,8 +18,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static NSURLSession *s_session;
-
 @interface CWTCPConnection ()
 
 @property (atomic, strong) NSString *name;
@@ -36,6 +34,7 @@ static NSURLSession *s_session;
 /// The thread where the read- and write streams are scheduled on.
 @property (nullable, strong) NSThread *backgroundThread;
 
+@property (nonatomic) NSURLSession *session;
 @property (nonatomic) NSURLSessionStreamTask *task;
 
 @end
@@ -52,7 +51,13 @@ static NSURLSession *s_session;
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
-        _task = [[self session] streamTaskWithHostName:theName port:thePort];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration
+                                                    defaultSessionConfiguration];
+        _session = [NSURLSession sessionWithConfiguration:configuration
+                                                 delegate:self
+                                            delegateQueue:nil];
+
+        _task = [_session streamTaskWithHostName:theName port:thePort];
         INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
@@ -210,18 +215,6 @@ static NSURLSession *s_session;
 }
 
 #pragma mark - Util
-
-- (NSURLSession *)session
-{
-    if (s_session == nil) {
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration
-                                                    defaultSessionConfiguration];
-        s_session = [NSURLSession sessionWithConfiguration:configuration
-                                                  delegate:self
-                                             delegateQueue:nil];
-    }
-    return s_session;
-}
 
 - (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
 {
