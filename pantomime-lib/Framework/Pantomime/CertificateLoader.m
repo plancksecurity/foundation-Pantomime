@@ -50,7 +50,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
                                               password:(NSString *)password
 {
     NSString *sslCertName = certificateName;
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:sslCertName ofType:@"p12"];
+    NSString *path2 = [[NSBundle mainBundle] pathForResource:sslCertName ofType:nil];
     NSData *p12data = [NSData dataWithContentsOfFile:path2];
 
     if (!p12data) {
