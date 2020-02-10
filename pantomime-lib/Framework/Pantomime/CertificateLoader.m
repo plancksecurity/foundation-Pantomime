@@ -41,8 +41,6 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
         CFRelease(options);
     }
 
-    CFRelease(items);
-
     return status;
 }
 
