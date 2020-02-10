@@ -30,10 +30,10 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     if (status == 0) {
         CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(items, 0);
         const void *tempIdentity = NULL;
-        tempIdentity = CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemIdentity);
-        *identity = (SecIdentityRef)tempIdentity;
+        tempIdentity = CFRetain(CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemIdentity));
+        *identity = (SecIdentityRef) tempIdentity;
         const void *tempTrust = NULL;
-        tempTrust = CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemTrust);
+        tempTrust = CFRetain(CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemTrust));
         *trust = (SecTrustRef)tempTrust;
     }
 
@@ -78,6 +78,8 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
                                          certificates:(__bridge NSArray *) certsArray
                                          persistence:NSURLCredentialPersistencePermanent];
     CFRelease(certsArray);
+    CFRelease(myIdentity);
+    CFRelease(myTrust);
 
     return secureCredential;
 }
