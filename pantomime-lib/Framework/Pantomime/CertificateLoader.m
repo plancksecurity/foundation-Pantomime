@@ -27,6 +27,11 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
 
     status = SecPKCS12Import(inP12data, options, &items);
 
+    NSArray *itemsArray = (__bridge NSArray *) items;
+    for (id obj in itemsArray) {
+        NSLog(@"**** %@", obj);
+    }
+
     if (status == 0) {
         CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(items, 0);
         const void *tempIdentity = NULL;
