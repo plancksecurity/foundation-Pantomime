@@ -30,9 +30,10 @@
                                                     trust:&myTrust];
 
     if (!certs) {
-        // We took ownership of myIdentity and myTrust, but if the return is nil
+        // We took ownership of myIdentity and myTrust, but if
+        // extractCertificateDataFromP12Data returns nil
         // then we have the guarantee that they weren't created.
-        // Nevertheless, keep the static analyzer happy and make the code clearer.
+        // Nevertheless, keep the static analyzer happy and make the code explicit.
         if (myIdentity) {
             CFRelease(myIdentity);
         }
