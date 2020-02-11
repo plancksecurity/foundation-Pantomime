@@ -98,15 +98,6 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     if (CFArrayGetCount(items) > 0) {
         CFDictionaryRef identityDict = CFArrayGetValueAtIndex(items, 0);
 
-        NSArray *secItemClasses = @[(id) kSecClassCertificate,
-                                    (id) kSecClassKey,
-                                    (id) kSecClassIdentity];
-
-        for (id secItemClass in secItemClasses) {
-            NSDictionary *spec = @{(id) kSecClass: secItemClass};
-            err = SecItemDelete((CFDictionaryRef) spec);
-        }
-
         // client identity
         SecIdentityRef clientIdentity = (SecIdentityRef) CFDictionaryGetValue(identityDict,
                                                                               kSecImportItemIdentity);
