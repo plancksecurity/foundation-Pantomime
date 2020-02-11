@@ -109,15 +109,8 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
         SecIdentityRef clientIdentity = (SecIdentityRef) CFDictionaryGetValue(identityDict,
                                                                               kSecImportItemIdentity);
 
-        NSString *kClientIdentityLabel = @"kClientIdentityLabel"; // arbitrary label
         NSString *kServerCertificateLabel = @"kServerCertificateLabel"; // arbitrary label
 
-        NSDictionary *addIdentityQuery = @{(id) kSecAttrLabel: kClientIdentityLabel,
-                                           (id) kSecValueRef: (__bridge id) clientIdentity};
-        err = SecItemAdd((CFDictionaryRef) addIdentityQuery, NULL);
-        if (err != noErr) {
-            return NO;
-        }
         // Server Certificate
         CFArrayRef chain = CFDictionaryGetValue(identityDict, kSecImportItemCertChain);
         CFIndex chainCount = CFArrayGetCount(chain);
