@@ -27,12 +27,12 @@
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
 
-    OSStatus status = [self extractIdentityAndTrustP12Data:p12data
-                                                  password:(NSString *)password
-                                                  identity:&myIdentity
-                                                     trust:&myTrust];
+    BOOL success = [self extractIdentityAndTrustP12Data:p12data
+                                               password:(NSString *)password
+                                               identity:&myIdentity
+                                                  trust:&myTrust];
 
-    if (status != noErr) {
+    if (!success) {
         return nil;
     }
 
