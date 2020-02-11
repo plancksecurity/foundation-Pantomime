@@ -88,41 +88,42 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
 }
 
 + (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
-    NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
-
-    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
-    OSStatus err = SecPKCS12Import((CFDataRef) p12Data, (CFDictionaryRef) p12Options, &items);
-    if (err != noErr) {
+    NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
+    if (items == nil) {
         return NO;
     }
-    if (CFArrayGetCount(items) > 0) {
-        CFDictionaryRef identityDict = CFArrayGetValueAtIndex(items, 0);
 
+    for (NSDictionary *dict in items) {
         // client identity
-        SecIdentityRef clientIdentity = (SecIdentityRef) CFDictionaryGetValue(identityDict,
-                                                                              kSecImportItemIdentity);
+        SecIdentityRef clientIdentity = (__bridge SecIdentityRef) [dict objectForKey:(id) kSecImportItemIdentity];
 
         // server identity
-        CFArrayRef chain = CFDictionaryGetValue(identityDict, kSecImportItemCertChain);
-        CFIndex chainCount = CFArrayGetCount(chain);
-        BOOL shouldBreak = false;
-        for (CFIndex i = 0; (i < chainCount) && (!shouldBreak); i++) {
-            SecCertificateRef cert = (SecCertificateRef) CFArrayGetValueAtIndex(chain, i);
+        NSArray *chain = [dict objectForKey:(id) kSecImportItemCertChain];
+        id firstObject = [chain firstObject];
+        for (id chainObj in chain) {
+            SecCertificateRef cert = (__bridge SecCertificateRef) chainObj;
             CFStringRef summary = SecCertificateCopySubjectSummary(cert);
             NSString *strSummary = (__bridge NSString *) summary;
-            if ([strSummary containsString:@"Root"] || (i == chainCount)) {
+            if ([strSummary containsString:@"Root"] || (chainObj == firstObject)) {
                 // have the root
             }
             CFRelease(summary);
         }
     }
-    else {
-        return NO;
-    }
-
-    CFRelease(items);
 
     return YES;
+}
+
++ (NSArray * _Nullable)extractCertificatesP12Data:(NSData *)p12Data password:(NSString *)password {
+    NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
+
+    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
+    OSStatus err = SecPKCS12Import((CFDataRef) p12Data, (CFDictionaryRef) p12Options, &items);
+    if (err != noErr) {
+        return nil;
+    }
+
+    return (__bridge NSArray *) items;
 }
 
 @end
