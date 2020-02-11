@@ -21,9 +21,6 @@
         return nil;
     }
 
-    // explore the certificates
-    [self exploreP12Data:p12data password:password];
-
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
 
