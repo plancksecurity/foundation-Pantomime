@@ -86,33 +86,6 @@
     return [NSArray arrayWithArray:result];
 }
 
-+ (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password
-{
-    NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
-    if (items == nil) {
-        return NO;
-    }
-
-    for (NSDictionary *dict in items) {
-        // client identity
-        SecIdentityRef clientIdentity = (__bridge SecIdentityRef) [dict objectForKey:(id) kSecImportItemIdentity];
-
-        // server identity
-        NSArray *chain = [dict objectForKey:(id) kSecImportItemCertChain];
-        id firstObject = [chain firstObject];
-        for (id chainObj in chain) {
-            SecCertificateRef cert = (__bridge SecCertificateRef) chainObj;
-            CFStringRef summary = SecCertificateCopySubjectSummary(cert);
-            NSString *strSummary = (__bridge_transfer NSString *) summary;
-            if ([strSummary containsString:@"Root"] || (chainObj == firstObject)) {
-                // have the root
-            }
-        }
-    }
-
-    return YES;
-}
-
 + (NSArray * _Nullable)extractCertificatesP12Data:(NSData *)p12Data password:(NSString *)password
 {
     NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
