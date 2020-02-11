@@ -84,4 +84,69 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     return secureCredential;
 }
 
+- (BOOL)addToKeyChainP12Data:(NSData *)p12Data withPassphrase:(NSString *)passphrase {
+    BOOL lastError = false;
+
+    NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: passphrase};
+
+    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
+    OSStatus err = SecPKCS12Import((CFDataRef) p12Data, (CFDictionaryRef) p12Options, &items);
+    if (err != noErr) {
+        return NO;
+    }
+    if (!lastError && err == noErr && CFArrayGetCount(items) > 0) {
+        CFDictionaryRef identityDict = CFArrayGetValueAtIndex(items, 0);
+        // Clean-up
+
+        NSArray *secItemClasses = @[(id) kSecClassCertificate,
+                                    (id) kSecClassKey,
+                                    (id) kSecClassIdentity];
+
+        for (id secItemClass in secItemClasses) {
+            NSDictionary *spec = @{(id) kSecClass: secItemClass};
+            err = SecItemDelete((CFDictionaryRef) spec);
+        }
+
+        // Client Identity & Certificate
+
+        SecIdentityRef clientIdentity = (SecIdentityRef) CFDictionaryGetValue(identityDict,
+                                                                              kSecImportItemIdentity);
+
+        NSString *kClientIdentityLabel = @"kClientIdentityLabel"; // arbitrary label
+        NSString *kServerCertificateLabel = @"kServerCertificateLabel"; // arbitrary label
+
+        NSDictionary *addIdentityQuery = @{(id) kSecAttrLabel: kClientIdentityLabel,
+                                           (id) kSecValueRef: (__bridge id) clientIdentity};
+        err = SecItemAdd((CFDictionaryRef) addIdentityQuery, NULL);
+        if (err != noErr) {
+            return NO;
+        }
+        // Server Certificate
+        CFArrayRef chain = CFDictionaryGetValue(identityDict, kSecImportItemCertChain);
+        CFIndex chainCount = CFArrayGetCount(chain);
+        BOOL shouldBreak = false;
+        for (CFIndex i = 0; (i < chainCount) && (!shouldBreak); i++) {
+            SecCertificateRef cert = (SecCertificateRef)CFArrayGetValueAtIndex(chain, i);
+            CFStringRef summary = SecCertificateCopySubjectSummary(cert);
+            NSString *strSummary = (__bridge NSString *) summary;
+            if ([strSummary containsString:@"Root"] || (i == chainCount)) {
+                NSDictionary *addCertQuery = @{(id) kSecAttrLabel: kServerCertificateLabel,
+                                               (id) kSecValueRef: (__bridge id) cert};
+                err = SecItemAdd((CFDictionaryRef)addCertQuery, NULL);
+                if (err != noErr) {
+                    return NO;
+                }
+                shouldBreak = true;
+            }
+            CFRelease(summary);
+        }
+    }
+    else {
+        return NO;
+    }
+    CFRelease(items);
+
+    return YES;
+}
+
 @end
