@@ -103,11 +103,10 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
         for (id chainObj in chain) {
             SecCertificateRef cert = (__bridge SecCertificateRef) chainObj;
             CFStringRef summary = SecCertificateCopySubjectSummary(cert);
-            NSString *strSummary = (__bridge NSString *) summary;
+            NSString *strSummary = (__bridge_transfer NSString *) summary;
             if ([strSummary containsString:@"Root"] || (chainObj == firstObject)) {
                 // have the root
             }
-            CFRelease(summary);
         }
     }
 
