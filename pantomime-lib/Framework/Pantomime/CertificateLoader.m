@@ -36,15 +36,9 @@
         return nil;
     }
 
-    SecCertificateRef myCertificate;
-    SecIdentityCopyCertificate(myIdentity, &myCertificate);
-    NSArray *certsArray = @[(__bridge_transfer id) myCertificate];
-
-    CFRelease(myCertificate);
-
     NSURLCredential *secureCredential = [NSURLCredential
                                          credentialWithIdentity:myIdentity
-                                         certificates:certsArray
+                                         certificates:certs
                                          persistence:NSURLCredentialPersistencePermanent];
     CFRelease(myIdentity);
     CFRelease(myTrust);
