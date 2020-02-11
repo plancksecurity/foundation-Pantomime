@@ -57,7 +57,7 @@
                                                                 identity:(SecIdentityRef *)identity
                                                                    trust:(SecTrustRef *)trust
 {
-    NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
+    NSArray<NSDictionary *> *items = [self extractCertificatesP12Data:p12Data password:password];
     if (items == nil) {
         return nil;
     }
@@ -75,7 +75,11 @@
     return nil;
 }
 
-+ (NSArray *)extractCertificates:(NSArray<NSDictionary *> *)dictionaries
+/// Gathers all certificates from the given data
+/// @param dictionaries An array of dictionaries that are assumed to contain
+///  an entry under `kSecImportItemCertChain`, which is supposed to be an array
+///  of `SecCertificateRef`s.
++ (NSArray<NSDictionary *> *)extractCertificates:(NSArray<NSDictionary *> *)dictionaries
 {
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:1];
 
