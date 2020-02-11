@@ -38,9 +38,7 @@
 
     SecCertificateRef myCertificate;
     SecIdentityCopyCertificate(myIdentity, &myCertificate);
-    const void *certs[] = {myCertificate};
-    CFArrayRef certsArrayCF = CFArrayCreate(NULL, certs, 1, NULL);
-    NSArray *certsArray = (__bridge_transfer NSArray *) certsArrayCF;
+    NSArray *certsArray = @[(__bridge_transfer id) myCertificate];
 
     CFRelease(myCertificate);
 
