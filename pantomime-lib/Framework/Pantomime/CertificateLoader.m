@@ -81,7 +81,8 @@
     return nil;
 }
 
-+ (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
++ (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password
+{
     NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
     if (items == nil) {
         return NO;
@@ -107,7 +108,8 @@
     return YES;
 }
 
-+ (NSArray * _Nullable)extractCertificatesP12Data:(NSData *)p12Data password:(NSString *)password {
++ (NSArray * _Nullable)extractCertificatesP12Data:(NSData *)p12Data password:(NSString *)password
+{
     NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
 
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
