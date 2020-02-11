@@ -24,7 +24,7 @@
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
 
-    NSArray *certs = [self extractIdentityAndTrustP12Data:p12data
+    NSArray *certs = [self extractCertificateDataFromP12Data:p12data
                                                  password:(NSString *)password
                                                  identity:&myIdentity
                                                     trust:&myTrust];
@@ -45,10 +45,17 @@
 
 #pragma mark - Helpers
 
-+ (NSArray<NSDictionary *> * _Nullable)extractIdentityAndTrustP12Data:(NSData *)p12Data
-                                                             password:(NSString *)password
-                                                             identity:(SecIdentityRef *)identity
-                                                                trust:(SecTrustRef *)trust
+/// Extracts the certificate chain, the identity and the trust from the given p12 data blob
+/// @param p12Data The p12 data blob to parse
+/// @param password The password that was used to encrypt the data
+/// @param identity Pointer to ref, which will be set on success
+/// @param trust Pointer to ref, which will be set on success
+/// @returns On success, returns an array of dictionaries containing the certificate chain,
+///  and sets the pointers (identity and trust). On error, nil is returned.
++ (NSArray<NSDictionary *> * _Nullable)extractCertificateDataFromP12Data:(NSData *)p12Data
+                                                                password:(NSString *)password
+                                                                identity:(SecIdentityRef *)identity
+                                                                   trust:(SecTrustRef *)trust
 {
     NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
     if (items == nil) {
