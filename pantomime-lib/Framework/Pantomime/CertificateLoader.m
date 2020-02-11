@@ -28,9 +28,9 @@
     SecTrustRef myTrust;
 
     OSStatus status = [self extractIdentityAndTrustP12Data:p12data
+                                                  password:(NSString *)password
                                                   identity:&myIdentity
-                                                     trust:&myTrust
-                                                  password: password];
+                                                     trust:&myTrust];
 
     if (status != noErr) {
         return nil;
@@ -54,38 +54,26 @@
 
 #pragma mark - Helpers
 
-+ (OSStatus)extractIdentityAndTrustP12Data:(NSData *)inP12data
-                                  identity:(SecIdentityRef *)identity
-                                     trust:(SecTrustRef *)trust
-                                  password:(NSString *)password
++ (BOOL)extractIdentityAndTrustP12Data:(NSData *)p12Data
+                              password:(NSString *)password
+                              identity:(SecIdentityRef *)identity
+                                 trust:(SecTrustRef *)trust
 {
-    OSStatus status = errSecSuccess;
-
-    CFStringRef cfPassword = (__bridge CFStringRef) password;
-    const void *keys[] = { kSecImportExportPassphrase };
-    const void *values[] = { cfPassword };
-
-    CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);
-
-    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
-
-    status = SecPKCS12Import((__bridge CFDataRef) inP12data, options, &items);
-
-    if (status == 0) {
-        CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(items, 0);
-        const void *tempIdentity = NULL;
-        tempIdentity = CFRetain(CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemIdentity));
-        *identity = (SecIdentityRef) tempIdentity;
-        const void *tempTrust = NULL;
-        tempTrust = CFRetain(CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemTrust));
-        *trust = (SecTrustRef)tempTrust;
+    NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
+    if (items == nil) {
+        return NO;
     }
 
-    if (options) {
-        CFRelease(options);
+    NSDictionary *myIdentityAndTrust = [items firstObject];
+    if (myIdentityAndTrust) {
+        id tmpIdentity = [myIdentityAndTrust objectForKey:(id) kSecImportItemIdentity];
+        *identity = (__bridge_retained SecIdentityRef) tmpIdentity;
+        id tmpTrust = [myIdentityAndTrust objectForKey:(id) kSecImportItemTrust];
+        *trust = (__bridge_retained SecTrustRef) tmpTrust;
+        return YES;
     }
 
-    return status;
+    return NO;
 }
 
 + (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
