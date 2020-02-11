@@ -21,8 +21,8 @@
         return nil;
     }
 
-    SecIdentityRef myIdentity;
-    SecTrustRef myTrust;
+    SecIdentityRef myIdentity = nil;
+    SecTrustRef myTrust = nil;
 
     NSArray *certs = [self extractCertificateDataFromP12Data:p12data
                                                  password:(NSString *)password
@@ -32,6 +32,13 @@
     if (!certs) {
         // We took ownership of myIdentity and myTrust, but if the return is nil
         // then we have the guarantee that they weren't created.
+        // Nevertheless, keep the static analyzer happy and make the code clearer.
+        if (myIdentity) {
+            CFRelease(myIdentity);
+        }
+        if (myTrust) {
+            CFRelease(myTrust);
+        }
         return nil;
     }
 
@@ -39,8 +46,12 @@
                                          credentialWithIdentity:myIdentity
                                          certificates:certs
                                          persistence:NSURLCredentialPersistencePermanent];
-    CFRelease(myIdentity);
-    CFRelease(myTrust);
+    if (myIdentity) {
+        CFRelease(myIdentity);
+    }
+    if (myTrust) {
+        CFRelease(myTrust);
+    }
 
     return secureCredential;
 }
