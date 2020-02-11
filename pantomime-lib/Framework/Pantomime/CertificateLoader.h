@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CertificateLoader : NSObject
 
+/// Loads a certificate from the main bundle.
+/// @param certificateName The filename of the certificate, including extension
+/// @param password The password that was used to encrypt the certificate
 + (NSURLCredential * _Nullable)loadCertificateWithName:(NSString *)certificateName
                                               password:(NSString *)password;
 
