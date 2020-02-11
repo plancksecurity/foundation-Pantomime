@@ -39,15 +39,15 @@
     SecCertificateRef myCertificate;
     SecIdentityCopyCertificate(myIdentity, &myCertificate);
     const void *certs[] = {myCertificate};
-    CFArrayRef certsArray = CFArrayCreate(NULL, certs, 1, NULL);
+    CFArrayRef certsArrayCF = CFArrayCreate(NULL, certs, 1, NULL);
+    NSArray *certsArray = (__bridge_transfer NSArray *) certsArrayCF;
 
     CFRelease(myCertificate);
 
     NSURLCredential *secureCredential = [NSURLCredential
                                          credentialWithIdentity:myIdentity
-                                         certificates:(__bridge NSArray *) certsArray
+                                         certificates:certsArray
                                          persistence:NSURLCredentialPersistencePermanent];
-    CFRelease(certsArray);
     CFRelease(myIdentity);
     CFRelease(myTrust);
 
