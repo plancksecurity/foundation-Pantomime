@@ -94,7 +94,6 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     }
     if (CFArrayGetCount(items) > 0) {
         CFDictionaryRef identityDict = CFArrayGetValueAtIndex(items, 0);
-        // Clean-up
 
         NSArray *secItemClasses = @[(id) kSecClassCertificate,
                                     (id) kSecClassKey,
