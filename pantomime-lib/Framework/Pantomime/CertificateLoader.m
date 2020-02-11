@@ -56,6 +56,8 @@
     return secureCredential;
 }
 
+#pragma mark - Helpers
+
 + (OSStatus)extractIdentityAndTrustP12Data:(CFDataRef)inP12data
                                   identity:(SecIdentityRef *)identity
                                      trust:(SecTrustRef *)trust
