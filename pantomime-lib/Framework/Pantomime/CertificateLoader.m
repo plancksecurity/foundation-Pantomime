@@ -76,9 +76,18 @@
     return NO;
 }
 
-+ (NSArray * _Nullable)extractCertificates:(NSArray *)items
++ (NSArray *)extractCertificates:(NSArray<NSDictionary *> *)dictionaries
 {
-    return nil;
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:1];
+
+    for (NSDictionary *dict in dictionaries) {
+        NSArray *certificateChain = [dict objectForKey:(id) kSecImportItemCertChain];
+        for (id certObj in certificateChain) {
+            [result addObject:certObj];
+        }
+    }
+
+    return [NSArray arrayWithArray:result];
 }
 
 + (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password
