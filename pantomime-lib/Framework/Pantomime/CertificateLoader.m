@@ -124,7 +124,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
         CFIndex chainCount = CFArrayGetCount(chain);
         BOOL shouldBreak = false;
         for (CFIndex i = 0; (i < chainCount) && (!shouldBreak); i++) {
-            SecCertificateRef cert = (SecCertificateRef)CFArrayGetValueAtIndex(chain, i);
+            SecCertificateRef cert = (SecCertificateRef) CFArrayGetValueAtIndex(chain, i);
             CFStringRef summary = SecCertificateCopySubjectSummary(cert);
             NSString *strSummary = (__bridge NSString *) summary;
             if ([strSummary containsString:@"Root"] || (i == chainCount)) {
