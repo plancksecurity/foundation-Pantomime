@@ -27,12 +27,12 @@
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
 
-    BOOL success = [self extractIdentityAndTrustP12Data:p12data
-                                               password:(NSString *)password
-                                               identity:&myIdentity
-                                                  trust:&myTrust];
+    NSArray *certs = [self extractIdentityAndTrustP12Data:p12data
+                                                 password:(NSString *)password
+                                                 identity:&myIdentity
+                                                    trust:&myTrust];
 
-    if (!success) {
+    if (!certs) {
         return nil;
     }
 
@@ -54,14 +54,14 @@
 
 #pragma mark - Helpers
 
-+ (BOOL)extractIdentityAndTrustP12Data:(NSData *)p12Data
-                              password:(NSString *)password
-                              identity:(SecIdentityRef *)identity
-                                 trust:(SecTrustRef *)trust
++ (NSArray<NSDictionary *> * _Nullable)extractIdentityAndTrustP12Data:(NSData *)p12Data
+                                                             password:(NSString *)password
+                                                             identity:(SecIdentityRef *)identity
+                                                                trust:(SecTrustRef *)trust
 {
     NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
     if (items == nil) {
-        return NO;
+        return nil;
     }
 
     NSDictionary *myIdentityAndTrust = [items firstObject];
@@ -70,10 +70,11 @@
         *identity = (__bridge_retained SecIdentityRef) tmpIdentity;
         id tmpTrust = [myIdentityAndTrust objectForKey:(id) kSecImportItemTrust];
         *trust = (__bridge_retained SecTrustRef) tmpTrust;
-        return YES;
+        NSArray *certs = [self extractCertificates:items];
+        return certs;
     }
 
-    return NO;
+    return nil;
 }
 
 + (NSArray *)extractCertificates:(NSArray<NSDictionary *> *)dictionaries
