@@ -84,8 +84,8 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     return secureCredential;
 }
 
-- (BOOL)addToKeyChainP12Data:(NSData *)p12Data withPassphrase:(NSString *)passphrase {
-    NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: passphrase};
+- (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
+    NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
 
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
     OSStatus err = SecPKCS12Import((CFDataRef) p12Data, (CFDictionaryRef) p12Options, &items);
