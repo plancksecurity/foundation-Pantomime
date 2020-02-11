@@ -57,7 +57,7 @@
                                                                 identity:(SecIdentityRef *)identity
                                                                    trust:(SecTrustRef *)trust
 {
-    NSArray<NSDictionary *> *items = [self extractCertificatesP12Data:p12Data password:password];
+    NSArray<NSDictionary *> *items = [self extractCertificatesFromP12Data:p12Data password:password];
     if (items == nil) {
         return nil;
     }
@@ -97,7 +97,11 @@
     return [NSArray arrayWithArray:result];
 }
 
-+ (NSArray * _Nullable)extractCertificatesP12Data:(NSData *)p12Data password:(NSString *)password
+/// Parses the given p12 data into a list of items via `SecPKCS12Import`.
+/// @param p12Data The encrypted p12 data
+/// @param password The password to decrypt the given p12 data
++ (NSArray<NSDictionary *> * _Nullable)extractCertificatesFromP12Data:(NSData *)p12Data
+                                                             password:(NSString *)password
 {
     NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
 
