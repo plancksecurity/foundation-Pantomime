@@ -105,13 +105,13 @@
 {
     NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
 
-    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
+    CFArrayRef items;
     OSStatus err = SecPKCS12Import((CFDataRef) p12Data, (CFDictionaryRef) p12Options, &items);
     if (err != noErr) {
         return nil;
     }
 
-    return (__bridge NSArray *) items;
+    return [NSArray arrayWithArray:(__bridge NSArray *) items];
 }
 
 @end
