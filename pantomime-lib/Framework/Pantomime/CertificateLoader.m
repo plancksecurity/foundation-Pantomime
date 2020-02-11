@@ -85,8 +85,6 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
 }
 
 - (BOOL)addToKeyChainP12Data:(NSData *)p12Data withPassphrase:(NSString *)passphrase {
-    BOOL lastError = false;
-
     NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: passphrase};
 
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
@@ -94,7 +92,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     if (err != noErr) {
         return NO;
     }
-    if (!lastError && err == noErr && CFArrayGetCount(items) > 0) {
+    if (CFArrayGetCount(items) > 0) {
         CFDictionaryRef identityDict = CFArrayGetValueAtIndex(items, 0);
         // Clean-up
 
