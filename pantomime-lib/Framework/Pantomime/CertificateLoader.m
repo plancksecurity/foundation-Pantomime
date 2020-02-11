@@ -24,12 +24,10 @@
     // explore the certificates
     [self exploreP12Data:p12data password:password];
 
-    CFDataRef inP12data = (__bridge CFDataRef) p12data;
-
     SecIdentityRef myIdentity;
     SecTrustRef myTrust;
 
-    OSStatus status = [self extractIdentityAndTrustP12Data:inP12data
+    OSStatus status = [self extractIdentityAndTrustP12Data:p12data
                                                   identity:&myIdentity
                                                      trust:&myTrust
                                                   password: password];
@@ -58,7 +56,7 @@
 
 #pragma mark - Helpers
 
-+ (OSStatus)extractIdentityAndTrustP12Data:(CFDataRef)inP12data
++ (OSStatus)extractIdentityAndTrustP12Data:(NSData *)inP12data
                                   identity:(SecIdentityRef *)identity
                                      trust:(SecTrustRef *)trust
                                   password:(NSString *)password
@@ -73,7 +71,7 @@
 
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
 
-    status = SecPKCS12Import(inP12data, options, &items);
+    status = SecPKCS12Import((__bridge CFDataRef) inP12data, options, &items);
 
     if (status == 0) {
         CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(items, 0);
