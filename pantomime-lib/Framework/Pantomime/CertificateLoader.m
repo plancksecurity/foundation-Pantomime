@@ -75,6 +75,10 @@
     for (NSDictionary *dict in dictionaries) {
         NSArray *certificateChain = [dict objectForKey:(id) kSecImportItemCertChain];
         for (id certObj in certificateChain) {
+            SecCertificateRef cert = (__bridge SecCertificateRef) certObj;
+            CFStringRef summary = SecCertificateCopySubjectSummary(cert);
+            NSString *strSummary = (__bridge_transfer NSString *) summary;
+            NSLog(@"**** certificate %@: %@", strSummary, certObj);
             [result addObject:certObj];
         }
     }
