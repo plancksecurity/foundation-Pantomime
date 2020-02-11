@@ -104,14 +104,11 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
             err = SecItemDelete((CFDictionaryRef) spec);
         }
 
-        // Client Identity & Certificate
-
+        // client identity
         SecIdentityRef clientIdentity = (SecIdentityRef) CFDictionaryGetValue(identityDict,
                                                                               kSecImportItemIdentity);
 
-        NSString *kServerCertificateLabel = @"kServerCertificateLabel"; // arbitrary label
-
-        // Server Certificate
+        // server identity
         CFArrayRef chain = CFDictionaryGetValue(identityDict, kSecImportItemCertChain);
         CFIndex chainCount = CFArrayGetCount(chain);
         BOOL shouldBreak = false;
@@ -120,13 +117,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
             CFStringRef summary = SecCertificateCopySubjectSummary(cert);
             NSString *strSummary = (__bridge NSString *) summary;
             if ([strSummary containsString:@"Root"] || (i == chainCount)) {
-                NSDictionary *addCertQuery = @{(id) kSecAttrLabel: kServerCertificateLabel,
-                                               (id) kSecValueRef: (__bridge id) cert};
-                err = SecItemAdd((CFDictionaryRef)addCertQuery, NULL);
-                if (err != noErr) {
-                    return NO;
-                }
-                shouldBreak = true;
+                // have the root
             }
             CFRelease(summary);
         }
@@ -134,6 +125,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     else {
         return NO;
     }
+
     CFRelease(items);
 
     return YES;
