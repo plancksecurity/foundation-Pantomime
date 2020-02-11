@@ -10,10 +10,56 @@
 
 @implementation CertificateLoader
 
-OSStatus extractIdentityAndTrust(CFDataRef inP12data,
-                                 SecIdentityRef *identity,
-                                 SecTrustRef *trust,
-                                 NSString *password)
++ (NSURLCredential * _Nullable)loadCertificateWithName:(NSString *)certificateName
+                                              password:(NSString *)password
+{
+    NSString *sslCertName = certificateName;
+    NSString *path2 = [[NSBundle mainBundle] pathForResource:sslCertName ofType:nil];
+    NSData *p12data = [NSData dataWithContentsOfFile:path2];
+
+    if (!p12data) {
+        return nil;
+    }
+
+    // explore the certificates
+    [self exploreP12Data:p12data password:password];
+
+    CFDataRef inP12data = (__bridge CFDataRef) p12data;
+
+    SecIdentityRef myIdentity;
+    SecTrustRef myTrust;
+
+    OSStatus status = [self extractIdentityAndTrustP12Data:inP12data
+                                                  identity:&myIdentity
+                                                     trust:&myTrust
+                                                  password: password];
+
+    if (status != noErr) {
+        return nil;
+    }
+
+    SecCertificateRef myCertificate;
+    SecIdentityCopyCertificate(myIdentity, &myCertificate);
+    const void *certs[] = {myCertificate};
+    CFArrayRef certsArray = CFArrayCreate(NULL, certs, 1, NULL);
+
+    CFRelease(myCertificate);
+
+    NSURLCredential *secureCredential = [NSURLCredential
+                                         credentialWithIdentity:myIdentity
+                                         certificates:(__bridge NSArray *) certsArray
+                                         persistence:NSURLCredentialPersistencePermanent];
+    CFRelease(certsArray);
+    CFRelease(myIdentity);
+    CFRelease(myTrust);
+
+    return secureCredential;
+}
+
++ (OSStatus)extractIdentityAndTrustP12Data:(CFDataRef)inP12data
+                                  identity:(SecIdentityRef *)identity
+                                     trust:(SecTrustRef *)trust
+                                  password:(NSString *)password
 {
     OSStatus status = errSecSuccess;
 
@@ -42,49 +88,6 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     }
 
     return status;
-}
-
-+ (NSURLCredential * _Nullable)loadCertificateWithName:(NSString *)certificateName
-                                              password:(NSString *)password
-{
-    NSString *sslCertName = certificateName;
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:sslCertName ofType:nil];
-    NSData *p12data = [NSData dataWithContentsOfFile:path2];
-
-    if (!p12data) {
-        return nil;
-    }
-
-    // explore the certificates
-    [self exploreP12Data:p12data password:password];
-
-    CFDataRef inP12data = (__bridge CFDataRef) p12data;
-
-    SecIdentityRef myIdentity;
-    SecTrustRef myTrust;
-
-    OSStatus status = extractIdentityAndTrust(inP12data, &myIdentity, &myTrust, password);
-
-    if (status != noErr) {
-        return nil;
-    }
-
-    SecCertificateRef myCertificate;
-    SecIdentityCopyCertificate(myIdentity, &myCertificate);
-    const void *certs[] = {myCertificate};
-    CFArrayRef certsArray = CFArrayCreate(NULL, certs, 1, NULL);
-
-    CFRelease(myCertificate);
-
-    NSURLCredential *secureCredential = [NSURLCredential
-                                         credentialWithIdentity:myIdentity
-                                         certificates:(__bridge NSArray *) certsArray
-                                         persistence:NSURLCredentialPersistencePermanent];
-    CFRelease(certsArray);
-    CFRelease(myIdentity);
-    CFRelease(myTrust);
-
-    return secureCredential;
 }
 
 + (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
