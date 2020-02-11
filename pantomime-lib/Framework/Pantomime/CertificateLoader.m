@@ -55,6 +55,9 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
         return nil;
     }
 
+    // explore the certificates
+    [self exploreP12Data:p12data password:password];
+
     CFDataRef inP12data = (__bridge CFDataRef) p12data;
 
     SecIdentityRef myIdentity;
@@ -84,7 +87,7 @@ OSStatus extractIdentityAndTrust(CFDataRef inP12data,
     return secureCredential;
 }
 
-- (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
++ (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
     NSDictionary *p12Options = @{(id) kSecImportExportPassphrase: password};
 
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
