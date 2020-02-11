@@ -76,6 +76,11 @@
     return NO;
 }
 
++ (NSArray * _Nullable)extractCertificates:(NSArray *)items
+{
+    return nil;
+}
+
 + (BOOL)exploreP12Data:(NSData *)p12Data password:(NSString *)password {
     NSArray *items = [self extractCertificatesP12Data:p12Data password:password];
     if (items == nil) {
