@@ -30,6 +30,8 @@
                                                     trust:&myTrust];
 
     if (!certs) {
+        // We took ownership of myIdentity and myTrust, but if the return is nil
+        // then we have the guarantee that they weren't created.
         return nil;
     }
 
@@ -48,8 +50,10 @@
 /// Extracts the certificate chain, the identity and the trust from the given p12 data blob
 /// @param p12Data The p12 data blob to parse
 /// @param password The password that was used to encrypt the data
-/// @param identity Pointer to ref, which will be set on success
-/// @param trust Pointer to ref, which will be set on success
+/// @param identity Pointer to ref, which will be set on success. You take ownership,
+///   release when done with it.
+/// @param trust Pointer to ref, which will be set on success. You take ownership,
+///   release when done with it.
 /// @returns On success, returns an array of dictionaries containing the certificate chain,
 ///  and sets the pointers (identity and trust). On error, nil is returned.
 + (NSArray<NSDictionary *> * _Nullable)extractCertificateDataFromP12Data:(NSData *)p12Data
