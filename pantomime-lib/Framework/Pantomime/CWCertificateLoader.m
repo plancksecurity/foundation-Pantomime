@@ -78,7 +78,7 @@
         return nil;
     }
 
-    return @{(id) kCFStreamSSLCertificates: certs};
+    return @{(id) kCFStreamSSLCertificates: certs, (id) kCFStreamSSLIsServer: @NO};
 }
 
 #pragma mark - Helpers
