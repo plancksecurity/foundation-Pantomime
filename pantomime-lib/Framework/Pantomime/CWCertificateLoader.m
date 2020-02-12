@@ -13,8 +13,7 @@
 + (NSURLCredential * _Nullable)loadCertificateWithName:(NSString *)certificateName
                                               password:(NSString *)password
 {
-    NSString *sslCertName = certificateName;
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:sslCertName ofType:nil];
+    NSString *path2 = [[NSBundle mainBundle] pathForResource:certificateName ofType:nil];
     NSData *p12data = [NSData dataWithContentsOfFile:path2];
 
     if (!p12data) {
