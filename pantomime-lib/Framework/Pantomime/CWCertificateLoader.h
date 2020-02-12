@@ -12,7 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CWCertificateLoader : NSObject
 
-/// Loads a certificate from the main bundle.
+/// Tries to load a certificate from the main bundle and parse it into an `NSURLCredential`
+/// suitable for handling a `NSURLAuthenticationMethodClientCertificate`
+/// in a `NSURLSessionDelegate`.
 /// @param certificateName The filename of the certificate, including extension
 /// @param password The password that was used to encrypt the certificate
 /// @return A `NSURLCredential` on success, or nil on error
