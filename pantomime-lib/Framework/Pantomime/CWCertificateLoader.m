@@ -83,7 +83,7 @@
 
 #pragma mark - Helpers
 
-/// Extracts the certificate chain, the identity and the trust from the given p12 data blob
+/// Extracts the certificate chain, the identity and the trust from the given p12 data blob.
 /// @param p12Data The p12 data blob to parse
 /// @param password The password that was used to encrypt the data
 /// @param identity Pointer to ref, which will be set on success. You take ownership,
@@ -115,7 +115,7 @@
     return nil;
 }
 
-/// Gathers all certificates from the given data
+/// Gathers all certificates from the given data.
 /// @param dictionaries An array of dictionaries that are assumed to contain
 ///  an entry under `kSecImportItemCertChain`, which is supposed to be an array
 ///  of `SecCertificateRef`s.
