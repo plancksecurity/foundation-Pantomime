@@ -323,7 +323,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     if ([challenge.protectionSpace.authenticationMethod
          isEqualToString:NSURLAuthenticationMethodClientCertificate]) {
         NSURLCredential *secureCredential = [CWCertificateLoader
-                                             loadCertificateWithName:@"certificate"
+                                             urlCredentialFromP12CertificateWithName:@"certificate"
                                              password: @"password"];
         if (secureCredential) {
             [[challenge sender]

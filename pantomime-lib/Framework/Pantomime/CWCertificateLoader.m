@@ -10,8 +10,8 @@
 
 @implementation CWCertificateLoader
 
-+ (NSURLCredential * _Nullable)loadCertificateWithName:(NSString *)certificateName
-                                              password:(NSString *)password
++ (NSURLCredential * _Nullable)urlCredentialFromP12CertificateWithName:(NSString *)certificateName
+                                                              password:(NSString *)password
 {
     NSString *path2 = [[NSBundle mainBundle] pathForResource:certificateName ofType:nil];
     NSData *p12data = [NSData dataWithContentsOfFile:path2];

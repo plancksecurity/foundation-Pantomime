@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param certificateName The filename of the certificate, including extension
 /// @param password The password that was used to encrypt the certificate
 /// @return A `NSURLCredential` on success, or nil on error
-+ (NSURLCredential * _Nullable)loadCertificateWithName:(NSString *)certificateName
-                                              password:(NSString *)password;
++ (NSURLCredential * _Nullable)urlCredentialFromP12CertificateWithName:(NSString *)certificateName
+                                                              password:(NSString *)password;
 
 @end
 
