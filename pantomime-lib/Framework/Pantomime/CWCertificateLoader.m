@@ -24,9 +24,9 @@
     SecTrustRef myTrust = nil;
 
     NSArray *certs = [self extractCertificateDataFromP12Data:p12data
-                                                 password:(NSString *)password
-                                                 identity:&myIdentity
-                                                    trust:&myTrust];
+                                                    password:(NSString *)password
+                                                    identity:&myIdentity
+                                                       trust:&myTrust];
 
     if (!certs) {
         // We took ownership of myIdentity and myTrust, but if
