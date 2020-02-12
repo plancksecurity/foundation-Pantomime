@@ -74,11 +74,26 @@
                                                     identity:&myIdentity
                                                        trust:&myTrust];
 
-    if (!certs) {
+    // Not used for output, can release right now
+    if (myTrust) {
+        CFRelease(myTrust);
+    }
+
+    if (!myIdentity) {
+        if (myIdentity) {
+            CFRelease(myIdentity);
+        }
         return nil;
     }
 
-    return @{(id) kCFStreamSSLCertificates: certs};
+    // Safely wrap the identity in order to put it into the array
+    id firstItem = (__bridge_transfer id) myIdentity;
+
+    // The certificate chain consist of our identity, plus certificates
+    NSMutableArray *certificateChain = [NSMutableArray arrayWithObject:firstItem];
+    [certificateChain addObjectsFromArray:certs];
+
+    return @{(id) kCFStreamSSLCertificates: certificateChain};
 }
 
 #pragma mark - Helpers
