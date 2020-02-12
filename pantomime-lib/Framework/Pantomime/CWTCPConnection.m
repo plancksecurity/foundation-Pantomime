@@ -12,7 +12,7 @@
 
 #import "CWTCPConnection.h"
 
-#import "CertificateLoader.h"
+#import "CWertificateLoader.h"
 
 #import "Pantomime/CWLogger.h"
 
@@ -322,7 +322,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 {
     if ([challenge.protectionSpace.authenticationMethod
          isEqualToString:NSURLAuthenticationMethodClientCertificate]) {
-        NSURLCredential *secureCredential = [CertificateLoader
+        NSURLCredential *secureCredential = [CWertificateLoader
                                              loadCertificateWithName:@"certificate"
                                              password: @"password"];
         if (secureCredential) {
