@@ -21,6 +21,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSURLCredential * _Nullable)urlCredentialFromP12CertificateWithName:(NSString *)certificateName
                                                               password:(NSString *)password;
 
+/// Tries to load a certificate from the main bundle and construct an options dictionary
+/// from it that is suitable for being set as `kCFStreamPropertySSLSettings` in a stream.
+/// @param certificateName The filename of the certificate, including extension
+/// @param password The password that was used to encrypt the certificate
+/// @return An options dictionary on success, or nil on error
++ (NSDictionary * _Nullable)tlsOptionsFromP12CertificateWithName:(NSString *)certificateName
+                                                        password:(NSString *)password;
+
 @end
 
 NS_ASSUME_NONNULL_END
