@@ -115,7 +115,8 @@
     return nil;
 }
 
-/// Gathers all certificates from the given data.
+/// Gathers all certificates from the given data, which is assumed
+/// to be the result of a call to `SecPKCS12Import` as an `NSArray`.
 /// @param dictionaries An array of dictionaries that are assumed to contain
 ///  an entry under `kSecImportItemCertChain`, which is supposed to be an array
 ///  of `SecCertificateRef`s.
