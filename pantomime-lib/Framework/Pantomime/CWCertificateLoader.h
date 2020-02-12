@@ -1,5 +1,5 @@
 //
-//  CWertificateLoader.h
+//  CWCertificateLoader.h
 //  PantomimeFramework
 //
 //  Created by Dirk Zimmermann on 07.02.20.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CWertificateLoader : NSObject
+@interface CWCertificateLoader : NSObject
 
 /// Loads a certificate from the main bundle.
 /// @param certificateName The filename of the certificate, including extension

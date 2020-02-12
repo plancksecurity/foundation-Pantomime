@@ -1,14 +1,14 @@
 //
-//  CWertificateLoader.m
+//  CWCertificateLoader.m
 //  PantomimeFramework
 //
 //  Created by Dirk Zimmermann on 07.02.20.
 //  Copyright © 2020 pEp Security. All rights reserved.
 //
 
-#import "CWertificateLoader.h"
+#import "CWCertificateLoader.h"
 
-@implementation CWertificateLoader
+@implementation CWCertificateLoader
 
 + (NSURLCredential * _Nullable)loadCertificateWithName:(NSString *)certificateName
                                               password:(NSString *)password
