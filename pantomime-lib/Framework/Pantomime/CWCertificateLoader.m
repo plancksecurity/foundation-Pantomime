@@ -90,12 +90,12 @@
 ///   release when done with it.
 /// @param trust Pointer to ref, which will be set on success. You take ownership,
 ///   release when done with it.
-/// @returns On success, returns an array of dictionaries containing the certificate chain,
+/// @returns On success, returns an array of `SecCertificateRef`,
 ///  and sets the pointers (identity and trust). On error, nil is returned.
-+ (NSArray<NSDictionary *> * _Nullable)extractCertificateDataFromP12Data:(NSData *)p12Data
-                                                                password:(NSString *)password
-                                                                identity:(SecIdentityRef *)identity
-                                                                   trust:(SecTrustRef *)trust
++ (NSArray * _Nullable)extractCertificateDataFromP12Data:(NSData *)p12Data
+                                                password:(NSString *)password
+                                                identity:(SecIdentityRef *)identity
+                                                   trust:(SecTrustRef *)trust
 {
     NSArray<NSDictionary *> *items = [self extractCertificatesFromP12Data:p12Data password:password];
     if (items == nil) {
@@ -119,7 +119,8 @@
 /// @param dictionaries An array of dictionaries that are assumed to contain
 ///  an entry under `kSecImportItemCertChain`, which is supposed to be an array
 ///  of `SecCertificateRef`s.
-+ (NSArray<NSDictionary *> *)extractCertificates:(NSArray<NSDictionary *> *)dictionaries
+/// @return An array of `SecCertificateRef`.
++ (NSArray *)extractCertificates:(NSArray<NSDictionary *> *)dictionaries
 {
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:1];
 
