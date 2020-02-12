@@ -150,7 +150,8 @@
     return [NSArray arrayWithArray:result];
 }
 
-/// Parses the given p12 data into a list of items via `SecPKCS12Import`.
+/// Wraps `SecPKCS12Import`, that is parses the given p12 data, protected by the given password,
+/// into a list of dictionaries.
 /// @param p12Data The encrypted p12 data
 /// @param password The password to decrypt the given p12 data
 + (NSArray<NSDictionary *> * _Nullable)extractCertificatesFromP12Data:(NSData *)p12Data
