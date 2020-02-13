@@ -8,6 +8,8 @@
 
 #import "CWCertificateLoader.h"
 
+#import "NSStream+SSLContext.h"
+
 @implementation CWCertificateLoader
 
 + (NSArray * _Nullable)certificateChainFromP12CertificateWithName:(NSString *)certificateName
@@ -104,10 +106,29 @@ password:(NSString *)password
     return context;
 }
 
-+ (void)setCertificateChainFromP12CertificateWithName:(NSString *)certificateName
++ (BOOL)setCertificateChainFromP12CertificateWithName:(NSString *)certificateName
                                              password:(NSString *)password
                                                stream:(NSStream *)stream
 {
+    SSLContextRef context = stream.sslContext;
+    if (!context) {
+        return NO;
+    }
+
+    NSArray *certificates = [self certificateChainFromP12CertificateWithName:certificateName
+                                                                    password:password];
+
+    if (!certificates) {
+        return NO;
+    }
+
+    OSStatus status = SSLSetCertificate(context, (__bridge CFArrayRef) certificates);
+    if (status != noErr) {
+        return NO;
+    }
+
+    stream.sslContext = context;
+    return YES;
 }
 
 #pragma mark - Helpers
