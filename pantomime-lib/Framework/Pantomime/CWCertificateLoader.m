@@ -133,6 +133,43 @@
     return context;
 }
 
++ (NSArray * _Nullable)certificateChainFromP12CertificateWithName:(NSString *)certificateName
+password:(NSString *)password
+{
+    NSString *path2 = [[NSBundle mainBundle] pathForResource:certificateName ofType:nil];
+    NSData *p12data = [NSData dataWithContentsOfFile:path2];
+
+    if (!p12data) {
+        return nil;
+    }
+
+    SecIdentityRef myIdentity = nil;
+    SecTrustRef myTrust = nil;
+
+    NSArray *certs = [self extractCertificateDataFromP12Data:p12data
+                                                    password:(NSString *)password
+                                                    identity:&myIdentity
+                                                       trust:&myTrust];
+
+    // Not used for output, can release right now
+    if (myTrust) {
+        CFRelease(myTrust);
+    }
+
+    if (!myIdentity) {
+        return nil;
+    }
+
+    // Safely wrap the identity in order to put it into the array
+    id firstItem = (__bridge_transfer id) myIdentity;
+
+    // The certificate chain consist of our identity, plus certificates
+    NSMutableArray *certificateChain = [NSMutableArray arrayWithObject:firstItem];
+    [certificateChain addObjectsFromArray:certs];
+
+    return [NSArray arrayWithArray:certificateChain];
+}
+
 #pragma mark - Helpers
 
 /// Extracts the certificate chain, the identity and the trust from the given p12 data blob.
