@@ -29,6 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary * _Nullable)tlsOptionsFromP12CertificateWithName:(NSString *)certificateName
                                                         password:(NSString *)password;
 
+/// Tries to load a certificate from the main bundle and construct an SSLContextRef
+/// from it that is suitable for being set as `kCFStreamPropertySSLContext` in a stream.
+/// @param certificateName The filename of the certificate, including extension
+/// @param password The password that was used to encrypt the certificate
+/// @return An SSLContextRef on success, or nil on error. You take ownership, so release
+///  when done with it.
++ (SSLContextRef _Nullable)sslContextRefFromP12CertificateWithName:(NSString *)certificateName
+                                                          password:(NSString *)password;
+
 @end
 
 NS_ASSUME_NONNULL_END
