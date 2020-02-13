@@ -14,6 +14,8 @@
 
 #import "Pantomime/CWLogger.h"
 
+#import "NSStream+TLS.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CWTCPConnection ()
@@ -56,10 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)startTLS
 {
-    [self.readStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                          forKey:NSStreamSocketSecurityLevelKey];
-    [self.writeStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                           forKey:NSStreamSocketSecurityLevelKey];
+    [self.readStream enableTLS];
+    [self.writeStream enableTLS];
 }
 
 #pragma mark - Stream Handling
@@ -70,12 +70,10 @@ NS_ASSUME_NONNULL_BEGIN
     switch (self.transport) {
         case ConnectionTransportPlain:
         case ConnectionTransportStartTLS:
-            [stream setProperty:NSStreamSocketSecurityLevelNone
-                         forKey:NSStreamSocketSecurityLevelKey];
+            [stream disableTLS];
             break;
         case ConnectionTransportTLS:
-            [stream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                         forKey:NSStreamSocketSecurityLevelKey];
+            [stream enableTLS];
             break;
     }
     [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
