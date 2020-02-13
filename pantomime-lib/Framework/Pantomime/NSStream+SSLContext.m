@@ -52,7 +52,7 @@
                   key);
     } else {
         NSAssert(false,
-                 @"Called setProperty for something that is neither NSInputStream nor NSOutputStream");
+                 @"Called setStreamProperty for something that is neither NSInputStream nor NSOutputStream");
     }
 }
 
