@@ -57,6 +57,16 @@ NS_ASSUME_NONNULL_BEGIN
                                                        password:(NSString *)password
                                                          stream:(NSStream *)stream;
 
+/// Tries to load a certificate chain from the given filename, with the given password,
+/// and set it into the given stream's options, via `kCFStreamPropertySSLSettings`.
+/// @param certificateName The filename of the certificate, including extension
+/// @param password The password that was used to encrypt the certificate
+/// @param stream The stream to set the key chain for.
+/// @return YES on error, NO otherwise.
++ (BOOL)setStreamPropertySSLSettingsFromP12CertificateWithName:(NSString *)certificateName
+                                                      password:(NSString *)password
+                                                        stream:(NSStream *)stream;
+
 @end
 
 NS_ASSUME_NONNULL_END

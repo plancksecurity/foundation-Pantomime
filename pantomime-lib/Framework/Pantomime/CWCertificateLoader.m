@@ -131,6 +131,22 @@ password:(NSString *)password
     return YES;
 }
 
++ (BOOL)setStreamPropertySSLSettingsFromP12CertificateWithName:(NSString *)certificateName
+                                                      password:(NSString *)password
+                                                        stream:(NSStream *)stream
+{
+    NSArray *certificates = [self certificateChainFromP12CertificateWithName:certificateName
+                                                                    password:password];
+
+    if (!certificates) {
+        return NO;
+    }
+
+    NSDictionary *options = @{(id) kCFStreamSSLCertificates: certificates};
+
+    return YES;
+}
+
 #pragma mark - Helpers
 
 /// Extracts the certificate chain, the identity and the trust from the given p12 data blob.
