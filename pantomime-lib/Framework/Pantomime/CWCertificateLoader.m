@@ -50,46 +50,24 @@ password:(NSString *)password
 + (NSURLCredential * _Nullable)urlCredentialFromP12CertificateWithName:(NSString *)certificateName
                                                               password:(NSString *)password
 {
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:certificateName ofType:nil];
-    NSData *p12data = [NSData dataWithContentsOfFile:path2];
+    NSArray *chain = [self certificateChainFromP12CertificateWithName:certificateName
+                                                             password:password];
 
-    if (!p12data) {
-        return nil;
-    }
+    id myIdentity = [chain firstObject];
 
-    SecIdentityRef myIdentity = nil;
-    SecTrustRef myTrust = nil;
-
-    NSArray *certs = [self extractCertificateDataFromP12Data:p12data
-                                                    password:(NSString *)password
-                                                    identity:&myIdentity
-                                                       trust:&myTrust];
-
-    if (!certs) {
-        // We took ownership of myIdentity and myTrust, but if
-        // extractCertificateDataFromP12Data returns nil
-        // then we have the guarantee that they weren't created.
-        // Nevertheless, keep the static analyzer happy and make the code explicit.
-        if (myIdentity) {
-            CFRelease(myIdentity);
+    NSPredicate *sortOut = [NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject,
+                                                                 NSDictionary<NSString *,id> * _Nullable bindings) {
+        if (evaluatedObject == myIdentity) {
+            return NO;
         }
-        if (myTrust) {
-            CFRelease(myTrust);
-        }
-        return nil;
-    }
+        return YES;
+    }];
+    NSArray *theRest = [chain filteredArrayUsingPredicate:sortOut];
 
     NSURLCredential *secureCredential = [NSURLCredential
-                                         credentialWithIdentity:myIdentity
-                                         certificates:certs
+                                         credentialWithIdentity:(__bridge SecIdentityRef) myIdentity
+                                         certificates:theRest
                                          persistence:NSURLCredentialPersistencePermanent];
-    if (myIdentity) {
-        CFRelease(myIdentity);
-    }
-    if (myTrust) {
-        CFRelease(myTrust);
-    }
-
     return secureCredential;
 }
 
