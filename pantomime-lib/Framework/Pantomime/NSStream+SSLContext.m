@@ -46,4 +46,25 @@
     }
 }
 
+- (void)setProperty:(id)property forKey:(NSString *)key
+{
+    if ([self isKindOfClass:[NSInputStream class]]) {
+        BOOL result = CFReadStreamSetProperty((__bridge CFReadStreamRef) (NSInputStream *) self,
+                                              (__bridge CFStreamPropertyKey) key,
+                                              (__bridge CFTypeRef) property);
+        NSAssert2(result,
+                  @"CFReadStreamSetProperty did not accept %@ with a value of %@",
+                  property,
+                  key);
+    } else if ([self isKindOfClass:[NSOutputStream class]]) {
+        BOOL result = CFWriteStreamSetProperty((__bridge CFWriteStreamRef) (NSOutputStream *) self,
+                                               (__bridge CFStreamPropertyKey) key,
+                                               (__bridge CFTypeRef) property);
+        NSAssert2(result,
+                  @"CFWriteStreamSetProperty did not accept %@ with a value of %@",
+                  property,
+                  key);
+    }
+}
+
 @end
