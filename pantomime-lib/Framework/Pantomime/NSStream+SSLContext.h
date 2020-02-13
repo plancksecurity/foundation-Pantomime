@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @note Getting it transfers ownership to the caller, make sure you release it.
 @property (readwrite, nullable) SSLContextRef sslContext;
 
-/// Sets a property, using `CFReadStreamSetProperty()` or `CFWriteStreamSetProperty()`,
+/// Sets a property, using `CFReadStreamSetProperty` or `CFWriteStreamSetProperty`,
 /// depending on the type of self.
 /// @param property The property (value) to set
 /// @param key The key under which the property gets set
