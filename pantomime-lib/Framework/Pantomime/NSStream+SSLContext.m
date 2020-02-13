@@ -43,7 +43,7 @@
                   property,
                   key);
     } else if ([self isKindOfClass:[NSOutputStream class]]) {
-        BOOL result = CFWriteStreamSetProperty((__bridge CFWriteStreamRef) (NSInputStream *) self,
+        BOOL result = CFWriteStreamSetProperty((__bridge CFWriteStreamRef) (NSOutputStream *) self,
                                                (__bridge CFStreamPropertyKey) key,
                                                (__bridge CFTypeRef) property);
         NSAssert2(result,
@@ -52,7 +52,7 @@
                   key);
     }
     NSAssert(false,
-             @"Called setProperty for something that is neither NSInputStream nor NSInputStream");
+             @"Called setProperty for something that is neither NSInputStream nor NSOutputStream");
 }
 
 @end
