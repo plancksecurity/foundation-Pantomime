@@ -59,9 +59,21 @@
 - (id _Nullable)getStreamPropertyKey:(NSString *)key
 {
     if ([self isKindOfClass:[NSInputStream class]]) {
-        return nil;
+        CFTypeRef cfRef = CFReadStreamCopyProperty((__bridge CFReadStreamRef) (NSInputStream *) self,
+                                                   (__bridge CFStreamPropertyKey) key);
+        if (cfRef) {
+            return (__bridge_transfer id) cfRef;
+        } else {
+            return nil;
+        }
     } else if ([self isKindOfClass:[NSOutputStream class]]) {
-        return nil;
+        CFTypeRef cfRef = CFWriteStreamCopyProperty((__bridge CFWriteStreamRef) (NSOutputStream *) self,
+                                                    (__bridge CFStreamPropertyKey) key);
+        if (cfRef) {
+            return (__bridge_transfer id) cfRef;
+        } else {
+            return nil;
+        }
     } else {
         NSAssert(false,
                  @"Called getStreamPropertyKey for something that is neither NSInputStream nor NSOutputStream");
