@@ -29,6 +29,21 @@
 
 - (void)setSslContext:(SSLContextRef)context
 {
+    if ([self isKindOfClass:[NSInputStream class]]) {
+        BOOL result = CFReadStreamSetProperty((__bridge CFReadStreamRef) (NSInputStream *) self,
+                                              kCFStreamPropertySSLContext,
+                                              context);
+        NSAssert1(result,
+                  @"CFReadStreamSetProperty did not accept kCFStreamPropertySSLContext %@",
+                  context);
+    } else if ([self isKindOfClass:[NSOutputStream class]]) {
+        BOOL result = CFWriteStreamSetProperty((__bridge CFWriteStreamRef) (NSOutputStream *) self,
+                                               kCFStreamPropertySSLContext,
+                                               context);
+        NSAssert1(result,
+                  @"CFWriteStreamSetProperty did not accept kCFStreamPropertySSLContext %@",
+                  context);
+    }
 }
 
 @end
