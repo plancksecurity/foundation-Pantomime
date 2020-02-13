@@ -14,6 +14,8 @@
 
 #import "Pantomime/CWLogger.h"
 
+#import "NSStream+SSLContext.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CWTCPConnection ()
@@ -66,6 +68,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setupStream:(NSStream *)stream
 {
+    SSLContextRef context = stream.sslContext;
+    if (context) {
+        CFRelease(context);
+    }
+
     stream.delegate = self;
     switch (self.transport) {
         case ConnectionTransportPlain:
