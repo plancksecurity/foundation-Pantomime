@@ -106,9 +106,9 @@ password:(NSString *)password
     return context;
 }
 
-+ (BOOL)setCertificateChainFromP12CertificateWithName:(NSString *)certificateName
-                                             password:(NSString *)password
-                                               stream:(NSStream *)stream
++ (BOOL)setSSLContextCertificateChainFromP12CertificateWithName:(NSString *)certificateName
+                                                       password:(NSString *)password
+                                                         stream:(NSStream *)stream
 {
     SSLContextRef context = stream.sslContext;
     if (!context) {

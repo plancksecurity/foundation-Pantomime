@@ -53,9 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param password The password that was used to encrypt the certificate
 /// @param stream The stream to override the SSL context with the loaded certificate chain.
 /// @return YES on error, NO otherwise.
-+ (BOOL)setCertificateChainFromP12CertificateWithName:(NSString *)certificateName
-                                             password:(NSString *)password
-                                               stream:(NSStream *)stream;
++ (BOOL)setSSLContextCertificateChainFromP12CertificateWithName:(NSString *)certificateName
+                                                       password:(NSString *)password
+                                                         stream:(NSStream *)stream;
 
 @end
 
