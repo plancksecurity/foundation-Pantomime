@@ -56,4 +56,17 @@
     }
 }
 
+- (id _Nullable)getStreamPropertyKey:(NSString *)key
+{
+    if ([self isKindOfClass:[NSInputStream class]]) {
+        return nil;
+    } else if ([self isKindOfClass:[NSOutputStream class]]) {
+        return nil;
+    } else {
+        NSAssert(false,
+                 @"Called getStreamPropertyKey for something that is neither NSInputStream nor NSOutputStream");
+        return nil;
+    }
+}
+
 @end
