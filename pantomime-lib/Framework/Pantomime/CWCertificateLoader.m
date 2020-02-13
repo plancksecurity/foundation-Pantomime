@@ -8,7 +8,7 @@
 
 #import "CWCertificateLoader.h"
 
-#import "NSStream+SSLContext.h"
+#import "NSStream+TLS.h"
 #import "NSStream+Options.h"
 
 @implementation CWCertificateLoader

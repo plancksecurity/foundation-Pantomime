@@ -1,5 +1,5 @@
 //
-//  NSStream+SSLContext.h
+//  NSStream+TLS.h
 //  PantomimeFramework
 //
 //  Created by Dirk Zimmermann on 13.02.20.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSStream (SSLContext)
+@interface NSStream (TLS)
 
 /// Gets or sets the SSL context.
 /// @note Getting it transfers ownership to the caller, make sure you release it.

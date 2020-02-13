@@ -166,8 +166,8 @@
 		433710E823F5950F0083BAE9 /* NSStream+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 433710E623F5950F0083BAE9 /* NSStream+Options.m */; };
 		43ADEB7F23ED5A04002F4F9E /* CWCertificateLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 43ADEB7D23ED5A04002F4F9E /* CWCertificateLoader.h */; };
 		43ADEB8023ED5A04002F4F9E /* CWCertificateLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 43ADEB7E23ED5A04002F4F9E /* CWCertificateLoader.m */; };
-		43C5D3E223F5530D006487F6 /* NSStream+SSLContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5D3E023F5530D006487F6 /* NSStream+SSLContext.h */; };
-		43C5D3E323F5530D006487F6 /* NSStream+SSLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C5D3E123F5530D006487F6 /* NSStream+SSLContext.m */; };
+		43C5D3E223F5530D006487F6 /* NSStream+TLS.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5D3E023F5530D006487F6 /* NSStream+TLS.h */; };
+		43C5D3E323F5530D006487F6 /* NSStream+TLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C5D3E123F5530D006487F6 /* NSStream+TLS.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,8 +347,8 @@
 		433710E623F5950F0083BAE9 /* NSStream+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+Options.m"; sourceTree = "<group>"; };
 		43ADEB7D23ED5A04002F4F9E /* CWCertificateLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CWCertificateLoader.h; sourceTree = "<group>"; };
 		43ADEB7E23ED5A04002F4F9E /* CWCertificateLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWCertificateLoader.m; sourceTree = "<group>"; };
-		43C5D3E023F5530D006487F6 /* NSStream+SSLContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+SSLContext.h"; sourceTree = "<group>"; };
-		43C5D3E123F5530D006487F6 /* NSStream+SSLContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+SSLContext.m"; sourceTree = "<group>"; };
+		43C5D3E023F5530D006487F6 /* NSStream+TLS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+TLS.h"; sourceTree = "<group>"; };
+		43C5D3E123F5530D006487F6 /* NSStream+TLS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+TLS.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -466,8 +466,8 @@
 				4329CAC02238FDBB007D377E /* CWTCPConnection.m */,
 				43ADEB7D23ED5A04002F4F9E /* CWCertificateLoader.h */,
 				43ADEB7E23ED5A04002F4F9E /* CWCertificateLoader.m */,
-				43C5D3E023F5530D006487F6 /* NSStream+SSLContext.h */,
-				43C5D3E123F5530D006487F6 /* NSStream+SSLContext.m */,
+				43C5D3E023F5530D006487F6 /* NSStream+TLS.h */,
+				43C5D3E123F5530D006487F6 /* NSStream+TLS.m */,
 				433710E523F5950F0083BAE9 /* NSStream+Options.h */,
 				433710E623F5950F0083BAE9 /* NSStream+Options.m */,
 				4329CAC12238FDBB007D377E /* CWISO8859_1.h */,
@@ -635,7 +635,7 @@
 				4329CA842238FD4A007D377E /* CWMessage.h in Headers */,
 				4329CB0F2238FDBB007D377E /* NSMutableString+Extension.h in Headers */,
 				4329CB032238FDBB007D377E /* CWWINDOWS_1253.h in Headers */,
-				43C5D3E223F5530D006487F6 /* NSStream+SSLContext.h in Headers */,
+				43C5D3E223F5530D006487F6 /* NSStream+TLS.h in Headers */,
 				4329CB472238FDBB007D377E /* CWSMTP+Protected.h in Headers */,
 				4329CB2C2238FDBB007D377E /* CWISO8859_1.h in Headers */,
 				4329CA7F2238FD4A007D377E /* CWConnection.h in Headers */,
@@ -893,7 +893,7 @@
 				4329CB352238FDBB007D377E /* CWService+Protected.m in Sources */,
 				433710E823F5950F0083BAE9 /* NSStream+Options.m in Sources */,
 				4329CB182238FDBB007D377E /* CWISO8859_9.m in Sources */,
-				43C5D3E323F5530D006487F6 /* NSStream+SSLContext.m in Sources */,
+				43C5D3E323F5530D006487F6 /* NSStream+TLS.m in Sources */,
 				4329CAFA2238FDBB007D377E /* CWIMAPFolder+CWProtected.m in Sources */,
 				4329CB2B2238FDBB007D377E /* CWTCPConnection.m in Sources */,
 				4329CB482238FDBB007D377E /* CWFlags.m in Sources */,
