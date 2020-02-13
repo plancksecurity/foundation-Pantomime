@@ -143,6 +143,7 @@ password:(NSString *)password
     }
 
     NSDictionary *options = @{(id) kCFStreamSSLCertificates: certificates};
+    [stream setProperty:options forKey:(NSString *) kCFStreamPropertySSLSettings];
 
     return YES;
 }
