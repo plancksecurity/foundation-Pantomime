@@ -80,9 +80,6 @@
     }
 
     if (!myIdentity) {
-        if (myIdentity) {
-            CFRelease(myIdentity);
-        }
         return nil;
     }
 
