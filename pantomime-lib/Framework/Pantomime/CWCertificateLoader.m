@@ -50,10 +50,14 @@ password:(NSString *)password
 + (NSURLCredential * _Nullable)urlCredentialFromP12CertificateWithName:(NSString *)certificateName
                                                               password:(NSString *)password
 {
-    NSArray *chain = [self certificateChainFromP12CertificateWithName:certificateName
-                                                             password:password];
+    NSArray *certificateChain = [self certificateChainFromP12CertificateWithName:certificateName
+                                                                        password:password];
 
-    id myIdentity = [chain firstObject];
+    if (!certificateChain) {
+        return nil;
+    }
+
+    id myIdentity = [certificateChain firstObject];
 
     NSPredicate *sortOut = [NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject,
                                                                  NSDictionary<NSString *,id> * _Nullable bindings) {
@@ -62,7 +66,7 @@ password:(NSString *)password
         }
         return YES;
     }];
-    NSArray *theRest = [chain filteredArrayUsingPredicate:sortOut];
+    NSArray *theRest = [certificateChain filteredArrayUsingPredicate:sortOut];
 
     NSURLCredential *secureCredential = [NSURLCredential
                                          credentialWithIdentity:(__bridge SecIdentityRef) myIdentity
@@ -74,36 +78,12 @@ password:(NSString *)password
 + (NSDictionary * _Nullable)tlsOptionsFromP12CertificateWithName:(NSString *)certificateName
                                                         password:(NSString *)password
 {
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:certificateName ofType:nil];
-    NSData *p12data = [NSData dataWithContentsOfFile:path2];
+    NSArray *certificateChain = [self certificateChainFromP12CertificateWithName:certificateName
+                                                                        password:password];
 
-    if (!p12data) {
+    if (!certificateChain) {
         return nil;
     }
-
-    SecIdentityRef myIdentity = nil;
-    SecTrustRef myTrust = nil;
-
-    NSArray *certs = [self extractCertificateDataFromP12Data:p12data
-                                                    password:(NSString *)password
-                                                    identity:&myIdentity
-                                                       trust:&myTrust];
-
-    // Not used for output, can release right now
-    if (myTrust) {
-        CFRelease(myTrust);
-    }
-
-    if (!myIdentity) {
-        return nil;
-    }
-
-    // Safely wrap the identity in order to put it into the array
-    id firstItem = (__bridge_transfer id) myIdentity;
-
-    // The certificate chain consist of our identity, plus certificates
-    NSMutableArray *certificateChain = [NSMutableArray arrayWithObject:firstItem];
-    [certificateChain addObjectsFromArray:certs];
 
     return @{(id) kCFStreamSSLCertificates: certificateChain};
 }
