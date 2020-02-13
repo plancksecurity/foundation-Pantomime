@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Sets a property, using `CFReadStreamSetProperty()` or `CFWriteStreamSetProperty()`.
 /// @param property The property (value) to set
 /// @param key The key under which the property gets set
-- (void)setProperty:(id)property forKey:(NSString *)key;
+- (void)setStreamProperty:(id)property forKey:(NSString *)key;
 
 @end
 

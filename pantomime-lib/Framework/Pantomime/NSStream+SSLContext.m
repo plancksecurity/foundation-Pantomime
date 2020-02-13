@@ -32,7 +32,7 @@
     [self setProperty:(__bridge id) context forKey:(NSString *) kCFStreamPropertySSLContext];
 }
 
-- (void)setProperty:(id)property forKey:(NSString *)key
+- (void)setStreamProperty:(id)property forKey:(NSString *)key
 {
     if ([self isKindOfClass:[NSInputStream class]]) {
         BOOL result = CFReadStreamSetProperty((__bridge CFReadStreamRef) (NSInputStream *) self,
