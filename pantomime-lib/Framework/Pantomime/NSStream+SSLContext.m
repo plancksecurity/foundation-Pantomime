@@ -50,9 +50,10 @@
                   @"CFWriteStreamSetProperty did not accept %@ with a value of %@",
                   property,
                   key);
+    } else {
+        NSAssert(false,
+                 @"Called setProperty for something that is neither NSInputStream nor NSOutputStream");
     }
-    NSAssert(false,
-             @"Called setProperty for something that is neither NSInputStream nor NSOutputStream");
 }
 
 @end
