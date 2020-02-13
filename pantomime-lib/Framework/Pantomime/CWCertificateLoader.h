@@ -47,6 +47,15 @@ NS_ASSUME_NONNULL_BEGIN
 + (SSLContextRef _Nullable)sslContextRefFromP12CertificateWithName:(NSString *)certificateName
                                                           password:(NSString *)password;
 
+/// Tries to load a certificate chain from the given filename, with the given password,
+/// and set it into the given stream's SSL context, if available.
+/// @param certificateName The filename of the certificate, including extension
+/// @param password The password that was used to encrypt the certificate
+/// @param stream The stream to override the SSL context with the loaded certificate chain.
++ (void)setCertificateChainFromP12CertificateWithName:(NSString *)certificateName
+                                             password:(NSString *)password
+                                               stream:(NSStream *)stream;
+
 @end
 
 NS_ASSUME_NONNULL_END

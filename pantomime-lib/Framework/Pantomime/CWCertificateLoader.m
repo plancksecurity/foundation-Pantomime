@@ -104,6 +104,12 @@ password:(NSString *)password
     return context;
 }
 
++ (void)setCertificateChainFromP12CertificateWithName:(NSString *)certificateName
+                                             password:(NSString *)password
+                                               stream:(NSStream *)stream
+{
+}
+
 #pragma mark - Helpers
 
 /// Extracts the certificate chain, the identity and the trust from the given p12 data blob.
