@@ -17,8 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// are certificates in that chain.
 /// @param certificateName The filename of the certificate, including extension
 /// @param password The password that was used to encrypt the certificate
-/// @return An SSLContextRef on success, or nil on error. You take ownership, so release
-///  when done with it.
+/// @return An array representing the certificate chain on success, or nil on error.
 + (NSArray * _Nullable)certificateChainFromP12CertificateWithName:(NSString *)certificateName
                                                          password:(NSString *)password;
 
