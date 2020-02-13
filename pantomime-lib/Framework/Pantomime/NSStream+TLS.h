@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @note Getting it transfers ownership to the caller, make sure you release it.
 @property (readwrite, nullable) SSLContextRef sslContext;
 
+/// If TLS is not already enabled on this stream, enable it.
+- (void)enableTLS;
+
 @end
 
 NS_ASSUME_NONNULL_END

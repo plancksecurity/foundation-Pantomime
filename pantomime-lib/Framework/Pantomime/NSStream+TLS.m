@@ -34,4 +34,13 @@
     [self setProperty:(__bridge id) context forKey:(NSString *) kCFStreamPropertySSLContext];
 }
 
+- (void)enableTLS
+{
+    id tlsOptions = [self getStreamPropertyKey:(id) kCFStreamPropertySSLSettings];
+    if (!tlsOptions) {
+        [self setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
+                   forKey:NSStreamSocketSecurityLevelKey];
+    }
+}
+
 @end
