@@ -12,6 +12,18 @@
 
 - (SSLContextRef)sslContext
 {
+    if ([self isKindOfClass:[NSInputStream class]]) {
+        CFTypeRef ref = CFReadStreamCopyProperty((__bridge CFReadStreamRef) (NSInputStream *) self,
+                                                 kCFStreamPropertySSLContext);
+        return (SSLContextRef) ref;
+    }
+
+    if ([self isKindOfClass:[NSOutputStream class]]) {
+        CFTypeRef ref = CFWriteStreamCopyProperty((__bridge CFWriteStreamRef) (NSOutputStream *) self,
+                                                  kCFStreamPropertySSLContext);
+        return (SSLContextRef) ref;
+    }
+
     return nil;
 }
 

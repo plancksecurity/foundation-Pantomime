@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSStream (SSLContext)
 
+/// Gets or sets the SSL context.
+/// @note Getting it transfers ownership to the caller, make sure you release it.
 @property (readwrite, nullable) SSLContextRef sslContext;
 
 @end
