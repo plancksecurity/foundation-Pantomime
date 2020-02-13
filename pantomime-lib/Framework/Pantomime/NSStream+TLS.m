@@ -43,4 +43,10 @@
     }
 }
 
+- (void)disableTLS
+{
+    [self setProperty:NSStreamSocketSecurityLevelNone
+               forKey:NSStreamSocketSecurityLevelKey];
+}
+
 @end

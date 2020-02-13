@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// If TLS is not already enabled on this stream, enable it.
 - (void)enableTLS;
 
+/// Disable TLS.
+- (void)disableTLS;
+
 @end
 
 NS_ASSUME_NONNULL_END
