@@ -12,6 +12,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CWCertificateLoader : NSObject
 
+/// Tries to load a certificate from the main bundle and construct a certificate chain
+/// from it so that the first element is the identity, and the following elements
+/// are certificates in that chain.
+/// @param certificateName The filename of the certificate, including extension
+/// @param password The password that was used to encrypt the certificate
+/// @return An SSLContextRef on success, or nil on error. You take ownership, so release
+///  when done with it.
++ (NSArray * _Nullable)certificateChainFromP12CertificateWithName:(NSString *)certificateName
+                                                         password:(NSString *)password;
+
 /// Tries to load a certificate from the main bundle and parse it into an `NSURLCredential`
 /// suitable for handling a `NSURLAuthenticationMethodClientCertificate`
 /// in a `NSURLSessionDelegate`.
@@ -37,16 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///  when done with it.
 + (SSLContextRef _Nullable)sslContextRefFromP12CertificateWithName:(NSString *)certificateName
                                                           password:(NSString *)password;
-
-/// Tries to load a certificate from the main bundle and construct a certificate chain
-/// from it so that the first element is the identity, and the following elements
-/// are certificates in that chain.
-/// @param certificateName The filename of the certificate, including extension
-/// @param password The password that was used to encrypt the certificate
-/// @return An SSLContextRef on success, or nil on error. You take ownership, so release
-///  when done with it.
-+ (NSArray * _Nullable)certificateChainFromP12CertificateWithName:(NSString *)certificateName
-                                                         password:(NSString *)password;
 
 @end
 
