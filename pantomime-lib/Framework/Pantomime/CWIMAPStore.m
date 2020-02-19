@@ -167,9 +167,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 //
 //
-- (id) initWithName: (NSString *) theName
-               port: (unsigned int) thePort
-          transport: (ConnectionTransport)transport
+- (instancetype) initWithName: (NSString *) theName
+                         port: (unsigned int) thePort
+                    transport: (ConnectionTransport)transport
 {
     if (thePort == 0) thePort = 143;
 
