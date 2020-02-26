@@ -13,15 +13,6 @@
 
 @implementation CWCertificateLoader
 
-+ (BOOL)setClientCertificate:(SecIdentityRef _Nonnull)secIdentity
-                      stream:(NSStream *)stream
-{
-    NSDictionary *options = @{(id) kCFStreamSSLCertificates: @[(__bridge id) secIdentity]};
-    [stream setStreamProperty:options forKey:(NSString *) kCFStreamPropertySSLSettings];
-
-    return YES;
-}
-
 + (SecIdentityRef _Nullable)secIdentityData:(NSData *)p12Data
                                    password:(NSString *)password
 {

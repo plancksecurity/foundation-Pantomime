@@ -49,4 +49,10 @@
                forKey:NSStreamSocketSecurityLevelKey];
 }
 
+- (void)setClientCertificate:(SecIdentityRef _Nonnull)secIdentity
+{
+    NSDictionary *options = @{(id) kCFStreamSSLCertificates: @[(__bridge id) secIdentity]};
+    [self setStreamProperty:options forKey:(NSString *) kCFStreamPropertySSLSettings];
+}
+
 @end

@@ -12,12 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CWCertificateLoader : NSObject
 
-/// Set the given client certificate to the stream's TLS options
-/// @param secIdentity The client certificate to set
-/// @param stream The stream to set it to
-+ (BOOL)setClientCertificate:(SecIdentityRef _Nonnull)secIdentity
-                      stream:(NSStream *)stream;
-
 /// Tries to parse a certificate from the given data and create a `SecIdentityRef` from it.
 /// @param p12Data The data blob of the certificate
 /// @param password The password that was used to encrypt the certificate

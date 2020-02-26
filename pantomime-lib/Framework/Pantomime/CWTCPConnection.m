@@ -13,7 +13,7 @@
 #import "CWTCPConnection.h"
 
 #import "Pantomime/CWLogger.h"
-#import "CWCertificateLoader.h"
+
 #import "NSStream+TLS.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setupStream:(NSStream *)stream
 {
     if (self.clientCertificate) {
-        [CWCertificateLoader setClientCertificate:self.clientCertificate stream:stream];
+        [stream setClientCertificate:self.clientCertificate];
     }
 
     stream.delegate = self;
