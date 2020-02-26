@@ -352,7 +352,8 @@ extern NSString * _Nonnull PantomimeProtocolException;
 */
 - (instancetype _Nonnull) initWithName: (NSString * _Nonnull) theName
                                   port: (unsigned int) thePort
-                             transport: (ConnectionTransport) transport;
+                             transport: (ConnectionTransport) transport
+                     clientCertificate: (SecIdentityRef _Nullable)clientCertificate;
 
 /*!
   @method setDelegate:
