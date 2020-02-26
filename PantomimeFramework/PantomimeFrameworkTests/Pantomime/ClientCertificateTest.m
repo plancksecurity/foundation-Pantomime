@@ -15,13 +15,15 @@
 static NSString *s_pfxBundleFilename = @"s_pfxBundleFilename";
 static NSString *s_pfxBundlePassword = @"s_pfxBundlePassword";
 static NSString *s_serverName = @"s_serverName";
+static NSString *s_serverUsername = @"s_serverUsername";
+static NSString *s_serverPassword = @"s_serverPassword";
 
 static NSTimeInterval s_timeout = 10;
 
 @interface ClientCertificateTest : XCTestCase
 
 @property (nonatomic) SecIdentityRef certificate;
-@property (nonatomic) XCTestExpectation *loggedIn;
+@property (nonatomic) XCTestExpectation *didAuthenticateExpectation;
 @property (nonatomic) CWIMAPStore *imapStore;
 
 @end
@@ -46,7 +48,7 @@ static NSTimeInterval s_timeout = 10;
 
 - (void)testIMAP
 {
-    self.loggedIn = [self expectationWithDescription:@"loggedIn"];
+    self.didAuthenticateExpectation = [self expectationWithDescription:@"loggedIn"];
 
     self.imapStore = [[CWIMAPStore alloc] initWithName:s_serverName
                                                   port:993
@@ -54,16 +56,29 @@ static NSTimeInterval s_timeout = 10;
                                      clientCertificate:self.certificate];
     self.imapStore.delegate = self;
     [self.imapStore connectInBackgroundAndNotify];
-    [self waitForExpectations:@[self.loggedIn] timeout:s_timeout];
+    [self waitForExpectations:@[self.didAuthenticateExpectation] timeout:s_timeout];
 }
 
 @end
 
 @implementation ClientCertificateTest (CWServiceClient)
 
-- (void) serviceInitialized: (NSNotification * _Nullable) theNotification
+- (void)serviceInitialized:(NSNotification * _Nullable)theNotification
 {
-    NSLog(@"serviceInitialized");
+    [self.imapStore authenticate:s_serverUsername
+                        password:s_serverPassword
+                       mechanism:@"CRAM-MD5"];
+}
+
+- (void)authenticationCompleted:(NSNotification * _Nullable)theNotification
+{
+    [self.didAuthenticateExpectation fulfill];
+}
+
+- (void)authenticationFailed:(NSNotification * _Nullable)theNotification
+{
+    XCTFail();
+    [self.didAuthenticateExpectation fulfill];
 }
 
 @end
