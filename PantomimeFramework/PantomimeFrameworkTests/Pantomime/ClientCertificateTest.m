@@ -22,6 +22,7 @@ static NSTimeInterval s_timeout = 10;
 
 @property (nonatomic) SecIdentityRef certificate;
 @property (nonatomic) XCTestExpectation *loggedIn;
+@property (nonatomic) CWIMAPStore *imapStore;
 
 @end
 
@@ -47,12 +48,12 @@ static NSTimeInterval s_timeout = 10;
 {
     self.loggedIn = [self expectationWithDescription:@"loggedIn"];
 
-    CWIMAPStore *imap = [[CWIMAPStore alloc] initWithName:s_serverName
-                                                     port:993
-                                                transport:ConnectionTransportTLS
-                                        clientCertificate:self.certificate];
-    imap.delegate = self;
-    [imap connectInBackgroundAndNotify];
+    self.imapStore = [[CWIMAPStore alloc] initWithName:s_serverName
+                                                  port:993
+                                             transport:ConnectionTransportTLS
+                                     clientCertificate:self.certificate];
+    self.imapStore.delegate = self;
+    [self.imapStore connectInBackgroundAndNotify];
     [self waitForExpectations:@[self.loggedIn] timeout:s_timeout];
 }
 
