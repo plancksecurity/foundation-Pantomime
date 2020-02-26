@@ -35,8 +35,7 @@ static NSTimeInterval s_timeout = 10;
     XCTAssertNotNil(path);
     NSData *p12data = [NSData dataWithContentsOfFile:path];
     XCTAssertNotNil(p12data);
-    self.certificate = [CWCertificateLoader secIdentityData:p12data
-                                                   password:s_pfxBundlePassword];
+    self.certificate = [CWCertificateLoader secIdentityData:p12data password:s_pfxBundlePassword];
     XCTAssertNotNil((__bridge id) self.certificate);
 }
 
