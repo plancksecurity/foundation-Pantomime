@@ -40,7 +40,10 @@
 #import "CWThreadSafeData.h"
 
 @interface CWService ()
+
 @property (nonatomic, nullable, strong) id<CWLogging> logger;
+@property (nonatomic, nullable) SecIdentityRef clientCertificate;
+
 @end
 
 //
@@ -87,6 +90,7 @@
         _name = theName;
         _port = thePort;
         _connectionTransport = transport;
+        _clientCertificate = clientCertificate;
     }
     return self;
 }
@@ -307,7 +311,7 @@
                                                    port: _port
                                               transport: _connectionTransport
                                              background: YES
-                                      clientCertificate: nil];
+                                      clientCertificate: self.clientCertificate];
 
     if (!_connection)
     {
