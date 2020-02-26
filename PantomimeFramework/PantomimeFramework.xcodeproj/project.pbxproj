@@ -164,6 +164,7 @@
 		4329CBD022391EA1007D377E /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB522391EA1007D377E /* MailWithDocAttached.txt */; };
 		433710E723F5950F0083BAE9 /* NSStream+Options.h in Headers */ = {isa = PBXBuildFile; fileRef = 433710E523F5950F0083BAE9 /* NSStream+Options.h */; };
 		433710E823F5950F0083BAE9 /* NSStream+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 433710E623F5950F0083BAE9 /* NSStream+Options.m */; };
+		439BC6B42406831D00D2D11A /* ClientCertificateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 439BC6B32406831D00D2D11A /* ClientCertificateTest.m */; };
 		43ADEB7F23ED5A04002F4F9E /* CWCertificateLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 43ADEB7D23ED5A04002F4F9E /* CWCertificateLoader.h */; };
 		43ADEB8023ED5A04002F4F9E /* CWCertificateLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 43ADEB7E23ED5A04002F4F9E /* CWCertificateLoader.m */; };
 		43C5D3E223F5530D006487F6 /* NSStream+TLS.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5D3E023F5530D006487F6 /* NSStream+TLS.h */; };
@@ -345,6 +346,7 @@
 		4329CBB522391EA1007D377E /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
 		433710E523F5950F0083BAE9 /* NSStream+Options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+Options.h"; sourceTree = "<group>"; };
 		433710E623F5950F0083BAE9 /* NSStream+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+Options.m"; sourceTree = "<group>"; };
+		439BC6B32406831D00D2D11A /* ClientCertificateTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClientCertificateTest.m; sourceTree = "<group>"; };
 		43ADEB7D23ED5A04002F4F9E /* CWCertificateLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CWCertificateLoader.h; sourceTree = "<group>"; };
 		43ADEB7E23ED5A04002F4F9E /* CWCertificateLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CWCertificateLoader.m; sourceTree = "<group>"; };
 		43C5D3E023F5530D006487F6 /* NSStream+TLS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+TLS.h"; sourceTree = "<group>"; };
@@ -595,6 +597,7 @@
 				4329CBA522391EA1007D377E /* NSString+ExtensionsTest.m */,
 				4329CBA622391EA1007D377E /* CWMIMEUtilityTest.m */,
 				4329CBA722391EA1007D377E /* NSData+PantomimeExtensionsTest.m */,
+				439BC6B32406831D00D2D11A /* ClientCertificateTest.m */,
 			);
 			path = Pantomime;
 			sourceTree = "<group>";
@@ -911,6 +914,7 @@
 				4329CBB722391EA1007D377E /* NSString+PEPDataUtils.m in Sources */,
 				4329CBB822391EA1007D377E /* NSString+PantomimeTestHelper.m in Sources */,
 				4329CBBA22391EA1007D377E /* NSData+CWParsingUtilsTest.m in Sources */,
+				439BC6B42406831D00D2D11A /* ClientCertificateTest.m in Sources */,
 				4329CBC422391EA1007D377E /* NSData+PantomimeExtensionsTest.m in Sources */,
 				4329CBC522391EA1007D377E /* MailParsingTests.m in Sources */,
 				4329CBC222391EA1007D377E /* NSString+ExtensionsTest.m in Sources */,
