@@ -348,6 +348,8 @@ extern NSString * _Nonnull PantomimeProtocolException;
   @param theName The FQDN of the server.
   @param thePort The server port to which we will connect.
   @param transport How to connect to the server (e.g., use TLS)
+  @param clientCertificate An optional reference to an identity (SecIdentity),
+   possibly backed by the keychain, denoting a "client side certificate".
   @result An instance of a Service class, nil on error.
 */
 - (instancetype _Nonnull) initWithName: (NSString * _Nonnull) theName

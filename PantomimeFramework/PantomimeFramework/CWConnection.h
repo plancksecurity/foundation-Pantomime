@@ -65,7 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
   @param theBOOL YES if we want to connect in background (non-blocking
                  way), NO if we want this call to be blocking until
 		 we successfully connected to the host.
-  @param clientCertificate An optional client certificate
+  @param clientCertificate An optional reference to an identity (SecIdentity),
+   possibly backed by the keychain, denoting a "client side certificate".
   @result An instance implementing the CWConnection protocol, nil
 	  if an error occurred, like DNS resolution.
 */
