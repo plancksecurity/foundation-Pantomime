@@ -12,6 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CWCertificateLoader : NSObject
 
+/// Tries to parse a certificate from the given data and create a `SecIdentityRef` from it.
+/// @param p12Data The data blob of the certificate
+/// @param password The password that was used to encrypt the certificate
+/// @return The `SecIdentityRef` from the certificate file, or nil on error.
++ (SecIdentityRef _Nullable)secIdentityData:(NSData *)p12Data
+                                   password:(NSString *)password;
+
 /// Tries to load a certificate from the main bundle and create a `SecIdentityRef` from it.
 /// @param certificateName The filename of the certificate, including extension
 /// @param password The password that was used to encrypt the certificate

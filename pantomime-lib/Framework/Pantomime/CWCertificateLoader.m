@@ -13,6 +13,25 @@
 
 @implementation CWCertificateLoader
 
++ (SecIdentityRef _Nullable)secIdentityData:(NSData *)p12Data
+                                   password:(NSString *)password
+{
+    SecIdentityRef myIdentity = nil;
+    SecTrustRef myTrust = nil;
+
+    [self extractCertificateDataFromP12Data:p12Data
+                                   password:(NSString *)password
+                                   identity:&myIdentity
+                                      trust:&myTrust];
+
+    // Not used for output, can release right now
+    if (myTrust) {
+        CFRelease(myTrust);
+    }
+
+    return myIdentity;
+}
+
 + (SecIdentityRef _Nullable)secIdentityFromCertificateWithName:(NSString *)certificateName
                                                       password:(NSString *)password
 {
