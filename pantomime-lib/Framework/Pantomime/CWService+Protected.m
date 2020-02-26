@@ -132,7 +132,8 @@
     _connection = [[CWTCPConnection alloc] initWithName: _name
                                                    port: _port
                                               transport: _connectionTransport
-                                             background: NO];
+                                             background: NO
+                                      clientCertificate: nil];
 
     if (!_connection)
     {

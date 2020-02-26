@@ -60,6 +60,7 @@
 - (instancetype) initWithName: (NSString *) theName
                          port: (unsigned int) thePort
                     transport: (ConnectionTransport) transport
+            clientCertificate: (SecIdentityRef _Nullable)clientCertificate
 {
     self = [super init];
     if (self) {
@@ -305,7 +306,8 @@
     _connection = [[CWTCPConnection alloc] initWithName: _name
                                                    port: _port
                                               transport: _connectionTransport
-                                             background: YES];
+                                             background: YES
+                                      clientCertificate: nil];
 
     if (!_connection)
     {
