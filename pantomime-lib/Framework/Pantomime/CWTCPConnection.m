@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
                         port:(unsigned int)thePort
                    transport:(ConnectionTransport)transport
                   background:(BOOL)theBOOL
+           clientCertificate: (SecIdentityRef _Nullable)clientCertificate;
 {
     if (self = [super init]) {
         _openConnections = [[NSMutableSet alloc] init];
