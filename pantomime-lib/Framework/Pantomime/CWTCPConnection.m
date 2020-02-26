@@ -13,7 +13,7 @@
 #import "CWTCPConnection.h"
 
 #import "Pantomime/CWLogger.h"
-
+#import "CWCertificateLoader.h"
 #import "NSStream+TLS.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSError *streamError;
 @property (nullable, strong) NSThread *backgroundThread;
 @property (atomic) BOOL isGettingClosed;
+@property (nonatomic, nullable) SecIdentityRef clientCertificate;
 
 @end
 
@@ -47,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
+        _clientCertificate = clientCertificate;
         INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
@@ -69,6 +71,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setupStream:(NSStream *)stream
 {
+    if (self.clientCertificate) {
+        [CWCertificateLoader setClientCertificate:self.clientCertificate stream:stream];
+    }
+
     stream.delegate = self;
     switch (self.transport) {
         case ConnectionTransportPlain:
