@@ -30,9 +30,11 @@ static NSTimeInterval s_timeout = 10;
 - (void)setUp
 {
     NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
-    NSString *path2 = [myBundle pathForResource:s_pfxBundleFilename
-                                         ofType:nil];
-    NSData *p12data = [NSData dataWithContentsOfFile:path2];
+    XCTAssertNotNil(myBundle);
+    NSString *path = [myBundle pathForResource:s_pfxBundleFilename ofType:nil];
+    XCTAssertNotNil(path);
+    NSData *p12data = [NSData dataWithContentsOfFile:path];
+    XCTAssertNotNil(p12data);
     self.certificate = [CWCertificateLoader secIdentityData:p12data
                                                    password:s_pfxBundlePassword];
     XCTAssertNotNil((__bridge id) self.certificate);
