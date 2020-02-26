@@ -67,7 +67,7 @@ static NSTimeInterval s_timeout = 10;
 {
     [self.imapStore authenticate:s_serverUsername
                         password:s_serverPassword
-                       mechanism:@"CRAM-MD5"];
+                       mechanism:@"PLAIN"];
 }
 
 - (void)authenticationCompleted:(NSNotification * _Nullable)theNotification
