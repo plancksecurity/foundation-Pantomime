@@ -1,5 +1,5 @@
 //
-//  ClientCertificateTest.m
+//  ClientCertificateImapTest.m
 //  PantomimeFrameworkTests
 //
 //  Created by Dirk Zimmermann on 26.02.20.
@@ -20,7 +20,7 @@ static NSString *s_serverPassword = @"s_serverPassword";
 
 static NSTimeInterval s_timeout = 10;
 
-@interface ClientCertificateTest : XCTestCase
+@interface ClientCertificateImapTest : XCTestCase
 
 @property (nonatomic) SecIdentityRef certificate;
 @property (nonatomic) XCTestExpectation *didAuthenticateExpectation;
@@ -28,7 +28,7 @@ static NSTimeInterval s_timeout = 10;
 
 @end
 
-@implementation ClientCertificateTest
+@implementation ClientCertificateImapTest
 
 - (void)setUp
 {
@@ -61,7 +61,7 @@ static NSTimeInterval s_timeout = 10;
 
 @end
 
-@implementation ClientCertificateTest (CWServiceClient)
+@implementation ClientCertificateImapTest (CWServiceClient)
 
 - (void)serviceInitialized:(NSNotification * _Nullable)theNotification
 {
