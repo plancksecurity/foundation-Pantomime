@@ -17,6 +17,7 @@ static NSString *s_pfxBundlePassword = @"s_pfxBundlePassword";
 static NSString *s_serverName = @"s_serverName";
 static NSString *s_serverUsername = @"s_serverUsername";
 static NSString *s_serverPassword = @"s_serverPassword";
+static ConnectionTransport s_connectionTransport = ConnectionTransportStartTLS;
 
 static NSTimeInterval s_timeout = 10;
 
@@ -25,6 +26,7 @@ static NSTimeInterval s_timeout = 10;
 @property (nonatomic) SecIdentityRef certificate;
 @property (nonatomic) XCTestExpectation *didAuthenticateExpectation;
 @property (nonatomic) CWSMTP *smtp;
+@property (nonatomic) BOOL haveStartedTLS;
 
 @end
 
@@ -65,9 +67,14 @@ static NSTimeInterval s_timeout = 10;
 
 - (void)serviceInitialized:(NSNotification * _Nullable)theNotification
 {
-    [self.smtp authenticate:s_serverUsername
-                   password:s_serverPassword
-                  mechanism:@"PLAIN"];
+    if (s_connectionTransport == ConnectionTransportStartTLS && !self.haveStartedTLS) {
+        [self.smtp startTLS];
+        self.haveStartedTLS = YES;
+    } else {
+        [self.smtp authenticate:s_serverUsername
+                       password:s_serverPassword
+                      mechanism:@"PLAIN"];
+    }
 }
 
 - (void)authenticationCompleted:(NSNotification * _Nullable)theNotification
