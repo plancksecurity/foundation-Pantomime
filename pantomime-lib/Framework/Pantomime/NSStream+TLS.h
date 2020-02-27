@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disableTLS;
 
 /// Set the given client certificate to the stream's TLS options
+/// @note Setting a client certificate will automatically enable TLS
 /// @param secIdentity The client certificate to set
 - (void)setClientCertificate:(SecIdentityRef _Nonnull)secIdentity;
 

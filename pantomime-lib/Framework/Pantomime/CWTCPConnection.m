@@ -71,10 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setupStream:(NSStream *)stream
 {
-    if (self.clientCertificate) {
-        [stream setClientCertificate:self.clientCertificate];
-    }
-
     stream.delegate = self;
     switch (self.transport) {
         case ConnectionTransportPlain:
@@ -82,7 +78,13 @@ NS_ASSUME_NONNULL_BEGIN
             [stream disableTLS];
             break;
         case ConnectionTransportTLS:
-            [stream enableTLS];
+            // Setting a client certificate already enables TLS,
+            // so only enable it explicitly when there is none
+            if (self.clientCertificate) {
+                [stream setClientCertificate:self.clientCertificate];
+            } else {
+                [stream enableTLS];
+            }
             break;
     }
     [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
