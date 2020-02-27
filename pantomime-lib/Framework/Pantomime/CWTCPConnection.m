@@ -63,8 +63,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)startTLS
 {
-    [self.readStream enableTLS];
-    [self.writeStream enableTLS];
+    // Setting a client certificate already enables TLS,
+    // so only enable it explicitly when there is none
+    if (self.clientCertificate) {
+        [self.readStream setClientCertificate:self.clientCertificate];
+        [self.writeStream setClientCertificate:self.clientCertificate];
+    } else {
+        [self.readStream enableTLS];
+        [self.writeStream enableTLS];
+    }
 }
 
 #pragma mark - Stream Handling
