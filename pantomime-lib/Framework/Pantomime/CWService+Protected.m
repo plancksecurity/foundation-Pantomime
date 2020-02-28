@@ -319,7 +319,17 @@
         case ET_EDESC:
             //INFO("GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
-                PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+                if (theExtra) {
+                    PERFORM_SELECTOR_2(_delegate,
+                                       @selector(connectionLost:),
+                                       PantomimeConnectionLost,
+                                       (__bridge id _Nonnull) theExtra,
+                                       PantomimeErrorExtra);
+                } else {
+                    PERFORM_SELECTOR_1(_delegate,
+                                       @selector(connectionLost:),
+                                       PantomimeConnectionLost);
+                }
                 [self close];
             } else {
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),

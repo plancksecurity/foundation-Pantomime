@@ -478,4 +478,7 @@ extern NSString * _Nonnull const PantomimeFlagsKey;
  */
 extern NSString * _Nonnull const PantomimeFolderSpecialUseKey;
 
+/// Dictionary key for an extra error object.
+extern NSString * _Nonnull const PantomimeErrorExtra;
+
 #endif // _Pantomime_H_CWConstants

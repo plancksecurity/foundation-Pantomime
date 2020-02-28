@@ -261,7 +261,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)signalErrorAndClose
 {
     // We abuse ET_EDESC for error indication.
-    [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
+    NSError *error = self.streamError;
+    [self.forceDelegate receivedEvent:nil
+                                 type:ET_EDESC extra:(__bridge void * _Nullable)(error)
+                              forMode:nil];
     [self close];
 }
 
