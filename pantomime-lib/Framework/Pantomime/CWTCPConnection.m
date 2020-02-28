@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
 @property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
-@property (nonatomic, strong) NSError *streamError;
+@property (nonatomic, strong) NSMutableArray *fatalErrors;
 @property (nullable, strong) NSThread *backgroundThread;
 @property (atomic) BOOL isGettingClosed;
 @property (nonatomic, nullable) SecIdentityRef clientCertificate;
@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
         _port = thePort;
         _transport = transport;
         _clientCertificate = clientCertificate;
+        _fatalErrors = [NSMutableArray new];
         INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
@@ -261,9 +262,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)signalErrorAndClose
 {
     // We abuse ET_EDESC for error indication.
-    NSError *error = self.streamError;
+    NSError *errorToReturn = self.streamError;
+
+    for (NSError *error in self.fatalErrors) {
+        if (error.code == errSSLPeerCertUnknown) {
+            // errSSLPeerCertUnknown is a base error that will cause others to follow
+            errorToReturn = error;
+            break;
+        }
+    }
+
     [self.forceDelegate receivedEvent:nil
-                                 type:ET_EDESC extra:(__bridge void * _Nullable)(error)
+                                 type:ET_EDESC extra:(__bridge void * _Nullable)(errorToReturn)
                               forMode:nil];
     [self close];
 }
@@ -302,10 +312,11 @@ NS_ASSUME_NONNULL_BEGIN
                   [self.readStream.streamError localizedDescription],
                   [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
-                self.streamError = self.readStream.streamError;
+                [self.fatalErrors addObject:self.readStream.streamError];
             } else if (self.writeStream.streamError) {
-                self.streamError = self.writeStream.streamError;
+                [self.fatalErrors addObject:self.writeStream.streamError];
             }
+            self.streamError = [self.fatalErrors firstObject];
 
             [self signalErrorAndClose];
 

@@ -16,5 +16,6 @@
 
 /// Required from CWConnection
 @property (nonatomic, nullable, weak) id<CWConnectionDelegate> delegate;
+@property (nonatomic, strong) NSError *streamError;
 
 @end
