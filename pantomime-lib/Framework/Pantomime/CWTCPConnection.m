@@ -266,7 +266,9 @@ NS_ASSUME_NONNULL_BEGIN
 
     for (NSError *error in self.fatalErrors) {
         if (error.code == errSSLPeerCertUnknown) {
-            // errSSLPeerCertUnknown is a base error that will cause others to follow
+            // errSSLPeerCertUnknown relatively clearly indicates problems with
+            // a client certificate, so give that error priority over others,
+            // in case they get mixed
             errorToReturn = error;
             break;
         }
