@@ -124,30 +124,6 @@
 
 
 //
-// If the connection or binding succeeds, zero  is  returned.
-// On  error, -1 is returned, and errno is set appropriately
-//
-- (int) connect
-{
-    _connection = [[CWTCPConnection alloc] initWithName: _name
-                                                   port: _port
-                                              transport: _connectionTransport
-                                             background: NO
-                                      clientCertificate: nil];
-
-    if (!_connection)
-    {
-        return -1;
-    }
-
-    _connection.delegate = self;
-    [_connection connect];
-
-    return 0;
-}
-
-
-//
 //
 //
 - (void) write: (NSData *) theData
