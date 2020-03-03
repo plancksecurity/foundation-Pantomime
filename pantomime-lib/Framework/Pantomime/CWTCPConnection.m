@@ -276,7 +276,8 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
     [self.forceDelegate receivedEvent:nil
-                                 type:ET_EDESC extra:(__bridge void * _Nullable)(errorToReturn)
+                                 type:ET_EDESC
+                                extra:(__bridge void * _Nullable)(errorToReturn)
                               forMode:nil];
     [self close];
 }
