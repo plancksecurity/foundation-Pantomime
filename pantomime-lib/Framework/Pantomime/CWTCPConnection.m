@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CWTCPConnection ()
 
-@property (nonatomic, nullable, strong) NSError *streamError;
+@property (nonatomic, nullable) NSError *streamError;
 @property (atomic) BOOL connected;
 @property (atomic, strong) NSString *name;
 @property (atomic) uint32_t port;
@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
 @property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
-@property (nonatomic, strong) NSMutableArray *fatalErrors;
+@property (nonatomic) NSMutableArray *fatalErrors;
 @property (nullable, strong) NSThread *backgroundThread;
 @property (atomic) BOOL isGettingClosed;
 @property (nonatomic, nullable) SecIdentityRef clientCertificate;
