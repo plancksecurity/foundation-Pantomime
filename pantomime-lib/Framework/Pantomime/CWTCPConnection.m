@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CWTCPConnection ()
 
+@property (nonatomic, nullable, strong) NSError *streamError;
 @property (atomic) BOOL connected;
 @property (atomic, strong) NSString *name;
 @property (atomic) uint32_t port;

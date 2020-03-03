@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol CWConnection
 
 @property (nonatomic, nullable, weak, readwrite) id<CWConnectionDelegate> delegate;
-@property (nonatomic, strong) NSError *streamError;
+@property (nonatomic, readonly, nullable) NSError *streamError;
 
 /*!
   @method initWithName: port: background:

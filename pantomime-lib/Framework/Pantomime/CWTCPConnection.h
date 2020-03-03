@@ -17,7 +17,4 @@
 /// Required from CWConnection
 @property (nonatomic, nullable, weak) id<CWConnectionDelegate> delegate;
 
-/// The first (or most specific, if known) error that canceled a connection
-@property (nonatomic, nullable, strong) NSError *streamError;
-
 @end
