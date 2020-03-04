@@ -1,5 +1,5 @@
 //
-//  NSDate+RFC2822.m
+//  NSDate+StringRepresentation.m
 //  Pantomime
 //
 //  Created by Dirk Zimmermann on 12/04/16.
@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "NSDate+RFC2822.h"
+#import "NSDate+StringRepresentation.h"
 
-@implementation NSDate (RFC2822) //BUFF: rename!
+@implementation NSDate (StringRepresentation)
 
 - (NSString *)rfc2822String {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

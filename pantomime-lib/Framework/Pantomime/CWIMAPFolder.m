@@ -31,7 +31,7 @@
 #import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
-#import "NSDate+RFC2822.h"
+#import "NSDate+StringRepresentation.h"
 
 
 
