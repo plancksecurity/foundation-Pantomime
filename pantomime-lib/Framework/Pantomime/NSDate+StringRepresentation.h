@@ -17,7 +17,8 @@
 /// date-month:                 [ "Jan" |"Feb" | "Mar" / "Apr"| "May" | "Jun" / "Jul" | "Aug" | "Sep" | "Oct" | "Nov" | "Dec"]
 /// date-year:                  4DIGIT
 /// zone:                          [+|-]4DIGIT
-/// date-time                   "date-day-fixed "-" date-month "-" date-year zone"
+/// date-time                   "date-day-fixed "-" date-month "-" date-year time zone"
+///  Example: "21-Jun-2018 17:51:47 +0000"
 /// @note: The date-month MUST use us-EN names for months.
 /// @Return: IMAP date/time string representation
 - (NSString *)dateTimeString;
