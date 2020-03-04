@@ -42,7 +42,7 @@
 
 #import "CWIMAPCacheManager.h"
 
-#import "NSDate+RFC2822.h"
+#import "NSDate+StringRepresentation.h"
 
 #import <stdlib.h>
 #import <string.h>

@@ -31,7 +31,7 @@
 #import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
-#import "NSDate+RFC2822.h"
+#import "NSDate+StringRepresentation.h"
 
 
 
@@ -128,23 +128,18 @@
                         @"NSData":rawSource,
                         @"Folder":self};
     }
-
-    if (date) {
-        [_store sendCommand: IMAP_APPEND
-                       info: aDictionary
-                  arguments: @"APPEND \"%@\" (%@) \"%@\" {%d}", // IMAP command
-         [_name modifiedUTF7String],                            // folder name
-         flagsAsString,                                         // flags
-         [date rfc2822String],                                  // internal date
-         [dataToAppend length]];                                // length of the data to write
-    } else {
-        [_store sendCommand: IMAP_APPEND
-                       info: aDictionary
-                  arguments: @"APPEND \"%@\" (%@) {%d}",        // IMAP command
-         [_name modifiedUTF7String],                            // folder name
-         flagsAsString,                                         // flags
-         [dataToAppend length]];                                // length of the data to write
+    if (!date) {
+        date = [NSDate new];
     }
+    NSAssert(date, @"Must not be nil");
+
+    [_store sendCommand: IMAP_APPEND
+                   info: aDictionary
+              arguments: @"APPEND \"%@\" (%@) \"%@\" {%d}", // IMAP command
+     [_name modifiedUTF7String],                            // folder name
+     flagsAsString,                                         // flags
+     [date dateTimeString],                                 // Internal date
+     [dataToAppend length]];                                // length of the data to write
 }
 
 #pragma mark - UID COPY

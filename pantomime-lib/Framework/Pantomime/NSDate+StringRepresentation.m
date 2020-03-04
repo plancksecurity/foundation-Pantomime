@@ -1,5 +1,5 @@
 //
-//  NSDate+RFC2822.m
+//  NSDate+StringRepresentation.m
 //  Pantomime
 //
 //  Created by Dirk Zimmermann on 12/04/16.
@@ -8,13 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-#import "NSDate+RFC2822.h"
+#import "NSDate+StringRepresentation.h"
 
-@implementation NSDate (RFC2822)
+@implementation NSDate (StringRepresentation)
 
 - (NSString *)rfc2822String {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"EEE, dd MMM yyyy HH:mm:ss Z";
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    return [formatter stringFromDate:self];
+}
+
+- (NSString *)dateTimeString {
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    formatter.dateFormat = @"dd-MMM-yyyy HH:mm:ss Z";
     formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     return [formatter stringFromDate:self];
 }

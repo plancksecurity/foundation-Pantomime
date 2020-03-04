@@ -31,7 +31,7 @@
 		4329CA8C2238FD4A007D377E /* CWCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CA772238FD4A007D377E /* CWCacheManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4329CAFA2238FDBB007D377E /* CWIMAPFolder+CWProtected.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CA8E2238FDBB007D377E /* CWIMAPFolder+CWProtected.m */; };
 		4329CAFB2238FDBB007D377E /* CWService+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CA8F2238FDBB007D377E /* CWService+Protected.h */; };
-		4329CAFD2238FDBB007D377E /* NSDate+RFC2822.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CA912238FDBB007D377E /* NSDate+RFC2822.m */; };
+		4329CAFD2238FDBB007D377E /* NSDate+StringRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CA912238FDBB007D377E /* NSDate+StringRepresentation.m */; };
 		4329CAFE2238FDBB007D377E /* CWUUFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CA922238FDBB007D377E /* CWUUFile.h */; };
 		4329CAFF2238FDBB007D377E /* CWContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CA932238FDBB007D377E /* CWContainer.m */; };
 		4329CB002238FDBB007D377E /* CWRegEx.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CA942238FDBB007D377E /* CWRegEx.h */; };
@@ -86,7 +86,7 @@
 		4329CB312238FDBB007D377E /* CWContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CAC72238FDBB007D377E /* CWContainer.h */; };
 		4329CB322238FDBB007D377E /* CWIMAPStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAC82238FDBB007D377E /* CWIMAPStore.m */; };
 		4329CB332238FDBB007D377E /* CWUUFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAC92238FDBB007D377E /* CWUUFile.m */; };
-		4329CB342238FDBB007D377E /* NSDate+RFC2822.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CACA2238FDBB007D377E /* NSDate+RFC2822.h */; };
+		4329CB342238FDBB007D377E /* NSDate+StringRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CACA2238FDBB007D377E /* NSDate+StringRepresentation.h */; };
 		4329CB352238FDBB007D377E /* CWService+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CACB2238FDBB007D377E /* CWService+Protected.m */; };
 		4329CB362238FDBB007D377E /* Pantomime.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CACC2238FDBB007D377E /* Pantomime.h */; };
 		4329CB372238FDBB007D377E /* CWMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CACD2238FDBB007D377E /* CWMessage.m */; };
@@ -201,7 +201,7 @@
 		4329CA772238FD4A007D377E /* CWCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCacheManager.h; sourceTree = "<group>"; };
 		4329CA8E2238FDBB007D377E /* CWIMAPFolder+CWProtected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPFolder+CWProtected.m"; sourceTree = "<group>"; };
 		4329CA8F2238FDBB007D377E /* CWService+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CWService+Protected.h"; sourceTree = "<group>"; };
-		4329CA912238FDBB007D377E /* NSDate+RFC2822.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RFC2822.m"; sourceTree = "<group>"; };
+		4329CA912238FDBB007D377E /* NSDate+StringRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+StringRepresentation.m"; sourceTree = "<group>"; };
 		4329CA922238FDBB007D377E /* CWUUFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWUUFile.h; sourceTree = "<group>"; };
 		4329CA932238FDBB007D377E /* CWContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWContainer.m; sourceTree = "<group>"; };
 		4329CA942238FDBB007D377E /* CWRegEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWRegEx.h; sourceTree = "<group>"; };
@@ -256,7 +256,7 @@
 		4329CAC72238FDBB007D377E /* CWContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWContainer.h; sourceTree = "<group>"; };
 		4329CAC82238FDBB007D377E /* CWIMAPStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWIMAPStore.m; sourceTree = "<group>"; };
 		4329CAC92238FDBB007D377E /* CWUUFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWUUFile.m; sourceTree = "<group>"; };
-		4329CACA2238FDBB007D377E /* NSDate+RFC2822.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RFC2822.h"; sourceTree = "<group>"; };
+		4329CACA2238FDBB007D377E /* NSDate+StringRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+StringRepresentation.h"; sourceTree = "<group>"; };
 		4329CACB2238FDBB007D377E /* CWService+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWService+Protected.m"; sourceTree = "<group>"; };
 		4329CACC2238FDBB007D377E /* Pantomime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pantomime.h; sourceTree = "<group>"; };
 		4329CACD2238FDBB007D377E /* CWMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMessage.m; sourceTree = "<group>"; };
@@ -412,7 +412,7 @@
 			children = (
 				4329CA8E2238FDBB007D377E /* CWIMAPFolder+CWProtected.m */,
 				4329CA8F2238FDBB007D377E /* CWService+Protected.h */,
-				4329CA912238FDBB007D377E /* NSDate+RFC2822.m */,
+				4329CA912238FDBB007D377E /* NSDate+StringRepresentation.m */,
 				4329CA922238FDBB007D377E /* CWUUFile.h */,
 				4329CA932238FDBB007D377E /* CWContainer.m */,
 				4329CA942238FDBB007D377E /* CWRegEx.h */,
@@ -460,7 +460,7 @@
 				4329CAC72238FDBB007D377E /* CWContainer.h */,
 				4329CAC82238FDBB007D377E /* CWIMAPStore.m */,
 				4329CAC92238FDBB007D377E /* CWUUFile.m */,
-				4329CACA2238FDBB007D377E /* NSDate+RFC2822.h */,
+				4329CACA2238FDBB007D377E /* NSDate+StringRepresentation.h */,
 				4329CACB2238FDBB007D377E /* CWService+Protected.m */,
 				4329CACC2238FDBB007D377E /* Pantomime.h */,
 				4329CACD2238FDBB007D377E /* CWMessage.m */,
@@ -620,7 +620,7 @@
 				4329CB472238FDBB007D377E /* CWSMTP+Protected.h in Headers */,
 				4329CB2C2238FDBB007D377E /* CWISO8859_1.h in Headers */,
 				4329CA7F2238FD4A007D377E /* CWConnection.h in Headers */,
-				4329CB342238FDBB007D377E /* NSDate+RFC2822.h in Headers */,
+				4329CB342238FDBB007D377E /* NSDate+StringRepresentation.h in Headers */,
 				4329CA872238FD4A007D377E /* CWFolder.h in Headers */,
 				4329CB5A2238FDBB007D377E /* CWISO8859_11.h in Headers */,
 				4329CA792238FD4A007D377E /* CWIMAPFolder.h in Headers */,
@@ -827,7 +827,7 @@
 				4329CB012238FDBB007D377E /* CWURLName.m in Sources */,
 				4329CB322238FDBB007D377E /* CWIMAPStore.m in Sources */,
 				4329CAFF2238FDBB007D377E /* CWContainer.m in Sources */,
-				4329CAFD2238FDBB007D377E /* NSDate+RFC2822.m in Sources */,
+				4329CAFD2238FDBB007D377E /* NSDate+StringRepresentation.m in Sources */,
 				4329CB022238FDBB007D377E /* CWSMTP+Protected.m in Sources */,
 				4329CB3C2238FDBB007D377E /* CWISO8859_10.m in Sources */,
 				4329CB4D2238FDBB007D377E /* CWConstants.m in Sources */,
