@@ -40,7 +40,10 @@
 #import "CWThreadSafeData.h"
 
 @interface CWService ()
+
 @property (nonatomic, nullable, strong) id<CWLogging> logger;
+@property (nonatomic, nullable) SecIdentityRef clientCertificate;
+
 @end
 
 //
@@ -60,6 +63,7 @@
 - (instancetype) initWithName: (NSString *) theName
                          port: (unsigned int) thePort
                     transport: (ConnectionTransport) transport
+            clientCertificate: (SecIdentityRef _Nullable)clientCertificate
 {
     self = [super init];
     if (self) {
@@ -86,6 +90,7 @@
         _name = theName;
         _port = thePort;
         _connectionTransport = transport;
+        _clientCertificate = clientCertificate;
     }
     return self;
 }
@@ -305,7 +310,8 @@
     _connection = [[CWTCPConnection alloc] initWithName: _name
                                                    port: _port
                                               transport: _connectionTransport
-                                             background: YES];
+                                             background: YES
+                                      clientCertificate: self.clientCertificate];
 
     if (!_connection)
     {

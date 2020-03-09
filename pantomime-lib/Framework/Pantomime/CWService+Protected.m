@@ -124,29 +124,6 @@
 
 
 //
-// If the connection or binding succeeds, zero  is  returned.
-// On  error, -1 is returned, and errno is set appropriately
-//
-- (int) connect
-{
-    _connection = [[CWTCPConnection alloc] initWithName: _name
-                                                   port: _port
-                                              transport: _connectionTransport
-                                             background: NO];
-
-    if (!_connection)
-    {
-        return -1;
-    }
-
-    _connection.delegate = self;
-    [_connection connect];
-
-    return 0;
-}
-
-
-//
 //
 //
 - (void) write: (NSData *) theData
@@ -318,7 +295,17 @@
         case ET_EDESC:
             //INFO("GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
-                PERFORM_SELECTOR_1(_delegate, @selector(connectionLost:),  PantomimeConnectionLost);
+                if (theExtra) {
+                    PERFORM_SELECTOR_2(_delegate,
+                                       @selector(connectionLost:),
+                                       PantomimeConnectionLost,
+                                       (__bridge id _Nonnull) theExtra,
+                                       PantomimeErrorExtra);
+                } else {
+                    PERFORM_SELECTOR_1(_delegate,
+                                       @selector(connectionLost:),
+                                       PantomimeConnectionLost);
+                }
                 [self close];
             } else {
                 PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),

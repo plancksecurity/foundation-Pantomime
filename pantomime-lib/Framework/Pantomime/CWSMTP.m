@@ -112,11 +112,15 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 // initializers
 //
-- (id) initWithName: (NSString *) theName
-               port: (unsigned int) thePort
-          transport: (ConnectionTransport)transport
+- (instancetype) initWithName: (NSString *) theName
+                         port: (unsigned int) thePort
+                    transport: (ConnectionTransport)transport
+            clientCertificate: (SecIdentityRef _Nullable)clientCertificate
 {
-    self = [super initWithName: theName  port: thePort transport: transport];
+    self = [super initWithName:theName
+                          port:thePort
+                     transport:transport
+             clientCertificate:clientCertificate];
 
     _sent_recipients = nil;
     _recipients = nil;

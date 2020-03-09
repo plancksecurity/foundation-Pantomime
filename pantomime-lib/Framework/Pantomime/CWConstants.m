@@ -99,6 +99,7 @@ NSString* PantomimeConnectionTimedOut = @"PantomimeConnectionTimedOut";
 NSString* PantomimeRequestCancelled = @"PantomimeRequestCancelled";
 NSString* PantomimeServiceInitialized = @"PantomimeServiceInitialized";
 NSString* PantomimeServiceReconnected = @"PantomimeServiceReconnected";
+NSString *PantomimeErrorExtra = @"PantomimeErrorExtra";
 
 // CWSMTP notifications
 NSString* PantomimeRecipientIdentificationCompleted = @"PantomimeRecipientIdentificationCompleted";

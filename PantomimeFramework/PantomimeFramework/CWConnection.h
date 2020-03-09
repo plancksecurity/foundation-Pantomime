@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol CWConnection
 
 @property (nonatomic, nullable, weak, readwrite) id<CWConnectionDelegate> delegate;
-@property (nonatomic, readonly) NSError * _Nullable streamError;
+@property (nonatomic, readonly, nullable) NSError *streamError;
 
 /*!
   @method initWithName: port: background:
@@ -65,13 +65,16 @@ NS_ASSUME_NONNULL_BEGIN
   @param theBOOL YES if we want to connect in background (non-blocking
                  way), NO if we want this call to be blocking until
 		 we successfully connected to the host.
+  @param clientCertificate An optional reference to an identity (SecIdentity),
+   possibly backed by the keychain, denoting a "client side certificate".
   @result An instance implementing the CWConnection protocol, nil
 	  if an error occurred, like DNS resolution.
 */
 - (id _Nonnull) initWithName: (NSString * _Nonnull) theName
                         port: (unsigned int) thePort
                    transport:(ConnectionTransport)transport
-                  background: (BOOL) theBOOL;
+                  background: (BOOL) theBOOL
+           clientCertificate: (SecIdentityRef _Nullable)clientCertificate;
 
 - (void)startTLS;
 

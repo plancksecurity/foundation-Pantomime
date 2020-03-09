@@ -14,12 +14,13 @@
 
 #import "Pantomime/CWLogger.h"
 
-NS_ASSUME_NONNULL_BEGIN
+#import "NSStream+TLS.h"
 
-static NSString *comp = @"CWTCPConnection";
+NS_ASSUME_NONNULL_BEGIN
 
 @interface CWTCPConnection ()
 
+@property (nonatomic, nullable) NSError *streamError;
 @property (atomic) BOOL connected;
 @property (atomic, strong) NSString *name;
 @property (atomic) uint32_t port;
@@ -27,16 +28,20 @@ static NSString *comp = @"CWTCPConnection";
 @property (atomic, strong, nullable) NSInputStream *readStream;
 @property (atomic, strong, nullable) NSOutputStream *writeStream;
 @property (atomic, strong) NSMutableSet<NSStream *> *openConnections;
-@property (nonatomic, strong) NSError *streamError;
+@property (nonatomic) NSMutableArray *fatalErrors;
 @property (nullable, strong) NSThread *backgroundThread;
 @property (atomic) BOOL isGettingClosed;
+@property (nonatomic, nullable) SecIdentityRef clientCertificate;
 
 @end
 
 @implementation CWTCPConnection
 
-- (instancetype)initWithName:(NSString *)theName port:(unsigned int)thePort
-         transport:(ConnectionTransport)transport background:(BOOL)theBOOL
+- (instancetype)initWithName:(NSString *)theName
+                        port:(unsigned int)thePort
+                   transport:(ConnectionTransport)transport
+                  background:(BOOL)theBOOL
+           clientCertificate: (SecIdentityRef _Nullable)clientCertificate;
 {
     if (self = [super init]) {
         _openConnections = [[NSMutableSet alloc] init];
@@ -44,6 +49,8 @@ static NSString *comp = @"CWTCPConnection";
         _name = [theName copy];
         _port = thePort;
         _transport = transport;
+        _clientCertificate = clientCertificate;
+        _fatalErrors = [NSMutableArray new];
         INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
@@ -58,11 +65,18 @@ static NSString *comp = @"CWTCPConnection";
 
 - (void)startTLS
 {
-    [self.readStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                          forKey:NSStreamSocketSecurityLevelKey];
-    [self.writeStream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                           forKey:NSStreamSocketSecurityLevelKey];
+    // Setting a client certificate already enables TLS,
+    // so only enable it explicitly when there is none
+    if (self.clientCertificate) {
+        [self.readStream setClientCertificate:self.clientCertificate];
+        [self.writeStream setClientCertificate:self.clientCertificate];
+    } else {
+        [self.readStream enableTLS];
+        [self.writeStream enableTLS];
+    }
 }
+
+#pragma mark - Stream Handling
 
 - (void)setupStream:(NSStream *)stream
 {
@@ -70,12 +84,16 @@ static NSString *comp = @"CWTCPConnection";
     switch (self.transport) {
         case ConnectionTransportPlain:
         case ConnectionTransportStartTLS:
-            [stream setProperty:NSStreamSocketSecurityLevelNone
-                         forKey:NSStreamSocketSecurityLevelKey];
+            [stream disableTLS];
             break;
         case ConnectionTransportTLS:
-            [stream setProperty:NSStreamSocketSecurityLevelNegotiatedSSL
-                         forKey:NSStreamSocketSecurityLevelKey];
+            // Setting a client certificate already enables TLS,
+            // so only enable it explicitly when there is none
+            if (self.clientCertificate) {
+                [stream setClientCertificate:self.clientCertificate];
+            } else {
+                [stream enableTLS];
+            }
             break;
     }
     [stream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -96,76 +114,27 @@ static NSString *comp = @"CWTCPConnection";
     }
 }
 
-/**
- Sets a socket option (the SOL_SOCKET layer) for a given stream.
- */
-- (NSInteger)setSocketOption:(int)optionName optionNameString:(NSString *)optionNameString
-                 optionValue:(NSInteger)optionValue onStream:(NSStream *)stream
-{
-    CFReadStreamRef cfStream = (__bridge CFReadStreamRef) (NSInputStream *) stream;
-    CFDataRef nativeSocket = CFReadStreamCopyProperty(cfStream,
-                                                      kCFStreamPropertySocketNativeHandle);
-    CFSocketNativeHandle *cfSock = (CFSocketNativeHandle *) CFDataGetBytePtr(nativeSocket);
-
-    NSUInteger originalValue = 500;
-    NSUInteger newValue = 501;
-    socklen_t originalValueSize = sizeof(originalValue);
-    socklen_t newValueSize = sizeof(newValue);
-    getsockopt(*cfSock, SOL_SOCKET, optionName, &originalValue, &originalValueSize);
-    setsockopt(*cfSock, SOL_SOCKET, optionName, &optionValue, sizeof(optionValue));
-    getsockopt(*cfSock, SOL_SOCKET, optionName, &newValue, &newValueSize);
-    INFO("%@: %lu (%d bytes) -> %lu (%d bytes)",
-         optionNameString,
-         (unsigned long) originalValue, originalValueSize,
-         (unsigned long) newValue, newValueSize);
-
-    CFRelease(nativeSocket);
-    return newValue;
-}
-
-/**
- Set SO_RCVLOWAT for the read stream socket, which is not needed because the default (1)
- is already the desired value.
- */
-- (void)setupSocketForStream:(NSStream *)stream
-{
-    if (stream == self.readStream) {
-        [self setSocketOption:SO_RCVLOWAT optionNameString:@"SO_RCVLOWAT" optionValue:1
-                     onStream: stream];
-    }
-}
-
-- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
-{
-    static NSInteger maxLength = 200;
-    if (length) {
-        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
-        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (length >= maxLength) {
-            return [string stringByAppendingString:@"..."];
-        }
-        return string;
-    } else {
-        return @"";
-    }
-}
+#pragma mark - Run Loop
 
 - (void)connectInBackgroundAndStartRunLoop
 {
-    CFReadStreamRef readStream = nil;
-    CFWriteStreamRef writeStream = nil;
-    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef) self.name,
-                                       self.port, &readStream, &writeStream);
+    NSInputStream *inputStream = nil;
+    NSOutputStream *outputStream = nil;
 
-    NSAssert(readStream != nil, @"Could not create input stream");
-    NSAssert(writeStream != nil, @"Could not create output stream");
+    [NSStream getStreamsToHostWithName:self.name
+                                  port:self.port
+                           inputStream:&inputStream
+                          outputStream:&outputStream];
 
-    if (readStream != nil && writeStream != nil) {
-        self.readStream = CFBridgingRelease(readStream);
-        self.writeStream = CFBridgingRelease(writeStream);
-        [self setupStream:self.readStream];
-        [self setupStream:self.writeStream];
+    if (inputStream == nil || outputStream == nil) {
+        [self signalErrorAndClose];
     }
+
+    self.readStream = inputStream;
+    self.writeStream = outputStream;
+
+    [self setupStream:self.readStream];
+    [self setupStream:self.writeStream];
 
     NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
     while (1) {
@@ -257,6 +226,66 @@ static NSString *comp = @"CWTCPConnection";
     return [self.writeStream hasSpaceAvailable];
 }
 
+#pragma mark - Util
+
+ /// Makes sure there is still a non-nil delegate and returns it, if not,
+ /// warns about it, and shuts the connection down.
+ ///
+ /// There's no point in going on without a live delegate.
+ ///
+ /// @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
+- (id<CWConnectionDelegate>)forceDelegate
+{
+    if (self.delegate == nil) {
+        WARN("CWTCPConnection: No delegate. Will close");
+        if (!self.isGettingClosed) {
+            [self close];
+        }
+    }
+    return self.delegate;
+}
+
+- (NSString *)bufferToString:(unsigned char *)buf length:(NSInteger)length
+{
+    static NSInteger maxLength = 200;
+    if (length) {
+        NSData *data = [NSData dataWithBytes:buf length:MIN(length, maxLength)];
+        NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (length >= maxLength) {
+            return [string stringByAppendingString:@"..."];
+        }
+        return string;
+    } else {
+        return @"";
+    }
+}
+
+- (void)signalErrorAndClose
+{
+    // We abuse ET_EDESC for error indication.
+    NSError *errorToReturn = self.streamError;
+
+    for (NSError *error in self.fatalErrors) {
+        if (error.code == errSSLPeerCertUnknown) {
+            // errSSLPeerCertUnknown relatively clearly indicates problems with
+            // a client certificate, so give that error priority over others,
+            // in case they get mixed
+            errorToReturn = error;
+            break;
+        }
+    }
+
+    [self.forceDelegate receivedEvent:nil
+                                 type:ET_EDESC
+                                extra:(__bridge void * _Nullable)(errorToReturn)
+                              forMode:nil];
+    [self close];
+}
+
+@end
+
+@implementation CWTCPConnection (NSStreamDelegate)
+
 #pragma mark - NSStreamDelegate
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
@@ -287,14 +316,13 @@ static NSString *comp = @"CWTCPConnection";
                   [self.readStream.streamError localizedDescription],
                   [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
-                self.streamError = self.readStream.streamError;
+                [self.fatalErrors addObject:self.readStream.streamError];
             } else if (self.writeStream.streamError) {
-                self.streamError = self.writeStream.streamError;
+                [self.fatalErrors addObject:self.writeStream.streamError];
             }
+            self.streamError = [self.fatalErrors firstObject];
 
-            // We abuse ET_EDESC for error indication.
-            [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
-            [self close];
+            [self signalErrorAndClose];
 
             break;
         case NSStreamEventEndEncountered:
@@ -305,27 +333,6 @@ static NSString *comp = @"CWTCPConnection";
 
             break;
     }
-}
-
-#pragma mark - Util
-
-/**
- Makes sure there is still a non-nil delegate and returns it, if not,
- warns about it, and shuts the connection down.
-
- There's no point in going on without a live delegate.
-
- @return The set CWConnectionDelegate, or nil if not set or if it went out of scope.
- */
-- (id<CWConnectionDelegate>)forceDelegate
-{
-    if (self.delegate == nil) {
-        WARN("CWTCPConnection: No delegate. Will close");
-        if (!self.isGettingClosed) {
-            [self close];
-        }
-    }
-    return self.delegate;
 }
 
 @end

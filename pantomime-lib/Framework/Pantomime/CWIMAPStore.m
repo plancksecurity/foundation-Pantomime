@@ -167,13 +167,17 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 //
 //
-- (id) initWithName: (NSString *) theName
-               port: (unsigned int) thePort
-          transport: (ConnectionTransport)transport
+- (instancetype) initWithName: (NSString *) theName
+                         port: (unsigned int) thePort
+                    transport: (ConnectionTransport)transport
+            clientCertificate: (SecIdentityRef _Nullable)clientCertificate
 {
     if (thePort == 0) thePort = 143;
 
-    self = [super initWithName: theName  port: thePort transport: transport];
+    self = [super initWithName:theName
+                          port:thePort
+                     transport:transport
+             clientCertificate:clientCertificate];
 
     INFO("CWIMAPStore.init %{public}@", self);
 
