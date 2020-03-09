@@ -49,7 +49,7 @@
 #import "CWThreadSafeArray.h"
 #import "CWThreadSafeData.h"
 
-#import "NSDate+RFC2822.h"
+#import "NSDate+StringRepresentation.h"
 
 #import <ctype.h>
 #import <stdio.h>
