@@ -274,7 +274,7 @@ static int currentPartVersion = 2;
 
   o = [_headers objectForKey: @"Content-Disposition"];
 
-  return (o ? [o intValue] : PantomimeInlineDisposition);
+  return (o ? [o intValue] : PantomimeAttachmentDisposition);
 }
 
 - (void) setContentDisposition: (PantomimeContentDisposition) theContentDisposition
