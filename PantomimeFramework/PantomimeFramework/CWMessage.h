@@ -42,7 +42,7 @@
 #define CWMessageSupportedStandardHeaderFields [NSArray arrayWithObjects: @"From", @"Message-ID", \
 @"In-Reply-To", @"Date", @"Reply-To", @"Subject", @"Organization", @"MIME-Version", @"Resent-Date",\
 @"Resent-From", @"Resent-Message-ID", @"Resent-Subject", @"Content-Transfer-Encoding", \
-@"Content-Type", @"Content-Disposition:", @"To:", @"Cc:", @"Bcc:", @"References:", nil]
+@"Content-Type", @"Content-Disposition", @"To:", @"Cc:", @"Bcc:", @"References:", nil]
 
 /*!
   @const PantomimeMessageFetchCompleted
