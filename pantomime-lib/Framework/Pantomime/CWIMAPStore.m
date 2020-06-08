@@ -534,7 +534,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                                               _crlf]];
                         break;
                     } else if (_lastCommand == IMAP_IDLE) {
-                        INFO("entering IDLE");
+                        INFO("entered IDLE");
                         PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
                     }
                 }
@@ -1009,6 +1009,18 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         // Only top level folders: LIST "" %
         [strongSelf sendCommand: IMAP_LIST  info: nil  arguments: @"LIST \"\" *"];
+    });
+}
+
+//
+//
+//
+- (void)sendIdle
+{
+    __weak typeof(self) weakSelf = self;
+    dispatch_sync(self.serviceQueue, ^{
+        typeof(self) strongSelf = weakSelf;
+        [strongSelf sendCommand: IMAP_IDLE  info: nil  arguments: @"IDLE"];
     });
 }
 
@@ -1655,8 +1667,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 // This method parses an * 23 EXISTS untagged response. (7.3.1)
 //
-// If we were NOT issueing a SELECT command, it fetches the
-// new messages (if any) and informs the folder's delegate that
+// If we were NOT issueing a SELECT command, it informs the folder's delegate that
 // new messages have arrived.
 //
 - (void) _parseEXISTS

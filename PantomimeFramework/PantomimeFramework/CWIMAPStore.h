@@ -236,6 +236,11 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 /// server.
 - (void)listFolders;
 
+/// Sends a IDLE command to the IMAP server.
+/// The CWIMAPStore notifies the delegate once it has entered IDLE mode
+/// (`idleEntered`).
+- (void)sendIdle;
+
 @end
 
 @interface CWMessageUpdate : NSObject
