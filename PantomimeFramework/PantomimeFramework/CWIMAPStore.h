@@ -111,6 +111,7 @@ typedef enum {
     IMAP_UNSUBSCRIBE, //36
     IMAP_EMPTY_QUEUE, //37
     IMAP_IDLE, //38
+    IMAP_IDLE_DONE //39
 } IMAPCommand;
 
 /*!

@@ -59,11 +59,6 @@
 #import "CWIMAPFolder+CWProtected.h"
 
 //
-// Some static variables used to enhance the performance.
-//
-static NSData *IDLE_DONE_CONTINUATION;
-
-//
 // This C function is used to verify if a line (specified in
 // "buf", with length "c") has a literal. If it does, the
 // value of the literal is returned.
@@ -145,16 +140,6 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 @implementation CWIMAPStore
 
-
-//
-//
-//
-+ (void) initialize
-{
-    IDLE_DONE_CONTINUATION = [[NSData alloc] initWithBytes: "DONE\r\n"  length: 6];
-}
-
-
 //
 //
 //
@@ -224,7 +209,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     dispatch_sync(self.serviceQueue, ^{
         if (self.lastCommand == IMAP_IDLE) {
-            [self writeData: IDLE_DONE_CONTINUATION];
+            _lastCommand = IMAP_IDLE_DONE;
+            [self writeData: [[NSData alloc] initWithBytes: "DONE\r\n"  length: 6]];
         }
     });
 }
@@ -2827,7 +2813,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 PERFORM_SELECTOR_2(_delegate, @selector(folderUnsubscribeCompleted:), PantomimeFolderUnsubscribeCompleted, [self.currentQueueObject.info objectForKey: @"Name"], @"Name");
                 break;
 
-            case IMAP_IDLE:
+            case IMAP_IDLE_DONE:
                 PERFORM_SELECTOR_1(_delegate, @selector(idleFinished:), PantomimeIdleFinished);
                 break;
 
