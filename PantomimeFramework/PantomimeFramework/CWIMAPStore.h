@@ -111,6 +111,7 @@ typedef enum {
     IMAP_UNSUBSCRIBE, //36
     IMAP_EMPTY_QUEUE, //37
     IMAP_IDLE, //38
+    IMAP_IDLE_DONE //39
 } IMAPCommand;
 
 /*!
@@ -235,6 +236,11 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 /// (`folderListCompleted`) and sends `folderNameParsed` for each folder name returned by the
 /// server.
 - (void)listFolders;
+
+/// Sends a IDLE command to the IMAP server.
+/// The CWIMAPStore notifies the delegate once it has entered IDLE mode
+/// (`idleEntered`).
+- (void)sendIdle;
 
 @end
 
