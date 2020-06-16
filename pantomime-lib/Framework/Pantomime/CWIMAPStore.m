@@ -1666,7 +1666,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     _selectedFolder.existsCount = n;
     INFO("EXISTS %d", n);
     if (_lastCommand == IMAP_IDLE) {
-        PERFORM_SELECTOR_1(_delegate, @selector(idleNewMessages:), PantomimeIdleNewMessages);
+        PERFORM_SELECTOR_1(_delegate, @selector(idleChangeOnServer:), PantomimeIdleChangeOnServer);
     }
 }
 
@@ -1698,6 +1698,10 @@ static inline int has_literal(char *buf, NSUInteger c)
     // The conditions for being able to react safely to expunges have to be verified.
     // In the case of IDLE, it's probably safe.
     if (_lastCommand != IMAP_IDLE && _lastCommand != IMAP_UID_MOVE) {
+        return;
+    }
+    if (_lastCommand == IMAP_IDLE) {
+        PERFORM_SELECTOR_1(_delegate, @selector(idleChangeOnServer:), PantomimeMessageChanged);
         return;
     }
 

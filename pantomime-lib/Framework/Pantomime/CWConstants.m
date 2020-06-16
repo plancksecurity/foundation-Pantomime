@@ -77,7 +77,7 @@ NSString *PantomimeBadResponseInfoKey = @"PantomimeBadResponseInfoKey";
 NSString *PantomimeErrorInfo = @"PantomimeErrorInfo";
 NSString *PantomimeBadResponse = @"PantomimeBadResponse";
 NSString *PantomimeIdleEntered = @"PantomimeIdleEntered";
-NSString *PantomimeIdleNewMessages = @"PantomimeIdleNewMessages";
+NSString *PantomimeIdleChangeOnServer = @"PantomimeIdleChangeOnServer";
 NSString *PantomimeIdleFinished = @"PantomimeIdleFinished";
 
 // CWMessage notifications

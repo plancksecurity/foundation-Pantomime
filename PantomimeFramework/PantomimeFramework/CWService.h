@@ -299,12 +299,12 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (void) idleEntered: (NSNotification * _Nullable) theNotification;
 
 /*!
- @method idleNewMessages:
- @discussion Called when during IDLE the server signals at least 1 new message via EXISTS.
- A PantomimeIdleNewMessages notification is also posted.
+ @method idleChangeOnServer:
+ @discussion Called when during IDLE the server signals a change. That is at least 1 new message via EXISTS or EXPUNCH has been sent.
+ A PantomimeIdleChangeOnServer notification is also posted.
  @param theNotification The notification holding the information, which in this case will be nil.
  */
-- (void) idleNewMessages: (NSNotification * _Nullable) theNotification;
+- (void) idleChangeOnServer: (NSNotification * _Nullable) theNotification;
 
 /*!
  @method idleFinished:

@@ -182,9 +182,9 @@ extern NSString * _Nonnull const PantomimeBadResponseInfoKey;
 extern NSString * _Nonnull const PantomimeIdleEntered;
 
 /*!
- @const PantomimeIdleNewMessages
+ @const PantomimeIdleChangeOnServer
  */
-extern NSString * _Nonnull const PantomimeIdleNewMessages;
+extern NSString * _Nonnull const PantomimeIdleChangeOnServer;
 
 /*!
  @const PantomimeIdleFinished
