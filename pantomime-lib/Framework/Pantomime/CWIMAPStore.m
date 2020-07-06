@@ -659,7 +659,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                             [self _parseFETCH_UIDS_IGNORING_HEADERS];
                             break;
                         default:
-                            [self _parseFETCH: msn];
+                            [self _parseFETCH: msn]; //BUFF: better here?!
                     }
                 }
                 //
@@ -1889,7 +1889,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 // And we MUST parse the UID correctly.
 //
-- (void) _parseFETCH: (NSInteger) theMSN
+- (void) _parseFETCH: (NSInteger) msn
 {
     NSMutableString *aMutableString;
     NSCharacterSet *aCharacterSet;
@@ -1939,23 +1939,26 @@ static inline int has_literal(char *buf, NSUInteger c)
     must_flush_record = seen_fetch = NO;
 
     // Extract the UID from anywhere in the response
-    NSUInteger theUID = [self extractUIDFromDataArray:_responsesFromServer.array];
+    NSUInteger uid = [self extractUIDFromDataArray:_responsesFromServer.array];
 
-    if (theUID == 0) {
+    if (uid == 0) {
         // If there is no UID in this response, try to deduce it from the mapping
-        theUID = [_selectedFolder uidForMSN:theMSN];
+        uid = [_selectedFolder uidForMSN:msn];
     }
 
-    INFO("parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
+    INFO("parseFETCH theMSN %lu, UID %lu", (unsigned long) msn, (unsigned long)uid);
 
     // Try to retrieve the message by UID
-    if (theUID > 0) {
-        INFO("Trying existing message for UID %lu", (unsigned long)theUID);
-        aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
+    if (uid > 0) {
+        INFO("Trying existing message for UID %lu", (unsigned long)uid);
+        aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:uid];
     }
 
     if (aMessage == nil) {
         INFO("New message");
+//        if (_lastCommand == IMAP_IDLE) {
+//            PERFORM_SELECTOR_1(_delegate, @selector(idleChangeOnServer:), PantomimeIdleChangeOnServer); //BUFF: gimmi
+//        }
         aMessage = [[CWIMAPMessage alloc] init];
         // We set some initial properties to our message;
         [aMessage setInitialized: NO];
@@ -1969,7 +1972,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     if (!isMessageUpdate) {
         // A UID must never change for an existing mail
-        [aMessage setUID:theUID];
+        [aMessage setUID:uid];
         messageUpdate.uid = YES;
     }
 
@@ -1989,7 +1992,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         aString = [[_responsesFromServer objectAtIndex: i] asciiString];
 
         //INFO("%i: %{public}@", i, aString);
-        if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)theMSN]])
+        if (!seen_fetch && [aString hasCaseInsensitivePrefix: [NSString stringWithFormat: @"* %ld FETCH", (long)msn]])
         {
             seen_fetch = YES;
         }
@@ -2041,7 +2044,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
 
             // Store any mapping MSN -> UID that came from the server
-            [_selectedFolder matchUID:theUID withMSN:theMSN];
+            [_selectedFolder matchUID:uid withMSN:msn];
         }
         // end of reading MSN
 
