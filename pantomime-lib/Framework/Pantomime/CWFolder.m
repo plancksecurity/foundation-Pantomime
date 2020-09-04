@@ -71,7 +71,7 @@
 //
 - (void) dealloc
 {
-  //INFO("Folder: -dealloc");
+  //DDLogInfo("Folder: -dealloc");
   RELEASE(_properties);
   RELEASE(_name);
 

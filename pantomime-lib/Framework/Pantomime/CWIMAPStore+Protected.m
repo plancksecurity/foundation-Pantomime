@@ -146,7 +146,7 @@
             else
             {
                 // The queue is empty, we have nothing more to do...
-                INFO("sendCommand currentQueueObject = nil");
+                DDLogInfo(@"sendCommand currentQueueObject = nil");
                 self.currentQueueObject = nil;
                 return;
             }
@@ -165,7 +165,7 @@
                 if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
                     [aQueueObject.arguments isEqualToString: theString])
                 {
-                    //INFO("A COMMAND ALREADY EXIST!!!!");
+                    //DDLogInfo("A COMMAND ALREADY EXIST!!!!");
                     return;
                 }
             }
@@ -177,13 +177,13 @@
             [_queue insertObject: aQueueObject  atIndex: 0];
             RELEASE(aQueueObject);
             
-            INFO("%p queue size = %lul", self, (unsigned long) [_queue count]);
+            DDLogInfo(@"%p queue size = %lul", self, (unsigned long) [_queue count]);
             
             // If we had queued commands, we return since we'll eventually
             // dequeue them one by one. Otherwise, we run it immediately.
             if ([_queue count] > 1)
             {
-                //INFO("%p QUEUED |%{public}@|", self, theString);
+                //DDLogInfo("%p QUEUED |%{public}@|", self, theString);
                 return;
             }
             
@@ -196,9 +196,9 @@
         }
         
         if (isPrivate) {
-            INFO("%p Sending private data |*******|", self);
+            DDLogInfo(@"%p Sending private data |*******|", self);
         } else {
-            INFO("%p Sending |%{public}@|", self, self.currentQueueObject.arguments);
+            DDLogInfo(@"%p Sending |%@|", self, self.currentQueueObject.arguments);
         }
         
         _lastCommand = self.currentQueueObject.command;
@@ -218,7 +218,7 @@
 {
     CWIMAPFolder *folder = [_openFolders objectForKey:name];
 
-    LOG("select folder %{public}@", name);
+    DDLogInfo(@"select folder %@", name);
     if (folder) {
         if ([_selectedFolder.name isEqualToString:name]) {
             // We have the folder already and it is already selected.
@@ -236,7 +236,7 @@
     [folder setStore:self];
     folder.mode = mode;
 
-    //INFO("_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
+    //DDLogInfo("_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
 
     // If we are already opening a mailbox, we must interrupt the process
     // and open the preferred one instead.
@@ -283,7 +283,7 @@
 //
 - (void)signalFolderFetchCompleted
 {
-    //INFO("DONE PREFETCHING FOLDER");
+    //DDLogInfo("DONE PREFETCHING FOLDER");
     NSMutableDictionary *info = [NSMutableDictionary new];
     if (_selectedFolder) {
         info[@"Folder"] = _selectedFolder;
@@ -308,7 +308,7 @@
 {
     self = [super init];
 
-    //INFO("CWIMAPQueueObject.init %{public}@\n", self);
+    //DDLogInfo("CWIMAPQueueObject.init %{public}@\n", self);
     _command = theCommand;
     _literal = 0;
 
