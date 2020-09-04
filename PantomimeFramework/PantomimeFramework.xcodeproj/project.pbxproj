@@ -164,7 +164,6 @@
 		4329CBD022391EA1007D377E /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB522391EA1007D377E /* MailWithDocAttached.txt */; };
 		433710E723F5950F0083BAE9 /* NSStream+Options.h in Headers */ = {isa = PBXBuildFile; fileRef = 433710E523F5950F0083BAE9 /* NSStream+Options.h */; };
 		433710E823F5950F0083BAE9 /* NSStream+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 433710E623F5950F0083BAE9 /* NSStream+Options.m */; };
-		43BF5C6525023E460029A173 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BF5C6425023E460029A173 /* CocoaLumberjack.framework */; };
 		43C5D3E223F5530D006487F6 /* NSStream+TLS.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5D3E023F5530D006487F6 /* NSStream+TLS.h */; };
 		43C5D3E323F5530D006487F6 /* NSStream+TLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C5D3E123F5530D006487F6 /* NSStream+TLS.m */; };
 /* End PBXBuildFile section */
@@ -344,7 +343,6 @@
 		4329CBB522391EA1007D377E /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
 		433710E523F5950F0083BAE9 /* NSStream+Options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+Options.h"; sourceTree = "<group>"; };
 		433710E623F5950F0083BAE9 /* NSStream+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+Options.m"; sourceTree = "<group>"; };
-		43BF5C6425023E460029A173 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43C5D3E023F5530D006487F6 /* NSStream+TLS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+TLS.h"; sourceTree = "<group>"; };
 		43C5D3E123F5530D006487F6 /* NSStream+TLS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+TLS.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -353,9 +351,6 @@
 		4329CA552238FCBF007D377E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
-			files = (
-				43BF5C6525023E460029A173 /* CocoaLumberjack.framework in Frameworks */,
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4329CB8422391DBD007D377E /* Frameworks */ = {
@@ -625,9 +620,6 @@
 		};
 		43BF5C6325023E460029A173 /* Frameworks */ = {
 			isa = PBXGroup;
-			children = (
-				43BF5C6425023E460029A173 /* CocoaLumberjack.framework */,
-			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
