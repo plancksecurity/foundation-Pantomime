@@ -430,7 +430,7 @@ fetchUidsForNewMailsIgnoringMessagesWithHeaderDefined:(NSArray<NSString*> *_Null
         [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
                   arguments: @"UID FETCH %u:%u (FLAGS)", firstUID, lastUID];
     } else {
-        ERROR(@"UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
+        DDLogError(@"UID FETCH %lu:%lu (FLAGS)", (unsigned long) firstUID, (unsigned long) lastUID);
         [_store signalFolderSyncError];
     }
 }

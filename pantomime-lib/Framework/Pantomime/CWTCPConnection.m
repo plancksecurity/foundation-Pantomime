@@ -314,7 +314,7 @@ NS_ASSUME_NONNULL_BEGIN
             [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            ERROR(@"NSStreamEventErrorOccurred: read: %@, write: %@",
+            DDLogError(@"NSStreamEventErrorOccurred: read: %@, write: %@",
                   [self.readStream.streamError localizedDescription],
                   [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
