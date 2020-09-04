@@ -10,6 +10,8 @@
 
 #import <os/log.h>
 
+@import CocoaLumberjack;
+
 @protocol CWLogging <NSObject>
 
 /** Log a verbose message */
@@ -28,13 +30,22 @@
 + (void)setLogger:(id<CWLogging> _Nonnull)logger;
 + (id<CWLogging> _Nullable)logger;
 
++ (void)log:(NSString * _Nonnull)string;
++ (void)logInfo:(NSString * _Nonnull)string;
++ (void)logWarn:(NSString * _Nonnull)string;
++ (void)logError:(NSString * _Nonnull)string;
+
 @end
 
 extern os_log_t _Nonnull theLog(void);
+extern NSString * _Nonnull varString(const char * _Nonnull format, ...);
 
 #define INFO(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log_info(theLog(), format, ##__VA_ARGS__);\
+  [CWLogger logInfo:varString(format, ##__VA_ARGS__)];\
+} else {\
+  [CWLogger logInfo:varString(format, ##__VA_ARGS__)];\
 }
 
 /**
@@ -43,6 +54,9 @@ if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
 #define WARN(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log(theLog(), format, ##__VA_ARGS__);\
+  [CWLogger logWarn:varString(format, ##__VA_ARGS__)];\
+} else {\
+  [CWLogger logWarn:varString(format, ##__VA_ARGS__)];\
 }
 
 /**
@@ -51,9 +65,15 @@ if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
 #define LOG(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
 os_log(theLog(), format, ##__VA_ARGS__);\
+  [CWLogger log:varString(format, ##__VA_ARGS__)];\
+} else {\
+  [CWLogger log:varString(format, ##__VA_ARGS__)];\
 }
 
 #define ERROR(format, ...) \
 if (@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)) {\
   os_log_error(theLog(), format, ##__VA_ARGS__);\
+  [CWLogger logError:varString(format, ##__VA_ARGS__)];\
+} else {\
+  [CWLogger logError:varString(format, ##__VA_ARGS__)];\
 }

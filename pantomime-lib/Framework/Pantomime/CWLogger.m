@@ -21,6 +21,17 @@ os_log_t theLog(void)
 
 static id<CWLogging> s_logger;
 
+extern NSString * _Nonnull varString(const char * _Nonnull format, ...) {
+    va_list args;
+    va_start(args, format);
+    NSString *formatString = [[NSString alloc]
+                              initWithCString:format
+                              encoding:NSUTF8StringEncoding];
+    NSString *s = [[NSString alloc] initWithFormat:formatString arguments:args];
+    va_end(args);
+    return s;
+}
+
 @implementation CWLogger
 
 + (void)setLogger:(id<CWLogging> _Nonnull)logger
@@ -31,6 +42,22 @@ static id<CWLogging> s_logger;
 + (id<CWLogging> _Nullable)logger
 {
     return s_logger;
+}
+
++ (void)log:(NSString * _Nonnull)string
+{
+}
+
++ (void)logInfo:(NSString * _Nonnull)string
+{
+}
+
++ (void)logWarn:(NSString * _Nonnull)string
+{
+}
+
++ (void)logError:(NSString * _Nonnull)string
+{
 }
 
 @end
