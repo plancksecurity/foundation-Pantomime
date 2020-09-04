@@ -81,7 +81,7 @@
                             withObject: [_wbuf subdataToIndex: (int) count]];
         }
 
-        //INFO("count = %d, len = %d", count, len);
+        //DDLogInfo("count = %d, len = %d", count, len);
 
         // If we have been able to write everything...
         if (count == len)
@@ -293,7 +293,7 @@
             [self updateWrite];
             break;
         case ET_EDESC:
-            //INFO("GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+            //DDLogInfo("GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
                 if (theExtra) {
                     PERFORM_SELECTOR_2(_delegate,
@@ -308,8 +308,16 @@
                 }
                 [self close];
             } else {
-                PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
-                                   PantomimeConnectionTimedOut);
+                if (theExtra) {
+                    PERFORM_SELECTOR_2(_delegate,
+                                       @selector(connectionTimedOut:),
+                                       PantomimeConnectionTimedOut,
+                                       (__bridge id _Nonnull) theExtra,
+                                       PantomimeErrorExtra);
+                } else {
+                    PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
+                                       PantomimeConnectionTimedOut);
+                }
             }
             break;
         default:
