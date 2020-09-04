@@ -239,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id<CWConnectionDelegate>)forceDelegate
 {
     if (self.delegate == nil) {
-        WARN(@"CWTCPConnection: No delegate. Will close");
+        DDLogWarn(@"CWTCPConnection: No delegate. Will close");
         if (!self.isGettingClosed) {
             [self close];
         }
@@ -328,7 +328,7 @@ NS_ASSUME_NONNULL_BEGIN
 
             break;
         case NSStreamEventEndEncountered:
-            WARN(@"NSStreamEventEndEncountered");
+            DDLogWarn(@"NSStreamEventEndEncountered");
 
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self close];

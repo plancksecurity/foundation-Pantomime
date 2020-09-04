@@ -22,7 +22,7 @@
         [DDLog addLogger:[DDOSLogger sharedInstance]]; // Uses os_log
 
         if (documentsUrl == nil) {
-            WARN(@"Could not find the documents directory");
+            DDLogWarn(@"Could not find the documents directory");
             return;
         }
 

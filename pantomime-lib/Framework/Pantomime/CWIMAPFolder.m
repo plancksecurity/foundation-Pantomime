@@ -309,7 +309,7 @@
 {
     // Invalid input. Do nothing.
     if (fromUid == 0 || fromUid > toUid) {
-        WARN(@"Invalid input.");
+        DDLogWarn(@"Invalid input.");
         // Inform the client
         [_store signalFolderFetchCompleted];
         return;
