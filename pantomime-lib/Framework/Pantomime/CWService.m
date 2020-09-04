@@ -41,7 +41,6 @@
 
 @interface CWService ()
 
-@property (nonatomic, nullable, strong) id<CWLogging> logger;
 @property (nonatomic, nullable) SecIdentityRef clientCertificate;
 
 @end

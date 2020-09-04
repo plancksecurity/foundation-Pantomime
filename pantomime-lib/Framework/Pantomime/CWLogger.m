@@ -19,8 +19,6 @@ os_log_t theLog(void)
     return s_theLog;
 }
 
-static id<CWLogging> s_logger;
-
 extern NSString * _Nonnull varString(const char * _Nonnull format, ...) {
     va_list args;
     va_start(args, format);
@@ -33,16 +31,6 @@ extern NSString * _Nonnull varString(const char * _Nonnull format, ...) {
 }
 
 @implementation CWLogger
-
-+ (void)setLogger:(id<CWLogging> _Nonnull)logger
-{
-    s_logger = logger;
-}
-
-+ (id<CWLogging> _Nullable)logger
-{
-    return s_logger;
-}
 
 + (void)log:(NSString * _Nonnull)string
 {
