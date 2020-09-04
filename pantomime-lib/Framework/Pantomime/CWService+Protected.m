@@ -308,8 +308,16 @@
                 }
                 [self close];
             } else {
-                PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
-                                   PantomimeConnectionTimedOut);
+                if (theExtra) {
+                    PERFORM_SELECTOR_2(_delegate,
+                                       @selector(connectionTimedOut:),
+                                       PantomimeConnectionTimedOut,
+                                       (__bridge id _Nonnull) theExtra,
+                                       PantomimeErrorExtra);
+                } else {
+                    PERFORM_SELECTOR_1(_delegate, @selector(connectionTimedOut:),
+                                       PantomimeConnectionTimedOut);
+                }
             }
             break;
         default:
