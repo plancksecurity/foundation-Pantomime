@@ -6,6 +6,8 @@
 //  Copyright © 2016 pEp Security S.A. All rights reserved.
 //
 
+@import CocoaLumberjack;
+
 #import "CWLogger.h"
 
 static os_log_t s_theLog;
@@ -31,6 +33,18 @@ extern NSString * _Nonnull varString(const char * _Nonnull format, ...) {
 }
 
 @implementation CWLogger
+
++ (void)initialize
+{
+    if (self == [CWLogger class]) {
+        [DDLog addLogger:[DDOSLogger sharedInstance]]; // Uses os_log
+
+        DDFileLogger *fileLogger = [[DDFileLogger alloc] init]; // File Logger
+        fileLogger.rollingFrequency = 60 * 60 * 24; // 24 hour rolling
+        fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
+        [DDLog addLogger:fileLogger];
+    }
+}
 
 + (void)log:(NSString * _Nonnull)string
 {
