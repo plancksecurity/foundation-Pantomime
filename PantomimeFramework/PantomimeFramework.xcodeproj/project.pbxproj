@@ -351,6 +351,8 @@
 		4329CA552238FCBF007D377E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
+			files = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4329CB8422391DBD007D377E /* Frameworks */ = {
@@ -371,7 +373,6 @@
 				4329CA5A2238FCBF007D377E /* PantomimeFramework */,
 				4329CB8822391DBD007D377E /* PantomimeFrameworkTests */,
 				4329CA592238FCBF007D377E /* Products */,
-				43BF5C6325023E460029A173 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -438,6 +439,7 @@
 				4329CAA12238FDBB007D377E /* CWCharset.h */,
 				4329CAA22238FDBB007D377E /* CWIMAPStore+Protected.m */,
 				4329CAA32238FDBB007D377E /* NSMutableString+Extension.h */,
+				4329CAA42238FDBB007D377E /* CWLogger.h */,
 				4329CAA52238FDBB007D377E /* CWParser.m */,
 				4329CAA62238FDBB007D377E /* CWMIMEMultipart.m */,
 				4329CAA72238FDBB007D377E /* CWVirtualFolder.m */,
@@ -494,7 +496,6 @@
 				4329CADF2238FDBB007D377E /* CWVirtualFolder.h */,
 				4329CAE02238FDBB007D377E /* CWService.m */,
 				4329CAE12238FDBB007D377E /* CWParser.h */,
-				4329CAA42238FDBB007D377E /* CWLogger.h */,
 				4329CAE22238FDBB007D377E /* CWLogger.m */,
 				4329CAE32238FDBB007D377E /* CWConstants.m */,
 				4329CAE42238FDBB007D377E /* NSMutableString+Extension.m */,
@@ -616,11 +617,6 @@
 				4329CBAF22391EA1007D377E /* IOS-421_MessageHeapOverflow.txt */,
 			);
 			path = validMultipartEmails;
-			sourceTree = "<group>";
-		};
-		43BF5C6325023E460029A173 /* Frameworks */ = {
-			isa = PBXGroup;
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
