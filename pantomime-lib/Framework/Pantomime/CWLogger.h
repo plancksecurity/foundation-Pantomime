@@ -20,8 +20,3 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 + (void)ping;
 
 @end
-
-#define LOG(format, ...) DDLogInfo(format, ##__VA_ARGS__)
-#define INFO(format, ...) DDLogInfo(format, ##__VA_ARGS__)
-#define WARN(format, ...) DDLogWarn(format, ##__VA_ARGS__)
-#define ERROR(format, ...) DDLogError(format, ##__VA_ARGS__)
