@@ -366,12 +366,12 @@
         fromUid = fromUid <= 0 ? 1 : fromUid;
         [self fetchFrom:fromUid to:UNLIMITED];
     } else {
-        LOG(@"no messages, fetching from scratch");
+        DDLogInfo(@"no messages, fetching from scratch");
         // case 7
         // Local cache seems to be empty. Fetch a maximum of fetchMaxMails newest mails
         // with a simple FETCH by sequnce numbers
         NSInteger upperMessageSequenceNumber = [self existsCount];
-        LOG(@"existsCount %ld", (long) upperMessageSequenceNumber);
+        DDLogInfo(@"existsCount %ld", (long) upperMessageSequenceNumber);
         if (upperMessageSequenceNumber == 0) {
             // nothing to fetch
             [_store signalFolderFetchCompleted];
@@ -426,7 +426,7 @@ fetchUidsForNewMailsIgnoringMessagesWithHeaderDefined:(NSArray<NSString*> *_Null
 - (void)syncExistingFirstUID:(NSUInteger)firstUID lastUID:(NSUInteger)lastUID
 {
     if (firstUID <= lastUID && firstUID > 0) {
-        LOG(@"sync existing %lu:%lu", (unsigned long) firstUID, (unsigned long) lastUID);
+        DDLogInfo(@"sync existing %lu:%lu", (unsigned long) firstUID, (unsigned long) lastUID);
         [_store sendCommand: IMAP_UID_FETCH_FLAGS  info: nil
                   arguments: @"UID FETCH %u:%u (FLAGS)", firstUID, lastUID];
     } else {
