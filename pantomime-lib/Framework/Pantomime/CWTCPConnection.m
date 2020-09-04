@@ -44,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
            clientCertificate: (SecIdentityRef _Nullable)clientCertificate;
 {
     if (self = [super init]) {
+        [CWLogger ping];
+
         _openConnections = [[NSMutableSet alloc] init];
         _connected = NO;
         _name = [theName copy];
