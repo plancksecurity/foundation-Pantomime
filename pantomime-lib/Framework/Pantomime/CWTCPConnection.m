@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
         _transport = transport;
         _clientCertificate = clientCertificate;
         _fatalErrors = [NSMutableArray new];
-        INFO(@"init %@:%d (%@)", self.name, self.port, self);
+        DDLogInfo(@"init %@:%d (%@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
     return self;
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)dealloc
 {
-    INFO(@"dealloc %@:%d (%@)", self.name, self.port, self);
+    DDLogInfo(@"dealloc %@:%d (%@)", self.name, self.port, self);
     [self close];
 }
 
@@ -186,7 +186,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSInteger count = [self.readStream read:buf maxLength:len];
 
-    /*INFO("< %@:%d %ld: \"%@\"",
+    /*DDLogInfo("< %@:%d %ld: \"%@\"",
          self.name, self.port,
          (long)count,
          [self bufferToString:buf length:count]);*/
@@ -201,7 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSInteger count = [self.writeStream write:buf maxLength:len];
 
-    /*INFO("> %@:%d %ld: \"%@\"",
+    /*DDLogInfo("> %@:%d %ld: \"%@\"",
          self.name, self.port,
          (long)count,
          [self bufferToString:buf length:len]);*/
@@ -294,23 +294,23 @@ NS_ASSUME_NONNULL_BEGIN
 {
     switch (eventCode) {
         case NSStreamEventNone:
-            //INFO("NSStreamEventNone");
+            //DDLogInfo("NSStreamEventNone");
             break;
         case NSStreamEventOpenCompleted:
-            //INFO("NSStreamEventOpenCompleted");
+            //DDLogInfo("NSStreamEventOpenCompleted");
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
-                INFO(@"connectionEstablished");
+                DDLogInfo(@"connectionEstablished");
                 self.connected = YES;
                 [self.forceDelegate connectionEstablished];
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            //INFO("NSStreamEventHasBytesAvailable");
+            //DDLogInfo("NSStreamEventHasBytesAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
-            //INFO("NSStreamEventHasSpaceAvailable");
+            //DDLogInfo("NSStreamEventHasSpaceAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
