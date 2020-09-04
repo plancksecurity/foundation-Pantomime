@@ -146,7 +146,7 @@
             else
             {
                 // The queue is empty, we have nothing more to do...
-                INFO("sendCommand currentQueueObject = nil");
+                INFO(@"sendCommand currentQueueObject = nil");
                 self.currentQueueObject = nil;
                 return;
             }
@@ -177,7 +177,7 @@
             [_queue insertObject: aQueueObject  atIndex: 0];
             RELEASE(aQueueObject);
             
-            INFO("%p queue size = %lul", self, (unsigned long) [_queue count]);
+            INFO(@"%p queue size = %lul", self, (unsigned long) [_queue count]);
             
             // If we had queued commands, we return since we'll eventually
             // dequeue them one by one. Otherwise, we run it immediately.
@@ -196,9 +196,9 @@
         }
         
         if (isPrivate) {
-            INFO("%p Sending private data |*******|", self);
+            INFO(@"%p Sending private data |*******|", self);
         } else {
-            INFO("%p Sending |%{public}@|", self, self.currentQueueObject.arguments);
+            INFO(@"%p Sending |%@|", self, self.currentQueueObject.arguments);
         }
         
         _lastCommand = self.currentQueueObject.command;
@@ -218,7 +218,7 @@
 {
     CWIMAPFolder *folder = [_openFolders objectForKey:name];
 
-    LOG("select folder %{public}@", name);
+    LOG(@"select folder %@", name);
     if (folder) {
         if ([_selectedFolder.name isEqualToString:name]) {
             // We have the folder already and it is already selected.

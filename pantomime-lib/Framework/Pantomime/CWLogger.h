@@ -21,9 +21,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @end
 
-#define nsString(format) [[NSString alloc] initWithCString:format encoding:NSUTF8StringEncoding]
-
-#define LOG(format, ...) DDLogInfo(nsString(format), ##__VA_ARGS__)
-#define INFO(format, ...) DDLogInfo(nsString(format), ##__VA_ARGS__)
-#define WARN(format, ...) DDLogWarn(nsString(format), ##__VA_ARGS__)
-#define ERROR(format, ...) DDLogError(nsString(format), ##__VA_ARGS__)
+#define LOG(format, ...) DDLogInfo(format, ##__VA_ARGS__)
+#define INFO(format, ...) DDLogInfo(format, ##__VA_ARGS__)
+#define WARN(format, ...) DDLogWarn(format, ##__VA_ARGS__)
+#define ERROR(format, ...) DDLogError(format, ##__VA_ARGS__)

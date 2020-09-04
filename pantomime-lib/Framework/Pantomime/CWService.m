@@ -227,7 +227,7 @@
 
         PERFORM_SELECTOR_1(_delegate, @selector(connectionTerminated:), PantomimeConnectionTerminated);
     } else {
-        INFO("CWService.close: Double invocation");
+        INFO(@"CWService.close: Double invocation");
     }
 
     [_connection setDelegate:nil];

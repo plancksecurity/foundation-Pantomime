@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
         _transport = transport;
         _clientCertificate = clientCertificate;
         _fatalErrors = [NSMutableArray new];
-        INFO("init %{public}@:%d (%{public}@)", self.name, self.port, self);
+        INFO(@"init %@:%d (%@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
     return self;
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)dealloc
 {
-    INFO("dealloc %{public}@:%d (%{public}@)", self.name, self.port, self);
+    INFO(@"dealloc %@:%d (%@)", self.name, self.port, self);
     [self close];
 }
 
@@ -239,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id<CWConnectionDelegate>)forceDelegate
 {
     if (self.delegate == nil) {
-        WARN("CWTCPConnection: No delegate. Will close");
+        WARN(@"CWTCPConnection: No delegate. Will close");
         if (!self.isGettingClosed) {
             [self close];
         }
@@ -300,7 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
             //INFO("NSStreamEventOpenCompleted");
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
-                INFO("connectionEstablished");
+                INFO(@"connectionEstablished");
                 self.connected = YES;
                 [self.forceDelegate connectionEstablished];
             }
@@ -314,7 +314,7 @@ NS_ASSUME_NONNULL_BEGIN
             [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            ERROR("NSStreamEventErrorOccurred: read: %@, write: %@",
+            ERROR(@"NSStreamEventErrorOccurred: read: %@, write: %@",
                   [self.readStream.streamError localizedDescription],
                   [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
@@ -328,7 +328,7 @@ NS_ASSUME_NONNULL_BEGIN
 
             break;
         case NSStreamEventEndEncountered:
-            WARN("NSStreamEventEndEncountered");
+            WARN(@"NSStreamEventEndEncountered");
 
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self close];

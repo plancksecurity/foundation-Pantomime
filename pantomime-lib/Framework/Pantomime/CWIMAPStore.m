@@ -179,7 +179,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                      transport:transport
              clientCertificate:clientCertificate];
 
-    INFO("CWIMAPStore.init %{public}@", self);
+    INFO(@"CWIMAPStore.init %@", self);
 
     _folderSeparator = 0;
     _selectedFolder = nil;
@@ -208,7 +208,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) dealloc
 {
-    INFO("dealloc %{public}@", self);
+    INFO(@"dealloc %@", self);
     RELEASE(_folders);
     RELEASE(_folderStatus);
     RELEASE(_openFolders);
@@ -534,7 +534,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                                               _crlf]];
                         break;
                     } else if (_lastCommand == IMAP_IDLE) {
-                        INFO("entering IDLE");
+                        INFO(@"entering IDLE");
                         PERFORM_SELECTOR_1(_delegate, @selector(idleEntered:), PantomimeIdleEntered);
                     }
                 }
@@ -824,7 +824,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         //INFO("%@", [_queue description]);
         [strongSelf->_queue removeAllObjects];
         strongSelf->_lastCommand = IMAP_AUTHORIZATION;
-        INFO("reconnect currentQueueObject = nil");
+        INFO(@"reconnect currentQueueObject = nil");
         strongSelf.currentQueueObject = nil;
         strongSelf->_counter = 0;
 
@@ -1550,7 +1550,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         aData = [_responsesFromServer lastObject];
 
-        INFO("IN _parseBAD: |%{public}@| %d", [aData asciiString], _lastCommand);
+        INFO(@"IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
 
         switch (_lastCommand)
         {
@@ -1667,7 +1667,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     aData = [_responsesFromServer lastObject];
     sscanf([aData cString], "* %d EXISTS", &n);
     _selectedFolder.existsCount = n;
-    INFO("EXISTS %d", n);
+    INFO(@"EXISTS %d", n);
     if (_lastCommand == IMAP_IDLE) {
         PERFORM_SELECTOR_1(_delegate, @selector(idleNewMessages:), PantomimeIdleNewMessages);
     }
@@ -1695,7 +1695,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     // It looks like some servers send untagged expunge reponses
     // _after_ the selected folder has been closed.
     if (!_selectedFolder) {
-        INFO("EXPUNGE %d on already closed folder", msn);
+        INFO(@"EXPUNGE %d on already closed folder", msn);
         return;
     }
     // The conditions for being able to react safely to expunges have to be verified.
@@ -1744,7 +1744,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     if (_lastCommand != IMAP_EXPUNGE) {
         PERFORM_SELECTOR_1(_delegate, @selector(messageExpunged:), PantomimeMessageExpunged);
     }
-    INFO("Expunged %d", msn);
+    INFO(@"Expunged %d", msn);
 }
 
 /**
@@ -1945,16 +1945,16 @@ static inline int has_literal(char *buf, NSUInteger c)
         theUID = [_selectedFolder uidForMSN:theMSN];
     }
 
-    INFO("parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
+    INFO(@"parseFETCH theMSN %lu, UID %lu", (unsigned long) theMSN, (unsigned long)theUID);
 
     // Try to retrieve the message by UID
     if (theUID > 0) {
-        INFO("Trying existing message for UID %lu", (unsigned long)theUID);
+        INFO(@"Trying existing message for UID %lu", (unsigned long)theUID);
         aMessage = (CWIMAPMessage *) [_selectedFolder.cacheManager messageWithUID:theUID];
     }
 
     if (aMessage == nil) {
-        INFO("New message");
+        INFO(@"New message");
         aMessage = [[CWIMAPMessage alloc] init];
         // We set some initial properties to our message;
         [aMessage setInitialized: NO];
@@ -2462,7 +2462,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         aData = [_responsesFromServer lastObject];
 
-        INFO("IN _parseNO: |%{public}@| %d", [aData asciiString], _lastCommand);
+        INFO(@"IN _parseNO: |%@| %d", [aData asciiString], _lastCommand);
 
         switch (_lastCommand)
         {
@@ -2570,7 +2570,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
                 break;
             default:
-                INFO("Unhandled \"NO\" response!");
+                INFO(@"Unhandled \"NO\" response!");
                 NSAssert(false, @"");
                 break;
         }
@@ -2836,7 +2836,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                  setObject: [NSNumber numberWithInt: _lastCommand]  forKey: @"Command"];
                 PERFORM_SELECTOR_3(_delegate, @selector(commandCompleted:), @"PantomimeCommandCompleted", self.currentQueueObject.info);
             } else {
-                INFO("self.currentQueueObject == nil");
+                INFO(@"self.currentQueueObject == nil");
             }
 
             [_queue removeLastObject];
