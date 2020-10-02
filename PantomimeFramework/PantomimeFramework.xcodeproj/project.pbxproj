@@ -167,6 +167,7 @@
 		43A3C6D825028F9100CA29BA /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A3C6D725028F9100CA29BA /* CocoaLumberjack.framework */; };
 		43C5D3E223F5530D006487F6 /* NSStream+TLS.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5D3E023F5530D006487F6 /* NSStream+TLS.h */; };
 		43C5D3E323F5530D006487F6 /* NSStream+TLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C5D3E123F5530D006487F6 /* NSStream+TLS.m */; };
+		43F12C6C2527720100B746C7 /* pEpIOSToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43F12C6B2527720100B746C7 /* pEpIOSToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,6 +348,7 @@
 		43A3C6D725028F9100CA29BA /* CocoaLumberjack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43C5D3E023F5530D006487F6 /* NSStream+TLS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+TLS.h"; sourceTree = "<group>"; };
 		43C5D3E123F5530D006487F6 /* NSStream+TLS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+TLS.m"; sourceTree = "<group>"; };
+		43F12C6B2527720100B746C7 /* pEpIOSToolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = pEpIOSToolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +356,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43F12C6C2527720100B746C7 /* pEpIOSToolbox.framework in Frameworks */,
 				43A3C6D825028F9100CA29BA /* CocoaLumberjack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -626,6 +629,7 @@
 		43A3C6D625028F9100CA29BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				43F12C6B2527720100B746C7 /* pEpIOSToolbox.framework */,
 				43A3C6D725028F9100CA29BA /* CocoaLumberjack.framework */,
 			);
 			name = Frameworks;
