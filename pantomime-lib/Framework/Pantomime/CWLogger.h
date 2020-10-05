@@ -8,15 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import <os/log.h>
-
-@import CocoaLumberjack;
-
-static const DDLogLevel ddLogLevel = DDLogLevelDebug;
-
 @interface CWLogger : NSObject
 
 /// Make sure the logging system is initialized.
 + (void)ping;
 
 @end
+
+#define DDLogInfo(...) NSLog(@"INFO %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
+#define DDLogWarn(...) NSLog(@"WARN %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
+#define DDLogError(...) NSLog(@"ERROR %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
