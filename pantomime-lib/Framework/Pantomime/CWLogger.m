@@ -12,8 +12,16 @@
 
 @implementation CWLogger
 
-+(void)logInfoFilename:(const char *)filename line:(NSInteger)line string:(NSString *)string
++ (void)logInfoFilename:(const char *)filename
+               function:(const char *)function
+                   line:(NSInteger)line
+                message:(NSString *)message
 {
+    [[Log shared]
+     logInfoWithMessage:message
+     function:[NSString stringWithUTF8String:function]
+     filePath:[NSString stringWithUTF8String:filename]
+     fileLine:line];
 }
 
 @end

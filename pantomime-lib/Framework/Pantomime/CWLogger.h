@@ -8,15 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CWLogger : NSObject
-
 NS_ASSUME_NONNULL_BEGIN
 
-+(void)logInfoFilename:(const char *)filename line:(NSInteger)line string:(NSString *)string;
+@interface CWLogger : NSObject
+
++ (void)logInfoFilename:(const char *)filename
+               function:(const char *)function
+                   line:(NSInteger)line
+                 message:(NSString *)message;
 
 @end
 
-#define LogInfo(...) NSLog(@"INFO %s:%d %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
+#define LogInfo(...) 
 #define LogWarn(...) NSLog(@"WARN %s:%d %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
 #define LogError(...) NSLog(@"ERROR %s:%d %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
 
