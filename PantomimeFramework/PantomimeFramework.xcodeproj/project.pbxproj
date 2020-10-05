@@ -164,7 +164,6 @@
 		4329CBD022391EA1007D377E /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB522391EA1007D377E /* MailWithDocAttached.txt */; };
 		433710E723F5950F0083BAE9 /* NSStream+Options.h in Headers */ = {isa = PBXBuildFile; fileRef = 433710E523F5950F0083BAE9 /* NSStream+Options.h */; };
 		433710E823F5950F0083BAE9 /* NSStream+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 433710E623F5950F0083BAE9 /* NSStream+Options.m */; };
-		43A3C6D825028F9100CA29BA /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A3C6D725028F9100CA29BA /* CocoaLumberjack.framework */; };
 		43C5D3E223F5530D006487F6 /* NSStream+TLS.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5D3E023F5530D006487F6 /* NSStream+TLS.h */; };
 		43C5D3E323F5530D006487F6 /* NSStream+TLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C5D3E123F5530D006487F6 /* NSStream+TLS.m */; };
 		43F12C6C2527720100B746C7 /* pEpIOSToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43F12C6B2527720100B746C7 /* pEpIOSToolbox.framework */; };
@@ -357,7 +356,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				43F12C6C2527720100B746C7 /* pEpIOSToolbox.framework in Frameworks */,
-				43A3C6D825028F9100CA29BA /* CocoaLumberjack.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
