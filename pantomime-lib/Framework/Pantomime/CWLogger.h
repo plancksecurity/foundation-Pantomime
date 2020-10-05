@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#define LogInfo(...) 
+#define LogInfo(...) [CWLogger logInfoFilename:__FILE__ function:__FUNCTION__ line:__LINE__ message:[NSString stringWithFormat:__VA_ARGS__]];
 #define LogWarn(...) NSLog(@"WARN %s:%d %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
 #define LogError(...) NSLog(@"ERROR %s:%d %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
 
