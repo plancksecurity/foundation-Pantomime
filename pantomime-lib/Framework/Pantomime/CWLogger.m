@@ -36,4 +36,16 @@
      fileLine:line];
 }
 
++ (void)logErrorFilename:(const char *)filename
+                function:(const char *)function
+                    line:(NSInteger)line
+                 message:(NSString *)message
+{
+    [[Log shared]
+     logErrorWithMessage:message
+     function:[NSString stringWithUTF8String:function]
+     filePath:[NSString stringWithUTF8String:filename]
+     fileLine:line];
+}
+
 @end
