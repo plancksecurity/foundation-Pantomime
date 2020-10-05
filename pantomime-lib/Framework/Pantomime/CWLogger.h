@@ -15,6 +15,6 @@
 
 @end
 
-#define DDLogInfo(...) NSLog(@"INFO %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
-#define DDLogWarn(...) NSLog(@"WARN %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
-#define DDLogError(...) NSLog(@"ERROR %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
+#define LogInfo(...) NSLog(@"INFO %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
+#define LogWarn(...) NSLog(@"WARN %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);
+#define LogError(...) NSLog(@"ERROR %@:%@ %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);

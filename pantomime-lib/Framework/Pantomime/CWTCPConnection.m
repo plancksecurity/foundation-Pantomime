@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
         _transport = transport;
         _clientCertificate = clientCertificate;
         _fatalErrors = [NSMutableArray new];
-        DDLogInfo(@"init %@:%d (%@)", self.name, self.port, self);
+        LogInfo(@"init %@:%d (%@)", self.name, self.port, self);
         NSAssert(theBOOL, @"TCPConnection only supports background mode");
     }
     return self;
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)dealloc
 {
-    DDLogInfo(@"dealloc %@:%d (%@)", self.name, self.port, self);
+    LogInfo(@"dealloc %@:%d (%@)", self.name, self.port, self);
     [self close];
 }
 
@@ -186,7 +186,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSInteger count = [self.readStream read:buf maxLength:len];
 
-    /*DDLogInfo("< %@:%d %ld: \"%@\"",
+    /*LogInfo("< %@:%d %ld: \"%@\"",
          self.name, self.port,
          (long)count,
          [self bufferToString:buf length:count]);*/
@@ -201,7 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSInteger count = [self.writeStream write:buf maxLength:len];
 
-    /*DDLogInfo("> %@:%d %ld: \"%@\"",
+    /*LogInfo("> %@:%d %ld: \"%@\"",
          self.name, self.port,
          (long)count,
          [self bufferToString:buf length:len]);*/
@@ -239,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (id<CWConnectionDelegate>)forceDelegate
 {
     if (self.delegate == nil) {
-        DDLogWarn(@"CWTCPConnection: No delegate. Will close");
+        LogWarn(@"CWTCPConnection: No delegate. Will close");
         if (!self.isGettingClosed) {
             [self close];
         }
@@ -294,27 +294,27 @@ NS_ASSUME_NONNULL_BEGIN
 {
     switch (eventCode) {
         case NSStreamEventNone:
-            //DDLogInfo("NSStreamEventNone");
+            //LogInfo("NSStreamEventNone");
             break;
         case NSStreamEventOpenCompleted:
-            //DDLogInfo("NSStreamEventOpenCompleted");
+            //LogInfo("NSStreamEventOpenCompleted");
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
-                DDLogInfo(@"connectionEstablished");
+                LogInfo(@"connectionEstablished");
                 self.connected = YES;
                 [self.forceDelegate connectionEstablished];
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            //DDLogInfo("NSStreamEventHasBytesAvailable");
+            //LogInfo("NSStreamEventHasBytesAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
-            //DDLogInfo("NSStreamEventHasSpaceAvailable");
+            //LogInfo("NSStreamEventHasSpaceAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:
-            DDLogError(@"NSStreamEventErrorOccurred: read: %@, write: %@",
+            LogError(@"NSStreamEventErrorOccurred: read: %@, write: %@",
                   [self.readStream.streamError localizedDescription],
                   [self.writeStream.streamError localizedDescription]);
             if (self.readStream.streamError) {
@@ -328,7 +328,7 @@ NS_ASSUME_NONNULL_BEGIN
 
             break;
         case NSStreamEventEndEncountered:
-            DDLogWarn(@"NSStreamEventEndEncountered");
+            LogWarn(@"NSStreamEventEndEncountered");
 
             [self.forceDelegate receivedEvent:nil type:ET_EDESC extra:nil forMode:nil];
             [self close];
