@@ -142,7 +142,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) dealloc
 {
-  //LogInfo("SMTP: -dealloc");
+  //LogInfo(@"SMTP: -dealloc");
   RELEASE(_message);
   RELEASE(_data);
   RELEASE(_recipients);
@@ -242,7 +242,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     char *buf;
     NSUInteger count;
 
-    //LogInfo("IN UPDATE READ");
+    //LogInfo(@"IN UPDATE READ");
 
     [super updateRead];
 
@@ -991,7 +991,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
   if ([aData hasCPrefix: "421"])
     {
       //!  - lost connection
-      //LogInfo("LOST CONNECTION TO THE SERVER");
+      //LogInfo(@"LOST CONNECTION TO THE SERVER");
       [super close];
     }
   else

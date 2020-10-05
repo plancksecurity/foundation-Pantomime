@@ -165,7 +165,7 @@
                 if (aQueueObject.command == theCommand && theCommand != IMAP_APPEND &&
                     [aQueueObject.arguments isEqualToString: theString])
                 {
-                    //LogInfo("A COMMAND ALREADY EXIST!!!!");
+                    //LogInfo(@"A COMMAND ALREADY EXIST!!!!");
                     return;
                 }
             }
@@ -183,7 +183,7 @@
             // dequeue them one by one. Otherwise, we run it immediately.
             if ([_queue count] > 1)
             {
-                //LogInfo("%p QUEUED |%{public}@|", self, theString);
+                //LogInfo(@"%p QUEUED |%@|", self, theString);
                 return;
             }
             
@@ -236,7 +236,7 @@
     [folder setStore:self];
     folder.mode = mode;
 
-    //LogInfo("_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
+    //LogInfo(@"_connection_state.opening_mailbox = %d", _connection_state.opening_mailbox);
 
     // If we are already opening a mailbox, we must interrupt the process
     // and open the preferred one instead.
@@ -283,7 +283,7 @@
 //
 - (void)signalFolderFetchCompleted
 {
-    //LogInfo("DONE PREFETCHING FOLDER");
+    //LogInfo(@"DONE PREFETCHING FOLDER");
     NSMutableDictionary *info = [NSMutableDictionary new];
     if (_selectedFolder) {
         info[@"Folder"] = _selectedFolder;
@@ -308,7 +308,7 @@
 {
     self = [super init];
 
-    //LogInfo("CWIMAPQueueObject.init %{public}@\n", self);
+    //LogInfo(@"CWIMAPQueueObject.init %@\n", self);
     _command = theCommand;
     _literal = 0;
 

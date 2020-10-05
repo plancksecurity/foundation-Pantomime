@@ -81,7 +81,7 @@
                             withObject: [_wbuf subdataToIndex: (int) count]];
         }
 
-        //LogInfo("count = %d, len = %d", count, len);
+        //LogInfo(@"count = %d, len = %d", count, len);
 
         // If we have been able to write everything...
         if (count == len)
@@ -293,7 +293,7 @@
             [self updateWrite];
             break;
         case ET_EDESC:
-            //LogInfo("GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
+            //LogInfo(@"GOT ET_EDESC! %d  current fd = %d", theData, [_connection fd]);
             if (_connected) {
                 if (theExtra) {
                     PERFORM_SELECTOR_2(_delegate,

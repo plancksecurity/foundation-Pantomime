@@ -292,10 +292,10 @@ NS_ASSUME_NONNULL_BEGIN
 {
     switch (eventCode) {
         case NSStreamEventNone:
-            //LogInfo("NSStreamEventNone");
+            //LogInfo(@"NSStreamEventNone");
             break;
         case NSStreamEventOpenCompleted:
-            //LogInfo("NSStreamEventOpenCompleted");
+            //LogInfo(@"NSStreamEventOpenCompleted");
             [self.openConnections addObject:aStream];
             if (self.openConnections.count == 2) {
                 LogInfo(@"connectionEstablished");
@@ -304,11 +304,11 @@ NS_ASSUME_NONNULL_BEGIN
             }
             break;
         case NSStreamEventHasBytesAvailable:
-            //LogInfo("NSStreamEventHasBytesAvailable");
+            //LogInfo(@"NSStreamEventHasBytesAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_RDESC extra:nil forMode:nil];
             break;
         case NSStreamEventHasSpaceAvailable:
-            //LogInfo("NSStreamEventHasSpaceAvailable");
+            //LogInfo(@"NSStreamEventHasSpaceAvailable");
             [self.forceDelegate receivedEvent:nil type:ET_WDESC extra:nil forMode:nil];
             break;
         case NSStreamEventErrorOccurred:

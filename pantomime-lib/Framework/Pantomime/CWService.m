@@ -99,7 +99,7 @@
 //
 - (void) dealloc
 {
-  //LogInfo("Service: -dealloc");
+  //LogInfo(@"Service: -dealloc");
   [self setDelegate: nil];
 
   RELEASE(_supportedMechanisms);
@@ -330,7 +330,7 @@
 		      type: (RunLoopEventType) theType
 		   forMode: (NSString *) theMode
 {
-  //LogInfo("timed out event!");
+  //LogInfo(@"timed out event!");
   return nil;
 }
 
