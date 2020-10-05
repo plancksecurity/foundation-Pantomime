@@ -6,10 +6,12 @@
 //  Copyright © 2016 pEp Security S.A. All rights reserved.
 //
 
-@import CocoaLumberjack;
-
 #import "CWLogger.h"
 
 @implementation CWLogger
+
++(void)logInfoFilename:(const char *)filename line:(NSInteger)line string:(NSString *)string
+{
+}
 
 @end
