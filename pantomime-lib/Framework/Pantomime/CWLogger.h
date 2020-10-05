@@ -10,9 +10,6 @@
 
 @interface CWLogger : NSObject
 
-/// Make sure the logging system is initialized.
-+ (void)ping;
-
 @end
 
 #define LogInfo(...) NSLog(@"INFO %s:%d %@", __FILE__, __LINE__, [NSString stringWithFormat:__VA_ARGS__]);

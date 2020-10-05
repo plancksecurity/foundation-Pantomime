@@ -12,15 +12,4 @@
 
 @implementation CWLogger
 
-+ (void)initialize
-{
-    if (self == [CWLogger class]) {
-        [DDLog addLogger:[DDOSLogger sharedInstance]]; // Uses os_log
-    }
-}
-
-+ (void)ping
-{
-}
-
 @end
