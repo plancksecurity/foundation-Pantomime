@@ -6,21 +6,46 @@
 //  Copyright © 2016 pEp Security S.A. All rights reserved.
 //
 
-@import CocoaLumberjack;
+#import <pEpIOSToolbox/pEpIOSToolbox-Swift.h>
 
 #import "CWLogger.h"
 
 @implementation CWLogger
 
-+ (void)initialize
++ (void)logInfoFilename:(const char *)filename
+               function:(const char *)function
+                   line:(NSInteger)line
+                message:(NSString *)message
 {
-    if (self == [CWLogger class]) {
-        [DDLog addLogger:[DDOSLogger sharedInstance]]; // Uses os_log
-    }
+    [[Log shared]
+     logInfoWithMessage:message
+     function:[NSString stringWithUTF8String:function]
+     filePath:[NSString stringWithUTF8String:filename]
+     fileLine:line];
 }
 
-+ (void)ping
++ (void)logWarnFilename:(const char *)filename
+               function:(const char *)function
+                   line:(NSInteger)line
+                message:(NSString *)message
 {
+    [[Log shared]
+     logWarnWithMessage:message
+     function:[NSString stringWithUTF8String:function]
+     filePath:[NSString stringWithUTF8String:filename]
+     fileLine:line];
+}
+
++ (void)logErrorFilename:(const char *)filename
+                function:(const char *)function
+                    line:(NSInteger)line
+                 message:(NSString *)message
+{
+    [[Log shared]
+     logErrorWithMessage:message
+     function:[NSString stringWithUTF8String:function]
+     filePath:[NSString stringWithUTF8String:filename]
+     fileLine:line];
 }
 
 @end

@@ -427,7 +427,7 @@
             {
                 if (realloc(o_bytes, total_length) == NULL)
                 {
-                    DDLogInfo("stringWithData, realloc() failed, returning nil");
+                    LogInfo("stringWithData, realloc() failed, returning nil");
                     iconv_close(conv);
                     return nil;
                 }
