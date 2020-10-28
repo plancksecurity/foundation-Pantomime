@@ -105,15 +105,6 @@ extern NSString * _Nonnull PantomimeFolderRenameFailed;
 - (id _Nullable) folderForURL: (NSString * _Nullable) theURL;
 
 /*!
-  @method folderEnumerator
-  @discussion This method is used to get the list of all available
-              folders on the receiver. The name of the folders
-	      are returned, not actual CWFolder subclass instances.
-  @result The list of folder names.
-*/
-- (NSEnumerator * _Nullable) folderEnumerator;
-
-/*!
   @method subscribedFolderEnumerator
   @discussion This method is used to get the list of subscribed
               folders on the receiver. The name of the folders
