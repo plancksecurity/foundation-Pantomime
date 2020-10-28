@@ -1177,8 +1177,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (CWIMAPFolder *)folderWithName:(NSString *)name
 {
-    //BUFF: rm folder builder form pantomime
-    return [[CWIMAPFolder alloc] initWithName:name]; //!!!!: This is always wrong. We need it to be a PersistanFolder
+    NSAssert(NO, @"Overwrite CWIMAPStore.folderWithName");
+    return nil;
 }
 
 
