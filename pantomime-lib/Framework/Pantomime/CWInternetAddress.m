@@ -174,7 +174,7 @@
 //
 - (void) encodeWithCoder: (NSCoder *) theCoder
 {
-  [theCoder encodeObject: [NSNumber numberWithInt: _type]];
+  [theCoder encodeObject: [NSNumber numberWithInt: (int) _type]];
   [theCoder encodeObject: _address];
   [theCoder encodeObject: [self personal]];
 }

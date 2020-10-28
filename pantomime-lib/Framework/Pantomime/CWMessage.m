@@ -1600,7 +1600,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
       fromString2 = tempString;
     }
 
-  result = [fromString1 caseInsensitiveCompare: fromString2];
+  result = (int) [fromString1 caseInsensitiveCompare: fromString2];
   if (result == NSOrderedSame)
     {
 	  return [self compareAccordingToNumber: aMessage];
