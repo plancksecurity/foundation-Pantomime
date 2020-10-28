@@ -1647,7 +1647,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
     }
 
 
-  result = [fromString1 caseInsensitiveCompare: fromString2];
+  result = (int) [fromString1 caseInsensitiveCompare: fromString2];
   
   if (result == NSOrderedSame)
     {
@@ -1670,7 +1670,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   if (subject2 == nil)
     subject2 = @"";
 
-  result = [subject1 caseInsensitiveCompare: subject2];
+  result = (int) [subject1 caseInsensitiveCompare: subject2];
 
   if (result == NSOrderedSame)
     {
@@ -1693,7 +1693,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
   if (subject2 == nil)
     subject2 = @"";
 
-  result = [subject1 caseInsensitiveCompare: subject2];
+  result = (int) [subject1 caseInsensitiveCompare: subject2];
 
   if (result == NSOrderedSame)
     {
