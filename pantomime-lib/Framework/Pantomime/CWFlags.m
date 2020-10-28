@@ -109,7 +109,7 @@
 //
 - (void) encodeWithCoder: (NSCoder *) theCoder
 {
-  [theCoder encodeObject: (int) [NSNumber numberWithInt: flags]];
+  [theCoder encodeObject: [NSNumber numberWithInt: (int) flags]];
 }
 
 
