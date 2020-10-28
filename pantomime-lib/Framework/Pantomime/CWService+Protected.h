@@ -121,15 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL) isConnected;
 
-/*!
- @method connect
- @discussion This method is used to connect the receiver to the server.
- It will block until the connection was succefully established
- (or until it fails).
- @result 0 on success, -1 on error.
- */
-- (int) connect;
-
 /**
  Buffers the given data to be streamed to a connected server later on.
  Also triggers the current connection to actually write the now bufferd data to the stream.
