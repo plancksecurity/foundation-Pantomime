@@ -676,7 +676,6 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)(void);
         self.testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
                                                                      NSDictionary *info,
                                                                      NSString *arguments) {
-            typeof(self) self = weakSelf;
             XCTFail(@"Should not be called.");
         };
         self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
@@ -694,7 +693,6 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)(void);
             }
         };
         self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-            typeof(self) self = weakSelf;
             XCTFail(@"Should not be called");
         };
     }
@@ -721,7 +719,6 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)(void);
         self.testStore.assertionBlockForSendCommandInfoArguments = ^(IMAPCommand command,
                                                                      NSDictionary *info,
                                                                      NSString *arguments) {
-            typeof(self) self = weakSelf;
             XCTFail(@"Should not be called.");
         };
         self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
@@ -739,7 +736,6 @@ void (^assertionBlockForSignalFolderFetchNothingToFetch)(void);
             }
         };
         self.testStore.assertionBlockForSignalFolderFetchNothingToFetch = ^() {
-            typeof(self) self = weakSelf;
             XCTFail(@"Should not be called");
         };
     }
