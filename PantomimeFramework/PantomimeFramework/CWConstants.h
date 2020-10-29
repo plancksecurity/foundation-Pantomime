@@ -34,7 +34,7 @@
 #define PANTOMIME_VERSION @"1.2.0"
 
 #if __APPLE__
-#include "TargetConditionals.h"
+#include <TargetConditionals.h>
 #define MACOSX
 #endif
 
@@ -102,7 +102,7 @@ if (__value != __object) \
 // We must define NSObject: -subclassResponsibility: on OS X.
 //
 #ifdef MACOSX
-#include "CWMacOSXGlue.h"
+#include <PantomimeFramework/CWMacOSXGlue.h>
 #endif
 
 //
