@@ -375,6 +375,13 @@ extern NSString * _Nonnull PantomimeProtocolException;
 - (id _Nullable) delegate;
 
 /*!
+  @method name
+  @discussion This method is used to obtain the server host name.
+  @result The server host name.
+*/
+- (NSString *) name;
+
+/*!
   @method port
   @discussion This method is used to obtain the server port.
   @result The server port.

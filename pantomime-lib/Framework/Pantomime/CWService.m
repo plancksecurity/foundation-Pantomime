@@ -162,6 +162,19 @@
     return returnee;
 }
 
+//
+//
+//
+- (NSString *)name
+{
+    __block NSString *returnee = nil;
+    __weak typeof(self) weakSelf = self;
+    dispatch_sync(self.serviceQueue, ^{
+        typeof(self) strongSelf = weakSelf;
+        returnee = strongSelf->_name;
+    });
+    return returnee;
+}
 
 //
 //
