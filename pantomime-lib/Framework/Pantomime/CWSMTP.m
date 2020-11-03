@@ -727,7 +727,11 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     }
   else
     {
-      [self fail];
+        LogError(@"SMTP error %@:%d %@",
+                 self.name,
+                 self.port,
+                 [aData asciiString]);
+        [self fail];
     }
 }
 
