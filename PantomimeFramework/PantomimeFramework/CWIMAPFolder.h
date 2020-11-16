@@ -23,13 +23,13 @@
 #ifndef _Pantomime_H_CWIMAPFolder
 #define _Pantomime_H_CWIMAPFolder
 
-#import "CWFolder.h"
+#import <PantomimeFramework/CWFolder.h>
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
 
-#import "CWConstants.h"
+#import <PantomimeFramework/CWConstants.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

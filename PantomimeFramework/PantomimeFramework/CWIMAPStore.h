@@ -23,9 +23,9 @@
 #ifndef _Pantomime_H_CWIMAPStore
 #define _Pantomime_H_CWIMAPStore
 
-#import "CWConstants.h"
-#import "CWService.h"
-#import "CWStore.h"
+#import <PantomimeFramework/CWConstants.h>
+#import <PantomimeFramework/CWService.h>
+#import <PantomimeFramework/CWStore.h>
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>
@@ -226,7 +226,9 @@ extern NSString * _Nonnull const PantomimeIdleFinished;
 
 - (void)exitIDLE;
 
-//BUFF: docs!
+/// Asks for the folder with the given name, which the caller can then use for manipulating the contained messages
+/// @param name The name of the folder
+/// @return The folder with the given name, or nil, if it doesn't exist
 - (CWIMAPFolder *_Nullable)folderWithName:(NSString *_Nonnull)name;
 
 #pragma mark - CWStore
