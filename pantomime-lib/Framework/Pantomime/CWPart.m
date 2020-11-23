@@ -710,7 +710,7 @@ static int currentPartVersion = 2;
   return [_parameters objectForKey: theKey];
 }
 
-- (void) setParameter: (id) theParameter  forKey: (NSString *) theKey
+- (void) setParameter: (NSString *) theParameter  forKey: (NSString *) theKey
 {
   if (theParameter)
     {
