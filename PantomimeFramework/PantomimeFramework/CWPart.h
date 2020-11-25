@@ -374,7 +374,7 @@
 		      for the specified key,
   @param theKey  The key for which the value will be set.
 */
-- (void) setParameter: (id _Nonnull) theParameter  forKey: (NSString * _Nonnull) theKey;
+- (void) setParameter: (NSString * _Nullable) theParameter  forKey: (NSString * _Nonnull) theKey;
 
 /*!
   @method allHeaders
