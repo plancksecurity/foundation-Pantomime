@@ -1403,18 +1403,20 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 //
-// This method parses a SEARCH response in order to decode
+// This method parses a IMAP_UID_FETCH_UIDS_IGNORING_HEADERS response in order to decode
 // all UIDs in the result.
 //
 // Examples:
-//  "* 5 FETCH (UID 905)"
-//  "* 39 FETCH (FLAGS (\Seen NonJunk))"
+// "* 9 FETCH (UID 9 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}"
+// "* 3 FETCH (UID 4808 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {2}"
 //
 - (NSArray<NSNumber*> *)_uniqueIdentifiersFromFetchUidsResponseData:(NSData *)response
 {
     NSString *searchResponsePrefix = @"* X FETCH";
+    NSString *searchResponsePostfix = @"{*}";
     return [self _uniqueIdentifiersFromData: response
-                 skippingFirstNumberOfChars: searchResponsePrefix.length];
+                 skippingFirstNumberOfChars: searchResponsePrefix.length
+                  skippingLastNumberOfChars: searchResponsePostfix.length];
 }
 
 //
@@ -1430,23 +1432,34 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     NSString *searchResponsePrefix = @"* SEARCH";
     return [self _uniqueIdentifiersFromData: response
-                 skippingFirstNumberOfChars: searchResponsePrefix.length];
+                 skippingFirstNumberOfChars: searchResponsePrefix.length
+                  skippingLastNumberOfChars:0];
 }
 
 
 - (NSArray<NSNumber*> *)_uniqueIdentifiersFromData:(NSData *)theData
-                        skippingFirstNumberOfChars:(NSUInteger)numSkip
+                        skippingFirstNumberOfChars:(NSUInteger)numSkipPre
+                        skippingLastNumberOfChars:(NSUInteger)numSkipPost
 {
     NSMutableArray<NSNumber*> *results = [NSMutableArray new];
-    if (numSkip >= theData.length) {
+    if (numSkipPre + numSkipPost >= theData.length) {
         // Nothing to scan.
         return results;
     }
-    theData = [theData subdataFromIndex: numSkip];
+    theData = [theData subdataFromIndex: numSkipPre];
     if (![theData length]) {
         // Nothing to scan.
         return results;
     }
+
+    if (numSkipPost) {
+        theData = [theData subdataToIndex: theData.length - numSkipPost];
+        if (![theData length]) {
+            // Nothing to scan.
+            return results;
+        }
+    }
+
     // We scan all our UIDs.
     NSScanner *scanner = [[NSScanner alloc] initWithString: [theData asciiString]];
     NSUInteger value = 0;
@@ -1787,22 +1800,12 @@ static inline int has_literal(char *buf, NSUInteger c)
     - The x is the lenght of the data of the fetched headers
     - In case none of headersToIgnore is defined in the message, {0} is returned.
     - Otherwize x > 0 is returned.
+    At least in theory. In practice (see example above "none of headersToIgnore" with x == 2)
  */
 - (void) _parseFETCH_UIDS_IGNORING_HEADERS
 {
     NSArray<NSNumber*> *uidsFromResponse =
     [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]];
-    if (uidsFromResponse.count > 1 && uidsFromResponse[1].intValue >= 20) {
-        // A message with one ore more of the headers to ignore defined results in a server
-        // response with "{x}" where x > 0. This is then results in *two* ints parsed by
-        // _uniqueIdentifiersFromFetchUidsResponseData.
-        // Other servers return x > 0 for non-autoconsumable (normal) mails though.
-        //
-        // All tested servers return x < 20 for "normal" mails. thus we are testing for this.
-        // (this is a very ugly hack. We should actually ready the full response and make an educated decition).
-        // Ignore the message.
-        return;
-    }
 
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
     if (!alreadyParsedUids) {
@@ -1811,7 +1814,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         alreadyParsedUids = [alreadyParsedUids arrayByAddingObjectsFromArray:uidsFromResponse];
     }
     // Store/update the results in our command queue.
-    [self.currentQueueObject.info setObject: alreadyParsedUids  forKey: @"Uids"];
+    [self.currentQueueObject.info setObject:alreadyParsedUids forKey:@"Uids"];
 }
 
 //

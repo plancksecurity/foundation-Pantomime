@@ -253,13 +253,16 @@ static NSString *CRLF = @"\r\n";
 
 - (void)test_uniqueIdentifiersFromFetchUidsResponseData
 {
-    NSDictionary *testInputs = @{@"* 5 FETCH (UID 905)": @[@905],
-                                 @"* 7 FETCH (UID 3819)": @[@3819],                                
+    NSDictionary *testInputs = @{@"* 9 FETCH (UID 9 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}": @[@(9)],
+                                 @"* 9 FETCH (UID 91 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}": @[@(91)],
+                                 @"* 9 FETCH (UID 191 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}": @[@(191)],
+                                 @"* 3 FETCH (UID 3819 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {2}": @[@(3819)],
                                  @"": @[],
-                                 @"* 39 FETCH (FLAGS (\\Seen NonJunk))": @[],
-                                 @"* 39 FETCH (UID 666)": @[@(666)]
-                                 }
-    ;
+                                 @"* 10 FETCH (UID 10 BODY[HEADER.FIELDS (pEp-auto-consume)] {23}": @[@(10)],
+                                 @"* 5 FETCH (UID 666 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {25}": @[@(666)],
+                                 @"* 5 FETCH (UID INVALID_BUT_SHOULD_PARSE_AS_WELL ANYWAY BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {25}": @[],
+                                 @"* 5 FETCH (UID 1 AND UID 2 INVALID_BUT_SHOULD_PARSE_AS_WELL ANYWAY BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {25}": @[@(1), @(2)]
+    };
     CWIMAPStore *store = [CWIMAPStore new];
     for (int i = 0; i < testInputs.count; ++i) {
         NSString *testee = testInputs.allKeys[i];
