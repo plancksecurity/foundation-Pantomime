@@ -1807,7 +1807,12 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSArray<NSNumber*> *uidsFromResponse =
     [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]];
 
+    LogInfo(@"[_responsesFromServer lastObject]: %@",
+            [[_responsesFromServer lastObject] asciiString]);
+    LogInfo(@"uidsFromResponse: %@", uidsFromResponse]);
+
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
+    LogInfo(@"alreadyParsedUids: %@", alreadyParsedUids]);
     if (!alreadyParsedUids) {
         alreadyParsedUids = uidsFromResponse;
     } else {
