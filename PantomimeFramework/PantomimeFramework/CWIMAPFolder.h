@@ -183,9 +183,9 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
  Note: In case there are no new messages, the server return the UID of the last existing message.
  Possible server responses:
  If there are new messages: list of UIDs of the new messages
- Otherwize:                 the UID of the last message that exists on server (that is already fetched)
+                 Otherwize: the UID of the last message that exists on server (that is already fetched)
  */
-- (void)fetchUidsForNewMailsIgnoringMessagesWithHeaderDefined:(NSArray<NSString*> *_Nullable)headersToIgnore;
+- (void)fetchUidsForNewMails;
 
 #pragma mark - FLAGS
 
