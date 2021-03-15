@@ -117,7 +117,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseCAPABILITY;
 - (void) _parseEXISTS;
 - (void) _parseEXPUNGE;
-- (void) _parseFETCH_UIDS_IGNORING_HEADERS;
+- (void) _parseFETCH_UIDS;
 - (void) _parseFETCH: (NSInteger) theMSN;
 - (void) _parseLIST;
 - (void) _parseLSUB;
@@ -655,8 +655,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                 {
                     switch (_lastCommand)
                     {
-                        case IMAP_UID_FETCH_UIDS_IGNORING_HEADERS:
-                            [self _parseFETCH_UIDS_IGNORING_HEADERS];
+                        case IMAP_UID_FETCH_UIDS:
+                            [self _parseFETCH_UIDS];
                             break;
                         default:
                             [self _parseFETCH: msn];
@@ -1403,20 +1403,17 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 //
-// This method parses a IMAP_UID_FETCH_UIDS_IGNORING_HEADERS response in order to decode
+// This method parses a IMAP_UID_FETCH_UIDS response in order to decode
 // all UIDs in the result.
 //
 // Examples:
-// "* 9 FETCH (UID 9 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}"
-// "* 3 FETCH (UID 4808 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {2}"
+// "* 170 FETCH (UID 95516)"
 //
 - (NSArray<NSNumber*> *)_uniqueIdentifiersFromFetchUidsResponseData:(NSData *)response
 {
     NSString *searchResponsePrefix = @"* X FETCH";
-    NSString *searchResponsePostfix = @"{*}";
     return [self _uniqueIdentifiersFromData: response
-                 skippingFirstNumberOfChars: searchResponsePrefix.length
-                  skippingLastNumberOfChars: searchResponsePostfix.length];
+                 skippingFirstNumberOfChars: searchResponsePrefix.length];
 }
 
 //
@@ -1432,17 +1429,15 @@ static inline int has_literal(char *buf, NSUInteger c)
 {
     NSString *searchResponsePrefix = @"* SEARCH";
     return [self _uniqueIdentifiersFromData: response
-                 skippingFirstNumberOfChars: searchResponsePrefix.length
-                  skippingLastNumberOfChars:0];
+                 skippingFirstNumberOfChars: searchResponsePrefix.length];
 }
 
 
 - (NSArray<NSNumber*> *)_uniqueIdentifiersFromData:(NSData *)theData
                         skippingFirstNumberOfChars:(NSUInteger)numSkipPre
-                        skippingLastNumberOfChars:(NSUInteger)numSkipPost
 {
     NSMutableArray<NSNumber*> *results = [NSMutableArray new];
-    if (numSkipPre + numSkipPost >= theData.length) {
+    if (numSkipPre >= theData.length) {
         // Nothing to scan.
         return results;
     }
@@ -1450,14 +1445,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     if (![theData length]) {
         // Nothing to scan.
         return results;
-    }
-
-    if (numSkipPost) {
-        theData = [theData subdataToIndex: theData.length - numSkipPost];
-        if (![theData length]) {
-            // Nothing to scan.
-            return results;
-        }
     }
 
     // We scan all our UIDs.
@@ -1788,21 +1775,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 
 /**
  Examples:
- Message without the given header (pEp-auto-consume) defined:
- "* 9 FETCH (UID 9 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}"
- "* 3 FETCH (UID 4808 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {2}"
-
- Message with the given header (pEp-auto-consume) defined:
- "* 10 FETCH (UID 10 BODY[HEADER.FIELDS (pEp-auto-consume)] {23}"
- "* 5 FETCH (UID 4810 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {25}"
-
- Note: Regarding the "{x}":
-    - The x is the lenght of the data of the fetched headers
-    - In case none of headersToIgnore is defined in the message, {0} is returned.
-    - Otherwize x > 0 is returned.
-    At least in theory. In practice (see example above "none of headersToIgnore" with x == 2)
+ "* 170 FETCH (UID 95516)"
  */
-- (void) _parseFETCH_UIDS_IGNORING_HEADERS
+- (void) _parseFETCH_UIDS
 {
     NSArray<NSNumber*> *uidsFromResponse =
     [self _uniqueIdentifiersFromFetchUidsResponseData:[_responsesFromServer lastObject]];
@@ -2764,7 +2739,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
             }
 
-            case IMAP_UID_FETCH_UIDS_IGNORING_HEADERS: {
+            case IMAP_UID_FETCH_UIDS: {
                 _connection_state.opening_mailbox = NO;
                 NSMutableDictionary *info = [NSMutableDictionary new];
                 if (_selectedFolder) {

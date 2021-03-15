@@ -253,15 +253,26 @@ static NSString *CRLF = @"\r\n";
 
 - (void)test_uniqueIdentifiersFromFetchUidsResponseData
 {
-    NSDictionary *testInputs = @{@"* 9 FETCH (UID 9 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}": @[@(9)],
-                                 @"* 9 FETCH (UID 91 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}": @[@(91)],
-                                 @"* 9 FETCH (UID 191 BODY[HEADER.FIELDS (pEp-auto-consume)] {0}": @[@(191)],
-                                 @"* 3 FETCH (UID 3819 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {2}": @[@(3819)],
-                                 @"": @[],
-                                 @"* 10 FETCH (UID 10 BODY[HEADER.FIELDS (pEp-auto-consume)] {23}": @[@(10)],
-                                 @"* 5 FETCH (UID 666 BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {25}": @[@(666)],
-                                 @"* 5 FETCH (UID INVALID_BUT_SHOULD_PARSE_AS_WELL ANYWAY BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {25}": @[],
-                                 @"* 5 FETCH (UID 1 AND UID 2 INVALID_BUT_SHOULD_PARSE_AS_WELL ANYWAY BODY[HEADER.FIELDS (PEP-AUTO-CONSUME)] {25}": @[@(1), @(2)]
+    NSDictionary *testInputs = @{@"* 1 FETCH (UID 1)": @[@(1)],
+                                 @"* 1 FETCH (UID 12)": @[@(12)],
+                                 @"* 1 FETCH (UID 123)": @[@(123)],
+                                 @"* 1 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 1 FETCH (UID 12345)": @[@(12345)],
+                                 @"* 12 FETCH (UID 1)": @[@(1)],
+                                 @"* 12 FETCH (UID 12)": @[@(12)],
+                                 @"* 12 FETCH (UID 123)": @[@(123)],
+                                 @"* 12 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 12 FETCH (UID 12345)": @[@(12345)],
+                                 @"* 123 FETCH (UID 1)": @[@(1)],
+                                 @"* 123 FETCH (UID 12)": @[@(12)],
+                                 @"* 123 FETCH (UID 123)": @[@(123)],
+                                 @"* 123 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 123 FETCH (UID 12345)": @[@(12345)],
+                                 @"* 1235 FETCH (UID 1)": @[@(1)],
+                                 @"* 1235 FETCH (UID 12)": @[@(12)],
+                                 @"* 1235 FETCH (UID 123)": @[@(123)],
+                                 @"* 1235 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 1235 FETCH (UID 12345)": @[@(12345)]
     };
     CWIMAPStore *store = [CWIMAPStore new];
     for (int i = 0; i < testInputs.count; ++i) {
