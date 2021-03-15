@@ -253,13 +253,27 @@ static NSString *CRLF = @"\r\n";
 
 - (void)test_uniqueIdentifiersFromFetchUidsResponseData
 {
-    NSDictionary *testInputs = @{@"* 5 FETCH (UID 905)": @[@905],
-                                 @"* 7 FETCH (UID 3819)": @[@3819],                                
-                                 @"": @[],
-                                 @"* 39 FETCH (FLAGS (\\Seen NonJunk))": @[],
-                                 @"* 39 FETCH (UID 666)": @[@(666)]
-                                 }
-    ;
+    NSDictionary *testInputs = @{@"* 1 FETCH (UID 1)": @[@(1)],
+                                 @"* 1 FETCH (UID 12)": @[@(12)],
+                                 @"* 1 FETCH (UID 123)": @[@(123)],
+                                 @"* 1 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 1 FETCH (UID 12345)": @[@(12345)],
+                                 @"* 12 FETCH (UID 1)": @[@(1)],
+                                 @"* 12 FETCH (UID 12)": @[@(12)],
+                                 @"* 12 FETCH (UID 123)": @[@(123)],
+                                 @"* 12 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 12 FETCH (UID 12345)": @[@(12345)],
+                                 @"* 123 FETCH (UID 1)": @[@(1)],
+                                 @"* 123 FETCH (UID 12)": @[@(12)],
+                                 @"* 123 FETCH (UID 123)": @[@(123)],
+                                 @"* 123 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 123 FETCH (UID 12345)": @[@(12345)],
+                                 @"* 1235 FETCH (UID 1)": @[@(1)],
+                                 @"* 1235 FETCH (UID 12)": @[@(12)],
+                                 @"* 1235 FETCH (UID 123)": @[@(123)],
+                                 @"* 1235 FETCH (UID 1234)": @[@(1234)],
+                                 @"* 1235 FETCH (UID 12345)": @[@(12345)]
+    };
     CWIMAPStore *store = [CWIMAPStore new];
     for (int i = 0; i < testInputs.count; ++i) {
         NSString *testee = testInputs.allKeys[i];
