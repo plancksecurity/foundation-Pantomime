@@ -50,7 +50,6 @@
 		4329CB0D2238FDBB007D377E /* CWCharset.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CAA12238FDBB007D377E /* CWCharset.h */; };
 		4329CB0E2238FDBB007D377E /* CWIMAPStore+Protected.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAA22238FDBB007D377E /* CWIMAPStore+Protected.m */; };
 		4329CB0F2238FDBB007D377E /* NSMutableString+Extension.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CAA32238FDBB007D377E /* NSMutableString+Extension.h */; };
-		4329CB102238FDBB007D377E /* CWLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CAA42238FDBB007D377E /* CWLogger.h */; };
 		4329CB112238FDBB007D377E /* CWParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAA52238FDBB007D377E /* CWParser.m */; };
 		4329CB122238FDBB007D377E /* CWMIMEMultipart.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAA62238FDBB007D377E /* CWMIMEMultipart.m */; };
 		4329CB132238FDBB007D377E /* CWVirtualFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAA72238FDBB007D377E /* CWVirtualFolder.m */; };
@@ -110,7 +109,6 @@
 		4329CB492238FDBB007D377E /* CWVirtualFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CADF2238FDBB007D377E /* CWVirtualFolder.h */; };
 		4329CB4A2238FDBB007D377E /* CWService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAE02238FDBB007D377E /* CWService.m */; };
 		4329CB4B2238FDBB007D377E /* CWParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4329CAE12238FDBB007D377E /* CWParser.h */; };
-		4329CB4C2238FDBB007D377E /* CWLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAE22238FDBB007D377E /* CWLogger.m */; };
 		4329CB4D2238FDBB007D377E /* CWConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAE32238FDBB007D377E /* CWConstants.m */; };
 		4329CB4E2238FDBB007D377E /* NSMutableString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAE42238FDBB007D377E /* NSMutableString+Extension.m */; };
 		4329CB4F2238FDBB007D377E /* NSData+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4329CAE52238FDBB007D377E /* NSData+Extensions.m */; };
@@ -225,7 +223,6 @@
 		4329CAA12238FDBB007D377E /* CWCharset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWCharset.h; sourceTree = "<group>"; };
 		4329CAA22238FDBB007D377E /* CWIMAPStore+Protected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CWIMAPStore+Protected.m"; sourceTree = "<group>"; };
 		4329CAA32238FDBB007D377E /* NSMutableString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+Extension.h"; sourceTree = "<group>"; };
-		4329CAA42238FDBB007D377E /* CWLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWLogger.h; sourceTree = "<group>"; };
 		4329CAA52238FDBB007D377E /* CWParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWParser.m; sourceTree = "<group>"; };
 		4329CAA62238FDBB007D377E /* CWMIMEMultipart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWMIMEMultipart.m; sourceTree = "<group>"; };
 		4329CAA72238FDBB007D377E /* CWVirtualFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWVirtualFolder.m; sourceTree = "<group>"; };
@@ -285,7 +282,6 @@
 		4329CADF2238FDBB007D377E /* CWVirtualFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWVirtualFolder.h; sourceTree = "<group>"; };
 		4329CAE02238FDBB007D377E /* CWService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWService.m; sourceTree = "<group>"; };
 		4329CAE12238FDBB007D377E /* CWParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWParser.h; sourceTree = "<group>"; };
-		4329CAE22238FDBB007D377E /* CWLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWLogger.m; sourceTree = "<group>"; };
 		4329CAE32238FDBB007D377E /* CWConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWConstants.m; sourceTree = "<group>"; };
 		4329CAE42238FDBB007D377E /* NSMutableString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+Extension.m"; sourceTree = "<group>"; };
 		4329CAE52238FDBB007D377E /* NSData+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Extensions.m"; sourceTree = "<group>"; };
@@ -443,7 +439,6 @@
 				4329CAA12238FDBB007D377E /* CWCharset.h */,
 				4329CAA22238FDBB007D377E /* CWIMAPStore+Protected.m */,
 				4329CAA32238FDBB007D377E /* NSMutableString+Extension.h */,
-				4329CAA42238FDBB007D377E /* CWLogger.h */,
 				4329CAA52238FDBB007D377E /* CWParser.m */,
 				4329CAA62238FDBB007D377E /* CWMIMEMultipart.m */,
 				4329CAA72238FDBB007D377E /* CWVirtualFolder.m */,
@@ -500,7 +495,6 @@
 				4329CADF2238FDBB007D377E /* CWVirtualFolder.h */,
 				4329CAE02238FDBB007D377E /* CWService.m */,
 				4329CAE12238FDBB007D377E /* CWParser.h */,
-				4329CAE22238FDBB007D377E /* CWLogger.m */,
 				4329CAE32238FDBB007D377E /* CWConstants.m */,
 				4329CAE42238FDBB007D377E /* NSMutableString+Extension.m */,
 				4329CAE52238FDBB007D377E /* NSData+Extensions.m */,
@@ -701,7 +695,6 @@
 				4329CB152238FDBB007D377E /* CWISO8859_5.h in Headers */,
 				4329CB0D2238FDBB007D377E /* CWCharset.h in Headers */,
 				4329CA882238FD4A007D377E /* CWIMAPCacheManager.h in Headers */,
-				4329CB102238FDBB007D377E /* CWLogger.h in Headers */,
 				4329CB072238FDBB007D377E /* CWISO8859_8.h in Headers */,
 				4329CAFE2238FDBB007D377E /* CWUUFile.h in Headers */,
 				4329CA8A2238FD4A007D377E /* CWCacheRecord.h in Headers */,
@@ -866,7 +859,6 @@
 				4329CB442238FDBB007D377E /* CWCacheRecord.m in Sources */,
 				4329CB432238FDBB007D377E /* CWISO8859_6.m in Sources */,
 				4329CB232238FDBB007D377E /* CWOAuthUtils.m in Sources */,
-				4329CB4C2238FDBB007D377E /* CWLogger.m in Sources */,
 				4329CB212238FDBB007D377E /* NSData+CWParsingUtils.m in Sources */,
 				4329CB332238FDBB007D377E /* CWUUFile.m in Sources */,
 				4329CB402238FDBB007D377E /* CWFolderInformation.m in Sources */,

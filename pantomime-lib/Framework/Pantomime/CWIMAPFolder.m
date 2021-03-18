@@ -27,7 +27,7 @@
 #import "CWFlags.h"
 #import "CWIMAPStore+Protected.h"
 #import "CWIMAPMessage.h"
-#import "Pantomime/CWLogger.h"
+#import <pEpIOSToolbox/PEPLogger.h>
 #import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
