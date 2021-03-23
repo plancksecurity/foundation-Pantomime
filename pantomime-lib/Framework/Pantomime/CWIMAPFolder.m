@@ -27,7 +27,7 @@
 #import "CWFlags.h"
 #import "CWIMAPStore+Protected.h"
 #import "CWIMAPMessage.h"
-#import "Pantomime/CWLogger.h"
+#import <pEpIOSToolbox/PEPLogger.h>
 #import "NSData+Extensions.h"
 #import "Pantomime/NSString+Extensions.h"
 
@@ -388,15 +388,8 @@
 }
 
 
-//
-//
-//
-/**
- Note:  The whole thing is a hack.
-        Usecase is to ignore pEp-auto-consumable messages in new mails count.
-        Correct would be to fetch the headers and handle affected messages on a higher level.
-        We did it like this as the high level operation is extremely timing critical (background fetch).
- */
+
+
 - (void)fetchUidsForNewMails;
 {
     NSInteger lastUid = [self lastUID] ? [self lastUID] : 0;

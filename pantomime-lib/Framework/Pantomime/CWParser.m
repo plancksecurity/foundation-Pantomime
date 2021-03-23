@@ -24,7 +24,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "Pantomime/CWLogger.h"
+#import <pEpIOSToolbox/PEPLogger.h>
 
 #import "CWConstants.h"
 #import "CWFlags.h"

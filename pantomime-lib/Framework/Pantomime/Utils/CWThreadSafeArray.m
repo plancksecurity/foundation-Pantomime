@@ -6,7 +6,7 @@
 //  Copyright © 2016 pEp Security S.A. All rights reserved.
 //
 
-#import "CWLogger.h"
+#import <pEpIOSToolbox/PEPLogger.h>
 
 #import "CWThreadSafeArray.h"
 

@@ -180,7 +180,7 @@ extern NSString * _Nonnull PantomimeMessageStoreFailed;
 
 /**
  Fetches the UIDs of all unknown (to us) messages.
- Note: In case there are no new messages, the server return the UID of the last existing message.
+ Note: In case there are no new messages, the server returns the UID of the last existing message.
  Possible server responses:
  If there are new messages: list of UIDs of the new messages
                  Otherwize: the UID of the last message that exists on server (that is already fetched)
