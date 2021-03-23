@@ -22,7 +22,7 @@
 
 #import "CWIMAPStore+Protected.h"
 
-#import "Pantomime/CWLogger.h"
+#import <pEpIOSToolbox/PEPLogger.h>
 #import "CWConstants.h"
 #import "CWFlags.h"
 #import "Pantomime/CWFolderInformation.h"
