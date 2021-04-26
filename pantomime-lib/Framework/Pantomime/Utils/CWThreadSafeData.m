@@ -70,10 +70,9 @@ NS_ASSUME_NONNULL_BEGIN
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
         typeof(self) strongSelf = weakSelf;
-        NSUInteger length = strongSelf.data.length - numBytes;
-        NSData *newData =  [strongSelf.data subdataWithRange:NSMakeRange(numBytes, length)];
-        [strongSelf.data replaceBytesInRange:NSMakeRange(0, length)
-                                   withBytes:newData.bytes];
+        NSUInteger theCount = strongSelf.data.length - numBytes;
+        char *theBytesTarget = [[strongSelf data] mutableBytes];
+        memmove(theBytesTarget, theBytesTarget + numBytes, theCount);
         strongSelf.data.length -= numBytes;
     });
 }
