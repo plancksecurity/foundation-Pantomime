@@ -72,7 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
         typeof(self) strongSelf = weakSelf;
         NSUInteger length = strongSelf.data.length - numBytes;
         NSData *newData =  [strongSelf.data subdataWithRange:NSMakeRange(numBytes, length)];
-        strongSelf.data = [NSMutableData dataWithData: newData];
+        [strongSelf.data replaceBytesInRange:NSMakeRange(0, length)
+                                   withBytes:newData.bytes];
+        strongSelf.data.length -= numBytes;
     });
 }
 
