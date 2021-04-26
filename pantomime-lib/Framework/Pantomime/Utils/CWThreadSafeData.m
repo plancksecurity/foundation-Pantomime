@@ -84,8 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
         typeof(self) strongSelf = weakSelf;
-        NSData *copy = strongSelf.data.copy;
-        copyOfBytes = copy.bytes;
+        copyOfBytes = strongSelf.data.bytes;
     });
 
     return copyOfBytes;
