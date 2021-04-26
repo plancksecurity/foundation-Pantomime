@@ -679,6 +679,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       // We first replace all occurences of LF by CRLF in the Message's data.
       //
       aMutableData = [[NSMutableData dataWithData: _data] replaceLFWithCRLF];
+      _data = nil;
   
       //
       // According to RFC 2821 section 4.5.2, we must check for the character
