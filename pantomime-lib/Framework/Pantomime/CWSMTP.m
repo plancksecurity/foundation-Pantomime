@@ -725,6 +725,10 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       // The data we wrote in the previous call was sucessfully written.
       // We inform the delegate that the mail was sucessfully sent.
       PERFORM_SELECTOR_2(_delegate, @selector(messageSent:), PantomimeMessageSent, _message, @"Message");
+
+        // Delete memory consuming objects
+        _data = nil;
+        _message = nil;
     }
   else
     {
