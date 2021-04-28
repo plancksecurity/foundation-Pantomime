@@ -554,11 +554,11 @@ static int currentPartVersion = 2;
     }
 
     NSMutableArray *allLines = [dataToSend componentsSeparatedByCString: "\n"];
-    if ([[allLines lastObject] length] == 0) {
-        [allLines removeLastObject];
-    }
     NSUInteger count = [allLines count];
     for (int i = 0; i < count; i++) {
+        if (i == count - 1 && [[allLines objectAtIndex: i] length] == 0) {
+            break;
+        }
         [dataValue appendData: [allLines objectAtIndex: i]];
         [dataValue appendBytes: LF  length: 1];
     }
