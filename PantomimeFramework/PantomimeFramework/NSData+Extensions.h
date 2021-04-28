@@ -261,8 +261,9 @@
 - (NSArray *) componentsSeparatedByCString: (const char *) theCString;
 
 /// Like `componentsSeparatedByCString`, but calls the given block with each result and the current count.
+/// The block will be invoked for every component, together with its count and a boolean denoting if it's the last element.
 - (void)componentsSeparatedByCString:(const char *)theCString
-                               block:(void (^)(NSData *, NSUInteger))block;
+                               block:(void (^)(NSData *, NSUInteger, BOOL isLast))block;
 
 /*!
   @method asciiString

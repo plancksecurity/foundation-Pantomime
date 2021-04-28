@@ -777,7 +777,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 }
 
 - (void)componentsSeparatedByCString:(const char *)theCString
-                               block:(void (^)(NSData *, NSUInteger))block
+                               block:(void (^)(NSData *, NSUInteger, BOOL isLast))block
 {
     NSUInteger len = [self length];
     NSRange r1 = NSMakeRange(0,len);
@@ -789,7 +789,9 @@ static const char *hexDigit = "0123456789ABCDEF";
 
     NSUInteger count = 0;
     while (r2.length) {
-        block([self subdataWithRange: NSMakeRange(r1.location, r2.location - r1.location)], count);
+        block([self subdataWithRange: NSMakeRange(r1.location, r2.location - r1.location)],
+              count,
+              NO);
         count++;
         r1.location = r2.location + r2.length;
         r1.length = len - r1.location;
@@ -797,7 +799,7 @@ static const char *hexDigit = "0123456789ABCDEF";
         r2 = [self rangeOfCString: theCString  options: 0  range: r1];
     }
 
-    block([self subdataWithRange: NSMakeRange(r1.location, len - r1.location)], count);
+    block([self subdataWithRange: NSMakeRange(r1.location, len - r1.location)], count, YES);
 }
 
 //

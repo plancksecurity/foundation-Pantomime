@@ -773,7 +773,9 @@
     NSMutableData *aMutableData = [[NSMutableData alloc] initWithCapacity: [theMessage length]];
   
     // We now replace all \n by \r\n
-    [theMessage componentsSeparatedByCString:"\n" block:^(NSData *aLine, NSUInteger count) {
+    [theMessage componentsSeparatedByCString:"\n" block:^(NSData *aLine,
+                                                          NSUInteger count,
+                                                          BOOL isLast) {
         // We skip dumb headers
         if ([aLine hasCPrefix: "From "]) {
             return;
