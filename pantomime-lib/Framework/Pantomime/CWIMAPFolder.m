@@ -769,35 +769,21 @@
 //
 - (NSData *) _removeInvalidHeadersFromMessage: (NSData *) theMessage
 {
-  NSMutableData *aMutableData;
-  NSArray *allLines;
-  NSUInteger i, count;
-
-  // We allocate our mutable data object
-  aMutableData = [[NSMutableData alloc] initWithCapacity: [theMessage length]];
+    // We allocate our mutable data object
+    NSMutableData *aMutableData = [[NSMutableData alloc] initWithCapacity: [theMessage length]];
   
-  // We now replace all \n by \r\n
-  allLines = [theMessage componentsSeparatedByCString: "\n"];
-  count = [allLines count];
+    // We now replace all \n by \r\n
+    [theMessage componentsSeparatedByCString:"\n" block:^(NSData *aLine, NSUInteger count) {
+        // We skip dumb headers
+        if ([aLine hasCPrefix: "From "]) {
+            return;
+        }
 
-  for (i = 0; i < count; i++)
-    {
-      NSData *aLine;
+        [aMutableData appendData: aLine];
+        [aMutableData appendCString: "\r\n"];
+    }];
 
-      // We get a line...
-      aLine = [allLines objectAtIndex: i];
-
-      // We skip dumb headers
-      if ([aLine hasCPrefix: "From "])
-	{
-	  continue;
-	}
-
-      [aMutableData appendData: aLine];
-      [aMutableData appendCString: "\r\n"];
-    }
-
-  return AUTORELEASE(aMutableData);
+    return AUTORELEASE(aMutableData);
 }
 
 @end
