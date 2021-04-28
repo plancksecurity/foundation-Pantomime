@@ -159,6 +159,8 @@
 - (NSData *) subdataToIndex: (NSUInteger) theIndex;
 
 /// Like `subDataWithRange`, but doesn't copy bytes, and instead points to the bytes from the original.
+/// @note The caller has to make sure that the returned `NSData` does not exist longer than the `NSData` that owns
+/// the actual bytes.
 - (NSData *)subdataUncopiedWithRange:(NSRange)range;
 
 /**
@@ -262,7 +264,7 @@
 
 /// Like `componentsSeparatedByCString`, but calls the given block with each result and the current count.
 /// The block will be invoked for every component, together with its count and a boolean denoting if it's the last element.
-/// @Note: Uses `subdataUncopiedWithRange` to produce the `NSData` parts.
+/// @note Uses `subdataUncopiedWithRange` to produce the `NSData` parts.
 - (void)componentsSeparatedByCString:(const char *)theCString
                                block:(void (^)(NSData *aLine, NSUInteger count, BOOL isLast))block;
 
