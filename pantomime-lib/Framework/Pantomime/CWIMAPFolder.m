@@ -770,7 +770,7 @@
 - (NSData *) _removeInvalidHeadersFromMessage: (NSData *) theMessage
 {
   NSMutableData *aMutableData;
-  NSMutableArray *allLines;
+  NSArray *allLines;
   NSUInteger i, count;
 
   // We allocate our mutable data object
@@ -785,10 +785,7 @@
       NSData *aLine;
 
       // We get a line...
-      aLine = [allLines firstObject];
-
-      // Remove the line immediately to easy memory consumption
-      [allLines removeObjectAtIndex:0];
+      aLine = [allLines objectAtIndex: i];
 
       // We skip dumb headers
       if ([aLine hasCPrefix: "From "])
