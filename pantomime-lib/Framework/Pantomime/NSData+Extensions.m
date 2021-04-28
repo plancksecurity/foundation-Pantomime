@@ -764,7 +764,7 @@ static const char *hexDigit = "0123456789ABCDEF";
   
   while (r2.length)
     {
-      [aMutableArray addObject: [self subdataUncopiedWithRange: NSMakeRange(r1.location, r2.location - r1.location)]];
+      [aMutableArray addObject: [self subdataWithRange: NSMakeRange(r1.location, r2.location - r1.location)]];
       r1.location = r2.location + r2.length;
       r1.length = len - r1.location;
       
