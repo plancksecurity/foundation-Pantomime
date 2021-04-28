@@ -255,7 +255,7 @@
   @result An instance of NSArray holding all components. The array is
           empty if the separator was not found in the receiver.
 */
-- (NSMutableArray *) componentsSeparatedByCString: (const char *) theCString;
+- (NSArray *) componentsSeparatedByCString: (const char *) theCString;
 
 /*!
   @method asciiString

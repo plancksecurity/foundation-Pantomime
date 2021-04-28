@@ -734,7 +734,7 @@ static const char *hexDigit = "0123456789ABCDEF";
   return NSOrderedDescending;
 }
 
-- (NSMutableArray *) componentsSeparatedByCString: (const char *) theCString
+- (NSArray *) componentsSeparatedByCString: (const char *) theCString
 {
   NSMutableArray *aMutableArray;
   NSRange r1, r2;
