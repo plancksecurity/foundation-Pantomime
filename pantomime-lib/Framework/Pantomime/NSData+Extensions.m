@@ -441,7 +441,14 @@ static const char *hexDigit = "0123456789ABCDEF";
 {
     const char *theBytes = [self bytes];
     const char *newBytes = theBytes + range.location;
-    return [NSData dataWithBytesNoCopy:(void *) newBytes length:range.length];
+
+    // Let the NSData point to existing bytes without copy,
+    // and don't do anything to free them
+    return [[NSData alloc] initWithBytesNoCopy:(void *) newBytes
+                                        length:range.length
+                                   deallocator:^(void * _Nonnull bytes, NSUInteger length) {
+        // ignore, don't free anything
+    }];
 }
 
 - (NSData *)dataByTrimmingWhiteSpaces
