@@ -437,6 +437,13 @@ static const char *hexDigit = "0123456789ABCDEF";
   return [self subdataWithRange: NSMakeRange(0, theIndex)];
 }
 
+- (NSData *)subdataUncopiedWithRange:(NSRange)range
+{
+    const char *theBytes = [self bytes];
+    const char *newBytes = theBytes + range.location;
+    return [NSData dataWithBytesNoCopy:(void *) newBytes length:range.length];
+}
+
 - (NSData *)dataByTrimmingWhiteSpaces
 {
     const char *bytes = [self bytes];

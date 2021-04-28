@@ -158,6 +158,9 @@
 */
 - (NSData *) subdataToIndex: (NSUInteger) theIndex;
 
+/// Like `subDataWithRange`, but doesn't copy bytes, and instead points to the bytes from the original.
+- (NSData *)subdataUncopiedWithRange:(NSRange)range;
+
 /**
  @discussion Simple method to trim the leading and trailing whitespaces (characters with no visible
  representation). Cahracters currently taken into accout are:
