@@ -789,7 +789,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 
     NSUInteger count = 0;
     while (r2.length) {
-        block([self subdataWithRange: NSMakeRange(r1.location, r2.location - r1.location)],
+        block([self subdataUncopiedWithRange:NSMakeRange(r1.location, r2.location - r1.location)],
               count,
               NO);
         count++;
