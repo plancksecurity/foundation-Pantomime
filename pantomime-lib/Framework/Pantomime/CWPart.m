@@ -559,7 +559,7 @@ static int currentPartVersion = 2;
     }
     NSUInteger count = [allLines count];
     for (int i = 0; i < count; i++) {
-        [dataValue appendData: [allLines objectAtIndex: 0]];
+        [dataValue appendData: [allLines firstObject]];
         [dataValue appendBytes: LF  length: 1];
         [allLines removeObjectAtIndex:0];
     }
