@@ -777,7 +777,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 }
 
 - (void)componentsSeparatedByCString:(const char *)theCString
-                               block:(void (^)(NSData *, NSUInteger, BOOL isLast))block
+                               block:(void (^)(NSData *aLine, NSUInteger count, BOOL isLast))block
 {
     NSUInteger len = [self length];
     NSRange r1 = NSMakeRange(0,len);
