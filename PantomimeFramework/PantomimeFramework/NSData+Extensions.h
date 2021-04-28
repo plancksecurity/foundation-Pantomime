@@ -260,6 +260,10 @@
 */
 - (NSArray *) componentsSeparatedByCString: (const char *) theCString;
 
+/// Like `componentsSeparatedByCString`, but calls the given block with each result and the current count.
+- (void)componentsSeparatedByCString:(const char *)theCString
+                               block:(void (^)(NSData *, NSUInteger))block;
+
 /*!
   @method asciiString
   @discussion This method turns the receiver into a NSString object.
