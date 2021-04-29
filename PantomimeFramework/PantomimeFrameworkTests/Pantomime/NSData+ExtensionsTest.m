@@ -205,24 +205,6 @@ static NSString *text = @"My test\t Text containing 1234567890ß? stuff";
     [self assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:testFormat];
 }
 
-#pragma mark - subdata
-
-/// This test proves that `[NSData subdataWithRange]` _copies_ the bytes it covers to a new buffer.
-- (void)testSubdataWithRange
-{
-    NSString *testStr = @"<35BE75EB.74E6.4CB7.9C5D.432B241FDF90@pretty.Easy.privacy>";
-    NSData *testData = [testStr dataUsingEncoding:NSASCIIStringEncoding];
-
-    NSRange r1 = NSMakeRange(0, 5);
-    NSData *subDataFromStart = [testData subdataWithRange:r1];
-    XCTAssertNotEqual([testData bytes], [subDataFromStart bytes]);
-
-    NSInteger offset = 5;
-    NSRange r2 = NSMakeRange(offset, 5);
-    NSData *subDataFromOffset = [testData subdataWithRange:r2];
-    XCTAssertNotEqual([testData bytes] + offset, [subDataFromOffset bytes]);
-}
-
 #pragma mark helper
 
 - (void)assertDataByTrimmingWhiteSpacesFromTestStringUsedInFormat:(NSString *)format
