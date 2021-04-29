@@ -437,20 +437,6 @@ static const char *hexDigit = "0123456789ABCDEF";
   return [self subdataWithRange: NSMakeRange(0, theIndex)];
 }
 
-- (NSData *)subdataUncopiedWithRange:(NSRange)range
-{
-    const char *theBytes = [self bytes];
-    const char *newBytes = theBytes + range.location;
-
-    // Let the NSData point to existing bytes without copy,
-    // and don't do anything to free them
-    return [[NSData alloc] initWithBytesNoCopy:(void *) newBytes
-                                        length:range.length
-                                   deallocator:^(void * _Nonnull bytes, NSUInteger length) {
-        // ignore, don't free anything
-    }];
-}
-
 - (NSData *)dataByTrimmingWhiteSpaces
 {
     const char *bytes = [self bytes];
@@ -789,7 +775,7 @@ static const char *hexDigit = "0123456789ABCDEF";
 
     NSUInteger count = 0;
     while (r2.length) {
-        block([self subdataUncopiedWithRange:NSMakeRange(r1.location, r2.location - r1.location)],
+        block([self subdataWithRange:NSMakeRange(r1.location, r2.location - r1.location)],
               count,
               NO);
         count++;
