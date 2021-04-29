@@ -768,9 +768,9 @@ static const char *hexDigit = "0123456789ABCDEF";
     NSUInteger len = [self length];
     NSRange r1 = NSMakeRange(0,len);
 
-    NSRange r2 = [self rangeOfCString: theCString
-                              options: 0
-                                range: r1];
+    NSRange r2 = [self rangeOfCString:theCString
+                              options:0
+                                range:r1];
 
 
     NSUInteger count = 0;
@@ -785,7 +785,7 @@ static const char *hexDigit = "0123456789ABCDEF";
         r2 = [self rangeOfCString: theCString  options: 0  range: r1];
     }
 
-    block([self subdataWithRange: NSMakeRange(r1.location, len - r1.location)], count, YES);
+    block([self subdataWithRange:NSMakeRange(r1.location, len - r1.location)], count, YES);
 }
 
 //
