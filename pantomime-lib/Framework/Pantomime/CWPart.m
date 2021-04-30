@@ -553,8 +553,8 @@ static int currentPartVersion = 2;
         dataToSend = [dataToSend wrapWithLimit: limit];
     }
 
-    [dataToSend componentsSeparatedByCString:"\n"
-                                       block:^(NSData *aLine, NSUInteger count, BOOL isLast) {
+    [dataToSend enumerateComponentsSeperatedByString:"\n"
+                                               block:^(NSData *aLine, NSUInteger count, BOOL isLast) {
         if (isLast && [aLine length] == 0) {
             return;
         }
