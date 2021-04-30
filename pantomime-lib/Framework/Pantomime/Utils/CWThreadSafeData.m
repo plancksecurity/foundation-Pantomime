@@ -77,16 +77,16 @@ NS_ASSUME_NONNULL_BEGIN
     });
 }
 
-- (const char*)copyOfBytes
+- (const char *)bytes
 {
-    __block const char* copyOfBytes = nil;
+    __block const char *theBytes = nil;
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
         typeof(self) strongSelf = weakSelf;
-        copyOfBytes = strongSelf.data.bytes;
+        theBytes = strongSelf.data.bytes;
     });
 
-    return copyOfBytes;
+    return theBytes;
 }
 
 - (NSData *)subdataToIndex:(NSUInteger)index
