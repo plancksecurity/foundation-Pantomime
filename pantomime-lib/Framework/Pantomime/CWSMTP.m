@@ -40,7 +40,7 @@
 #import "CWOAuthUtils.h"
 #import "CWService+Protected.h"
 
-#import <pEpIOSToolbox/PEPLogger.h>
+#import <pEpIOSToolboxForExtensions/PEPLogger.h>
 
 // The hostname/domain used to do EHLO/HELO
 static NSString *pEpEHLOBase = @"pretty.Easy.privacy";

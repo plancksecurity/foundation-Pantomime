@@ -25,7 +25,7 @@
 
 #import "CWConstants.h"
 #import "NSData+Extensions.h"
-#import <pEpIOSToolbox/PEPLogger.h>
+#import <pEpIOSToolboxForExtensions/PEPLogger.h>
 
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSDictionary.h>
