@@ -762,6 +762,31 @@ static const char *hexDigit = "0123456789ABCDEF";
   return AUTORELEASE(aMutableArray);
 }
 
+- (void)enumerateComponentsSeperatedByString:(const char *)theCString
+                                       block:(void (^)(NSData *aLine, NSUInteger count, BOOL isLast))block
+{
+    NSUInteger len = [self length];
+    NSRange r1 = NSMakeRange(0,len);
+
+    NSRange r2 = [self rangeOfCString:theCString
+                              options:0
+                                range:r1];
+
+
+    NSUInteger count = 0;
+    while (r2.length) {
+        block([self subdataWithRange:NSMakeRange(r1.location, r2.location - r1.location)],
+              count,
+              NO);
+        count++;
+        r1.location = r2.location + r2.length;
+        r1.length = len - r1.location;
+
+        r2 = [self rangeOfCString: theCString  options: 0  range: r1];
+    }
+
+    block([self subdataWithRange:NSMakeRange(r1.location, len - r1.location)], count, YES);
+}
 
 //
 //

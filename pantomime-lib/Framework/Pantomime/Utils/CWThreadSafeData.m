@@ -70,23 +70,23 @@ NS_ASSUME_NONNULL_BEGIN
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
         typeof(self) strongSelf = weakSelf;
-        NSUInteger length = strongSelf.data.length - numBytes;
-        NSData *newData =  [strongSelf.data subdataWithRange:NSMakeRange(numBytes, length)];
-        strongSelf.data = [NSMutableData dataWithData: newData];
+        NSUInteger theCount = strongSelf.data.length - numBytes;
+        char *theBytesTarget = [[strongSelf data] mutableBytes];
+        memmove(theBytesTarget, theBytesTarget + numBytes, theCount);
+        strongSelf.data.length -= numBytes;
     });
 }
 
-- (const char*)copyOfBytes
+- (const char *)bytes
 {
-    __block const char* copyOfBytes = nil;
+    __block const char *theBytes = nil;
     __weak typeof(self) weakSelf = self;
     dispatch_sync(self.queue, ^{
         typeof(self) strongSelf = weakSelf;
-        NSData *copy = strongSelf.data.copy;
-        copyOfBytes = copy.bytes;
+        theBytes = strongSelf.data.bytes;
     });
 
-    return copyOfBytes;
+    return theBytes;
 }
 
 - (NSData *)subdataToIndex:(NSUInteger)index

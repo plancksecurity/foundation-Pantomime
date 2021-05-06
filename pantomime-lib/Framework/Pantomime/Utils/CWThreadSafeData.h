@@ -49,9 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)truncateLeadingBytes:(NSUInteger)numBytes;
 
 /**
- @return a copy of the inner byte array.
+ @return a pointer to the inner byte array.
  */
-- (const char*)copyOfBytes;
+- (const char *)bytes;
 
 /**
  @discussion This method is used to obtain the subdata to <i>index</i>
