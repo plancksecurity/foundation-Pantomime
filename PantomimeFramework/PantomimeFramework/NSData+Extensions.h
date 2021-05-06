@@ -257,6 +257,11 @@
 */
 - (NSArray *) componentsSeparatedByCString: (const char *) theCString;
 
+/// Like `componentsSeparatedByCString`, but calls the given block with each component, the current count, .
+/// and a boolean denoting if it's the last element.
+- (void)enumerateComponentsSeperatedByString:(const char *)theCString
+                                       block:(void (^)(NSData *aLine, NSUInteger count, BOOL isLast))block;
+
 /*!
   @method asciiString
   @discussion This method turns the receiver into a NSString object.

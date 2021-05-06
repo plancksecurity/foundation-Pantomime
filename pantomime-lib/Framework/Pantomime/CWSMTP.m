@@ -679,6 +679,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       // We first replace all occurences of LF by CRLF in the Message's data.
       //
       aMutableData = [[NSMutableData dataWithData: _data] replaceLFWithCRLF];
+      _data = nil; // save memory by deleting as soon as possible
   
       //
       // According to RFC 2821 section 4.5.2, we must check for the character
@@ -724,6 +725,10 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       // The data we wrote in the previous call was sucessfully written.
       // We inform the delegate that the mail was sucessfully sent.
       PERFORM_SELECTOR_2(_delegate, @selector(messageSent:), PantomimeMessageSent, _message, @"Message");
+
+        // Delete memory consuming objects as soon as possible
+        _data = nil;
+        _message = nil;
     }
   else
     {
