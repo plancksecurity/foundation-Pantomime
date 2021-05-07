@@ -553,15 +553,15 @@ static int currentPartVersion = 2;
         dataToSend = [dataToSend wrapWithLimit: limit];
     }
 
-    NSArray *allLines = [dataToSend componentsSeparatedByCString: "\n"];
-    NSUInteger count = [allLines count];
-    for (int i = 0; i < count; i++) {
-        if (i == count - 1 && [[allLines objectAtIndex: i] length] == 0) {
-            break;
+    [dataToSend enumerateComponentsSeperatedByString:"\n"
+                                               block:^(NSData *aLine, NSUInteger count, BOOL isLast) {
+        if (isLast && [aLine length] == 0) {
+            return;
         }
-        [dataValue appendData: [allLines objectAtIndex: i]];
-        [dataValue appendBytes: LF  length: 1];
-    }
+        [dataValue appendData:aLine];
+        [dataValue appendBytes:LF length:1];
+    }];
+
     return dataValue;
 }
 

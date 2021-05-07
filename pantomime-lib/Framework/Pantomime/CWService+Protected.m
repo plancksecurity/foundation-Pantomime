@@ -60,7 +60,7 @@
         unsigned char *bytes;
         NSInteger count, len;
 
-        bytes = (unsigned char*)[_wbuf copyOfBytes];
+        bytes = (unsigned char*)[_wbuf bytes];
         len = [_wbuf length];
 
 #ifdef MACOSX
