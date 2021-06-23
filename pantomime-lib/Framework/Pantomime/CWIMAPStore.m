@@ -1548,7 +1548,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
         aData = [_responsesFromServer lastObject];
 
-        LogInfo(@"IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
+        LogError(@"IN _parseBAD: |%@| %d", [aData asciiString], _lastCommand);
 
         switch (_lastCommand)
         {
