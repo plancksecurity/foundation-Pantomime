@@ -1,24 +1,24 @@
 /*
-**  CWParser.m
-**
-**  Copyright (c) 2001-2007
-**
-**  Author: Ludovic Marcotte <ludovic@Sophos.ca>
-**
-**  This library is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU Lesser General Public
-**  License as published by the Free Software Foundation; either
-**  version 2.1 of the License, or (at your option) any later version.
-**  
-**  This library is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-**  Lesser General Public License for more details.
-**  
-**  You should have received a copy of the GNU Lesser General Public
-**  License along with this library; if not, write to the Free Software
-**  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ **  CWParser.m
+ **
+ **  Copyright (c) 2001-2007
+ **
+ **  Author: Ludovic Marcotte <ludovic@Sophos.ca>
+ **
+ **  This library is free software; you can redistribute it and/or
+ **  modify it under the terms of the GNU Lesser General Public
+ **  License as published by the Free Software Foundation; either
+ **  version 2.1 of the License, or (at your option) any later version.
+ **
+ **  This library is distributed in the hope that it will be useful,
+ **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ **  Lesser General Public License for more details.
+ **
+ **  You should have received a copy of the GNU Lesser General Public
+ **  License along with this library; if not, write to the Free Software
+ **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 #import "Pantomime/CWParser.h"
 
@@ -53,47 +53,47 @@
 static char *month_name[12] = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
 
 static struct _timezone {
-  char *name;          /* time zone name */
-  int offset;         /* offset, in minutes, EAST of GMT */
+    char *name;          /* time zone name */
+    int offset;         /* offset, in minutes, EAST of GMT */
 } timezone_info[] = {
-  
-  /* the following are from RFC-822 */
-  { "ut", 0 },
-  { "gmt", 0 },
-  { "est", -5*3600 },   { "edt", -4*3600 },       /* USA eastern standard */
-  { "cst", -6*3600 },   { "cdt", -5*3600 },       /* USA central standard */
-  { "mst", -7*3600 },   { "mdt", -6*3600 },       /* USA mountain standard */
-  { "pst", -8*3600 },   { "pdt", -7*3600 },       /* USA pacific standard */
-  { "z", 0 }, /* zulu time (the rest of the military codes are bogus) */
-  
-  /* popular European timezones */
-  { "wet", 0*3600 },                            /* western european */
-  { "met", 1*3600 },                            /* middle european */
-  { "eet", 2*3600 },                            /* eastern european */
-  { "bst", 1*3600 },                            /* ??? british summer time */
-  
-  /* Canadian timezones */
-  { "ast", -4*3600 },   { "adt", -3*3600 },       /* atlantic */
-	{ "nst", -3*1800 },{ "ndt", -2*1800 },          /* newfoundland */
-  { "yst", -9*3600 },   { "ydt", -8*3600 },       /* yukon */
-	{ "hst", -10*3600 },                            /* hawaii (not really canada) */
-  
-  /* Asian timezones */
-  { "jst", 9*3600 },                            /* japan */
-  { "sst", 8*3600 },                            /* singapore */
-  
-  /* South-Pacific timezones */
-  { "nzst", 12*3600 },  { "nzdt", 13*3600 },      /* new zealand */
-  { "wst", 8*3600 },    { "wdt", 9*3600 },        /* western australia */
-  
-  /*
-   * Daylight savings modifiers.  These are not real timezones.
-   * They are used for things like "met dst".  The "met" timezone
-   * is 1*3600, and applying the "dst" modifier makes it 2*3600.
-   */
-  { "dst", 1*3600 },
-  { "dt", 1*3600 },
-  { "st", 1*3600 }
+
+    /* the following are from RFC-822 */
+    { "ut", 0 },
+    { "gmt", 0 },
+    { "est", -5*3600 },   { "edt", -4*3600 },       /* USA eastern standard */
+    { "cst", -6*3600 },   { "cdt", -5*3600 },       /* USA central standard */
+    { "mst", -7*3600 },   { "mdt", -6*3600 },       /* USA mountain standard */
+    { "pst", -8*3600 },   { "pdt", -7*3600 },       /* USA pacific standard */
+    { "z", 0 }, /* zulu time (the rest of the military codes are bogus) */
+
+    /* popular European timezones */
+    { "wet", 0*3600 },                            /* western european */
+    { "met", 1*3600 },                            /* middle european */
+    { "eet", 2*3600 },                            /* eastern european */
+    { "bst", 1*3600 },                            /* ??? british summer time */
+
+    /* Canadian timezones */
+    { "ast", -4*3600 },   { "adt", -3*3600 },       /* atlantic */
+    { "nst", -3*1800 },{ "ndt", -2*1800 },          /* newfoundland */
+    { "yst", -9*3600 },   { "ydt", -8*3600 },       /* yukon */
+    { "hst", -10*3600 },                            /* hawaii (not really canada) */
+
+    /* Asian timezones */
+    { "jst", 9*3600 },                            /* japan */
+    { "sst", 8*3600 },                            /* singapore */
+
+    /* South-Pacific timezones */
+    { "nzst", 12*3600 },  { "nzdt", 13*3600 },      /* new zealand */
+    { "wst", 8*3600 },    { "wdt", 9*3600 },        /* western australia */
+
+    /*
+     * Daylight savings modifiers.  These are not real timezones.
+     * They are used for things like "met dst".  The "met" timezone
+     * is 1*3600, and applying the "dst" modifier makes it 2*3600.
+     */
+    { "dst", 1*3600 },
+    { "dt", 1*3600 },
+    { "st", 1*3600 }
 };
 
 //
@@ -101,22 +101,22 @@ static struct _timezone {
 //
 NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsigned char *word)
 {
-  unsigned char *p;
-  NSUInteger i;
+    unsigned char *p;
+    NSUInteger i;
 
-  for (p = buf+start, i = start; (isspace(*p) || *p == ','); ++p, ++i);
-  
-  if (start >= len) return -1;
+    for (p = buf+start, i = start; (isspace(*p) || *p == ','); ++p, ++i);
 
-  while (i < len && !(isspace(*p) || *p == ','))
+    if (start >= len) return -1;
+
+    while (i < len && !(isspace(*p) || *p == ','))
     {
-      *word++ = *p++;
-      i++;
+        *word++ = *p++;
+        i++;
     }
-  
-  *word = '\0';
 
-  return p-buf-start;
+    *word = '\0';
+
+    return p-buf-start;
 }
 
 // MARK: - private interface
@@ -137,13 +137,13 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 + (void) parseContentDescription: (NSData *) theLine
                           inPart: (CWPart *) thePart
 {
-  NSData *aData;
+    NSData *aData;
 
-  aData = [[theLine subdataFromIndex: 20] dataByTrimmingWhiteSpaces];
+    aData = [[theLine subdataFromIndex: 20] dataByTrimmingWhiteSpaces];
 
-  if (aData && [aData length])
+    if (aData && [aData length])
     {
-      [thePart setContentDescription: [[aData dataFromQuotedData] asciiString] ];
+        [thePart setContentDescription: [[aData dataFromQuotedData] asciiString] ];
     }
 }
 
@@ -188,26 +188,26 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 //
 //
 + (void) parseContentID: (NSData *) theLine
-		 inPart: (CWPart *) thePart
+                 inPart: (CWPart *) thePart
 {
-  if ([theLine length] > 12)
+    if ([theLine length] > 12)
     {
-      NSData *aData;
-      
-      aData = [theLine subdataFromIndex: 12];
-      
-      if ([aData hasCPrefix: "<"] && [aData hasCSuffix: ">"])
-	{
-	  [thePart setContentID: [[aData subdataWithRange: NSMakeRange(1, [aData length]-2)] asciiString]];
-	}
-      else
-	{
-	  [thePart setContentID: [aData asciiString]];
-	}
+        NSData *aData;
+
+        aData = [theLine subdataFromIndex: 12];
+
+        if ([aData hasCPrefix: "<"] && [aData hasCSuffix: ">"])
+        {
+            [thePart setContentID: [[aData subdataWithRange: NSMakeRange(1, [aData length]-2)] asciiString]];
+        }
+        else
+        {
+            [thePart setContentID: [aData asciiString]];
+        }
     }
-  else
+    else
     {
-      [thePart setContentID: @""];
+        [thePart setContentID: @""];
     }
 }
 
@@ -218,36 +218,36 @@ NSInteger next_word(unsigned char *buf, NSUInteger start, NSUInteger len, unsign
 + (void) parseContentTransferEncoding: (NSData *) theLine
                                inPart: (CWPart *) thePart
 {
-  if ([theLine length] > 26)
+    if ([theLine length] > 26)
     {
-      NSData *aData;
-      
-      aData = [[theLine subdataFromIndex: 26] dataByTrimmingWhiteSpaces];
-      
-      if ([aData caseInsensitiveCCompare: "quoted-printable"] == NSOrderedSame)
-	{
-	  [thePart setContentTransferEncoding: PantomimeEncodingQuotedPrintable];
-	}
-      else if ([aData caseInsensitiveCCompare: "base64"] == NSOrderedSame)
-	{
-	  [thePart setContentTransferEncoding: PantomimeEncodingBase64];
-	}
-      else if ([aData caseInsensitiveCCompare: "8bit"] == NSOrderedSame)
-	{
-	  [thePart setContentTransferEncoding: PantomimeEncoding8bit];
-	}
-      else if ([aData caseInsensitiveCCompare: "binary"] == NSOrderedSame)
-	{
-	  [thePart setContentTransferEncoding: PantomimeEncodingBinary];
-	}
-      else
-	{
-	  [thePart setContentTransferEncoding: PantomimeEncodingNone];
-	}
+        NSData *aData;
+
+        aData = [[theLine subdataFromIndex: 26] dataByTrimmingWhiteSpaces];
+
+        if ([aData caseInsensitiveCCompare: "quoted-printable"] == NSOrderedSame)
+        {
+            [thePart setContentTransferEncoding: PantomimeEncodingQuotedPrintable];
+        }
+        else if ([aData caseInsensitiveCCompare: "base64"] == NSOrderedSame)
+        {
+            [thePart setContentTransferEncoding: PantomimeEncodingBase64];
+        }
+        else if ([aData caseInsensitiveCCompare: "8bit"] == NSOrderedSame)
+        {
+            [thePart setContentTransferEncoding: PantomimeEncoding8bit];
+        }
+        else if ([aData caseInsensitiveCCompare: "binary"] == NSOrderedSame)
+        {
+            [thePart setContentTransferEncoding: PantomimeEncodingBinary];
+        }
+        else
+        {
+            [thePart setContentTransferEncoding: PantomimeEncodingNone];
+        }
     }
-  else
+    else
     {
-      [thePart setContentTransferEncoding: PantomimeEncodingNone];
+        [thePart setContentTransferEncoding: PantomimeEncodingNone];
     }
 }
 
@@ -268,96 +268,96 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseContentType: (NSData *) theLine
-		   inPart: (CWPart *) thePart
+                   inPart: (CWPart *) thePart
 {
-  NSRange aRange;
-  NSData *aData;
-  NSInteger x;
+    NSRange aRange;
+    NSData *aData;
+    NSInteger x;
 
-  if ([theLine length] <= 14)
+    if ([theLine length] <= 14)
     {
-      [thePart setContentType: @"text/plain"];
-      return;
+        [thePart setContentType: @"text/plain"];
+        return;
     }
 
-  aData = [[theLine subdataFromIndex: 13] dataByTrimmingWhiteSpaces];
+    aData = [[theLine subdataFromIndex: 13] dataByTrimmingWhiteSpaces];
 
-  // We first skip the parameters, if we need to
-  x = [aData indexOfCharacter: ';'];
-  if (x > 0)
+    // We first skip the parameters, if we need to
+    x = [aData indexOfCharacter: ';'];
+    if (x > 0)
     {
-      aData = [aData subdataToIndex: x];
-    } 
-  
-  // We see if there's a subtype specified for text, if none was specified, we append "/plain"
-  x = [aData indexOfCharacter: '/'];
-
-  if (x < 0 && [aData hasCaseInsensitiveCPrefix: "text"])
-    {
-      [thePart setContentType: [[[aData asciiString] stringByAppendingString: @"/plain"] lowercaseString]];
-    }
-  else
-    {
-      [thePart setContentType: [[aData asciiString] lowercaseString]];
+        aData = [aData subdataToIndex: x];
     }
 
-  //
-  // We decode our boundary (if we need to)
-  //
-  aRange = shrinkRange([theLine rangeOfCString: "boundary="  options: NSCaseInsensitiveSearch]);
-  
-  if (aRange.location != NSNotFound)
+    // We see if there's a subtype specified for text, if none was specified, we append "/plain"
+    x = [aData indexOfCharacter: '/'];
+
+    if (x < 0 && [aData hasCaseInsensitiveCPrefix: "text"])
     {
-      [thePart setBoundary: [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil]];
+        [thePart setContentType: [[[aData asciiString] stringByAppendingString: @"/plain"] lowercaseString]];
+    }
+    else
+    {
+        [thePart setContentType: [[aData asciiString] lowercaseString]];
     }
 
-  //
-  // We decode our charset (if we need to)
-  //
-  aRange = shrinkRange([theLine rangeOfCString: "charset="  options: NSCaseInsensitiveSearch]);
-  
-  if (aRange.location != NSNotFound)
-    {
-      [thePart setCharset: [[CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil] asciiString]];
-    }
-  
-  //
-  // We decode our format (if we need to). See RFC2646.
-  //
-  aRange = shrinkRange([theLine rangeOfCString: "format="  options: NSCaseInsensitiveSearch]);
-  
-  if (aRange.location != NSNotFound)
-    {
-      NSData *aFormat;
-      
-      aFormat = [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil];
-      
-      if ([aFormat caseInsensitiveCCompare: "flowed"] == NSOrderedSame)
-	{
-	  [thePart setFormat: PantomimeFormatFlowed];
-	}
-      else
-	{
-	  [thePart setFormat: PantomimeFormatUnknown];
-	}
-    }
-  else
-    {
-      [thePart setFormat: PantomimeFormatUnknown];
-    }
-
-  //
-  // We decode the parameter "name" if the thePart is an instance of Part
-  //
-  if ([thePart isKindOfClass: [CWPart class]])
-  {
-    aRange = [theLine rangeOfCString: "name="  options: NSCaseInsensitiveSearch];
+    //
+    // We decode our boundary (if we need to)
+    //
+    aRange = shrinkRange([theLine rangeOfCString: "boundary="  options: NSCaseInsensitiveSearch]);
 
     if (aRange.location != NSNotFound)
-      {
-	[thePart setFilename: [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: YES  charset: [thePart defaultCharset]]];
-      }
-  }
+    {
+        [thePart setBoundary: [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil]];
+    }
+
+    //
+    // We decode our charset (if we need to)
+    //
+    aRange = shrinkRange([theLine rangeOfCString: "charset="  options: NSCaseInsensitiveSearch]);
+
+    if (aRange.location != NSNotFound)
+    {
+        [thePart setCharset: [[CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil] asciiString]];
+    }
+
+    //
+    // We decode our format (if we need to). See RFC2646.
+    //
+    aRange = shrinkRange([theLine rangeOfCString: "format="  options: NSCaseInsensitiveSearch]);
+
+    if (aRange.location != NSNotFound)
+    {
+        NSData *aFormat;
+
+        aFormat = [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil];
+
+        if ([aFormat caseInsensitiveCCompare: "flowed"] == NSOrderedSame)
+        {
+            [thePart setFormat: PantomimeFormatFlowed];
+        }
+        else
+        {
+            [thePart setFormat: PantomimeFormatUnknown];
+        }
+    }
+    else
+    {
+        [thePart setFormat: PantomimeFormatUnknown];
+    }
+
+    //
+    // We decode the parameter "name" if the thePart is an instance of Part
+    //
+    if ([thePart isKindOfClass: [CWPart class]])
+    {
+        aRange = [theLine rangeOfCString: "name="  options: NSCaseInsensitiveSearch];
+
+        if (aRange.location != NSNotFound)
+        {
+            [thePart setFilename: [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: YES  charset: [thePart defaultCharset]]];
+        }
+    }
 }
 
 
@@ -365,7 +365,7 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseDate: (NSData *) theLine
-	 inMessage: (CWMessage *) theMessage
+         inMessage: (CWMessage *) theMessage
 {
     if ([[theLine asciiString] containsString:@"__Smtpdate"]) {
         // We have seen spammer to use this date: "Date: __Smtpdate", which we consider invalid.
@@ -373,160 +373,160 @@ NSRange shrinkRange(NSRange range)
         return;
     }
 
-  if ([theLine length] > 6)
+    if ([theLine length] > 6)
     {
-      NSData *aData;
+        NSData *aData;
 
         NSInteger month;
         int day, year, hours, mins, secs;
-      NSUInteger tz, i, j, len, tot, s;
-      unsigned char *bytes, *word;
+        NSUInteger tz, i, j, len, tot, s;
+        unsigned char *bytes, *word;
 
-      aData = [theLine subdataFromIndex: 6];
+        aData = [theLine subdataFromIndex: 6];
 
-      word = malloc(256);
-      *word = '\0';
+        word = malloc(256);
+        *word = '\0';
 
-      //LogInfo(@"Have to parse |%@|", [aData asciiString]);
+        //LogInfo(@"Have to parse |%@|", [aData asciiString]);
 
-      bytes = (unsigned char*)[aData bytes];
-      tot = [aData length];
-      i = len = 0;
-      s = 0;
-      tz = 0;
+        bytes = (unsigned char*)[aData bytes];
+        tot = [aData length];
+        i = len = 0;
+        s = 0;
+        tz = 0;
 
-      // date-time       =       [ day-of-week "," ] date FWS time [CFWS]
-      // day-of-week     =       ([FWS] day-name) / obs-day-of-week
-      // day-name        =       "Mon" / "Tue" / "Wed" / "Thu" /
-      //                         "Fri" / "Sat" / "Sun"
-      // date            =       day month year
-      // year            =       4*DIGIT / obs-year
-      // month           =       (FWS month-name FWS) / obs-month
-      // month-name      =       "Jan" / "Feb" / "Mar" / "Apr" /
-      //                         "May" / "Jun" / "Jul" / "Aug" /
-      //                         "Sep" / "Oct" / "Nov" / "Dec"
-      //
-      // day             =       ([FWS] 1*2DIGIT) / obs-day
-      // time            =       time-of-day FWS zone
-      // time-of-day     =       hour ":" minute [ ":" second ]
-      // hour            =       2DIGIT / obs-hour
-      // minute          =       2DIGIT / obs-minute
-      // second          =       2DIGIT / obs-second
-      // zone            =       (( "+" / "-" ) 4DIGIT) / obs-zone
-      //
-      // We need to handle RFC2822 and UNIX time:
-      //
-      // Date: Wed, 02 Jan 2002 09:07:19 -0700
-      // Date: 02 Jan 2002 19:57:49 +0000
-      //
-      // And broken dates such as:
-      //
-      // Date: Thu, 03 Jan 2002 16:40:30 GMT
-      // Date: Wed, 2 Jan 2002 08:56:18 -0700 (MST)
-      // Date: Wed, 9 Jan 2002 10:04:23 -0500 (Eastern Standard Time)
-      // Date: 11-Jan-02
-      // Date: Tue, 15 Jan 2002 15:45:53 -0801
-      // Date: Thu, 17 Jan 2002 11:54:11 -0900<br>
-      //
-      //while (i < tot && isspace(*bytes))
-      //	{
-      //	  i++; bytes++;
-      //	}
-      
-      len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
+        // date-time       =       [ day-of-week "," ] date FWS time [CFWS]
+        // day-of-week     =       ([FWS] day-name) / obs-day-of-week
+        // day-name        =       "Mon" / "Tue" / "Wed" / "Thu" /
+        //                         "Fri" / "Sat" / "Sun"
+        // date            =       day month year
+        // year            =       4*DIGIT / obs-year
+        // month           =       (FWS month-name FWS) / obs-month
+        // month-name      =       "Jan" / "Feb" / "Mar" / "Apr" /
+        //                         "May" / "Jun" / "Jul" / "Aug" /
+        //                         "Sep" / "Oct" / "Nov" / "Dec"
+        //
+        // day             =       ([FWS] 1*2DIGIT) / obs-day
+        // time            =       time-of-day FWS zone
+        // time-of-day     =       hour ":" minute [ ":" second ]
+        // hour            =       2DIGIT / obs-hour
+        // minute          =       2DIGIT / obs-minute
+        // second          =       2DIGIT / obs-second
+        // zone            =       (( "+" / "-" ) 4DIGIT) / obs-zone
+        //
+        // We need to handle RFC2822 and UNIX time:
+        //
+        // Date: Wed, 02 Jan 2002 09:07:19 -0700
+        // Date: 02 Jan 2002 19:57:49 +0000
+        //
+        // And broken dates such as:
+        //
+        // Date: Thu, 03 Jan 2002 16:40:30 GMT
+        // Date: Wed, 2 Jan 2002 08:56:18 -0700 (MST)
+        // Date: Wed, 9 Jan 2002 10:04:23 -0500 (Eastern Standard Time)
+        // Date: 11-Jan-02
+        // Date: Tue, 15 Jan 2002 15:45:53 -0801
+        // Date: Thu, 17 Jan 2002 11:54:11 -0900<br>
+        //
+        //while (i < tot && isspace(*bytes))
+        //	{
+        //	  i++; bytes++;
+        //	}
 
-      if (isalpha(*word))
-	{
-	  //LogInfo(@"UNIX DATE");
-	  
-	  // We skip the first word, no need for it.
-	  i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
-	}
+        len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
 
-      
-      month = year = -1;
-      
-      // We got a RFC 822 date. The syntax is:
-      // day month year hh:mm:ss zone
-      // For example: 03 Apr 2003 17:27:06 +0200
-      //LogInfo(@"RFC-822 time");
-      day = atoi((const char*)word);
-      
-      //printf("len = %d |%s| day = %d\n", len, word, day);
-      
-      // We get the month name and we convert it.
-      i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
-      
-      for (j = 0; j < 12; j++)
-	{
-	  if (strncasecmp((const char*)word, month_name[j], 3) == 0)
-	    {
-	      month = j+1;
-	    }
-	}
-      
-      if (month < 0) { free(word); return; }
-      
-      //printf("len = %d |%s| month = %d\n", len, word, month);
-      
-      // We get the year.
-      i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
-      year = atoi((const char*)word);
-      
-      if (year < 70) year += 2000;
-      if (year < 100) year += 1900;
-      
-      //printf("len = %d |%s| year = %d\n", len, word, year);
+        if (isalpha(*word))
+        {
+            //LogInfo(@"UNIX DATE");
 
-      // We parse the time using the hh:mm:ss format.
-      i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
-      sscanf((const char*)word, "%d:%d:%d", &hours, &mins, &secs);
-      //printf("len = %d |%s| %d:%d:%d\n", len, word, hours, mins, secs);
-      
-      // We parse the timezone.
-      i += len+1; len = next_word(bytes, i, tot, word); 
-      
-      if (len <= 0)
-	{
-	  tz = 0;
-	}
-      else
-	{
-	  unsigned char *p;
-	  
-	  p = word;
-	  
-	  if (*p == '-' || *p == '+')
-	    {
-	      s = (*p == '-' ? -1 : 1);
-	      p++;
-	    }
-	  
-	  len = strlen((const char*)p);
-	  
-	  if (isdigit(*p))
-	    {
-	      if (len == 2)
-		{
-		  tz = (*(p)-48)*36000+*((p+1)-48)*3600;
-		}
-	      else
-		{
-		  tz = (*(p)-48)*36000+(*(p+1)-48)*3600+(*(p+2)-48)*10+(*(p+3)-48);
-		}
-	    }
-	  else
-	    {
-	      for (j = 0; j < sizeof(timezone_info)/sizeof(timezone_info[0]); j++)
-		{
-		  if (strncasecmp((const char*)p, timezone_info[j].name, len) == 0)
-		    {
-		      tz = timezone_info[j].offset;
-		    }
-		}
-	    }
-	  tz = s*tz;
-	}
+            // We skip the first word, no need for it.
+            i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
+        }
+
+
+        month = year = -1;
+
+        // We got a RFC 822 date. The syntax is:
+        // day month year hh:mm:ss zone
+        // For example: 03 Apr 2003 17:27:06 +0200
+        //LogInfo(@"RFC-822 time");
+        day = atoi((const char*)word);
+
+        //printf("len = %d |%s| day = %d\n", len, word, day);
+
+        // We get the month name and we convert it.
+        i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
+
+        for (j = 0; j < 12; j++)
+        {
+            if (strncasecmp((const char*)word, month_name[j], 3) == 0)
+            {
+                month = j+1;
+            }
+        }
+
+        if (month < 0) { free(word); return; }
+
+        //printf("len = %d |%s| month = %d\n", len, word, month);
+
+        // We get the year.
+        i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
+        year = atoi((const char*)word);
+
+        if (year < 70) year += 2000;
+        if (year < 100) year += 1900;
+
+        //printf("len = %d |%s| year = %d\n", len, word, year);
+
+        // We parse the time using the hh:mm:ss format.
+        i += len+1; len = next_word(bytes, i, tot, word); if (len <= 0) { free(word); return; }
+        sscanf((const char*)word, "%d:%d:%d", &hours, &mins, &secs);
+        //printf("len = %d |%s| %d:%d:%d\n", len, word, hours, mins, secs);
+
+        // We parse the timezone.
+        i += len+1; len = next_word(bytes, i, tot, word);
+
+        if (len <= 0)
+        {
+            tz = 0;
+        }
+        else
+        {
+            unsigned char *p;
+
+            p = word;
+
+            if (*p == '-' || *p == '+')
+            {
+                s = (*p == '-' ? -1 : 1);
+                p++;
+            }
+
+            len = strlen((const char*)p);
+
+            if (isdigit(*p))
+            {
+                if (len == 2)
+                {
+                    tz = (*(p)-48)*36000+*((p+1)-48)*3600;
+                }
+                else
+                {
+                    tz = (*(p)-48)*36000+(*(p+1)-48)*3600+(*(p+2)-48)*10+(*(p+3)-48);
+                }
+            }
+            else
+            {
+                for (j = 0; j < sizeof(timezone_info)/sizeof(timezone_info[0]); j++)
+                {
+                    if (strncasecmp((const char*)p, timezone_info[j].name, len) == 0)
+                    {
+                        tz = timezone_info[j].offset;
+                    }
+                }
+            }
+            tz = s*tz;
+        }
         NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDateComponents *components = [[NSDateComponents alloc] init];
         [components setDay:day];
@@ -538,8 +538,8 @@ NSRange shrinkRange(NSRange range)
         [components setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: tz]];
         NSDate *date = [calendar dateFromComponents:components];
 
-      [theMessage setOriginationDate:date];
-      free(word);
+        [theMessage setOriginationDate:date];
+        free(word);
     }
 }
 
@@ -547,123 +547,123 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (NSData *) parseDestination: (NSData *) theLine
-		      forType: (PantomimeRecipientType) theType
-		    inMessage: (CWMessage *) theMessage
-			quick: (BOOL) theBOOL
+                      forType: (PantomimeRecipientType) theType
+                    inMessage: (CWMessage *) theMessage
+                        quick: (BOOL) theBOOL
 {  
-  CWInternetAddress *anInternetAddress;
-  NSData *aData;
+    CWInternetAddress *anInternetAddress;
+    NSData *aData;
 
-  NSUInteger i, len, s_len, x, y;
-  unsigned char *bytes;
-  BOOL b;
+    NSUInteger i, len, s_len, x, y;
+    unsigned char *bytes;
+    BOOL b;
 
-  len = 0;
-  if (theBOOL)
+    len = 0;
+    if (theBOOL)
     {
-      aData = theLine;
+        aData = theLine;
     }
-  else
+    else
     {
-      switch (theType)
-	{
-	case PantomimeBccRecipient:
-	  len = 5;
-	  break;
+        switch (theType)
+        {
+            case PantomimeBccRecipient:
+                len = 5;
+                break;
 
-	case PantomimeCcRecipient:
-	case PantomimeToRecipient:
-	  len = 4;
-	  break;
-	  
-	case PantomimeResentBccRecipient:
-	  len = 12;
-	  break;
+            case PantomimeCcRecipient:
+            case PantomimeToRecipient:
+                len = 4;
+                break;
 
-	case PantomimeResentCcRecipient:
-	case PantomimeResentToRecipient:
-	  len = 11;
-	  break;
-	}
+            case PantomimeResentBccRecipient:
+                len = 12;
+                break;
 
-      // We skip over emtpy headers.
-      if (len >= [theLine length]) return [NSData data];
-      
-      aData = [theLine subdataFromIndex: len];
-    }
+            case PantomimeResentCcRecipient:
+            case PantomimeResentToRecipient:
+                len = 11;
+                break;
+        }
 
-  bytes = (unsigned char*)[aData bytes];
-  len = [aData length];
-  b = NO; x = 0;
+        // We skip over emtpy headers.
+        if (len >= [theLine length]) return [NSData data];
 
-  for (i = 0; i < len; i++)
-    {
-      if (*bytes == '"')
-	{
-	  b = !b;
-	}
-
-      if (*bytes == ',' || i == len-1)
-	{
-	  if (b)
-	    {
-	      bytes++;
-	      continue;
-	    }
-
-	  y = i;
-
-	  // We strip the trailing comma for all but the last entries.
-	  s_len = y-x;
-	  if (i == len-1) s_len++;
-
-	  anInternetAddress = [[CWInternetAddress alloc]
-				initWithString: [CWMIMEUtility decodeHeader: [[aData subdataWithRange: NSMakeRange(x, s_len)] dataByTrimmingWhiteSpaces]
-							       charset: [theMessage defaultCharset]]];
- 
-	  [anInternetAddress setType: theType];
-	  [theMessage addRecipient: anInternetAddress];
-	  RELEASE(anInternetAddress);
-	  x = y+1;
-	}
-      
-      bytes++;
+        aData = [theLine subdataFromIndex: len];
     }
 
-  return aData;
+    bytes = (unsigned char*)[aData bytes];
+    len = [aData length];
+    b = NO; x = 0;
+
+    for (i = 0; i < len; i++)
+    {
+        if (*bytes == '"')
+        {
+            b = !b;
+        }
+
+        if (*bytes == ',' || i == len-1)
+        {
+            if (b)
+            {
+                bytes++;
+                continue;
+            }
+
+            y = i;
+
+            // We strip the trailing comma for all but the last entries.
+            s_len = y-x;
+            if (i == len-1) s_len++;
+
+            anInternetAddress = [[CWInternetAddress alloc]
+                                 initWithString: [CWMIMEUtility decodeHeader: [[aData subdataWithRange: NSMakeRange(x, s_len)] dataByTrimmingWhiteSpaces]
+                                                                     charset: [theMessage defaultCharset]]];
+
+            [anInternetAddress setType: theType];
+            [theMessage addRecipient: anInternetAddress];
+            RELEASE(anInternetAddress);
+            x = y+1;
+        }
+
+        bytes++;
+    }
+
+    return aData;
 }
 
 //
 //
 //
 + (NSData *) parseFrom: (NSData *) theLine
-	     inMessage: (CWMessage *) theMessage
-		 quick: (BOOL) theBOOL;
+             inMessage: (CWMessage *) theMessage
+                 quick: (BOOL) theBOOL;
 {
-  CWInternetAddress *anInternetAddress;
-  NSData *aData;
-  
-  if (!theBOOL && !([theLine length] > 6))
+    CWInternetAddress *anInternetAddress;
+    NSData *aData;
+
+    if (!theBOOL && !([theLine length] > 6))
     {
-      return [NSData data];
-    }
- 
-  if (theBOOL)
-    {
-      aData = theLine;
-    }
-  else
-    {
-      aData = [theLine subdataFromIndex: 6];
+        return [NSData data];
     }
 
-  anInternetAddress = [[CWInternetAddress alloc] initWithString:
-                       [CWMIMEUtility decodeHeader: aData charset: [theMessage defaultCharset]]
-                       ];
-  [theMessage setFrom: anInternetAddress];
-  RELEASE(anInternetAddress);
+    if (theBOOL)
+    {
+        aData = theLine;
+    }
+    else
+    {
+        aData = [theLine subdataFromIndex: 6];
+    }
 
-  return aData;
+    anInternetAddress = [[CWInternetAddress alloc] initWithString:
+                         [CWMIMEUtility decodeHeader: aData charset: [theMessage defaultCharset]]
+                         ];
+    [theMessage setFrom: anInternetAddress];
+    RELEASE(anInternetAddress);
+
+    return aData;
 }
 
 
@@ -728,11 +728,11 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseMIMEVersion: (NSData *) theLine
-		inMessage: (CWMessage *) theMessage
+                inMessage: (CWMessage *) theMessage
 {
-  if ([theLine length] > 14)
+    if ([theLine length] > 14)
     {
-      [theMessage setMIMEVersion: [[theLine subdataFromIndex: 14] asciiString]];
+        [theMessage setMIMEVersion: [[theLine subdataFromIndex: 14] asciiString]];
     }
 }
 
@@ -777,63 +777,63 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseReplyTo: (NSData *) theLine
-	    inMessage: (CWMessage *) theMessage
+            inMessage: (CWMessage *) theMessage
 {
-  if ([theLine length] > 10)
+    if ([theLine length] > 10)
     {
-      CWInternetAddress *anInternetAddress;
-      NSMutableArray *aMutableArray;
-      NSData *aData;
+        CWInternetAddress *anInternetAddress;
+        NSMutableArray *aMutableArray;
+        NSData *aData;
 
-      unsigned char *bytes;
-      NSUInteger i, len, s_len, x, y;
-      BOOL b;
-      
-      aMutableArray = [[NSMutableArray alloc] init];
-      aData = [theLine subdataFromIndex: 10];
-      bytes = (unsigned char*)[aData bytes];
-      len = [aData length];
-      b = NO; x = 0;
-      
-      for (i = 0; i < len; i++)
-	{
-	  if (*bytes == '"')
-	    {
-	      b = !b;
-	    }
-	  
-	  if (*bytes == ',' || i == len-1)
-	    {
-	      if (b)
-		{
-		  bytes++;
-		  continue;
-		}
-	      
-	      y = i;
-	      
-	      // We strip the trailing comma for all but the last entries.
-	      s_len = y-x;
-	      if (i == len-1) s_len++;
+        unsigned char *bytes;
+        NSUInteger i, len, s_len, x, y;
+        BOOL b;
 
-	      anInternetAddress = [[CWInternetAddress alloc]
-				    initWithString: [CWMIMEUtility decodeHeader: [[aData subdataWithRange: NSMakeRange(x, s_len)] dataByTrimmingWhiteSpaces]
-								   charset: [theMessage defaultCharset]]];
-	      
-	      [aMutableArray addObject: anInternetAddress];
-	      RELEASE(anInternetAddress);
-	      x = y+1;
-	    }
-	  
-	  bytes++;
-	}
+        aMutableArray = [[NSMutableArray alloc] init];
+        aData = [theLine subdataFromIndex: 10];
+        bytes = (unsigned char*)[aData bytes];
+        len = [aData length];
+        b = NO; x = 0;
 
-      if ([aMutableArray count])
-	{
-	  [theMessage setReplyTo: aMutableArray];
-	}
+        for (i = 0; i < len; i++)
+        {
+            if (*bytes == '"')
+            {
+                b = !b;
+            }
 
-      RELEASE(aMutableArray);
+            if (*bytes == ',' || i == len-1)
+            {
+                if (b)
+                {
+                    bytes++;
+                    continue;
+                }
+
+                y = i;
+
+                // We strip the trailing comma for all but the last entries.
+                s_len = y-x;
+                if (i == len-1) s_len++;
+
+                anInternetAddress = [[CWInternetAddress alloc]
+                                     initWithString: [CWMIMEUtility decodeHeader: [[aData subdataWithRange: NSMakeRange(x, s_len)] dataByTrimmingWhiteSpaces]
+                                                                         charset: [theMessage defaultCharset]]];
+
+                [aMutableArray addObject: anInternetAddress];
+                RELEASE(anInternetAddress);
+                x = y+1;
+            }
+
+            bytes++;
+        }
+
+        if ([aMutableArray count])
+        {
+            [theMessage setReplyTo: aMutableArray];
+        }
+
+        RELEASE(aMutableArray);
     }
 }
 
@@ -842,18 +842,18 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseResentFrom: (NSData *) theLine
-	 inMessage: (CWMessage *) theMessage
+               inMessage: (CWMessage *) theMessage
 {
-  if ([theLine length] > 13)
+    if ([theLine length] > 13)
     {
-      CWInternetAddress *anInternetAddress;
-      
-      anInternetAddress = [[CWInternetAddress alloc] initWithString: [CWMIMEUtility decodeHeader:
-										      [theLine subdataFromIndex: 13]
-										    charset: [theMessage defaultCharset]]];
-      
-      [theMessage setResentFrom: anInternetAddress];
-      RELEASE(anInternetAddress);
+        CWInternetAddress *anInternetAddress;
+
+        anInternetAddress = [[CWInternetAddress alloc] initWithString: [CWMIMEUtility decodeHeader:
+                                                                        [theLine subdataFromIndex: 13]
+                                                                                           charset: [theMessage defaultCharset]]];
+
+        [theMessage setResentFrom: anInternetAddress];
+        RELEASE(anInternetAddress);
     }
 }
 
@@ -862,15 +862,15 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseStatus: (NSData *) theLine
-	   inMessage: (CWMessage *) theMessage
+           inMessage: (CWMessage *) theMessage
 {
-  if ([theLine length] > 8)
+    if ([theLine length] > 8)
     {
-      NSData *aData;
-      
-      aData = [theLine subdataFromIndex: 8];
-      [[theMessage flags] addFlagsFromData: aData  format: PantomimeFormatMbox];
-      [theMessage addHeader: @"Status"  withValue: [aData asciiString]];
+        NSData *aData;
+
+        aData = [theLine subdataFromIndex: 8];
+        [[theMessage flags] addFlagsFromData: aData  format: PantomimeFormatMbox];
+        [theMessage addHeader: @"Status"  withValue: [aData asciiString]];
     }
 }
 
@@ -879,15 +879,15 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseXStatus: (NSData *) theLine
-	    inMessage: (CWMessage *) theMessage
+            inMessage: (CWMessage *) theMessage
 {
-  if ([theLine length] > 10)
+    if ([theLine length] > 10)
     {
-      NSData *aData;
+        NSData *aData;
 
-      aData = [theLine subdataFromIndex: 10];
-      [[theMessage flags] addFlagsFromData: aData  format: PantomimeFormatMbox];
-      [theMessage addHeader: @"X-Status"  withValue: [aData asciiString]];
+        aData = [theLine subdataFromIndex: 10];
+        [[theMessage flags] addFlagsFromData: aData  format: PantomimeFormatMbox];
+        [theMessage addHeader: @"X-Status"  withValue: [aData asciiString]];
     }
 }
 
@@ -896,27 +896,27 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (NSData *) parseSubject: (NSData *) theLine
-		inMessage: (CWMessage *) theMessage
-		    quick: (BOOL) theBOOL
+                inMessage: (CWMessage *) theMessage
+                    quick: (BOOL) theBOOL
 {
-  NSData *aData;
+    NSData *aData;
 
-  if (theBOOL)
+    if (theBOOL)
     {
-      aData = theLine;
+        aData = theLine;
     }
-  else if ([theLine length] > 9)
+    else if ([theLine length] > 9)
     {
-      aData = [[theLine subdataFromIndex: 8] dataByTrimmingWhiteSpaces];
+        aData = [[theLine subdataFromIndex: 8] dataByTrimmingWhiteSpaces];
     }
-  else
+    else
     {
-      return [NSData data];
+        return [NSData data];
     }
 
-  [theMessage setSubject: [CWMIMEUtility decodeHeader: aData  charset: [theMessage defaultCharset]]];
-  
-  return aData;
+    [theMessage setSubject: [CWMIMEUtility decodeHeader: aData  charset: [theMessage defaultCharset]]];
+
+    return aData;
 }
 
 
@@ -924,24 +924,24 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseUnknownHeader: (NSData *) theLine
-		  inMessage: (CWMessage *) theMessage
+                  inMessage: (CWMessage *) theMessage
 {
-  NSData *aName, *aValue;
-  NSRange range;
+    NSData *aName, *aValue;
+    NSRange range;
 
-  range = [theLine rangeOfCString: ":"];
-  
-  if (range.location != NSNotFound)
+    range = [theLine rangeOfCString: ":"];
+
+    if (range.location != NSNotFound)
     {
-      aName = [theLine subdataWithRange: NSMakeRange(0, range.location)];
-      
-      // we keep only the headers that have a value
-      if (([theLine length]-range.location-1) > 0)
-	{
-	  aValue = [theLine subdataWithRange: NSMakeRange(range.location + 2, [theLine length]-range.location-2)];
-	  
-	  [theMessage addHeader: [aName asciiString]  withValue: [aValue asciiString]];
-	}
+        aName = [theLine subdataWithRange: NSMakeRange(0, range.location)];
+
+        // we keep only the headers that have a value
+        if (([theLine length]-range.location-1) > 0)
+        {
+            aValue = [theLine subdataWithRange: NSMakeRange(range.location + 2, [theLine length]-range.location-2)];
+
+            [theMessage addHeader: [aName asciiString]  withValue: [aValue asciiString]];
+        }
     }
 }
 
@@ -950,21 +950,21 @@ NSRange shrinkRange(NSRange range)
 //
 //
 + (void) parseOrganization: (NSData *) theLine
-		 inMessage: (CWMessage *) theMessage
+                 inMessage: (CWMessage *) theMessage
 {
-  NSString *organization;
+    NSString *organization;
 
-  if ([theLine length] > 14)
+    if ([theLine length] > 14)
     {
-      organization = [CWMIMEUtility decodeHeader: [[theLine subdataFromIndex: 13] dataByTrimmingWhiteSpaces]
-				    charset: [theMessage defaultCharset]];
+        organization = [CWMIMEUtility decodeHeader: [[theLine subdataFromIndex: 13] dataByTrimmingWhiteSpaces]
+                                           charset: [theMessage defaultCharset]];
     }
-  else
+    else
     {
-      organization = @"";
+        organization = @"";
     }
-  
-  [theMessage setOrganization: organization];    
+
+    [theMessage setOrganization: organization];
 }
 
 @end
@@ -1069,7 +1069,7 @@ NSRange shrinkRange(NSRange range)
                     value_start++;
                 }
                 NSRange r2 = [inData firstSemicolonOrNewlineInRange:NSMakeRange(NSMaxRange(r1),
-                                                                        len - NSMaxRange(r1))];
+                                                                                len - NSMaxRange(r1))];
                 if (r2.location != NSNotFound) {
                     value_end = r2.location;
                 } else {
@@ -1108,7 +1108,7 @@ NSRange shrinkRange(NSRange range)
                                  length: 0];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-// Suppress warning. We need to be able to pass the specified charset
+        // Suppress warning. We need to be able to pass the specified charset
         if (decode) {
             NSString *result = [[NSString alloc] initWithData: resultData
                                                      encoding: NSASCIIStringEncoding];
