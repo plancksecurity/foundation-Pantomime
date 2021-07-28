@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
     __block NSString *_password;
     __block NSString *_name;
     NSData *_crlf;
-    NSStringEncoding _defaultCStringEncoding;
+    NSStringEncoding _defaultStringEncoding;
     
 #ifdef MACOSX
     CFRunLoopSourceRef _runLoopSource;

@@ -493,7 +493,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
       [aMD5 computeDigest];
       
       aString = [NSString stringWithFormat: @"%@ %@", _username, [aMD5 hmacAsStringUsingPassword: _password]];
-        [self bulkWriteData:@[[[aString dataUsingEncoding:  _defaultCStringEncoding] encodeBase64WithLineLength: 0],
+        [self bulkWriteData:@[[[aString dataUsingEncoding:  _defaultStringEncoding] encodeBase64WithLineLength: 0],
                                  _crlf]];
       RELEASE(aMD5);
     }
@@ -521,8 +521,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     {
       NSString *aString;
       
-      aString = [[NSString alloc] initWithData: [[_username dataUsingEncoding: _defaultCStringEncoding] encodeBase64WithLineLength: 0]
-						   encoding: _defaultCStringEncoding];
+      aString = [[NSString alloc] initWithData: [[_username dataUsingEncoding: _defaultStringEncoding] encodeBase64WithLineLength: 0]
+						   encoding: _defaultStringEncoding];
       [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
       RELEASE(aString);
     }
@@ -546,8 +546,8 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     {
       NSString *aString;
       
-      aString = [[NSString alloc] initWithData: [[_password dataUsingEncoding: _defaultCStringEncoding] encodeBase64WithLineLength: 0]
-				  encoding: _defaultCStringEncoding];
+      aString = [[NSString alloc] initWithData: [[_password dataUsingEncoding: _defaultStringEncoding] encodeBase64WithLineLength: 0]
+				  encoding: _defaultStringEncoding];
       
       [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
       RELEASE(aString);
@@ -574,7 +574,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
     if ([aData hasCPrefix: "334"]) {
         NSString *stringToSend = [NSString stringWithFormat:@"\0%@\0%@", _username, _password];
-        NSData *dataToSend = [stringToSend dataUsingEncoding:_defaultCStringEncoding];
+        NSData *dataToSend = [stringToSend dataUsingEncoding:_defaultStringEncoding];
         [self bulkWriteData:@[[dataToSend encodeBase64WithLineLength: 0],
                               _crlf]];
     } else if ([aData hasCPrefix: "235"]) {
@@ -730,7 +730,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 	  aData = [aData subdataFromIndex: 4];
 
 	  // We add it to our capabilities
-	  [_capabilities addObject: AUTORELEASE([[NSString alloc] initWithData: aData  encoding: _defaultCStringEncoding])];
+	  [_capabilities addObject: AUTORELEASE([[NSString alloc] initWithData: aData  encoding: _defaultStringEncoding])];
 
 	  // Example of responses:
 	  //

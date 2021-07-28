@@ -205,7 +205,7 @@
         
         [self bulkWriteData:@[self.currentQueueObject.tag,
                               [NSData dataWithBytes: " "  length: 1],
-                              [self.currentQueueObject.arguments dataUsingEncoding: _defaultCStringEncoding],
+                              [self.currentQueueObject.arguments dataUsingEncoding: _defaultStringEncoding],
                               _crlf]];
 
         PERFORM_SELECTOR_2(_delegate, @selector(commandSent:), @"PantomimeCommandSent", [NSNumber numberWithInt: _lastCommand], @"Command");
