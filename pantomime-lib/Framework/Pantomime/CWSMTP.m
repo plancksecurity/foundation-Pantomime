@@ -570,46 +570,18 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseAUTH_PLAIN
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
+    NSData *aData = [_responsesFromServer lastObject];
 
-  if ([aData hasCPrefix: "334"])
-    {
-      NSMutableData *aMutableData;
-      NSUInteger len_username, len_password;
-      
-      len_username = [_username length];
-  
-      if (!_password)
-	{
-	  len_password = 0;
-	}
-      else
-	{
-	  len_password = [_password length];
-	}
-      
-      // We create our phrase
-      aMutableData = [NSMutableData dataWithLength: (len_username + len_password + 2)];
-      
-      [aMutableData replaceBytesInRange: NSMakeRange(1,len_username)
-		    withBytes: [[_username dataUsingEncoding: _defaultCStringEncoding] bytes]];
-      
-      
-      [aMutableData replaceBytesInRange: NSMakeRange(2 + len_username, len_password)
-		    withBytes: [[_password dataUsingEncoding:  [NSString defaultCStringEncoding]] bytes]];
-
-        [self bulkWriteData:@[[aMutableData encodeBase64WithLineLength: 0],
-                                 _crlf]];
+    if ([aData hasCPrefix: "334"]) {
+        NSString *stringToSend = [NSString stringWithFormat:@"\0%@\0%@", _username, _password];
+        NSData *dataToSend = [stringToSend dataUsingEncoding:_defaultCStringEncoding];
+        [self bulkWriteData:@[[dataToSend encodeBase64WithLineLength: 0],
+                              _crlf]];
+    } else if ([aData hasCPrefix: "235"]) {
+        AUTHENTICATION_COMPLETED(_delegate, @"PLAIN");
     }
-  else if ([aData hasCPrefix: "235"])
-    {
-      AUTHENTICATION_COMPLETED(_delegate, @"PLAIN");
-    }
-  else
-    {
-      AUTHENTICATION_FAILED(_delegate, @"PLAIN");
+    else {
+        AUTHENTICATION_FAILED(_delegate, @"PLAIN");
     }
 }
 
