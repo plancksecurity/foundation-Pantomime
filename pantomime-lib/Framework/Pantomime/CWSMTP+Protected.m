@@ -130,7 +130,7 @@
             }
             _lastCommand = aQueueObject->command;
             [self bulkWriteData:@[[aQueueObject->arguments
-                                   dataUsingEncoding: _defaultCStringEncoding],
+                                   dataUsingEncoding: _defaultStringEncoding],
                                   _crlf]];
         } else {
             LogInfo(@"Sending with nil queue object");

@@ -1490,7 +1490,7 @@ static inline int has_literal(char *buf, NSUInteger c)
         aString = [[NSString alloc] initWithData: [[aString dataUsingEncoding: NSASCIIStringEncoding] encodeBase64WithLineLength: 0]
                                         encoding: NSASCIIStringEncoding];
 
-        [self bulkWriteData:@[[aString dataUsingEncoding: _defaultCStringEncoding],
+        [self bulkWriteData:@[[aString dataUsingEncoding: _defaultStringEncoding],
                                  _crlf]];
         RELEASE(aMD5);
         RELEASE(aString);
@@ -1634,7 +1634,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSData *aData;
 
     aData = [_responsesFromServer objectAtIndex: 0];
-    aString = [[NSString alloc] initWithData: aData  encoding: _defaultCStringEncoding];
+    aString = [[NSString alloc] initWithData: aData  encoding: _defaultStringEncoding];
 
     [_capabilities addObjectsFromArray: [[aString substringFromIndex: 13] componentsSeparatedByString: @" "]];
     RELEASE(aString);
@@ -2405,7 +2405,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSUInteger len;
 
     aString = [[NSString alloc] initWithData: [_responsesFromServer lastObject]
-                                    encoding: _defaultCStringEncoding];
+                                    encoding: _defaultStringEncoding];
 
     if (!aString)
     {

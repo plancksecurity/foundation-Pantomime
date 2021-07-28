@@ -1,24 +1,24 @@
 /*
-**  CWMessage.m
-** 
-**  Copyright (c) 2001-2007
-**
-**  Author: Ludovic Marcotte <ludovic@Sophos.ca>
-**
-**  This library is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU Lesser General Public
-**  License as published by the Free Software Foundation; either
-**  version 2.1 of the License, or (at your option) any later version.
-**  
-**  This library is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-**  Lesser General Public License for more details.
-**  
-**  You should have received a copy of the GNU Lesser General Public
-**  License along with this library; if not, write to the Free Software
-**  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ **  CWMessage.m
+ **
+ **  Copyright (c) 2001-2007
+ **
+ **  Author: Ludovic Marcotte <ludovic@Sophos.ca>
+ **
+ **  This library is free software; you can redistribute it and/or
+ **  modify it under the terms of the GNU Lesser General Public
+ **  License as published by the Free Software Foundation; either
+ **  version 2.1 of the License, or (at your option) any later version.
+ **
+ **  This library is distributed in the hope that it will be useful,
+ **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ **  Lesser General Public License for more details.
+ **
+ **  You should have received a copy of the GNU Lesser General Public
+ **  License along with this library; if not, write to the Free Software
+ **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 #import <PantomimeFramework/CWMessage.h>
 
@@ -66,8 +66,8 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (NSString *) _computeBaseSubject;
 - (void) _extractText: (NSMutableData *) theMutableData
-		 part: (id) thePart
-		quote: (BOOL *) theBOOL;
+                 part: (id) thePart
+                quote: (BOOL *) theBOOL;
 - (NSData *) _formatRecipientsWithType: (int) theType;
 
 @end
@@ -83,26 +83,26 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 + (void) initialize
 {
-  if (atLeastOneSpaceRegex == nil)
+    if (atLeastOneSpaceRegex == nil)
     {
-      NSString *blobChar = @"[^][]";
-      NSString *subjTrailer = @"(\\(fwd\\))| ";
-      NSString *subjFwdHdr = @"\\[fwd:";
-      NSString *subjFwdTrl = @"\\]";
-      NSString *subjBlob = [NSString stringWithFormat:@"\\[(%@)*\\] *", blobChar];
-      NSString *subjReFwd = [NSString stringWithFormat:@"((re)|(fwd?)) *(%@)?:", subjBlob];
-      NSString *subjLeader = [NSString stringWithFormat:@"((%@)*%@)| ", subjBlob, subjReFwd];
- 
-      atLeastOneSpaceRegex = [[CWRegEx alloc] initWithPattern: @"[[:space:]]+"
-					      flags: REG_EXTENDED|REG_ICASE];
-      suffixSubjTrailerRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"(%@)*$", subjTrailer]
-						flags: REG_EXTENDED|REG_ICASE];
-      prefixSubjLeaderRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"^(%@)", subjLeader]
-					       flags: REG_EXTENDED|REG_ICASE];
-      prefixSubjBlobRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"^(%@)", subjBlob]
-					     flags: REG_EXTENDED|REG_ICASE];
-      prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"^(%@)(.*)(%@)$", subjFwdHdr, subjFwdTrl]
-								  flags: REG_EXTENDED|REG_ICASE];
+        NSString *blobChar = @"[^][]";
+        NSString *subjTrailer = @"(\\(fwd\\))| ";
+        NSString *subjFwdHdr = @"\\[fwd:";
+        NSString *subjFwdTrl = @"\\]";
+        NSString *subjBlob = [NSString stringWithFormat:@"\\[(%@)*\\] *", blobChar];
+        NSString *subjReFwd = [NSString stringWithFormat:@"((re)|(fwd?)) *(%@)?:", subjBlob];
+        NSString *subjLeader = [NSString stringWithFormat:@"((%@)*%@)| ", subjBlob, subjReFwd];
+
+        atLeastOneSpaceRegex = [[CWRegEx alloc] initWithPattern: @"[[:space:]]+"
+                                                          flags: REG_EXTENDED|REG_ICASE];
+        suffixSubjTrailerRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"(%@)*$", subjTrailer]
+                                                            flags: REG_EXTENDED|REG_ICASE];
+        prefixSubjLeaderRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"^(%@)", subjLeader]
+                                                           flags: REG_EXTENDED|REG_ICASE];
+        prefixSubjBlobRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"^(%@)", subjBlob]
+                                                         flags: REG_EXTENDED|REG_ICASE];
+        prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = [[CWRegEx alloc] initWithPattern: [NSString stringWithFormat:@"^(%@)(.*)(%@)$", subjFwdHdr, subjFwdTrl]
+                                                                              flags: REG_EXTENDED|REG_ICASE];
     }
 }
 
@@ -112,25 +112,25 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (id) init
 {
-  self = [super init];
+    self = [super init];
 
-  [CWMessage setVersion: currentMessageVersion];
-  
-  _recipients = [[NSMutableArray alloc] init];
-  _flags = [[CWFlags alloc] init];
-  _initialized = NO;
-  _references = nil;
-  _folder = nil;
+    [CWMessage setVersion: currentMessageVersion];
 
-  // By default, we want the subclass's rawSource method to be called so we set our
-  // rawSource ivar to nil. If it's not nil (ONLY set in initWithData) it'll be returned,
-  // for performances improvements.
-  _rawSource = nil;
+    _recipients = [[NSMutableArray alloc] init];
+    _flags = [[CWFlags alloc] init];
+    _initialized = NO;
+    _references = nil;
+    _folder = nil;
 
-  // We initialize our dictionary holding all extra properties a message might have
-  _properties = [[NSMutableDictionary alloc] init];
-  
-  return self;
+    // By default, we want the subclass's rawSource method to be called so we set our
+    // rawSource ivar to nil. If it's not nil (ONLY set in initWithData) it'll be returned,
+    // for performances improvements.
+    _rawSource = nil;
+
+    // We initialize our dictionary holding all extra properties a message might have
+    _properties = [[NSMutableDictionary alloc] init];
+
+    return self;
 }
 
 
@@ -139,25 +139,25 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (id) initWithData: (NSData *) theData
 {
-  self = [super initWithData: theData];
+    self = [super initWithData: theData];
 
-  // Part: -initWithData could fail. We return nil if it does.
-  if (!self)
+    // Part: -initWithData could fail. We return nil if it does.
+    if (!self)
     {
-      return nil;
+        return nil;
     }
 
-  //
-  // We can tell now that this message is fully initialized
-  // NOTE: We must NOT call [self setInitialized: YES] since
-  //       it will call the method from the subclass and may do
-  //       extremely weird things.
-  _initialized = YES;
+    //
+    // We can tell now that this message is fully initialized
+    // NOTE: We must NOT call [self setInitialized: YES] since
+    //       it will call the method from the subclass and may do
+    //       extremely weird things.
+    _initialized = YES;
 
-  // We set our rawSource ivar for performance reasons
-  [self setRawSource: theData];
+    // We set our rawSource ivar for performance reasons
+    [self setRawSource: theData];
 
-  return self;
+    return self;
 }
 
 
@@ -165,10 +165,10 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 - (id) initWithData: (NSData *) theData
-	    charset: (NSString *) theCharset
+            charset: (NSString *) theCharset
 {
-  [self setDefaultCharset: theCharset];
-  return [self initWithData: theData];
+    [self setDefaultCharset: theCharset];
+    return [self initWithData: theData];
 }
 
 
@@ -177,9 +177,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (id) initWithHeadersFromData: (NSData *) theHeaders
 {
-  self = [self init];
-  [self setHeadersFromData: theHeaders];
-  return self;
+    self = [self init];
+    [self setHeadersFromData: theHeaders];
+    return self;
 }
 
 
@@ -188,9 +188,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (id) initWithHeaders: (NSDictionary *) theHeaders
 {
-  self = [self init];
-  [self setHeaders: theHeaders];
-  return self;
+    self = [self init];
+    [self setHeaders: theHeaders];
+    return self;
 }
 
 
@@ -199,13 +199,13 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) dealloc
 {
-  RELEASE(_recipients);
-  RELEASE(_properties);
-  RELEASE(_references);
-  RELEASE(_rawSource);
-  RELEASE(_flags);
-  
-  //[super dealloc];
+    RELEASE(_recipients);
+    RELEASE(_properties);
+    RELEASE(_references);
+    RELEASE(_rawSource);
+    RELEASE(_flags);
+
+    //[super dealloc];
 }
 
 
@@ -214,22 +214,22 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) encodeWithCoder: (NSCoder *) theCoder
 {
-  // Must also encode Part's superclass
-  [super encodeWithCoder: theCoder];
+    // Must also encode Part's superclass
+    [super encodeWithCoder: theCoder];
 
-  [CWMessage setVersion: currentMessageVersion];
+    [CWMessage setVersion: currentMessageVersion];
 
-  [theCoder encodeObject: [self originationDate]];                       // Date
-  [theCoder encodeObject: [self from]];                               // From
-  [theCoder encodeObject: _recipients];                               // To and Cc (Bcc, at worst)
-  [theCoder encodeObject: [self subject]];                            // Subject
-  [theCoder encodeObject: [self messageID]];                          // Message-ID
-  [theCoder encodeObject: [self MIMEVersion]];                        // MIME-Version
-  [theCoder encodeObject: _references];                               // References
-  [theCoder encodeObject: [self inReplyTo]];                          // In-Reply-To
-  
-  [theCoder encodeObject: [NSNumber numberWithInteger: _message_number]]; // Message number
-  [theCoder encodeObject: _flags];                                    // Message flags
+    [theCoder encodeObject: [self originationDate]];                       // Date
+    [theCoder encodeObject: [self from]];                               // From
+    [theCoder encodeObject: _recipients];                               // To and Cc (Bcc, at worst)
+    [theCoder encodeObject: [self subject]];                            // Subject
+    [theCoder encodeObject: [self messageID]];                          // Message-ID
+    [theCoder encodeObject: [self MIMEVersion]];                        // MIME-Version
+    [theCoder encodeObject: _references];                               // References
+    [theCoder encodeObject: [self inReplyTo]];                          // In-Reply-To
+
+    [theCoder encodeObject: [NSNumber numberWithInteger: _message_number]]; // Message number
+    [theCoder encodeObject: _flags];                                    // Message flags
 }
 
 
@@ -238,38 +238,38 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (id) initWithCoder: (NSCoder *) theCoder
 {
-  // Must also decode Part's superclass
-  self = [super initWithCoder: theCoder];
+    // Must also decode Part's superclass
+    self = [super initWithCoder: theCoder];
 
-  _properties = [[NSMutableDictionary alloc] init];
-  _recipients = [[NSMutableArray alloc] init];
-  
-  [self setOriginationDate: [theCoder decodeObject]];              // Date
-  [self setFrom: [theCoder decodeObject]];                      // From
-  [self setRecipients: [theCoder decodeObject]];                // To and Cc (Bcc, at worst)
-  [self setSubject: [theCoder decodeObject]];                   // Subject
-  [self setMessageID: [theCoder decodeObject]];                 // Message-ID
-  [self setMIMEVersion: [theCoder decodeObject]];               // MIME-Version
-  [self setReferences: [theCoder decodeObject]];                // References
-      
-  [self setInReplyTo: [theCoder decodeObject]];                 // In-Reply-To
-  [self setMessageNumber: [[theCoder decodeObject] intValue]];  // Message number
-  
-  // We decode our flags. We must not simply call [self setFlags: [theCoder decodeObject]]
-  // since IMAPMessage is re-implementing flags and that would cause problems when
-  // unarchiving IMAP caches.
-  _flags = [[CWFlags alloc] init];
-  [_flags replaceWithFlags: [theCoder decodeObject]];
-  
-  // It's very important to set the "initialized" ivar to NO since we didn't serialize the content.
-  // or our message.
-  _initialized = NO;
-  
-  // We initialize the rest of our ivars
-  _rawSource = nil;
-  _folder = nil;
+    _properties = [[NSMutableDictionary alloc] init];
+    _recipients = [[NSMutableArray alloc] init];
 
-  return self;
+    [self setOriginationDate: [theCoder decodeObject]];              // Date
+    [self setFrom: [theCoder decodeObject]];                      // From
+    [self setRecipients: [theCoder decodeObject]];                // To and Cc (Bcc, at worst)
+    [self setSubject: [theCoder decodeObject]];                   // Subject
+    [self setMessageID: [theCoder decodeObject]];                 // Message-ID
+    [self setMIMEVersion: [theCoder decodeObject]];               // MIME-Version
+    [self setReferences: [theCoder decodeObject]];                // References
+
+    [self setInReplyTo: [theCoder decodeObject]];                 // In-Reply-To
+    [self setMessageNumber: [[theCoder decodeObject] intValue]];  // Message number
+
+    // We decode our flags. We must not simply call [self setFlags: [theCoder decodeObject]]
+    // since IMAPMessage is re-implementing flags and that would cause problems when
+    // unarchiving IMAP caches.
+    _flags = [[CWFlags alloc] init];
+    [_flags replaceWithFlags: [theCoder decodeObject]];
+
+    // It's very important to set the "initialized" ivar to NO since we didn't serialize the content.
+    // or our message.
+    _initialized = NO;
+
+    // We initialize the rest of our ivars
+    _rawSource = nil;
+    _folder = nil;
+
+    return self;
 }
 
 
@@ -278,7 +278,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (id) copyWithZone: (NSZone *) zone
 {
-  return RETAIN(self);
+    return RETAIN(self);
 }
 
 
@@ -287,7 +287,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (CWInternetAddress *) from
 {
-  return [_headers objectForKey: @"From"];
+    return [_headers objectForKey: @"From"];
 }
 
 
@@ -296,9 +296,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setFrom: (CWInternetAddress *) theInternetAddress
 {
-  if (theInternetAddress)
+    if (theInternetAddress)
     {
-      [_headers setObject: theInternetAddress  forKey: @"From"];
+        [_headers setObject: theInternetAddress  forKey: @"From"];
     }
 }
 
@@ -308,7 +308,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSUInteger) messageNumber
 {
-  return _message_number;
+    return _message_number;
 }
 
 
@@ -317,7 +317,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setMessageNumber: (NSUInteger) theMessageNumber
 {
-  _message_number = theMessageNumber;
+    _message_number = theMessageNumber;
 }
 
 
@@ -326,17 +326,17 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) messageID
 {
-  NSString *aString;
+    NSString *aString;
 
-  aString = [_headers objectForKey: @"Message-ID"];
-  
-  if (!aString)
+    aString = [_headers objectForKey: @"Message-ID"];
+
+    if (!aString)
     {
-      aString = [[CWMIMEUtility globallyUniqueID] asciiString];
-      [self setMessageID: aString];
+        aString = [[CWMIMEUtility globallyUniqueID] asciiString];
+        [self setMessageID: aString];
     }
 
-  return aString;
+    return aString;
 }
 
 
@@ -345,9 +345,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setMessageID: (NSString *) theMessageID
 {
-  if (theMessageID)
+    if (theMessageID)
     {
-      [_headers setObject: theMessageID  forKey: @"Message-ID"];
+        [_headers setObject: theMessageID  forKey: @"Message-ID"];
     }
 }
 
@@ -357,7 +357,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) inReplyTo
 {
-  return [_headers objectForKey: @"In-Reply-To"];
+    return [_headers objectForKey: @"In-Reply-To"];
 }
 
 
@@ -366,9 +366,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setInReplyTo: (NSString *) theInReplyTo
 {
-  if (theInReplyTo)
+    if (theInReplyTo)
     {
-      [_headers setObject: theInReplyTo  forKey: @"In-Reply-To"];
+        [_headers setObject: theInReplyTo  forKey: @"In-Reply-To"];
     }
 }
 
@@ -378,7 +378,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSDate *) originationDate
 {
-  return [_headers objectForKey: @"Date"];
+    return [_headers objectForKey: @"Date"];
 }
 
 
@@ -387,9 +387,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setOriginationDate: (NSDate*) theDate
 {
-  if (theDate)
+    if (theDate)
     {
-      [_headers setObject: theDate  forKey: @"Date"];
+        [_headers setObject: theDate  forKey: @"Date"];
     }
 }
 
@@ -399,9 +399,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) addRecipient: (CWInternetAddress *) theAddress
 {
-  if (theAddress)
+    if (theAddress)
     {
-      [_recipients addObject: theAddress];
+        [_recipients addObject: theAddress];
     }
 }
 
@@ -411,9 +411,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) removeRecipient: (CWInternetAddress *) theAddress
 {
-  if (theAddress)
+    if (theAddress)
     {
-      [_recipients removeObject: theAddress];
+        [_recipients removeObject: theAddress];
     }
 }
 
@@ -423,7 +423,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSArray *) recipients
 {
-  return _recipients;
+    return _recipients;
 }
 
 
@@ -432,11 +432,11 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setRecipients: (NSArray *) theRecipients
 {
-  [_recipients removeAllObjects];
+    [_recipients removeAllObjects];
 
-  if (theRecipients)
+    if (theRecipients)
     {
-      [_recipients addObjectsFromArray: theRecipients];
+        [_recipients addObjectsFromArray: theRecipients];
     }
 }
 
@@ -446,7 +446,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSUInteger) recipientsCount
 {
-  return [_recipients count];
+    return [_recipients count];
 }
 
 
@@ -455,7 +455,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) removeAllRecipients
 {
-  [_recipients removeAllObjects];
+    [_recipients removeAllObjects];
 }
 
 
@@ -464,7 +464,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSArray *) replyTo
 {
-  return [_headers objectForKey: @"Reply-To"];
+    return [_headers objectForKey: @"Reply-To"];
 }
 
 
@@ -473,13 +473,13 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setReplyTo: (NSArray *) theAddressList
 {
-  if (theAddressList && [theAddressList count])
+    if (theAddressList && [theAddressList count])
     {
-      [_headers setObject: theAddressList  forKey: @"Reply-To"];
+        [_headers setObject: theAddressList  forKey: @"Reply-To"];
     }
-  else
+    else
     {
-      [_headers removeObjectForKey: @"Reply-To"];
+        [_headers removeObjectForKey: @"Reply-To"];
     }
 }
 
@@ -498,12 +498,12 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setSubject: (NSString *) theSubject
 {
-  if (theSubject)
+    if (theSubject)
     {
-      [_headers setObject: theSubject  forKey: @"Subject"];
-      
-      // We invalidate our previous base subject.
-      [self setBaseSubject: nil];
+        [_headers setObject: theSubject  forKey: @"Subject"];
+
+        // We invalidate our previous base subject.
+        [self setBaseSubject: nil];
     }
 }
 
@@ -513,17 +513,17 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) baseSubject
 {
-  NSString *baseSubject;
-  
-  baseSubject = [self propertyForKey: @"baseSubject"];
-  
-  if (!baseSubject)
+    NSString *baseSubject;
+
+    baseSubject = [self propertyForKey: @"baseSubject"];
+
+    if (!baseSubject)
     {
-      baseSubject = [self _computeBaseSubject];
-      [self setBaseSubject: baseSubject];
+        baseSubject = [self _computeBaseSubject];
+        [self setBaseSubject: baseSubject];
     }
-  
-  return baseSubject;
+
+    return baseSubject;
 }
 
 
@@ -532,7 +532,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setBaseSubject: (NSString *) theBaseSubject
 {
-  [self setProperty: theBaseSubject  forKey: @"baseSubject"];
+    [self setProperty: theBaseSubject  forKey: @"baseSubject"];
 }
 
 
@@ -541,7 +541,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (BOOL) isInitialized
 {
-  return _initialized;
+    return _initialized;
 }
 
 
@@ -550,7 +550,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setInitialized: (BOOL) theBOOL
 {
-  _initialized = theBOOL;
+    _initialized = theBOOL;
 }
 
 
@@ -559,7 +559,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) organization
 {
-  return [_headers objectForKey: @"Organization"];
+    return [_headers objectForKey: @"Organization"];
 }
 
 
@@ -568,7 +568,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setOrganization: (NSString *) theOrganization
 {
-  [_headers setObject: theOrganization  forKey: @"Organization"];
+    [_headers setObject: theOrganization  forKey: @"Organization"];
 }
 
 
@@ -577,7 +577,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (id) propertyForKey: (id) theKey
 {
-  return [_properties objectForKey: theKey];
+    return [_properties objectForKey: theKey];
 }
 
 
@@ -585,15 +585,15 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 - (void) setProperty: (id) theProperty
-	      forKey: (id) theKey
+              forKey: (id) theKey
 {
-  if (theProperty)
+    if (theProperty)
     {
-      [_properties setObject: theProperty  forKey: theKey];
+        [_properties setObject: theProperty  forKey: theKey];
     }
-  else
+    else
     {
-      [_properties removeObjectForKey: theKey];
+        [_properties removeObjectForKey: theKey];
     }
 }
 
@@ -603,7 +603,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSArray *) allReferences
 {
-  return _references;
+    return _references;
 }
 
 
@@ -621,7 +621,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (CWFlags *) flags
 {
-  return _flags;
+    return _flags;
 }
 
 
@@ -630,7 +630,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setFlags: (CWFlags *) theFlags
 {
-  ASSIGN(_flags, theFlags);
+    ASSIGN(_flags, theFlags);
 }
 
 
@@ -639,7 +639,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) MIMEVersion
 {
-  return [_headers objectForKey: @"MIME-Version"];
+    return [_headers objectForKey: @"MIME-Version"];
 }
 
 
@@ -648,9 +648,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setMIMEVersion: (NSString *) theMIMEVersion
 {
-  if (theMIMEVersion)
+    if (theMIMEVersion)
     {
-      [_headers setObject: theMIMEVersion  forKey: @"MIME-Version"];
+        [_headers setObject: theMIMEVersion  forKey: @"MIME-Version"];
     }
 }
 
@@ -660,134 +660,134 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (CWMessage *) reply: (PantomimeReplyMode) theMode
 {
-  CWInternetAddress *anInternetAddress;
-  NSMutableData *aMutableData; 
-  CWMessage *theMessage;
-  BOOL needsToQuote;
-  
-  theMessage = [[CWMessage alloc] init];
-  [theMessage setContentType: @"text/plain"];
-  [theMessage setCharset: @"utf-8"];
+    CWInternetAddress *anInternetAddress;
+    NSMutableData *aMutableData;
+    CWMessage *theMessage;
+    BOOL needsToQuote;
 
-  // We set the subject of our message 
-  if (![self subject])
-    {
-      [theMessage setSubject: _(@"Re: your mail")];
-    }
-  else if ([[[self subject] stringByTrimmingWhiteSpaces] hasREPrefix])
-    {
-      [theMessage setSubject: [self subject]];
-    }
-  else 
-    {
-      [theMessage setSubject: [NSString stringWithFormat: _(@"Re: %@"), [[self subject] stringByTrimmingWhiteSpaces]]];
-    }
+    theMessage = [[CWMessage alloc] init];
+    [theMessage setContentType: @"text/plain"];
+    [theMessage setCharset: @"utf-8"];
 
-  // If Reply-To is defined, we use it. Otherwise, we use From:
-  if ([self replyTo] == nil)
+    // We set the subject of our message
+    if (![self subject])
     {
-      anInternetAddress = [self from];
-      [anInternetAddress setType: PantomimeToRecipient];
-      [theMessage addRecipient: anInternetAddress];
+        [theMessage setSubject: _(@"Re: your mail")];
     }
-  else 
+    else if ([[[self subject] stringByTrimmingWhiteSpaces] hasREPrefix])
     {
-      int i;
-
-      for (i = 0; i < [[self replyTo] count]; i++)
-	{
-	  anInternetAddress = [[self replyTo] objectAtIndex: i];
-	  [anInternetAddress setType: PantomimeToRecipient];
-	  [theMessage addRecipient: anInternetAddress];
-	}
+        [theMessage setSubject: [self subject]];
+    }
+    else
+    {
+        [theMessage setSubject: [NSString stringWithFormat: _(@"Re: %@"), [[self subject] stringByTrimmingWhiteSpaces]]];
     }
 
-
-
-  // We add our In-Reply-To header
-  if ([self messageID])
+    // If Reply-To is defined, we use it. Otherwise, we use From:
+    if ([self replyTo] == nil)
     {
-      [theMessage setInReplyTo: [self messageID]];
+        anInternetAddress = [self from];
+        [anInternetAddress setType: PantomimeToRecipient];
+        [theMessage addRecipient: anInternetAddress];
     }
-  
-  // If we reply to all, we add the other recipients
-  if ((theMode&PantomimeReplyAllMode) == PantomimeReplyAllMode)
+    else
     {
-      NSEnumerator *anEnumerator;
+        int i;
 
-      anEnumerator = [_recipients objectEnumerator];
-      
-      while ((anInternetAddress = [anEnumerator nextObject]))
-	{
-	  [anInternetAddress setType: PantomimeCcRecipient];
-	  [theMessage addRecipient: anInternetAddress];
-	}
+        for (i = 0; i < [[self replyTo] count]; i++)
+        {
+            anInternetAddress = [[self replyTo] objectAtIndex: i];
+            [anInternetAddress setType: PantomimeToRecipient];
+            [theMessage addRecipient: anInternetAddress];
+        }
     }
 
-  // If it's a "simple" reply, we don't compute a content.
-  if ((theMode&PantomimeSimpleReplyMode) == PantomimeSimpleReplyMode)
-    {
-      [theMessage setContent: [NSData data]];
-      return AUTORELEASE(theMessage);
-    }
-  
 
-  // We finally work on the content of the message
-  aMutableData = [[NSMutableData alloc] init];
-  needsToQuote = NO;
 
-  [self _extractText: aMutableData  part: self  quote: &needsToQuote];
-  
-  //
-  // It was impossible for use to find a text/plain part. Let's
-  // inform our user that we can't do anything with this message.
-  //
-  if (![aMutableData length])
+    // We add our In-Reply-To header
+    if ([self messageID])
     {
-      [aMutableData appendData: [@"\t[NON-Text Body part not included]" dataUsingEncoding: NSUTF8StringEncoding]];
-      needsToQuote = NO;
-    }
-  else
-    {
-      // We remove the signature
-      NSRange aRange;
-      
-      aRange = [aMutableData rangeOfCString: "\n-- "  options: NSBackwardsSearch];
-      
-      if (aRange.length)
-	{
-	  [aMutableData replaceBytesInRange: NSMakeRange(aRange.location, [aMutableData length]-aRange.location)
-			withBytes: NULL
-			length: 0];
-	}
+        [theMessage setInReplyTo: [self messageID]];
     }
 
-  
-  // We now have our content as string, let's 'quote' it
-  if (needsToQuote)
+    // If we reply to all, we add the other recipients
+    if ((theMode&PantomimeReplyAllMode) == PantomimeReplyAllMode)
     {
-      NSData *aData;
-      
-      aData = [aMutableData unwrapWithLimit: 78];
-      [aMutableData setData: [aData quoteWithLevel: 1  wrappingLimit: 80]]; 
+        NSEnumerator *anEnumerator;
+
+        anEnumerator = [_recipients objectEnumerator];
+
+        while ((anInternetAddress = [anEnumerator nextObject]))
+        {
+            [anInternetAddress setType: PantomimeCcRecipient];
+            [theMessage addRecipient: anInternetAddress];
+        }
     }
 
-  [aMutableData insertCString: [[NSString stringWithFormat: @"%@ wrote:\n\n", [[self from] stringValue]] UTF8String]
-		atIndex: 0];
-  
-  
-  // We verify if we have a Date value. We might receive messages w/o this field
-  // (Yes, I know, it's borken but it's happening).
-  if ([self originationDate])
+    // If it's a "simple" reply, we don't compute a content.
+    if ((theMode&PantomimeSimpleReplyMode) == PantomimeSimpleReplyMode)
     {
-      [aMutableData insertCString: [[NSString stringWithFormat: @"On %@ ", [[self originationDate] description]] UTF8String]
-		    atIndex: 0];
+        [theMessage setContent: [NSData data]];
+        return AUTORELEASE(theMessage);
     }
 
-  [theMessage setContent: aMutableData];
-  RELEASE(aMutableData);
-  
-  return AUTORELEASE(theMessage);
+
+    // We finally work on the content of the message
+    aMutableData = [[NSMutableData alloc] init];
+    needsToQuote = NO;
+
+    [self _extractText: aMutableData  part: self  quote: &needsToQuote];
+
+    //
+    // It was impossible for use to find a text/plain part. Let's
+    // inform our user that we can't do anything with this message.
+    //
+    if (![aMutableData length])
+    {
+        [aMutableData appendData: [@"\t[NON-Text Body part not included]" dataUsingEncoding: NSUTF8StringEncoding]];
+        needsToQuote = NO;
+    }
+    else
+    {
+        // We remove the signature
+        NSRange aRange;
+
+        aRange = [aMutableData rangeOfCString: "\n-- "  options: NSBackwardsSearch];
+
+        if (aRange.length)
+        {
+            [aMutableData replaceBytesInRange: NSMakeRange(aRange.location, [aMutableData length]-aRange.location)
+                                    withBytes: NULL
+                                       length: 0];
+        }
+    }
+
+
+    // We now have our content as string, let's 'quote' it
+    if (needsToQuote)
+    {
+        NSData *aData;
+
+        aData = [aMutableData unwrapWithLimit: 78];
+        [aMutableData setData: [aData quoteWithLevel: 1  wrappingLimit: 80]];
+    }
+
+    [aMutableData insertCString: [[NSString stringWithFormat: @"%@ wrote:\n\n", [[self from] stringValue]] UTF8String]
+                        atIndex: 0];
+
+
+    // We verify if we have a Date value. We might receive messages w/o this field
+    // (Yes, I know, it's borken but it's happening).
+    if ([self originationDate])
+    {
+        [aMutableData insertCString: [[NSString stringWithFormat: @"On %@ ", [[self originationDate] description]] UTF8String]
+                            atIndex: 0];
+    }
+
+    [theMessage setContent: aMutableData];
+    RELEASE(aMutableData);
+
+    return AUTORELEASE(theMessage);
 }
 
 
@@ -796,261 +796,261 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (CWMessage *) forward: (PantomimeForwardMode) theMode;
 {
-  CWMessage *theMessage;
- 
-  theMessage = [[CWMessage alloc] init];
-  
-  // We set the subject of our message
-  if ([self subject])
+    CWMessage *theMessage;
+
+    theMessage = [[CWMessage alloc] init];
+
+    // We set the subject of our message
+    if ([self subject])
     {
-      [theMessage setSubject: [NSString stringWithFormat: @"%@ (fwd)", [self subject]]];
+        [theMessage setSubject: [NSString stringWithFormat: @"%@ (fwd)", [self subject]]];
     }
-  else
+    else
     {
-      [theMessage setSubject: @"Forwarded mail..."];
+        [theMessage setSubject: @"Forwarded mail..."];
     }
 
-  if (theMode == PantomimeAttachmentForwardMode)
+    if (theMode == PantomimeAttachmentForwardMode)
     {
-      CWMIMEMultipart *aMimeMultipart;
-      CWPart *aPart;      
-      
-      aMimeMultipart = [[CWMIMEMultipart alloc] init];
+        CWMIMEMultipart *aMimeMultipart;
+        CWPart *aPart;
 
-      aPart = [[CWPart alloc] init];
-      [aMimeMultipart addPart: aPart];
-      RELEASE(aPart);
+        aMimeMultipart = [[CWMIMEMultipart alloc] init];
 
-      aPart = [[CWPart alloc] init];
-      [aPart setContentType: @"message/rfc822"];
-      [aPart setContentDisposition: PantomimeAttachmentDisposition];
-      [aPart setSize: [self size]];
-      [aPart setContent: self];
-      [aMimeMultipart addPart: aPart];
-      RELEASE(aPart);
+        aPart = [[CWPart alloc] init];
+        [aMimeMultipart addPart: aPart];
+        RELEASE(aPart);
 
-      [theMessage setContentType: @"multipart/mixed"];
-      [theMessage setContent: aMimeMultipart];
-      RELEASE(aMimeMultipart);
+        aPart = [[CWPart alloc] init];
+        [aPart setContentType: @"message/rfc822"];
+        [aPart setContentDisposition: PantomimeAttachmentDisposition];
+        [aPart setSize: [self size]];
+        [aPart setContent: self];
+        [aMimeMultipart addPart: aPart];
+        RELEASE(aPart);
+
+        [theMessage setContentType: @"multipart/mixed"];
+        [theMessage setContent: aMimeMultipart];
+        RELEASE(aMimeMultipart);
     }
-  else
+    else
     {
-      NSMutableData *aMutableData;
-      
-      // We create our generic forward message header
-      aMutableData = AUTORELEASE([[NSMutableData alloc] init]);
-      [aMutableData appendCString: "---------- Forwarded message ----------"];
-  
-      // We verify if we have a Date value. We might receive messages w/o this field
-      // (Yes, I know, it's borken but it's happening).
-      if ([self originationDate])
-	{
-	  [aMutableData appendCString: "\nDate: "];
-	  [aMutableData appendData: [[[self originationDate] description] dataUsingEncoding: NSASCIIStringEncoding]];
-	}
-      
-      [aMutableData appendCString: "\nFrom: "];
-      [aMutableData appendData: [[[self from] stringValue] dataUsingEncoding: [NSString encodingForPart: self]]];
-  
-      if ([self subject])
-	{
-	  [aMutableData appendCString: "\nSubject: "];
-	}
-  
-      [aMutableData appendData: [[NSString stringWithFormat: @"%@\n\n", [self subject]]
-				  dataUsingEncoding: [NSString encodingForPart: self]]];
-  
-      //
-      // If our Content-Type is text/plain, we represent it as a it is, otherwise,
-      // we currently create a new body part representing the forwarded message.
-      //
-      if ([self isMIMEType: @"text"  subType: @"*"])
-	{
-	  // We set the content of our message
-	  [aMutableData appendData: [CWMIMEUtility plainTextContentFromPart: self]];
+        NSMutableData *aMutableData;
 
-	  // We set the Content-Transfer-Encoding and the Charset to the previous one
-	  [theMessage setContentTransferEncoding: [self contentTransferEncoding]];
-	  [theMessage setCharset: [self charset]];
-      
+        // We create our generic forward message header
+        aMutableData = AUTORELEASE([[NSMutableData alloc] init]);
+        [aMutableData appendCString: "---------- Forwarded message ----------"];
 
-	  [theMessage setContentType: @"text/plain"];
-	  [theMessage setContent: aMutableData];
-	  [theMessage setSize: [aMutableData length]];
-	}
-      //
-      // If our Content-Type is a message/rfc822 or any other type like
-      // application/*, audio/*, image/* or video/*
-      // 
-      else if ([self isMIMEType: @"application"  subType: @"*"] ||
-	       [self isMIMEType: @"audio"  subType: @"*"] ||
-	       [self isMIMEType: @"image"  subType: @"*"] || 
-	       [self isMIMEType: @"message"  subType: @"*"] ||
-	       [self isMIMEType: @"video"  subType: @"*"])
-	{
-	  CWMIMEMultipart *aMimeMultipart;
-	  CWPart *aPart;
-      
-	  aMimeMultipart = [[CWMIMEMultipart alloc] init];
-      
-	  // We add our text/plain part.
-	  aPart = [[CWPart alloc] init];
-	  [aPart setContentType: @"text/plain"];
-	  [aPart setContent: aMutableData];
-	  [aPart setContentDisposition: PantomimeInlineDisposition];
-	  [aPart setSize: [aMutableData length]];
-	  [aMimeMultipart addPart: aPart];
-	  RELEASE(aPart);
-      
-	  // We add our content as an attachment
-	  aPart = [[CWPart alloc] init];  
-	  [aPart setContentType: [self contentType]];
-	  [aPart setContent: [self content]];
-	  [aPart setContentTransferEncoding: [self contentTransferEncoding]];
-	  [aPart setContentDisposition: PantomimeAttachmentDisposition];
-	  [aPart setCharset: [self charset]];
-	  [aPart setFilename: [self filename]];
-	  [aPart setSize: [self size]];
-	  [aMimeMultipart addPart: aPart];
-	  RELEASE(aPart);
+        // We verify if we have a Date value. We might receive messages w/o this field
+        // (Yes, I know, it's borken but it's happening).
+        if ([self originationDate])
+        {
+            [aMutableData appendCString: "\nDate: "];
+            [aMutableData appendData: [[[self originationDate] description] dataUsingEncoding: NSASCIIStringEncoding]];
+        }
 
-	  [theMessage setContentType: @"multipart/mixed"];
-	  [theMessage setContent: aMimeMultipart];
-	  RELEASE(aMimeMultipart);
-	}
-      //
-      // We have a multipart object. We must treat multipart/alternative
-      // parts differently since we don't want to include multipart parts in the forward.
-      //
-      else if ([self isMIMEType: @"multipart"  subType: @"*"])
-	{
-	  //
-	  // If we have multipart/alternative part, we only keep one part from it.
-	  //
-	  if ([self isMIMEType: @"multipart"  subType: @"alternative"])
-	    {
-	      CWMIMEMultipart *aMimeMultipart;
-	      CWPart *aPart;
-	      int i;
-	  
-	      aMimeMultipart = (CWMIMEMultipart *)[self content];
-	      aPart = nil;
+        [aMutableData appendCString: "\nFrom: "];
+        [aMutableData appendData: [[[self from] stringValue] dataUsingEncoding: [NSString encodingForPart: self]]];
 
-	      // We search for our text/plain part
-	      for (i = 0; i < [aMimeMultipart count]; i++)
-		{
-		  aPart = [aMimeMultipart partAtIndex: i];
+        if ([self subject])
+        {
+            [aMutableData appendCString: "\nSubject: "];
+        }
 
-		  if ([aPart isMIMEType: @"text"  subType: @"plain"])
-		    {
-		      break;
-		    }
-		  else
-		    {
-		      aPart = nil;
-		    }
-		}
+        [aMutableData appendData: [[NSString stringWithFormat: @"%@\n\n", [self subject]]
+                                   dataUsingEncoding: [NSString encodingForPart: self]]];
 
-	      // We found one
-	      if (aPart)
-		{
-		  // We set the content of our message
-		  [aMutableData appendData: (NSData *)[aPart content]];
-	      
-		  // We set the Content-Transfer-Encoding and the Charset to our text part
-		  [theMessage setContentTransferEncoding: [aPart contentTransferEncoding]];
-		  [theMessage setCharset: [aPart charset]];
-	      
-		  [theMessage setContentType: @"text/plain"];
-		  [theMessage setContent: aMutableData];
-		  [theMessage setSize: [aMutableData length]];
-		}
-	      // We haven't found one! Inform the user that it happened.
-	      else
-		{
-		  [aMutableData appendCString: "No text/plain part from this multipart/alternative part has been found"];
-		  [aMutableData appendCString: "\nNo parts have been included as attachments with this mail during the forward operation."];
-		  [aMutableData appendCString: "\n\nPlease report this as a bug."];
+        //
+        // If our Content-Type is text/plain, we represent it as a it is, otherwise,
+        // we currently create a new body part representing the forwarded message.
+        //
+        if ([self isMIMEType: @"text"  subType: @"*"])
+        {
+            // We set the content of our message
+            [aMutableData appendData: [CWMIMEUtility plainTextContentFromPart: self]];
 
-		  [theMessage setContent: aMutableData];
-		  [theMessage setSize: [aMutableData length]];
-		}
-	    }
-	  //
-	  // We surely have a multipart/mixed or multipart/related.
-	  // We search for a text/plain part inside our multipart object.
-	  // We 'keep' the other parts in a separate new multipart object too
-	  // that will become our new content.
-	  //
-	  else
-	    {
-	      CWMIMEMultipart *aMimeMultipart, *newMimeMultipart;
-	      CWPart *aPart;
-	      BOOL hasFoundTextPlain = NO;
-	      int i;
-	  
-	      // We get our current mutipart object
-	      aMimeMultipart = (CWMIMEMultipart *)[self content];
+            // We set the Content-Transfer-Encoding and the Charset to the previous one
+            [theMessage setContentTransferEncoding: [self contentTransferEncoding]];
+            [theMessage setCharset: [self charset]];
 
-	      // We create our new multipart object for holding all our parts.
-	      newMimeMultipart = [[CWMIMEMultipart alloc] init];
-	  
-	      for (i = 0; i < [aMimeMultipart count]; i++)
-		{
-		  aPart = [aMimeMultipart partAtIndex: i];
-	      
-		  if ([aPart isMIMEType: @"text"  subType: @"plain"] && !hasFoundTextPlain)
-		    {
-		      CWPart *newPart;
-		  
-		      newPart = [[CWPart alloc] init];
-		  
-		      // We set the content of our new part
-		      [aMutableData appendData: (NSData *)[aPart content]];
-		      [newPart setContentType: @"text/plain"];
-		      [newPart setContent: aMutableData];
-		      [newPart setSize: [aMutableData length]];
-		  
-		      // We set the Content-Transfer-Encoding and the Charset to the previous one
-		      [newPart setContentTransferEncoding: [aPart contentTransferEncoding]];
-		      [newPart setCharset: [aPart charset]];
-		  
-		      // We finally add our new part to our MIME multipart object
-		      [newMimeMultipart addPart: newPart];
-		      RELEASE(newPart);
-		  
-		      hasFoundTextPlain = YES;
-		    }
-		  // We set the Content-Disposition to "attachment"
-		  // all the time.
-		  else
-		    {
-		      [aPart setContentDisposition: PantomimeAttachmentDisposition];
-		      [newMimeMultipart addPart: aPart];
-		    }
-		}
-	      
-	      [theMessage setContentType: @"multipart/mixed"];
-	      [theMessage setContent: newMimeMultipart];
-	      RELEASE(newMimeMultipart);
-	    }
-	}
-      //
-      // We got an unknown part. Let's inform the user about this situation.
-      //
-      else
-	{
-	  // We set the content of our message
-	  [aMutableData appendCString: "The original message contained an unknown part that was not included in this forwarded message."];
-	  [aMutableData appendCString: "\n\nPlease report this as a bug."];
-      
-	  [theMessage setContentType: @"text/plain"];
-	  [theMessage setContent: aMutableData];
-	  [theMessage setSize: [aMutableData length]];
-	}
+
+            [theMessage setContentType: @"text/plain"];
+            [theMessage setContent: aMutableData];
+            [theMessage setSize: [aMutableData length]];
+        }
+        //
+        // If our Content-Type is a message/rfc822 or any other type like
+        // application/*, audio/*, image/* or video/*
+        //
+        else if ([self isMIMEType: @"application"  subType: @"*"] ||
+                 [self isMIMEType: @"audio"  subType: @"*"] ||
+                 [self isMIMEType: @"image"  subType: @"*"] ||
+                 [self isMIMEType: @"message"  subType: @"*"] ||
+                 [self isMIMEType: @"video"  subType: @"*"])
+        {
+            CWMIMEMultipart *aMimeMultipart;
+            CWPart *aPart;
+
+            aMimeMultipart = [[CWMIMEMultipart alloc] init];
+
+            // We add our text/plain part.
+            aPart = [[CWPart alloc] init];
+            [aPart setContentType: @"text/plain"];
+            [aPart setContent: aMutableData];
+            [aPart setContentDisposition: PantomimeInlineDisposition];
+            [aPart setSize: [aMutableData length]];
+            [aMimeMultipart addPart: aPart];
+            RELEASE(aPart);
+
+            // We add our content as an attachment
+            aPart = [[CWPart alloc] init];
+            [aPart setContentType: [self contentType]];
+            [aPart setContent: [self content]];
+            [aPart setContentTransferEncoding: [self contentTransferEncoding]];
+            [aPart setContentDisposition: PantomimeAttachmentDisposition];
+            [aPart setCharset: [self charset]];
+            [aPart setFilename: [self filename]];
+            [aPart setSize: [self size]];
+            [aMimeMultipart addPart: aPart];
+            RELEASE(aPart);
+
+            [theMessage setContentType: @"multipart/mixed"];
+            [theMessage setContent: aMimeMultipart];
+            RELEASE(aMimeMultipart);
+        }
+        //
+        // We have a multipart object. We must treat multipart/alternative
+        // parts differently since we don't want to include multipart parts in the forward.
+        //
+        else if ([self isMIMEType: @"multipart"  subType: @"*"])
+        {
+            //
+            // If we have multipart/alternative part, we only keep one part from it.
+            //
+            if ([self isMIMEType: @"multipart"  subType: @"alternative"])
+            {
+                CWMIMEMultipart *aMimeMultipart;
+                CWPart *aPart;
+                int i;
+
+                aMimeMultipart = (CWMIMEMultipart *)[self content];
+                aPart = nil;
+
+                // We search for our text/plain part
+                for (i = 0; i < [aMimeMultipart count]; i++)
+                {
+                    aPart = [aMimeMultipart partAtIndex: i];
+
+                    if ([aPart isMIMEType: @"text"  subType: @"plain"])
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        aPart = nil;
+                    }
+                }
+
+                // We found one
+                if (aPart)
+                {
+                    // We set the content of our message
+                    [aMutableData appendData: (NSData *)[aPart content]];
+
+                    // We set the Content-Transfer-Encoding and the Charset to our text part
+                    [theMessage setContentTransferEncoding: [aPart contentTransferEncoding]];
+                    [theMessage setCharset: [aPart charset]];
+
+                    [theMessage setContentType: @"text/plain"];
+                    [theMessage setContent: aMutableData];
+                    [theMessage setSize: [aMutableData length]];
+                }
+                // We haven't found one! Inform the user that it happened.
+                else
+                {
+                    [aMutableData appendCString: "No text/plain part from this multipart/alternative part has been found"];
+                    [aMutableData appendCString: "\nNo parts have been included as attachments with this mail during the forward operation."];
+                    [aMutableData appendCString: "\n\nPlease report this as a bug."];
+
+                    [theMessage setContent: aMutableData];
+                    [theMessage setSize: [aMutableData length]];
+                }
+            }
+            //
+            // We surely have a multipart/mixed or multipart/related.
+            // We search for a text/plain part inside our multipart object.
+            // We 'keep' the other parts in a separate new multipart object too
+            // that will become our new content.
+            //
+            else
+            {
+                CWMIMEMultipart *aMimeMultipart, *newMimeMultipart;
+                CWPart *aPart;
+                BOOL hasFoundTextPlain = NO;
+                int i;
+
+                // We get our current mutipart object
+                aMimeMultipart = (CWMIMEMultipart *)[self content];
+
+                // We create our new multipart object for holding all our parts.
+                newMimeMultipart = [[CWMIMEMultipart alloc] init];
+
+                for (i = 0; i < [aMimeMultipart count]; i++)
+                {
+                    aPart = [aMimeMultipart partAtIndex: i];
+
+                    if ([aPart isMIMEType: @"text"  subType: @"plain"] && !hasFoundTextPlain)
+                    {
+                        CWPart *newPart;
+
+                        newPart = [[CWPart alloc] init];
+
+                        // We set the content of our new part
+                        [aMutableData appendData: (NSData *)[aPart content]];
+                        [newPart setContentType: @"text/plain"];
+                        [newPart setContent: aMutableData];
+                        [newPart setSize: [aMutableData length]];
+
+                        // We set the Content-Transfer-Encoding and the Charset to the previous one
+                        [newPart setContentTransferEncoding: [aPart contentTransferEncoding]];
+                        [newPart setCharset: [aPart charset]];
+
+                        // We finally add our new part to our MIME multipart object
+                        [newMimeMultipart addPart: newPart];
+                        RELEASE(newPart);
+
+                        hasFoundTextPlain = YES;
+                    }
+                    // We set the Content-Disposition to "attachment"
+                    // all the time.
+                    else
+                    {
+                        [aPart setContentDisposition: PantomimeAttachmentDisposition];
+                        [newMimeMultipart addPart: aPart];
+                    }
+                }
+
+                [theMessage setContentType: @"multipart/mixed"];
+                [theMessage setContent: newMimeMultipart];
+                RELEASE(newMimeMultipart);
+            }
+        }
+        //
+        // We got an unknown part. Let's inform the user about this situation.
+        //
+        else
+        {
+            // We set the content of our message
+            [aMutableData appendCString: "The original message contained an unknown part that was not included in this forwarded message."];
+            [aMutableData appendCString: "\n\nPlease report this as a bug."];
+
+            [theMessage setContentType: @"text/plain"];
+            [theMessage setContent: aMutableData];
+            [theMessage setSize: [aMutableData length]];
+        }
     }
-  
-  return AUTORELEASE(theMessage);
+
+    return AUTORELEASE(theMessage);
 }
 
 - (NSData *)dataValue
@@ -1189,12 +1189,12 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (CWFolder *) folder
 {
-  return _folder;
+    return _folder;
 }
 
 - (void) setFolder: (CWFolder *) theFolder
 {
-  _folder = theFolder;
+    _folder = theFolder;
 }
 
 //
@@ -1207,13 +1207,13 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSData *) rawSource
 {
-  if (!_rawSource)
+    if (!_rawSource)
     {
-      [self subclassResponsibility: _cmd];
-      return nil;
+        [self subclassResponsibility: _cmd];
+        return nil;
     }
-  
-  return _rawSource;
+
+    return _rawSource;
 }
 
 
@@ -1222,7 +1222,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setRawSource: (NSData *) theRawSource
 {
-  ASSIGN(_rawSource, theRawSource);
+    ASSIGN(_rawSource, theRawSource);
 }
 
 
@@ -1231,7 +1231,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSDate *) resentDate
 {
-  return [_headers objectForKey: @"Resent-Date"];
+    return [_headers objectForKey: @"Resent-Date"];
 }
 
 
@@ -1240,7 +1240,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setResentDate: (NSDate *) theResentDate
 {
-  [_headers setObject: theResentDate  forKey: @"Resent-Date"];
+    [_headers setObject: theResentDate  forKey: @"Resent-Date"];
 }
 
 
@@ -1249,7 +1249,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (CWInternetAddress *) resentFrom
 {
-  return [_headers objectForKey: @"Resent-From"];
+    return [_headers objectForKey: @"Resent-From"];
 }
 
 
@@ -1258,7 +1258,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setResentFrom: (CWInternetAddress *) theInternetAddress
 {
-  [_headers setObject: theInternetAddress  forKey: @"Resent-From"];
+    [_headers setObject: theInternetAddress  forKey: @"Resent-From"];
 }
 
 
@@ -1267,7 +1267,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) resentMessageID
 {
-  return [_headers objectForKey: @"Resent-Message-ID"];
+    return [_headers objectForKey: @"Resent-Message-ID"];
 }
 
 
@@ -1276,7 +1276,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setResentMessageID: (NSString *) theResentMessageID
 {
-  [_headers setObject: theResentMessageID  forKey: @"Resent-Message-ID"];
+    [_headers setObject: theResentMessageID  forKey: @"Resent-Message-ID"];
 }
 
 
@@ -1285,7 +1285,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) resentSubject
 {
-  return [_headers objectForKey: @"Resent-Subject"];
+    return [_headers objectForKey: @"Resent-Subject"];
 }
 
 
@@ -1294,7 +1294,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setResentSubject: (NSString *) theResentSubject
 {
-  [_headers setObject: theResentSubject  forKey: @"Resent-Subject"];
+    [_headers setObject: theResentSubject  forKey: @"Resent-Subject"];
 }
 
 
@@ -1303,144 +1303,144 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) addHeadersFromData: (NSData *) theHeaders  record: (CWCacheRecord *) theRecord
 {
-  NSArray *allLines;
-  NSData *aData;
-  NSUInteger i, count;
+    NSArray *allLines;
+    NSData *aData;
+    NSUInteger i, count;
 
-  [super setHeadersFromData: theHeaders];
+    [super setHeadersFromData: theHeaders];
 
-  // We MUST be sure to unfold all headers properly before
-  // decoding the headers
-  theHeaders = [theHeaders unfoldLines];
+    // We MUST be sure to unfold all headers properly before
+    // decoding the headers
+    theHeaders = [theHeaders unfoldLines];
 
-  allLines = [theHeaders componentsSeparatedByCString: "\n"];
-  count = [allLines count];
+    allLines = [theHeaders componentsSeparatedByCString: "\n"];
+    count = [allLines count];
 
-  for (i = 0; i < count; i++)
+    for (i = 0; i < count; i++)
     {
-      NSData *aLine = [allLines objectAtIndex: i];
+        NSData *aLine = [allLines objectAtIndex: i];
 
-      // We stop if we found the header separator. (\n\n) since someone could
-      // have called this method with the entire rawsource of a message.
-      if ([aLine length] == 0)
-	{
-	  break;
-	}
+        // We stop if we found the header separator. (\n\n) since someone could
+        // have called this method with the entire rawsource of a message.
+        if ([aLine length] == 0)
+        {
+            break;
+        }
 
-      if ([aLine hasCaseInsensitiveCPrefix: "Bcc"])
-	{
-	  [CWParser parseDestination: aLine
-		    forType: PantomimeBccRecipient
-		    inMessage: self
-		    quick: NO];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Cc"])
-	{
-	  aData = [CWParser parseDestination: aLine
-			    forType: PantomimeCcRecipient
-			    inMessage: self
-			    quick: NO];
-	  if (theRecord) theRecord.cc = aData;
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Date"])
-	{
-	  [CWParser parseDate: aLine  inMessage: self];
-	  if (theRecord && [self originationDate]) theRecord.date = [[self originationDate] timeIntervalSince1970]; 
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "From"] &&
-               ![aLine hasCaseInsensitiveCPrefix: "From "] &&
-               ![aLine hasCaseInsensitiveCPrefix: "From-"]) //ignore: from-name: from-address:
-	{
-	  aData = [CWParser parseFrom: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord.from = aData;
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "In-Reply-To"])
-	{
-	  aData = [CWParser parseInReplyTo: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord.in_reply_to = aData;
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Message-ID"])
-	{
-	  aData = [CWParser parseMessageID: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord.message_id = aData;
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "MIME-Version"])
-	{
-	  [CWParser parseMIMEVersion: aLine  inMessage: self];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Organization"])
-	{
-	  [CWParser parseOrganization: aLine  inMessage: self];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "References"])
-	{
-	  aData = [CWParser parseReferences: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord.references = aData;
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Reply-To"])
-	{
-	  [CWParser parseReplyTo: aLine  inMessage: self];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Resent-From"])
-	{
-	  [CWParser parseResentFrom: aLine  inMessage: self];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Resent-Bcc"])
-	{
-	  [CWParser parseDestination: aLine
-		    forType: PantomimeResentBccRecipient
-		    inMessage: self
-		    quick: NO];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Resent-Cc"])
-	{
-	  [CWParser parseDestination: aLine
-		    forType: PantomimeResentCcRecipient
-		    inMessage: self
-		    quick: NO];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Resent-To"])
-	{
-	  [CWParser parseDestination: aLine
-		    forType: PantomimeResentToRecipient
-		    inMessage: self
-		    quick: NO];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Status"])
-	{
-	  [CWParser parseStatus: aLine  inMessage: self];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "To"])
-	{
-	  aData = [CWParser parseDestination: aLine
-			    forType: PantomimeToRecipient
-			    inMessage: self
-			    quick: NO];
-	  if (theRecord) theRecord.to = aData;
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "X-Status"])
-	{
-	  [CWParser parseXStatus: aLine  inMessage: self];
-	}
-      else if ([aLine hasCaseInsensitiveCPrefix: "Subject"])
-	{
-	  aData = [CWParser parseSubject: aLine  inMessage: self  quick: NO];
-	  if (theRecord) theRecord.subject = aData;
-	}
-      else
-	{
-	  // We MUST NOT parse the headers that we already parsed in
-	  // Part as "unknown".
-	  if (![aLine hasCaseInsensitiveCPrefix: "Content-Description"] &&
-	      ![aLine hasCaseInsensitiveCPrefix: "Content-Disposition"] &&
-	      ![aLine hasCaseInsensitiveCPrefix: "Content-ID"] &&
-	      ![aLine hasCaseInsensitiveCPrefix: "Content-Length"] &&
-	      ![aLine hasCaseInsensitiveCPrefix: "Content-Transfer-Encoding"] &&
-	      ![aLine hasCaseInsensitiveCPrefix: "Content-Type"])
-	    {
-	      [CWParser parseUnknownHeader: aLine  inMessage: self];
-	    }
-	}
+        if ([aLine hasCaseInsensitiveCPrefix: "Bcc"])
+        {
+            [CWParser parseDestination: aLine
+                               forType: PantomimeBccRecipient
+                             inMessage: self
+                                 quick: NO];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Cc"])
+        {
+            aData = [CWParser parseDestination: aLine
+                                       forType: PantomimeCcRecipient
+                                     inMessage: self
+                                         quick: NO];
+            if (theRecord) theRecord.cc = aData;
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Date"])
+        {
+            [CWParser parseDate: aLine  inMessage: self];
+            if (theRecord && [self originationDate]) theRecord.date = [[self originationDate] timeIntervalSince1970];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "From"] &&
+                 ![aLine hasCaseInsensitiveCPrefix: "From "] &&
+                 ![aLine hasCaseInsensitiveCPrefix: "From-"]) //ignore: from-name: from-address:
+        {
+            aData = [CWParser parseFrom: aLine  inMessage: self  quick: NO];
+            if (theRecord) theRecord.from = aData;
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "In-Reply-To"])
+        {
+            aData = [CWParser parseInReplyTo: aLine  inMessage: self  quick: NO];
+            if (theRecord) theRecord.in_reply_to = aData;
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Message-ID"])
+        {
+            aData = [CWParser parseMessageID: aLine  inMessage: self  quick: NO];
+            if (theRecord) theRecord.message_id = aData;
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "MIME-Version"])
+        {
+            [CWParser parseMIMEVersion: aLine  inMessage: self];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Organization"])
+        {
+            [CWParser parseOrganization: aLine  inMessage: self];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "References"])
+        {
+            aData = [CWParser parseReferences: aLine  inMessage: self  quick: NO];
+            if (theRecord) theRecord.references = aData;
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Reply-To"])
+        {
+            [CWParser parseReplyTo: aLine  inMessage: self];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Resent-From"])
+        {
+            [CWParser parseResentFrom: aLine  inMessage: self];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Resent-Bcc"])
+        {
+            [CWParser parseDestination: aLine
+                               forType: PantomimeResentBccRecipient
+                             inMessage: self
+                                 quick: NO];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Resent-Cc"])
+        {
+            [CWParser parseDestination: aLine
+                               forType: PantomimeResentCcRecipient
+                             inMessage: self
+                                 quick: NO];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Resent-To"])
+        {
+            [CWParser parseDestination: aLine
+                               forType: PantomimeResentToRecipient
+                             inMessage: self
+                                 quick: NO];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Status"])
+        {
+            [CWParser parseStatus: aLine  inMessage: self];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "To"])
+        {
+            aData = [CWParser parseDestination: aLine
+                                       forType: PantomimeToRecipient
+                                     inMessage: self
+                                         quick: NO];
+            if (theRecord) theRecord.to = aData;
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "X-Status"])
+        {
+            [CWParser parseXStatus: aLine  inMessage: self];
+        }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Subject"])
+        {
+            aData = [CWParser parseSubject: aLine  inMessage: self  quick: NO];
+            if (theRecord) theRecord.subject = aData;
+        }
+        else
+        {
+            // We MUST NOT parse the headers that we already parsed in
+            // Part as "unknown".
+            if (![aLine hasCaseInsensitiveCPrefix: "Content-Description"] &&
+                ![aLine hasCaseInsensitiveCPrefix: "Content-Disposition"] &&
+                ![aLine hasCaseInsensitiveCPrefix: "Content-ID"] &&
+                ![aLine hasCaseInsensitiveCPrefix: "Content-Length"] &&
+                ![aLine hasCaseInsensitiveCPrefix: "Content-Transfer-Encoding"] &&
+                ![aLine hasCaseInsensitiveCPrefix: "Content-Type"])
+            {
+                [CWParser parseUnknownHeader: aLine  inMessage: self];
+            }
+        }
     }
 }
 
@@ -1449,7 +1449,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setHeadersFromData: (NSData *) theHeaders
 {
-  [self setHeadersFromData: theHeaders  record: NULL];
+    [self setHeadersFromData: theHeaders  record: NULL];
 }
 
 //
@@ -1457,14 +1457,14 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (void) setHeadersFromData: (NSData *) theHeaders  record: (CWCacheRecord *) theRecord
 {  
-  if (!theHeaders || [theHeaders length] == 0)
+    if (!theHeaders || [theHeaders length] == 0)
     {
-      return;
+        return;
     }
 
-  [_recipients removeAllObjects];
-  [_headers removeAllObjects];
-  [self addHeadersFromData: theHeaders  record: theRecord];
+    [_recipients removeAllObjects];
+    [_headers removeAllObjects];
+    [self addHeadersFromData: theHeaders  record: theRecord];
 }
 
 @end
@@ -1477,269 +1477,269 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 
 - (int) compareAccordingToNumber: (CWMessage *) aMessage
 {
-  NSUInteger num;
-  num = [aMessage messageNumber];
-  if (_message_number < num)
+    NSUInteger num;
+    num = [aMessage messageNumber];
+    if (_message_number < num)
     {
-      return NSOrderedAscending;
+        return NSOrderedAscending;
     }
-  else if (_message_number > num)
+    else if (_message_number > num)
     {
-      return NSOrderedDescending;
+        return NSOrderedDescending;
     }
-  else
+    else
     {
-      return NSOrderedSame;
+        return NSOrderedSame;
     }
 }
 
 - (int) reverseCompareAccordingToNumber: (CWMessage *) aMessage
 {
-  NSUInteger num;
-  num = [aMessage messageNumber];
-  if (num < _message_number)
+    NSUInteger num;
+    num = [aMessage messageNumber];
+    if (num < _message_number)
     {
-      return NSOrderedAscending;
+        return NSOrderedAscending;
     }
-  else if (num > _message_number)
+    else if (num > _message_number)
     {
-      return NSOrderedDescending;
+        return NSOrderedDescending;
     }
-  else
+    else
     {
-      return NSOrderedSame;
+        return NSOrderedSame;
     }
 }
 
 - (int) compareAccordingToDate: (CWMessage *) aMessage
 {
-  NSDate *date1 = [self originationDate];
-  NSDate *date2 = [aMessage originationDate];
-  NSTimeInterval timeInterval;
+    NSDate *date1 = [self originationDate];
+    NSDate *date2 = [aMessage originationDate];
+    NSTimeInterval timeInterval;
 
-  if (date1 == nil || date2 == nil)
+    if (date1 == nil || date2 == nil)
     {
-      return [self compareAccordingToNumber: aMessage]; 
+        return [self compareAccordingToNumber: aMessage];
     }
 
-  timeInterval = [date1 timeIntervalSinceDate: date2];
+    timeInterval = [date1 timeIntervalSinceDate: date2];
 
-  if (timeInterval < 0)
+    if (timeInterval < 0)
     {
-      return NSOrderedAscending;
+        return NSOrderedAscending;
     }
-  else if (timeInterval > 0)
+    else if (timeInterval > 0)
     {
-      return NSOrderedDescending;
+        return NSOrderedDescending;
     }
-  else
+    else
     {
-      return [self compareAccordingToNumber: aMessage];      
+        return [self compareAccordingToNumber: aMessage];
     }
 }
 
 - (int) reverseCompareAccordingToDate: (CWMessage *) aMessage
 {
-  NSDate *date2 = [self originationDate];
-  NSDate *date1 = [aMessage originationDate];
-  NSTimeInterval timeInterval;
+    NSDate *date2 = [self originationDate];
+    NSDate *date1 = [aMessage originationDate];
+    NSTimeInterval timeInterval;
 
-  if (date1 == nil || date2 == nil)
+    if (date1 == nil || date2 == nil)
     {
-      return [self reverseCompareAccordingToNumber: aMessage]; 
+        return [self reverseCompareAccordingToNumber: aMessage];
     }
 
-  timeInterval = [date1 timeIntervalSinceDate: date2];
+    timeInterval = [date1 timeIntervalSinceDate: date2];
 
-  if (timeInterval < 0)
+    if (timeInterval < 0)
     {
-      return NSOrderedAscending;
+        return NSOrderedAscending;
     }
-  else if (timeInterval > 0)
+    else if (timeInterval > 0)
     {
-      return NSOrderedDescending;
+        return NSOrderedDescending;
     }
-  else
+    else
     {
-      return [self reverseCompareAccordingToNumber: aMessage];      
+        return [self reverseCompareAccordingToNumber: aMessage];
     }
 }
 
 - (int) compareAccordingToSender: (CWMessage *) aMessage
 {
-  CWInternetAddress *from1, *from2;
-  NSString *fromString1, *fromString2;
-  NSString *tempString;
-  int result;
+    CWInternetAddress *from1, *from2;
+    NSString *fromString1, *fromString2;
+    NSString *tempString;
+    int result;
 
-  from1 = [self from];
-  from2 = [aMessage from];
+    from1 = [self from];
+    from2 = [aMessage from];
 
-  tempString = [from1 personal];
-  if (tempString == nil || [tempString length] == 0)
+    tempString = [from1 personal];
+    if (tempString == nil || [tempString length] == 0)
     {
-      fromString1 = [from1 address];
-      if (fromString1 == nil)
-	fromString1 = @"";
+        fromString1 = [from1 address];
+        if (fromString1 == nil)
+            fromString1 = @"";
     }
-  else
+    else
     {
-      fromString1 = tempString;
-    }
-
-
-  tempString = [from2 personal];
-  if (tempString == nil || [tempString length] == 0)
-    {
-      fromString2 = [from2 address];
-      if (fromString2 == nil)
-	fromString2 = @"";
-    }
-  else
-    {
-      fromString2 = tempString;
+        fromString1 = tempString;
     }
 
-  result = (int) [fromString1 caseInsensitiveCompare: fromString2];
-  if (result == NSOrderedSame)
+
+    tempString = [from2 personal];
+    if (tempString == nil || [tempString length] == 0)
     {
-	  return [self compareAccordingToNumber: aMessage];
+        fromString2 = [from2 address];
+        if (fromString2 == nil)
+            fromString2 = @"";
     }
-  else
+    else
     {
-      return result;
+        fromString2 = tempString;
+    }
+
+    result = (int) [fromString1 caseInsensitiveCompare: fromString2];
+    if (result == NSOrderedSame)
+    {
+        return [self compareAccordingToNumber: aMessage];
+    }
+    else
+    {
+        return result;
     }
 }
 
 - (int) reverseCompareAccordingToSender: (CWMessage *) aMessage
 {
-  CWInternetAddress *from1, *from2;
-  NSString *fromString1, *fromString2;
-  NSString *tempString;
-  int result;
+    CWInternetAddress *from1, *from2;
+    NSString *fromString1, *fromString2;
+    NSString *tempString;
+    int result;
 
-  from2 = [self from];
-  from1 = [aMessage from];
+    from2 = [self from];
+    from1 = [aMessage from];
 
-  tempString = [from1 personal];
-  if (tempString == nil || [tempString length] == 0)
+    tempString = [from1 personal];
+    if (tempString == nil || [tempString length] == 0)
     {
-      fromString1 = [from1 address];
-      if (fromString1 == nil)
-	fromString1 = @"";
+        fromString1 = [from1 address];
+        if (fromString1 == nil)
+            fromString1 = @"";
     }
-  else
+    else
     {
-      fromString1 = tempString;
-    }
-
-
-  tempString = [from2 personal];
-  if (tempString == nil || [tempString length] == 0)
-    {
-      fromString2 = [from2 address];
-      if (fromString2 == nil)
-	fromString2 = @"";
-    }
-  else
-    {
-      fromString2 = tempString;
+        fromString1 = tempString;
     }
 
 
-  result = (int) [fromString1 caseInsensitiveCompare: fromString2];
-  
-  if (result == NSOrderedSame)
+    tempString = [from2 personal];
+    if (tempString == nil || [tempString length] == 0)
     {
-      return [self reverseCompareAccordingToNumber: aMessage];
+        fromString2 = [from2 address];
+        if (fromString2 == nil)
+            fromString2 = @"";
     }
-  else
+    else
     {
-      return result;
+        fromString2 = tempString;
+    }
+
+
+    result = (int) [fromString1 caseInsensitiveCompare: fromString2];
+
+    if (result == NSOrderedSame)
+    {
+        return [self reverseCompareAccordingToNumber: aMessage];
+    }
+    else
+    {
+        return result;
     }
 }
 
 - (int) compareAccordingToSubject: (CWMessage *) aMessage
 {
-  NSString *subject1 = [self baseSubject];
-  NSString *subject2 = [aMessage baseSubject];
-  int result;
-  
-  if (subject1 == nil)
-    subject1 = @"";
-  if (subject2 == nil)
-    subject2 = @"";
+    NSString *subject1 = [self baseSubject];
+    NSString *subject2 = [aMessage baseSubject];
+    int result;
 
-  result = (int) [subject1 caseInsensitiveCompare: subject2];
+    if (subject1 == nil)
+        subject1 = @"";
+    if (subject2 == nil)
+        subject2 = @"";
 
-  if (result == NSOrderedSame)
+    result = (int) [subject1 caseInsensitiveCompare: subject2];
+
+    if (result == NSOrderedSame)
     {
-      return [self compareAccordingToNumber: aMessage];      
+        return [self compareAccordingToNumber: aMessage];
     }
-  else
+    else
     {
-      return result;
+        return result;
     }
 }
 
 - (int) reverseCompareAccordingToSubject: (CWMessage *) aMessage
 {
-  NSString *subject2 = [self baseSubject];
-  NSString *subject1 = [aMessage baseSubject];
-  int result;
-  
-  if (subject1 == nil)
-    subject1 = @"";
-  if (subject2 == nil)
-    subject2 = @"";
+    NSString *subject2 = [self baseSubject];
+    NSString *subject1 = [aMessage baseSubject];
+    int result;
 
-  result = (int) [subject1 caseInsensitiveCompare: subject2];
+    if (subject1 == nil)
+        subject1 = @"";
+    if (subject2 == nil)
+        subject2 = @"";
 
-  if (result == NSOrderedSame)
+    result = (int) [subject1 caseInsensitiveCompare: subject2];
+
+    if (result == NSOrderedSame)
     {
-      return [self compareAccordingToNumber: aMessage];      
+        return [self compareAccordingToNumber: aMessage];
     }
-  else
+    else
     {
-      return result;
+        return result;
     }
 }
 
 - (int) compareAccordingToSize: (CWMessage *) aMessage
 {
-  NSUInteger size1 = [self size];
-  NSUInteger size2 = [aMessage size];
+    NSUInteger size1 = [self size];
+    NSUInteger size2 = [aMessage size];
 
-  if (size1 < size2)
+    if (size1 < size2)
     {
-      return NSOrderedAscending;
+        return NSOrderedAscending;
     }
-  else if (size1 > size2)
+    else if (size1 > size2)
     {
-      return NSOrderedDescending;
+        return NSOrderedDescending;
     }
-  else
+    else
     {
-      return [self compareAccordingToNumber: aMessage];
+        return [self compareAccordingToNumber: aMessage];
     }
 }
 
 - (int) reverseCompareAccordingToSize: (CWMessage *) aMessage
 {
-  NSUInteger size1 = [aMessage size];
-  NSUInteger size2 = [self size];
+    NSUInteger size1 = [aMessage size];
+    NSUInteger size2 = [self size];
 
-  if (size1 < size2)
+    if (size1 < size2)
     {
-      return NSOrderedAscending;
+        return NSOrderedAscending;
     }
-  else if (size1 > size2)
+    else if (size1 > size2)
     {
-      return NSOrderedDescending;
+        return NSOrderedDescending;
     }
-  else
+    else
     {
-      return [self reverseCompareAccordingToNumber: aMessage];      
+        return [self reverseCompareAccordingToNumber: aMessage];
     }
 }
 
@@ -1762,117 +1762,117 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSString *) _computeBaseSubject
 {
-  NSMutableString *baseSubject;
-  NSArray *theMatches;
-  NSString *aSubject;
-  NSRange aRange;
+    NSMutableString *baseSubject;
+    NSArray *theMatches;
+    NSString *aSubject;
+    NSRange aRange;
 
-  BOOL b1, b2;
-  NSInteger i;
-  
-  aSubject = [self subject];
-  
-  if (!aSubject)
+    BOOL b1, b2;
+    NSInteger i;
+
+    aSubject = [self subject];
+
+    if (!aSubject)
     {
-      return nil;
+        return nil;
     }
-  
-  baseSubject = [NSMutableString stringWithString: aSubject];
-  
-  //
-  // (1) Convert any RFC 2047 encoded-words in the subject to
-  // UTF-8 as described in "internationalization
-  // considerations."  Convert all tabs and continuations to
-  // space.  Convert all multiple spaces to a single space.
-  // 
-  theMatches = [atLeastOneSpaceRegex matchString: baseSubject];
 
-  for (i = [theMatches count]-1; i >= 0; i--)
+    baseSubject = [NSMutableString stringWithString: aSubject];
+
+    //
+    // (1) Convert any RFC 2047 encoded-words in the subject to
+    // UTF-8 as described in "internationalization
+    // considerations."  Convert all tabs and continuations to
+    // space.  Convert all multiple spaces to a single space.
+    //
+    theMatches = [atLeastOneSpaceRegex matchString: baseSubject];
+
+    for (i = [theMatches count]-1; i >= 0; i--)
     {
-      aRange = [[theMatches objectAtIndex:i] rangeValue];
-      
-      if (CHECK_RANGE(aRange, [baseSubject length]))
-	{
-	  [baseSubject replaceCharactersInRange: aRange  withString:@" "];
-	}
+        aRange = [[theMatches objectAtIndex:i] rangeValue];
+
+        if (CHECK_RANGE(aRange, [baseSubject length]))
+        {
+            [baseSubject replaceCharactersInRange: aRange  withString:@" "];
+        }
     }
-  do
+    do
     {
-      b1 = NO;
-    
-      //
-      // (2) Remove all trailing text of the subject that matches
-      // the subj-trailer ABNF, repeat until no more matches are
-      // possible.
-      //
-      theMatches = [suffixSubjTrailerRegex matchString: baseSubject];
+        b1 = NO;
 
-      if ([theMatches count] > 0)
+        //
+        // (2) Remove all trailing text of the subject that matches
+        // the subj-trailer ABNF, repeat until no more matches are
+        // possible.
+        //
+        theMatches = [suffixSubjTrailerRegex matchString: baseSubject];
+
+        if ([theMatches count] > 0)
         {
-	  aRange = [[theMatches objectAtIndex:0] rangeValue];
-	  
-	  if (CHECK_RANGE(aRange,[baseSubject length]))
-	    {
-	      [baseSubject deleteCharactersInRange: [[theMatches objectAtIndex:0] rangeValue]];
-	    }
-	}
-      do
-        {
-	  b2 = NO;
-	  //
-	  // (3) Remove all prefix text of the subject that matches the
-	  // subj-leader ABNF.
-          //
-	  theMatches = [prefixSubjLeaderRegex matchString: baseSubject];
-	  
-	  if ([theMatches count] > 0)
+            aRange = [[theMatches objectAtIndex:0] rangeValue];
+
+            if (CHECK_RANGE(aRange,[baseSubject length]))
             {
-	      aRange = [[theMatches objectAtIndex:0] rangeValue];
-	      
-	      if (CHECK_RANGE(aRange, [baseSubject length]))
+                [baseSubject deleteCharactersInRange: [[theMatches objectAtIndex:0] rangeValue]];
+            }
+        }
+        do
+        {
+            b2 = NO;
+            //
+            // (3) Remove all prefix text of the subject that matches the
+            // subj-leader ABNF.
+            //
+            theMatches = [prefixSubjLeaderRegex matchString: baseSubject];
+
+            if ([theMatches count] > 0)
+            {
+                aRange = [[theMatches objectAtIndex:0] rangeValue];
+
+                if (CHECK_RANGE(aRange, [baseSubject length]))
                 {
-		  [baseSubject deleteCharactersInRange: [[theMatches objectAtIndex:0] rangeValue]];
-		  b2 = YES;
+                    [baseSubject deleteCharactersInRange: [[theMatches objectAtIndex:0] rangeValue]];
+                    b2 = YES;
                 }
             }
-	  //
-          // (4) If there is prefix text of the subject that matches the
-          // subj-blob ABNF, and removing that prefix leaves a non-empty
-          // subj-base, then remove the prefix text.
-          //
-	  theMatches = [prefixSubjBlobRegex matchString: baseSubject];
+            //
+            // (4) If there is prefix text of the subject that matches the
+            // subj-blob ABNF, and removing that prefix leaves a non-empty
+            // subj-base, then remove the prefix text.
+            //
+            theMatches = [prefixSubjBlobRegex matchString: baseSubject];
 
-	  if ([theMatches count] > 0)
-	    {
-	      aRange = [[theMatches objectAtIndex:0] rangeValue];
-	      if (CHECK_RANGE(aRange, [baseSubject length]))
+            if ([theMatches count] > 0)
+            {
+                aRange = [[theMatches objectAtIndex:0] rangeValue];
+                if (CHECK_RANGE(aRange, [baseSubject length]))
                 {
-		  [baseSubject deleteCharactersInRange:[[theMatches objectAtIndex:0] rangeValue]];
-		  b2 = YES;
+                    [baseSubject deleteCharactersInRange:[[theMatches objectAtIndex:0] rangeValue]];
+                    b2 = YES;
                 }
             }
             //
             // (5) Repeat (3) and (4) until no matches remain.
             //
         } while (b2);
-      //
-      // (6) If the resulting text begins with the subj-fwd-hdr ABNF
-      // and ends with the subj-fwd-trl ABNF, remove the
-      // subj-fwd-hdr and subj-fwd-trl and repeat from step (2).
-      //
-      theMatches = [prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex matchString:baseSubject];
+        //
+        // (6) If the resulting text begins with the subj-fwd-hdr ABNF
+        // and ends with the subj-fwd-trl ABNF, remove the
+        // subj-fwd-hdr and subj-fwd-trl and repeat from step (2).
+        //
+        theMatches = [prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex matchString:baseSubject];
 
-      if ([theMatches count] > 0)
+        if ([theMatches count] > 0)
         {
-	  [baseSubject deleteCharactersInRange:NSMakeRange(0,5)];
-	  [baseSubject deleteCharactersInRange:NSMakeRange([baseSubject length] - 1,1)];
-	  b1 = YES;
+            [baseSubject deleteCharactersInRange:NSMakeRange(0,5)];
+            [baseSubject deleteCharactersInRange:NSMakeRange([baseSubject length] - 1,1)];
+            b1 = YES;
         }
     } while (b1);
-  //
-  // (7) The resulting text is the "base subject" used in the SORT.
-  //
-  return baseSubject;
+    //
+    // (7) The resulting text is the "base subject" used in the SORT.
+    //
+    return baseSubject;
 }
 
 
@@ -1880,85 +1880,85 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 //
 - (void) _extractText: (NSMutableData *) theMutableData
-		 part: (id) thePart
-		quote: (BOOL *) theBOOL
+                 part: (id) thePart
+                quote: (BOOL *) theBOOL
 {
-  //
-  // We now get the right text part of the message.
-  // 
-  //
-  if ([thePart isMIMEType: @"text"  subType: @"*"])
+    //
+    // We now get the right text part of the message.
+    //
+    //
+    if ([thePart isMIMEType: @"text"  subType: @"*"])
     {
-      NSData *d;
+        NSData *d;
 
-      d = [[NSString stringWithData: [CWMIMEUtility plainTextContentFromPart: thePart]  charset: [[thePart charset] dataUsingEncoding: NSASCIIStringEncoding]]
-	    dataUsingEncoding: NSUTF8StringEncoding];
-      [theMutableData appendData: d];
-       *theBOOL = YES;
+        d = [[NSString stringWithData: [CWMIMEUtility plainTextContentFromPart: thePart]  charset: [[thePart charset] dataUsingEncoding: NSASCIIStringEncoding]]
+             dataUsingEncoding: NSUTF8StringEncoding];
+        [theMutableData appendData: d];
+        *theBOOL = YES;
     }
-  //
-  // If our message only contains the following part types, we cannot
-  // represent those in a reply.
-  // 
-  else if ([thePart isMIMEType: @"application"  subType: @"*"] ||
-	   [thePart isMIMEType: @"audio"  subType: @"*"] ||
-	   [thePart isMIMEType: @"image"  subType: @"*"] || 
-	   [thePart isMIMEType: @"message"  subType: @"*"] ||
-	   [thePart isMIMEType: @"video"  subType: @"*"])
+    //
+    // If our message only contains the following part types, we cannot
+    // represent those in a reply.
+    //
+    else if ([thePart isMIMEType: @"application"  subType: @"*"] ||
+             [thePart isMIMEType: @"audio"  subType: @"*"] ||
+             [thePart isMIMEType: @"image"  subType: @"*"] ||
+             [thePart isMIMEType: @"message"  subType: @"*"] ||
+             [thePart isMIMEType: @"video"  subType: @"*"])
     {
-      [theMutableData appendData: [@"\t[NON-Text Body part not included]" dataUsingEncoding: NSUTF8StringEncoding]];
+        [theMutableData appendData: [@"\t[NON-Text Body part not included]" dataUsingEncoding: NSUTF8StringEncoding]];
     }
-  //
-  // We have a multipart type. It can be:
-  //
-  // multipart/appledouble, multipart/alternative, multipart/related,
-  // multipart/mixed or even multipart/report.
-  //
-  // We must search for a text part to use in our reply.
-  //
-  else if ([thePart isMIMEType: @"multipart"  subType: @"*"])
+    //
+    // We have a multipart type. It can be:
+    //
+    // multipart/appledouble, multipart/alternative, multipart/related,
+    // multipart/mixed or even multipart/report.
+    //
+    // We must search for a text part to use in our reply.
+    //
+    else if ([thePart isMIMEType: @"multipart"  subType: @"*"])
     {
-      CWMIMEMultipart *aMimeMultipart;
-      CWPart *aPart;
-      int i;
+        CWMIMEMultipart *aMimeMultipart;
+        CWPart *aPart;
+        int i;
 
-      aMimeMultipart = (CWMIMEMultipart *)[thePart content];
-     
-      for (i = 0; i < [aMimeMultipart count]; i++)
-	{
-	  aPart = [aMimeMultipart partAtIndex: i];
-	  
-	  //
-	  // We do a full verification on the Content-Type since we might
-	  // have a text/x-{something} like text/x-vcard.
-	  //
-	  if ([aPart isMIMEType: @"text"  subType: @"plain"] ||
-	      [aPart isMIMEType: @"text"  subType: @"enriched"] ||
-	      [aPart isMIMEType: @"text"  subType: @"html"])
-	    {
-	      [theMutableData appendData: [[NSString stringWithData: [CWMIMEUtility plainTextContentFromPart: aPart]
-						     charset: [[aPart charset] dataUsingEncoding: NSASCIIStringEncoding]]
-					    dataUsingEncoding: NSUTF8StringEncoding]];
-	      
-	      // If our original Content-Type is multipart/alternative, no need to
-	      // consider to the other text/* parts. Otherwise, we just append 
-	      // all text/* parts.
-	      if ([thePart isMIMEType: @"multipart"  subType: @"alternative"])
-		{
-		  break;
-		}
-	    }
-	  //
-	  // If we got any other kind of multipart parts, we loop inside of it in order to
-	  // extract all text parts.
-	  //
-	  else if ([aPart isMIMEType: @"multipart"  subType: @"*"])
-	    {
-	      [self _extractText: theMutableData  part: aPart  quote: theBOOL];
-	    }
-	} // for ( ... )
+        aMimeMultipart = (CWMIMEMultipart *)[thePart content];
 
-      *theBOOL = YES;
+        for (i = 0; i < [aMimeMultipart count]; i++)
+        {
+            aPart = [aMimeMultipart partAtIndex: i];
+
+            //
+            // We do a full verification on the Content-Type since we might
+            // have a text/x-{something} like text/x-vcard.
+            //
+            if ([aPart isMIMEType: @"text"  subType: @"plain"] ||
+                [aPart isMIMEType: @"text"  subType: @"enriched"] ||
+                [aPart isMIMEType: @"text"  subType: @"html"])
+            {
+                [theMutableData appendData: [[NSString stringWithData: [CWMIMEUtility plainTextContentFromPart: aPart]
+                                                              charset: [[aPart charset] dataUsingEncoding: NSASCIIStringEncoding]]
+                                             dataUsingEncoding: NSUTF8StringEncoding]];
+
+                // If our original Content-Type is multipart/alternative, no need to
+                // consider to the other text/* parts. Otherwise, we just append
+                // all text/* parts.
+                if ([thePart isMIMEType: @"multipart"  subType: @"alternative"])
+                {
+                    break;
+                }
+            }
+            //
+            // If we got any other kind of multipart parts, we loop inside of it in order to
+            // extract all text parts.
+            //
+            else if ([aPart isMIMEType: @"multipart"  subType: @"*"])
+            {
+                [self _extractText: theMutableData  part: aPart  quote: theBOOL];
+            }
+        } // for ( ... )
+
+        *theBOOL = YES;
     } // else if ([thePart isMIMEType: @"multipart"  subType: @"*"])
 }
 
@@ -1968,32 +1968,32 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 //
 - (NSData *) _formatRecipientsWithType: (int) theType
 {
-  NSMutableData *aMutableData;
-  int i;
+    NSMutableData *aMutableData;
+    int i;
 
-  aMutableData = [[NSMutableData alloc] init];
+    aMutableData = [[NSMutableData alloc] init];
 
-  for (i = 0; i < [_recipients count]; i++)
+    for (i = 0; i < [_recipients count]; i++)
     {
-      CWInternetAddress *anInternetAddress;
+        CWInternetAddress *anInternetAddress;
 
-      anInternetAddress = [_recipients objectAtIndex: i];
+        anInternetAddress = [_recipients objectAtIndex: i];
 
-      if ([anInternetAddress type] == theType)
-	{
-	  [aMutableData appendData: [anInternetAddress dataValue]];
-	  [aMutableData appendCString: ", "];
-	}
+        if ([anInternetAddress type] == theType)
+        {
+            [aMutableData appendData: [anInternetAddress dataValue]];
+            [aMutableData appendCString: ", "];
+        }
     }
-  
-  if ([aMutableData length] > 0)
+
+    if ([aMutableData length] > 0)
     {
-      [aMutableData setLength: [aMutableData length]-2];
-      return AUTORELEASE(aMutableData);
+        [aMutableData setLength: [aMutableData length]-2];
+        return AUTORELEASE(aMutableData);
     }
-  
-  RELEASE(aMutableData);     
-  return nil;
+
+    RELEASE(aMutableData);
+    return nil;
 }
 
 @end
