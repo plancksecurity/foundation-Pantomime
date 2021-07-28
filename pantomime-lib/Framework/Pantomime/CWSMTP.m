@@ -1,24 +1,24 @@
 /*
-**  CWSMTP.m
-**
-**  Copyright (c) 2001-2007
-**
-**  Author: Ludovic Marcotte <ludovic@Sophos.ca>
-**
-**  This library is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU Lesser General Public
-**  License as published by the Free Software Foundation; either
-**  version 2.1 of the License, or (at your option) any later version.
-**  
-**  This library is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-**  Lesser General Public License for more details.
-**  
-**  You should have received a copy of the GNU Lesser General Public
-**  License along with this library; if not, write to the Free Software
-**  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ **  CWSMTP.m
+ **
+ **  Copyright (c) 2001-2007
+ **
+ **  Author: Ludovic Marcotte <ludovic@Sophos.ca>
+ **
+ **  This library is free software; you can redistribute it and/or
+ **  modify it under the terms of the GNU Lesser General Public
+ **  License as published by the Free Software Foundation; either
+ **  version 2.1 of the License, or (at your option) any later version.
+ **
+ **  This library is distributed in the hope that it will be useful,
+ **  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ **  Lesser General Public License for more details.
+ **
+ **  You should have received a copy of the GNU Lesser General Public
+ **  License along with this library; if not, write to the Free Software
+ **  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 #import "CWSMTP.h"
 #import "CWSMTP+Protected.h"
@@ -51,32 +51,32 @@ static NSString *pEpEHLOBase = @"pretty.Easy.privacy";
 //
 static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, BOOL aBOOL)
 {
-  CWInternetAddress *theAddress;
-  NSUInteger i, count;
+    CWInternetAddress *theAddress;
+    NSUInteger i, count;
 
-  count = [theRecipients count];
+    count = [theRecipients count];
 
-  for (i = 0; i < count; i++)
+    for (i = 0; i < count; i++)
     {
-      theAddress = [theRecipients objectAtIndex: i];
+        theAddress = [theRecipients objectAtIndex: i];
 
-      if (aBOOL)
-	{
-	  if ([theAddress type] > 3)
-	    {
-	      return theAddress;
-	    }
-	}
-      else
-	{
-	  if ([theAddress type] < 4)
-	    {
-	      return theAddress;
-	    }
-	}
+        if (aBOOL)
+        {
+            if ([theAddress type] > 3)
+            {
+                return theAddress;
+            }
+        }
+        else
+        {
+            if ([theAddress type] < 4)
+            {
+                return theAddress;
+            }
+        }
     }
 
-  return nil;
+    return nil;
 }
 
 
@@ -129,7 +129,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
     _max_size = 0;
 
     _lastCommand = SMTP_AUTHORIZATION;
-  
+
     // We queue our first "command".
     [_queue addObject: AUTORELEASE([[CWSMTPQueueObject alloc] initWithCommand: _lastCommand  arguments: @""])];
 
@@ -142,13 +142,13 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) dealloc
 {
-  //LogInfo(@"SMTP: -dealloc");
-  RELEASE(_message);
-  RELEASE(_data);
-  RELEASE(_recipients);
-  RELEASE(_sent_recipients);
+    //LogInfo(@"SMTP: -dealloc");
+    RELEASE(_message);
+    RELEASE(_data);
+    RELEASE(_recipients);
+    RELEASE(_sent_recipients);
 
-  //[super dealloc];
+    //[super dealloc];
 }
 
 #pragma mark - Overriden
@@ -478,32 +478,32 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 
 - (void) _parseAUTH_CRAM_MD5
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
- 
-  if ([aData hasCPrefix: "334"])
+    NSData *aData;
+
+    aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "334"])
     {
-      NSString *aString;
-      CWMD5 *aMD5;
-      
-      // We trim the "334 ", decode the data using base64 and we keep the challenge phrase
-      aData = [[aData subdataFromIndex: 4] decodeBase64];
-      aMD5 = [[CWMD5 alloc] initWithData: aData];
-      [aMD5 computeDigest];
-      
-      aString = [NSString stringWithFormat: @"%@ %@", _username, [aMD5 hmacAsStringUsingPassword: _password]];
-        [self bulkWriteData:@[[[aString dataUsingEncoding:  _defaultCStringEncoding] encodeBase64WithLineLength: 0],
-                                 _crlf]];
-      RELEASE(aMD5);
+        NSString *aString;
+        CWMD5 *aMD5;
+
+        // We trim the "334 ", decode the data using base64 and we keep the challenge phrase
+        aData = [[aData subdataFromIndex: 4] decodeBase64];
+        aMD5 = [[CWMD5 alloc] initWithData: aData];
+        [aMD5 computeDigest];
+
+        aString = [NSString stringWithFormat: @"%@ %@", _username, [aMD5 hmacAsStringUsingPassword: _password]];
+        [self bulkWriteData:@[[[aString dataUsingEncoding:  _defaultStringEncoding] encodeBase64WithLineLength: 0],
+                              _crlf]];
+        RELEASE(aMD5);
     }
-  else if ([aData hasCPrefix: "235"])
+    else if ([aData hasCPrefix: "235"])
     {
-      AUTHENTICATION_COMPLETED(_delegate, @"CRAM-MD5");
+        AUTHENTICATION_COMPLETED(_delegate, @"CRAM-MD5");
     }
-  else
+    else
     {
-      AUTHENTICATION_FAILED(_delegate, @"CRAM-MD5");
+        AUTHENTICATION_FAILED(_delegate, @"CRAM-MD5");
     }
 }
 
@@ -513,22 +513,22 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseAUTH_LOGIN
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
-  
-  if ([aData hasCPrefix: "334"])
+    NSData *aData;
+
+    aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "334"])
     {
-      NSString *aString;
-      
-      aString = [[NSString alloc] initWithData: [[_username dataUsingEncoding: _defaultCStringEncoding] encodeBase64WithLineLength: 0]
-						   encoding: _defaultCStringEncoding];
-      [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
-      RELEASE(aString);
+        NSString *aString;
+
+        aString = [[NSString alloc] initWithData: [[_username dataUsingEncoding: _defaultStringEncoding] encodeBase64WithLineLength: 0]
+                                        encoding: _defaultStringEncoding];
+        [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
+        RELEASE(aString);
     }
-  else
+    else
     {
-      AUTHENTICATION_FAILED(_delegate, @"LOGIN");
+        AUTHENTICATION_FAILED(_delegate, @"LOGIN");
     }
 }
 
@@ -538,28 +538,28 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseAUTH_LOGIN_CHALLENGE
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
-  
-  if ([aData hasCPrefix: "334"])
+    NSData *aData;
+
+    aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "334"])
     {
-      NSString *aString;
-      
-      aString = [[NSString alloc] initWithData: [[_password dataUsingEncoding: _defaultCStringEncoding] encodeBase64WithLineLength: 0]
-				  encoding: _defaultCStringEncoding];
-      
-      [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
-      RELEASE(aString);
+        NSString *aString;
+
+        aString = [[NSString alloc] initWithData: [[_password dataUsingEncoding: _defaultStringEncoding] encodeBase64WithLineLength: 0]
+                                        encoding: _defaultStringEncoding];
+
+        [self sendCommand: SMTP_AUTH_LOGIN_CHALLENGE  arguments: aString];
+        RELEASE(aString);
     }
-  else if ([aData hasCPrefix: "235"])
+    else if ([aData hasCPrefix: "235"])
     {
-      AUTHENTICATION_COMPLETED(_delegate, @"LOGIN");
+        AUTHENTICATION_COMPLETED(_delegate, @"LOGIN");
     }
-  else
+    else
     {
         LogInfo(@"Authentification response: |%@|",
-             [aData asciiString]);
+                [aData asciiString]);
         AUTHENTICATION_FAILED(_delegate, @"LOGIN");
     }
 }
@@ -570,46 +570,18 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseAUTH_PLAIN
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
+    NSData *aData = [_responsesFromServer lastObject];
 
-  if ([aData hasCPrefix: "334"])
-    {
-      NSMutableData *aMutableData;
-      NSUInteger len_username, len_password;
-      
-      len_username = [_username length];
-  
-      if (!_password)
-	{
-	  len_password = 0;
-	}
-      else
-	{
-	  len_password = [_password length];
-	}
-      
-      // We create our phrase
-      aMutableData = [NSMutableData dataWithLength: (len_username + len_password + 2)];
-      
-      [aMutableData replaceBytesInRange: NSMakeRange(1,len_username)
-		    withBytes: [[_username dataUsingEncoding: _defaultCStringEncoding] bytes]];
-      
-      
-      [aMutableData replaceBytesInRange: NSMakeRange(2 + len_username, len_password)
-		    withBytes: [[_password dataUsingEncoding:  [NSString defaultCStringEncoding]] bytes]];
-
-        [self bulkWriteData:@[[aMutableData encodeBase64WithLineLength: 0],
-                                 _crlf]];
+    if ([aData hasCPrefix: "334"]) {
+        NSString *stringToSend = [NSString stringWithFormat:@"\0%@\0%@", _username, _password];
+        NSData *dataToSend = [stringToSend dataUsingEncoding:_defaultStringEncoding];
+        [self bulkWriteData:@[[dataToSend encodeBase64WithLineLength: 0],
+                              _crlf]];
+    } else if ([aData hasCPrefix: "235"]) {
+        AUTHENTICATION_COMPLETED(_delegate, @"PLAIN");
     }
-  else if ([aData hasCPrefix: "235"])
-    {
-      AUTHENTICATION_COMPLETED(_delegate, @"PLAIN");
-    }
-  else
-    {
-      AUTHENTICATION_FAILED(_delegate, @"PLAIN");
+    else {
+        AUTHENTICATION_FAILED(_delegate, @"PLAIN");
     }
 }
 
@@ -643,20 +615,20 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseAUTHORIZATION
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
-  
-  // 220 <domain> Service ready
-  if ([aData hasCPrefix: "220"])
+    NSData *aData;
+
+    aData = [_responsesFromServer lastObject];
+
+    // 220 <domain> Service ready
+    if ([aData hasCPrefix: "220"])
     {
-      [self sendCommand: SMTP_EHLO  arguments: [NSString stringWithFormat:@"EHLO %@", pEpEHLOBase]];
+        [self sendCommand: SMTP_EHLO  arguments: [NSString stringWithFormat:@"EHLO %@", pEpEHLOBase]];
     }
-  else
+    else
     {
-      // Handle the fact when a server is loaded and can't handle our requests
-      // right away.
-//!  unhandled
+        // Handle the fact when a server is loaded and can't handle our requests
+        // right away.
+        //!  unhandled
     }
 }
 
@@ -666,73 +638,73 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseDATA
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
+    NSData *aData;
 
-  // If we can proceed to write the message's data, let's do so.
-  if ([aData hasCPrefix: "354"])
+    aData = [_responsesFromServer lastObject];
+
+    // If we can proceed to write the message's data, let's do so.
+    if ([aData hasCPrefix: "354"])
     {
-      NSMutableData *aMutableData;
-      NSRange r1, r2;
-      
-      // We first replace all occurences of LF by CRLF in the Message's data.
-      //
-      aMutableData = [[NSMutableData dataWithData: _data] replaceLFWithCRLF];
-      _data = nil; // save memory by deleting as soon as possible
-  
-      //
-      // According to RFC 2821 section 4.5.2, we must check for the character
-      // sequence "<CRLF>.<CRLF>"; any occurrence have its period duplicated
-      // to avoid data transparency. 
-      //
-      r1 = [aMutableData rangeOfCString: "\r\n."];
-      
-      while (r1.location != NSNotFound)
-	{
-	  [aMutableData replaceBytesInRange: r1  withBytes: "\r\n.."  length: 4];
-	  
-	  r1 = [aMutableData rangeOfCString: "\r\n."
-			     options: 0 
-			     range: NSMakeRange(NSMaxRange(r1)+1, [aMutableData length]-NSMaxRange(r1)-1)];
-	}
+        NSMutableData *aMutableData;
+        NSRange r1, r2;
 
-      //
-      // We now look for the Bcc: header. If it is present, we remove it.
-      // Some servers, like qmail, do not remove it automatically.
-      //
-      r1 = [aMutableData rangeOfCString: "\r\n\r\n"];
-      r1 = [aMutableData rangeOfCString: "\r\nBcc: "
-			 options: 0
-			 range: NSMakeRange(0,r1.location-1)];
-      
-      if (r1.location != NSNotFound)
-	{
-	  // We search for the first \r\n AFTER the Bcc: header and
-	  // replace the whole thing with \r\n.
-	  r2 = [aMutableData rangeOfCString: "\r\n"
-			     options: 0
-			     range: NSMakeRange(NSMaxRange(r1)+1,[aMutableData length]-NSMaxRange(r1)-1)];
-	  [aMutableData replaceBytesInRange: NSMakeRange(r1.location, NSMaxRange(r2)-r1.location)
-			withBytes: "\r\n"
-			length: 2];
-    }
+        // We first replace all occurences of LF by CRLF in the Message's data.
+        //
+        aMutableData = [[NSMutableData dataWithData: _data] replaceLFWithCRLF];
+        _data = nil; // save memory by deleting as soon as possible
+
+        //
+        // According to RFC 2821 section 4.5.2, we must check for the character
+        // sequence "<CRLF>.<CRLF>"; any occurrence have its period duplicated
+        // to avoid data transparency.
+        //
+        r1 = [aMutableData rangeOfCString: "\r\n."];
+
+        while (r1.location != NSNotFound)
+        {
+            [aMutableData replaceBytesInRange: r1  withBytes: "\r\n.."  length: 4];
+
+            r1 = [aMutableData rangeOfCString: "\r\n."
+                                      options: 0
+                                        range: NSMakeRange(NSMaxRange(r1)+1, [aMutableData length]-NSMaxRange(r1)-1)];
+        }
+
+        //
+        // We now look for the Bcc: header. If it is present, we remove it.
+        // Some servers, like qmail, do not remove it automatically.
+        //
+        r1 = [aMutableData rangeOfCString: "\r\n\r\n"];
+        r1 = [aMutableData rangeOfCString: "\r\nBcc: "
+                                  options: 0
+                                    range: NSMakeRange(0,r1.location-1)];
+
+        if (r1.location != NSNotFound)
+        {
+            // We search for the first \r\n AFTER the Bcc: header and
+            // replace the whole thing with \r\n.
+            r2 = [aMutableData rangeOfCString: "\r\n"
+                                      options: 0
+                                        range: NSMakeRange(NSMaxRange(r1)+1,[aMutableData length]-NSMaxRange(r1)-1)];
+            [aMutableData replaceBytesInRange: NSMakeRange(r1.location, NSMaxRange(r2)-r1.location)
+                                    withBytes: "\r\n"
+                                       length: 2];
+        }
         [self bulkWriteData:@[aMutableData,
-                                 [NSData dataWithBytes: "\r\n.\r\n"  length: 5]]];
+                              [NSData dataWithBytes: "\r\n.\r\n"  length: 5]]];
     }
-  else if ([aData hasCPrefix: "250"])
+    else if ([aData hasCPrefix: "250"])
     {
-      // The data we wrote in the previous call was sucessfully written.
-      // We inform the delegate that the mail was sucessfully sent.
-      PERFORM_SELECTOR_2(_delegate, @selector(messageSent:), PantomimeMessageSent, _message, @"Message");
+        // The data we wrote in the previous call was sucessfully written.
+        // We inform the delegate that the mail was sucessfully sent.
+        PERFORM_SELECTOR_2(_delegate, @selector(messageSent:), PantomimeMessageSent, _message, @"Message");
 
         // Delete memory consuming objects as soon as possible
         _data = nil;
         _message = nil;
     }
-  else
+    else
     {
-      [self fail];
+        [self fail];
     }
 }
 
@@ -742,81 +714,81 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseEHLO
 {
-  NSData *aData;
-  NSUInteger i, count;
+    NSData *aData;
+    NSUInteger i, count;
 
-  count = [_responsesFromServer count];
-  
-  for (i = 0; i < count; i++)
+    count = [_responsesFromServer count];
+
+    for (i = 0; i < count; i++)
     {
-      aData = [_responsesFromServer objectAtIndex: i];
+        aData = [_responsesFromServer objectAtIndex: i];
 
-      if ([aData hasCPrefix: "250"])
-	{
-	  // We parse the SMTP service extensions. For now, we support the SIZE
-	  // and the AUTH extensions. We ignore the rest.
-	  aData = [aData subdataFromIndex: 4];
+        if ([aData hasCPrefix: "250"])
+        {
+            // We parse the SMTP service extensions. For now, we support the SIZE
+            // and the AUTH extensions. We ignore the rest.
+            aData = [aData subdataFromIndex: 4];
 
-	  // We add it to our capabilities
-	  [_capabilities addObject: AUTORELEASE([[NSString alloc] initWithData: aData  encoding: _defaultCStringEncoding])];
+            // We add it to our capabilities
+            [_capabilities addObject: AUTORELEASE([[NSString alloc] initWithData: aData  encoding: _defaultStringEncoding])];
 
-	  // Example of responses:
-	  //
-	  // AUTH LOGIN
-	  // AUTH=PLAIN CRAM-MD5 DIGEST-MD5
-	  //
-	  if ([aData hasCPrefix: "AUTH"])
-	    {
-	      NSEnumerator *theEnumerator;
-	      id aString;
+            // Example of responses:
+            //
+            // AUTH LOGIN
+            // AUTH=PLAIN CRAM-MD5 DIGEST-MD5
+            //
+            if ([aData hasCPrefix: "AUTH"])
+            {
+                NSEnumerator *theEnumerator;
+                id aString;
 
-	      // We chomp the "AUTH " or "AUTH=" part and we decode our
-	      // supported mechanisms.
-	      theEnumerator = [[[aData subdataFromIndex: 5] componentsSeparatedByCString: " "] objectEnumerator];
+                // We chomp the "AUTH " or "AUTH=" part and we decode our
+                // supported mechanisms.
+                theEnumerator = [[[aData subdataFromIndex: 5] componentsSeparatedByCString: " "] objectEnumerator];
 
-	      while ((aString = [theEnumerator nextObject]))
-		{
-		  aString = [aString asciiString];
+                while ((aString = [theEnumerator nextObject]))
+                {
+                    aString = [aString asciiString];
 
-		  if (![_supportedMechanisms containsObject: aString])
-		    {
-		      [_supportedMechanisms addObject: aString];
-		    }
-		}
-	    }
-	  //
-	  // SIZE size-param
-	  // size-param ::= [1*DIGIT]
-	  //
-	  // See RFC1870 for detailed information.
-	  //
-	  else if ([aData hasCPrefix: "SIZE"])
-	    {
-	      NSRange aRange;
+                    if (![_supportedMechanisms containsObject: aString])
+                    {
+                        [_supportedMechanisms addObject: aString];
+                    }
+                }
+            }
+            //
+            // SIZE size-param
+            // size-param ::= [1*DIGIT]
+            //
+            // See RFC1870 for detailed information.
+            //
+            else if ([aData hasCPrefix: "SIZE"])
+            {
+                NSRange aRange;
 
-	      // We must be careful here. Some broken servers will send only
-	      // 250-SIZE
-	      // and we don't want to parse an inexistant value.
-	      aRange = [aData rangeOfCString: " "];
+                // We must be careful here. Some broken servers will send only
+                // 250-SIZE
+                // and we don't want to parse an inexistant value.
+                aRange = [aData rangeOfCString: " "];
 
-	      if (aRange.length)
-		{
-		  _max_size = atoi([[aData subdataFromIndex: aRange.location+1] cString]);
-		}
-	    }
-	}
-      else
-	{
-	  // The server doesn't handle EHLO. We send it
-	  // a HELO greeting instead.
-	  [self sendCommand: SMTP_HELO  arguments: [NSString stringWithFormat:@"HELO %@", pEpEHLOBase]];
-	  break;
-	}
+                if (aRange.length)
+                {
+                    _max_size = atoi([[aData subdataFromIndex: aRange.location+1] cString]);
+                }
+            }
+        }
+        else
+        {
+            // The server doesn't handle EHLO. We send it
+            // a HELO greeting instead.
+            [self sendCommand: SMTP_HELO  arguments: [NSString stringWithFormat:@"HELO %@", pEpEHLOBase]];
+            break;
+        }
     }
 
 
-//!  - Inform the delegate if it is ready or not, especially if EHLO failed
-  PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:), PantomimeServiceInitialized);
+    //!  - Inform the delegate if it is ready or not, especially if EHLO failed
+    PERFORM_SELECTOR_1(_delegate, @selector(serviceInitialized:), PantomimeServiceInitialized);
 }
 
 
@@ -825,7 +797,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseHELO
 {
-  //!  - Implement. + inform the delegate if it's ready or not.
+    //!  - Implement. + inform the delegate if it's ready or not.
 }
 
 
@@ -837,24 +809,24 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseMAIL
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
+    NSData *aData;
 
-  if ([aData hasCPrefix: "250"])
+    aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "250"])
     {
-      // We write the first recipient while respecting the fact
-      // that we are bouncing or not the message.
-      PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationCompleted:), PantomimeTransactionInitiationCompleted);
+        // We write the first recipient while respecting the fact
+        // that we are bouncing or not the message.
+        PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationCompleted:), PantomimeTransactionInitiationCompleted);
 
-      [self sendCommand: SMTP_RCPT  arguments: @"RCPT TO:<%@>", [next_recipient(_sent_recipients, _redirected) address]];
+        [self sendCommand: SMTP_RCPT  arguments: @"RCPT TO:<%@>", [next_recipient(_sent_recipients, _redirected) address]];
     }
-  else
+    else
     {
-      if (!PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:), PantomimeTransactionInitiationFailed))
-	{
-	  [self fail];
-	}
+        if (!PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:), PantomimeTransactionInitiationFailed))
+        {
+            [self fail];
+        }
     }
 }
 
@@ -864,7 +836,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseNOOP
 {
-  // Do what?
+    // Do what?
 }
 
 
@@ -873,16 +845,16 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseQUIT
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
-  
-  if ([aData hasCPrefix: "221"])
+    NSData *aData;
+
+    aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "221"])
     {
-      // Do anything special here?
+        // Do anything special here?
     }
 
-  [super close];
+    [super close];
 }
 
 
@@ -895,40 +867,40 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseRCPT
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
+    NSData *aData;
 
-  if ([aData hasCPrefix: "250"])
+    aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "250"])
     {
-      CWInternetAddress *theAddress;
+        CWInternetAddress *theAddress;
 
-      theAddress = next_recipient(_sent_recipients, _redirected);
+        theAddress = next_recipient(_sent_recipients, _redirected);
 
-      if (theAddress)
-	{
-	  [_sent_recipients removeObject: theAddress];
-	  
-	  theAddress = next_recipient(_sent_recipients, _redirected);
-	  
-	  if (theAddress)
-	    {
-	      [self sendCommand: SMTP_RCPT  arguments: @"RCPT TO:<%@>", [theAddress address]];
-	      return;
-	    }
-	}
+        if (theAddress)
+        {
+            [_sent_recipients removeObject: theAddress];
 
-      // We are done writing the recipients, we now write the content
-      // of the message.
-      PERFORM_SELECTOR_2(_delegate, @selector(recipientIdentificationCompleted:), PantomimeRecipientIdentificationCompleted, _recipients, @"Recipients");
-      [self sendCommand: SMTP_DATA  arguments: @"DATA"];
+            theAddress = next_recipient(_sent_recipients, _redirected);
+
+            if (theAddress)
+            {
+                [self sendCommand: SMTP_RCPT  arguments: @"RCPT TO:<%@>", [theAddress address]];
+                return;
+            }
+        }
+
+        // We are done writing the recipients, we now write the content
+        // of the message.
+        PERFORM_SELECTOR_2(_delegate, @selector(recipientIdentificationCompleted:), PantomimeRecipientIdentificationCompleted, _recipients, @"Recipients");
+        [self sendCommand: SMTP_DATA  arguments: @"DATA"];
     }
-  else
+    else
     {
-      if (!PERFORM_SELECTOR_1(_delegate, @selector(recipientIdentificationFailed:), PantomimeRecipientIdentificationFailed))
-	{
-	  [self fail];
-	}
+        if (!PERFORM_SELECTOR_1(_delegate, @selector(recipientIdentificationFailed:), PantomimeRecipientIdentificationFailed))
+        {
+            [self fail];
+        }
     }
 }
 
@@ -938,17 +910,17 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseRSET
 {
-  NSData *aData;
-  
-  aData = [_responsesFromServer lastObject];
-  
-  if ([aData hasCPrefix: "250"])
+    NSData *aData;
+
+    aData = [_responsesFromServer lastObject];
+
+    if ([aData hasCPrefix: "250"])
     {
-      PERFORM_SELECTOR_1(_delegate, @selector(transactionResetCompleted:), PantomimeTransactionResetCompleted);
+        PERFORM_SELECTOR_1(_delegate, @selector(transactionResetCompleted:), PantomimeTransactionResetCompleted);
     }
-  else
+    else
     {
-      PERFORM_SELECTOR_1(_delegate, @selector(transactionResetFailed:), PantomimeTransactionResetFailed);
+        PERFORM_SELECTOR_1(_delegate, @selector(transactionResetFailed:), PantomimeTransactionResetFailed);
     }
 }
 
@@ -970,7 +942,7 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
         // The server probably doesn't support TLS. We inform the delegate that the transaction
         // initiation failed or that the message wasn't sent.
         if (!PERFORM_SELECTOR_1(_delegate, @selector(transactionInitiationFailed:),
-                               PantomimeTransactionInitiationFailed)) {
+                                PantomimeTransactionInitiationFailed)) {
             [self fail];
         }
     }
@@ -982,103 +954,103 @@ static inline CWInternetAddress *next_recipient(NSMutableArray *theRecipients, B
 //
 - (void) _parseServerOutput
 {
-  NSData *aData;
+    NSData *aData;
 
-  if (![_responsesFromServer count])
+    if (![_responsesFromServer count])
     {
-      return;
+        return;
     }
 
-  // We read only the first response. The _parseXYZ methods
-  // will handle multiline responses.
-  aData = [_responsesFromServer objectAtIndex: 0];
+    // We read only the first response. The _parseXYZ methods
+    // will handle multiline responses.
+    aData = [_responsesFromServer objectAtIndex: 0];
 
-  if ([aData hasCPrefix: "421"])
+    if ([aData hasCPrefix: "421"])
     {
-      //!  - lost connection
-      //LogInfo(@"LOST CONNECTION TO THE SERVER");
-      [super close];
+        //!  - lost connection
+        //LogInfo(@"LOST CONNECTION TO THE SERVER");
+        [super close];
     }
-  else
+    else
     {
-      switch (_lastCommand)
-	{
-	case SMTP_AUTH_CRAM_MD5:
-	  [self _parseAUTH_CRAM_MD5];
-	  break;
+        switch (_lastCommand)
+        {
+            case SMTP_AUTH_CRAM_MD5:
+                [self _parseAUTH_CRAM_MD5];
+                break;
 
-	case SMTP_AUTH_LOGIN:
-	  [self _parseAUTH_LOGIN];
-	  break;
-	  
-	case SMTP_AUTH_LOGIN_CHALLENGE:
-	  [self _parseAUTH_LOGIN_CHALLENGE];
-	  break;
+            case SMTP_AUTH_LOGIN:
+                [self _parseAUTH_LOGIN];
+                break;
 
-	case SMTP_AUTH_PLAIN:
-	  [self _parseAUTH_PLAIN];
-	  break;
+            case SMTP_AUTH_LOGIN_CHALLENGE:
+                [self _parseAUTH_LOGIN_CHALLENGE];
+                break;
 
-    case SMTP_AUTH_XOAUTH2:
-        [self _parseAUTH_OAUTH2];
-        break;
+            case SMTP_AUTH_PLAIN:
+                [self _parseAUTH_PLAIN];
+                break;
 
-	case SMTP_DATA:
-	  [self _parseDATA];
-	  break;
+            case SMTP_AUTH_XOAUTH2:
+                [self _parseAUTH_OAUTH2];
+                break;
 
-	case SMTP_EHLO:
-	  [self _parseEHLO];
-	  break;
-	  
-	case SMTP_HELO:
-	  [self _parseHELO];
-	  break;
+            case SMTP_DATA:
+                [self _parseDATA];
+                break;
 
-	case SMTP_MAIL:
-	  [self _parseMAIL];
-	  break;
+            case SMTP_EHLO:
+                [self _parseEHLO];
+                break;
 
-	case SMTP_NOOP:
-	  [self _parseNOOP];
-	  break;
+            case SMTP_HELO:
+                [self _parseHELO];
+                break;
 
-	case SMTP_QUIT:
-	  [self _parseQUIT];
-	  break;
+            case SMTP_MAIL:
+                [self _parseMAIL];
+                break;
 
-	case SMTP_RCPT:
-	  [self _parseRCPT];
-	  break;
+            case SMTP_NOOP:
+                [self _parseNOOP];
+                break;
 
-	case SMTP_RSET:
-	  [self _parseRSET];
-	  break;
+            case SMTP_QUIT:
+                [self _parseQUIT];
+                break;
 
-	case SMTP_STARTTLS:
-	  [self _parseSTARTTLS];
-	  break;
-	  
-	case SMTP_AUTHORIZATION:
-	  [self _parseAUTHORIZATION];
-	  break;
+            case SMTP_RCPT:
+                [self _parseRCPT];
+                break;
 
-	default:
-	  break;
-	  //! 
-	}
-    }
-  
-  // We are done parsing this entry...
-  [_responsesFromServer removeAllObjects];
+            case SMTP_RSET:
+                [self _parseRSET];
+                break;
 
-  // We remove the last object of the queue....
-  if ([_queue lastObject])
-    {
-      [_queue removeLastObject];
+            case SMTP_STARTTLS:
+                [self _parseSTARTTLS];
+                break;
+
+            case SMTP_AUTHORIZATION:
+                [self _parseAUTHORIZATION];
+                break;
+
+            default:
+                break;
+                //!
+        }
     }
 
-  [self sendCommand: SMTP_EMPTY_QUEUE  arguments: @""];
+    // We are done parsing this entry...
+    [_responsesFromServer removeAllObjects];
+
+    // We remove the last object of the queue....
+    if ([_queue lastObject])
+    {
+        [_queue removeLastObject];
+    }
+
+    [self sendCommand: SMTP_EMPTY_QUEUE  arguments: @""];
 }
 
 @end

@@ -67,7 +67,7 @@
     self = [super init];
     if (self) {
         _crlf = [[NSData alloc] initWithBytes: "\r\n"  length: 2];
-        _defaultCStringEncoding = [NSString defaultCStringEncoding];
+        _defaultStringEncoding = NSUTF8StringEncoding;
 
         _supportedMechanisms = [[CWThreadSafeArray alloc] init];
         _responsesFromServer = [[CWThreadSafeArray alloc] init];
