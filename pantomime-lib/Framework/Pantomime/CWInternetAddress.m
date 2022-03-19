@@ -131,7 +131,17 @@
       [self setAddress: theString];
     }
 
-  return self;
+    NSString *addressString = self.address;
+    while ([addressString hasSuffix:@"\\"]) {
+        addressString = [addressString substringToIndex:addressString.length - 2];
+    }
+
+    if (addressString.length == 0) {
+        return nil;
+    } else {
+        self.address = addressString;
+        return self;
+    }
 }
 
 //
