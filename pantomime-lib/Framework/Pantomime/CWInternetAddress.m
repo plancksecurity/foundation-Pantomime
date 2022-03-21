@@ -131,9 +131,14 @@
       [self setAddress: theString];
     }
 
-    NSString *addressString = self.address;
+    // Remove trailing back slashes.
+    NSString *addressString = [self.address stringFromQuotedString];
     while ([addressString hasSuffix:@"\\"]) {
-        addressString = [addressString substringToIndex:addressString.length - 2];
+        NSUInteger lastIndex = addressString.length - 1;
+        if (lastIndex > 0) {
+            lastIndex -= 1;
+        }
+        addressString = [addressString substringToIndex:lastIndex];
     }
 
     if (addressString.length == 0) {
