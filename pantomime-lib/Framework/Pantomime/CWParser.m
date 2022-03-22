@@ -621,9 +621,11 @@ NSRange shrinkRange(NSRange range)
                                  initWithString: [CWMIMEUtility decodeHeader: [[aData subdataWithRange: NSMakeRange(x, s_len)] dataByTrimmingWhiteSpaces]
                                                                      charset: [theMessage defaultCharset]]];
 
-            [anInternetAddress setType: theType];
-            [theMessage addRecipient: anInternetAddress];
-            RELEASE(anInternetAddress);
+            if (anInternetAddress) { // ignore malformed addresses
+                [anInternetAddress setType: theType];
+                [theMessage addRecipient: anInternetAddress];
+                RELEASE(anInternetAddress);
+            }
             x = y+1;
         }
 
