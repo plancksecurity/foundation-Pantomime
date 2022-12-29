@@ -1784,10 +1784,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     LogInfo(@"[_responsesFromServer lastObject]: %@",
             [[_responsesFromServer lastObject] asciiString]);
-    LogInfo(@"uidsFromResponse: %@", uidsFromResponse);
 
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
-    LogInfo(@"alreadyParsedUids: %@", alreadyParsedUids);
     if (!alreadyParsedUids) {
         alreadyParsedUids = uidsFromResponse;
     } else {
