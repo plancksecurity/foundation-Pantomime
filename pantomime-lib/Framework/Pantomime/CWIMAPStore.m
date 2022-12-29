@@ -656,6 +656,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     switch (_lastCommand)
                     {
                         case IMAP_UID_FETCH_UIDS:
+                        case IMAP_UID_FETCH_UNSEEN_UIDS:
                             [self _parseFETCH_UIDS];
                             break;
                         default:
@@ -1403,8 +1404,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 //
-// This method parses a IMAP_UID_FETCH_UIDS response in order to decode
-// all UIDs in the result.
+// This method parses a IMAP_UID_FETCH_UIDS or IMAP_UID_FETCH_UNSEEN_UIDS
+// response in order to decode all UIDs in the result.
 //
 // Examples:
 // "* 170 FETCH (UID 95516)"
@@ -2737,7 +2738,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
             }
 
-            case IMAP_UID_FETCH_UIDS: {
+            case IMAP_UID_FETCH_UIDS:
+            case IMAP_UID_FETCH_UNSEEN_UIDS: {
                 _connection_state.opening_mailbox = NO;
                 NSMutableDictionary *info = [NSMutableDictionary new];
                 if (_selectedFolder) {
