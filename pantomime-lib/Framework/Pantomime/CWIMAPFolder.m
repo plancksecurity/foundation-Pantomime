@@ -394,9 +394,9 @@
 {
     NSInteger lastUid = [self lastUID] ? [self lastUID] : 0;
     NSInteger from = lastUid + 1;
-    [_store sendCommand:IMAP_UID_FETCH_UNSEEN_UIDS
+    [_store sendCommand:IMAP_UID_SEARCH_UNSEEN_UIDS
                    info:nil
-              arguments:@"UID FETCH %u:* (UID)",
+              arguments:@"UID SEARCH UID %u:*",
      from];
 }
 
