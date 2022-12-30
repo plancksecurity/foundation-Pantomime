@@ -112,7 +112,7 @@ typedef enum {
     IMAP_EMPTY_QUEUE, //37
     IMAP_IDLE, //38
     IMAP_IDLE_DONE, //39
-    IMAP_UID_SEARCH_UNSEEN_UIDS, //40
+    IMAP_UID_SEARCH_NEW_MAILS, //40
 } IMAPCommand;
 
 /*!
