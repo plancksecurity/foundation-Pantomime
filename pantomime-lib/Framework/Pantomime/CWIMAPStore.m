@@ -2537,6 +2537,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_UID_SEARCH_ANSWERED:
             case IMAP_UID_SEARCH_FLAGGED:
             case IMAP_UID_SEARCH_UNSEEN:
+            case IMAP_UID_SEARCH_UNSEEN_UIDS:
             case IMAP_EMPTY_QUEUE: {
                 id nameValue = [[[self currentQueueObject] info] objectForKey:@"Name"];
                 if (nameValue) {
