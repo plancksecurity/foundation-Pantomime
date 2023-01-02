@@ -663,7 +663,7 @@ static inline int has_literal(char *buf, NSUInteger c)
                     switch (_lastCommand)
                     {
                         case IMAP_UID_FETCH_UIDS:
-                        case IMAP_UID_SEARCH_NEW_MAILS:
+                        case IMAP_SEARCH_NEW_MAILS:
                             [self _parseFETCH_UIDS];
                             break;
                         default:
@@ -1411,7 +1411,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 //
-// This method parses a IMAP_UID_FETCH_UIDS or IMAP_UID_SEARCH_NEW_MAILS
+// This method parses a IMAP_UID_FETCH_UIDS or IMAP_SEARCH_NEW_MAILS
 // response in order to decode all UIDs in the result.
 //
 // Examples:
@@ -2544,7 +2544,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_UID_SEARCH_ANSWERED:
             case IMAP_UID_SEARCH_FLAGGED:
             case IMAP_UID_SEARCH_UNSEEN:
-            case IMAP_UID_SEARCH_NEW_MAILS:
+            case IMAP_SEARCH_NEW_MAILS:
             case IMAP_EMPTY_QUEUE: {
                 id nameValue = [[[self currentQueueObject] info] objectForKey:@"Name"];
                 if (nameValue) {
@@ -2747,7 +2747,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             }
 
             case IMAP_UID_FETCH_UIDS:
-            case IMAP_UID_SEARCH_NEW_MAILS: {
+            case IMAP_SEARCH_NEW_MAILS: {
                 _connection_state.opening_mailbox = NO;
                 NSMutableDictionary *info = [NSMutableDictionary new];
                 if (_selectedFolder) {
