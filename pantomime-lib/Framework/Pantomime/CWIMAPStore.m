@@ -126,6 +126,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseOK;
 - (void) _parseRECENT;
 - (void) _parseSEARCH;
+- (void) _parseSEARCH_NewMails;
 - (void) _parseSEARCH_CACHE;
 - (void) _parseSELECT;
 - (void) _parseSTATUS;
@@ -698,6 +699,9 @@ static inline int has_literal(char *buf, NSUInteger c)
                         case IMAP_UID_SEARCH_FLAGGED:
                         case IMAP_UID_SEARCH_UNSEEN:
                             [self _parseSEARCH_CACHE];
+                            break;
+                        case IMAP_SEARCH_NEW_MAILS:
+                            [self _parseSEARCH_NewMails];
                             break;
                         default:
                             [self _parseSEARCH];
@@ -2845,6 +2849,26 @@ static inline int has_literal(char *buf, NSUInteger c)
     // is not recorded.
 }
 
+
+//
+//
+//
+- (void) _parseSEARCH_NewMails
+{
+    NSMutableArray *aMutableArray;
+    CWIMAPMessage *aMessage;
+    NSArray *allResults;
+    NSUInteger i, count;
+
+    // Please note that the method call implies UID, but it doesn't really care
+    // if it's UIDs or sequence IDs.
+    allResults = [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer lastObject]];
+
+    // We store the results in our command queue (ie., in the current queue object).
+    // aMutableArray may be empty if no result was found
+    if (self.currentQueueObject)
+        [self.currentQueueObject.info setObject: allResults  forKey: @"Results"];
+}
 
 //
 //
