@@ -2848,14 +2848,9 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseSEARCH_NewMails
 {
-    NSMutableArray *aMutableArray;
-    CWIMAPMessage *aMessage;
-    NSArray *allResults;
-    NSUInteger i, count;
-
     // Please note that the method call implies UID, but it doesn't really care
     // if it's UIDs or sequence IDs.
-    allResults = [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer lastObject]];
+    NSArray *allResults = [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer lastObject]];
 
     // We store the results in our command queue (ie., in the current queue object).
     // aMutableArray may be empty if no result was found
