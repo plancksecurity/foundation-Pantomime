@@ -396,7 +396,7 @@
     NSInteger from = lastUid + 1;
     [_store sendCommand:IMAP_UID_SEARCH_NEW_MAILS
                    info:nil
-              arguments:@"UID SEARCH UID %u:*",
+              arguments:@"SEARCH UID %u:*",
      from];
 }
 
