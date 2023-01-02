@@ -2855,7 +2855,7 @@ static inline int has_literal(char *buf, NSUInteger c)
     // We store the results in our command queue (ie., in the current queue object).
     // aMutableArray may be empty if no result was found
     if (self.currentQueueObject)
-        [self.currentQueueObject.info setObject: allResults  forKey: @"Results"];
+        [self.currentQueueObject.info setObject: allResults  forKey: @"Uids"];
 }
 
 //
