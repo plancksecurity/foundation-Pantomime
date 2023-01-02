@@ -2743,7 +2743,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
             }
 
-            case IMAP_UID_FETCH_UIDS: {
+            case IMAP_UID_FETCH_UIDS:
+            case IMAP_SEARCH_NEW_MAILS: {
                 _connection_state.opening_mailbox = NO;
                 NSMutableDictionary *info = [NSMutableDictionary new];
                 if (_selectedFolder) {
@@ -2751,19 +2752,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                 }
                 if (self.currentQueueObject.info[@"Uids"]) {
                     info[@"Uids"] = self.currentQueueObject.info[@"Uids"];
-                }
-                PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, info);
-                break;
-            }
-
-            case IMAP_SEARCH_NEW_MAILS: {
-                _connection_state.opening_mailbox = NO;
-                NSMutableDictionary *info = [NSMutableDictionary new];
-                if (_selectedFolder) {
-                    info[@"Folder"] = _selectedFolder;
-                }
-                if (self.currentQueueObject.info[@"Results"]) {
-                    info[@"Results"] = self.currentQueueObject.info[@"Results"];
                 }
                 PERFORM_SELECTOR_3(_delegate, @selector(folderFetchCompleted:), PantomimeFolderFetchCompleted, info);
                 break;
