@@ -350,6 +350,13 @@ static inline int has_literal(char *buf, NSUInteger c)
             buf = (char *)[aData bytes];
             count = [aData length];
 
+            NSLog(@"*** buf: |%s|", buf);
+            NSString *token = @"* SEARCH";
+            NSString *nsBuffer = [NSString stringWithUTF8String:buf];
+            if ([[nsBuffer substringToIndex:[token length]] isEqualToString:token]) {
+                NSLog(@"here");
+            }
+
             // If we are reading a literal, do so.
             if (self.currentQueueObject && self.currentQueueObject.literal)
             {
