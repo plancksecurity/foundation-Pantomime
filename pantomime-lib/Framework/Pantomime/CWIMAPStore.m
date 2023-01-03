@@ -657,7 +657,6 @@ static inline int has_literal(char *buf, NSUInteger c)
                     switch (_lastCommand)
                     {
                         case IMAP_UID_FETCH_UIDS:
-                        case IMAP_SEARCH_NEW_MAILS:
                             [self _parseFETCH_UIDS];
                             break;
                         default:
@@ -1408,8 +1407,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 }
 
 //
-// This method parses a IMAP_UID_FETCH_UIDS or IMAP_SEARCH_NEW_MAILS
-// response in order to decode all UIDs in the result.
+// This method parses a IMAP_UID_FETCH_UIDS response in order to decode
+// all UIDs in the result.
 //
 // Examples:
 // "* 170 FETCH (UID 95516)"
