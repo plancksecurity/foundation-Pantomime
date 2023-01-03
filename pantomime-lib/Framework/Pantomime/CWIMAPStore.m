@@ -2847,8 +2847,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 //
 - (void) _parseSEARCH_NewMails
 {
-    // Please note that the method call implies UID, but it doesn't really care
-    // if it's UIDs or sequence IDs.
+    // Note: The method call implies UID, but it doesn't really care if it's UIDs or sequence IDs.
     NSArray *allResults = [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer lastObject]];
 
     // We store the results in our command queue (ie., in the current queue object).
