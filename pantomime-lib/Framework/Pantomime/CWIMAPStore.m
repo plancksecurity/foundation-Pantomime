@@ -2851,7 +2851,6 @@ static inline int has_literal(char *buf, NSUInteger c)
     NSArray *allResults = [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer lastObject]];
 
     // We store the results in our command queue (ie., in the current queue object).
-    // aMutableArray may be empty if no result was found
     if (self.currentQueueObject)
         [self.currentQueueObject.info setObject: allResults  forKey: @"Uids"];
 }
