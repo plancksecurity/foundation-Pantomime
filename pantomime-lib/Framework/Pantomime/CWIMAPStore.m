@@ -126,6 +126,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 - (void) _parseOK;
 - (void) _parseRECENT;
 - (void) _parseSEARCH;
+- (void) _parseSEARCH_NewMails;
 - (void) _parseSEARCH_CACHE;
 - (void) _parseSELECT;
 - (void) _parseSTATUS;
@@ -690,6 +691,9 @@ static inline int has_literal(char *buf, NSUInteger c)
                         case IMAP_UID_SEARCH_FLAGGED:
                         case IMAP_UID_SEARCH_UNSEEN:
                             [self _parseSEARCH_CACHE];
+                            break;
+                        case IMAP_SEARCH_NEW_MAILS:
+                            [self _parseSEARCH_NewMails];
                             break;
                         default:
                             [self _parseSEARCH];
@@ -1784,10 +1788,8 @@ static inline int has_literal(char *buf, NSUInteger c)
 
     LogInfo(@"[_responsesFromServer lastObject]: %@",
             [[_responsesFromServer lastObject] asciiString]);
-    LogInfo(@"uidsFromResponse: %@", uidsFromResponse);
 
     NSArray *alreadyParsedUids = self.currentQueueObject.info[@"Uids"];
-    LogInfo(@"alreadyParsedUids: %@", alreadyParsedUids);
     if (!alreadyParsedUids) {
         alreadyParsedUids = uidsFromResponse;
     } else {
@@ -2538,6 +2540,7 @@ static inline int has_literal(char *buf, NSUInteger c)
             case IMAP_UID_SEARCH_ANSWERED:
             case IMAP_UID_SEARCH_FLAGGED:
             case IMAP_UID_SEARCH_UNSEEN:
+            case IMAP_SEARCH_NEW_MAILS:
             case IMAP_EMPTY_QUEUE: {
                 id nameValue = [[[self currentQueueObject] info] objectForKey:@"Name"];
                 if (nameValue) {
@@ -2739,7 +2742,8 @@ static inline int has_literal(char *buf, NSUInteger c)
                 break;
             }
 
-            case IMAP_UID_FETCH_UIDS: {
+            case IMAP_UID_FETCH_UIDS:
+            case IMAP_SEARCH_NEW_MAILS: {
                 _connection_state.opening_mailbox = NO;
                 NSMutableDictionary *info = [NSMutableDictionary new];
                 if (_selectedFolder) {
@@ -2837,6 +2841,19 @@ static inline int has_literal(char *buf, NSUInteger c)
     // is not recorded.
 }
 
+
+//
+//
+//
+- (void) _parseSEARCH_NewMails
+{
+    // Note: The method call implies UID, but it doesn't really care if it's UIDs or sequence IDs.
+    NSArray *allResults = [self _uniqueIdentifiersFromSearchResponseData:[_responsesFromServer lastObject]];
+
+    // We store the results in our command queue (ie., in the current queue object).
+    if (self.currentQueueObject)
+        [self.currentQueueObject.info setObject: allResults  forKey: @"Uids"];
+}
 
 //
 //

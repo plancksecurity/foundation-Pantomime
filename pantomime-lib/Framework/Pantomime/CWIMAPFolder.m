@@ -394,7 +394,10 @@
 {
     NSInteger lastUid = [self lastUID] ? [self lastUID] : 0;
     NSInteger from = lastUid + 1;
-    [_store sendCommand: IMAP_UID_FETCH_UIDS  info:nil arguments:@"UID FETCH %u:* (UID)", from];
+    [_store sendCommand:IMAP_SEARCH_NEW_MAILS
+                   info:nil
+              arguments:@"UID SEARCH UID %u:* UNSEEN",
+     from];
 }
 
 #pragma mark -
@@ -429,7 +432,8 @@
   theCommand = [[self store] lastCommand];
 
   if (theCommand == IMAP_SELECT || theCommand == IMAP_UID_SEARCH || theCommand == IMAP_UID_SEARCH_ANSWERED ||
-      theCommand == IMAP_UID_SEARCH_FLAGGED || theCommand == IMAP_UID_SEARCH_UNSEEN)
+      theCommand == IMAP_UID_SEARCH_FLAGGED || theCommand == IMAP_UID_SEARCH_UNSEEN ||
+      theCommand == IMAP_SEARCH_NEW_MAILS)
     {
       [_store removeFolderFromOpenFolders: self];
       [[self store] cancelRequest];
