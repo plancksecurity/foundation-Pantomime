@@ -12,7 +12,7 @@
 
 #import "CWTCPConnection.h"
 
-#import <pEpIOSToolboxForExtensions/PEPLogger.h>
+#import <PlanckToolboxForExtensions/PEPLogger.h>
 
 #import "NSStream+TLS.h"
 

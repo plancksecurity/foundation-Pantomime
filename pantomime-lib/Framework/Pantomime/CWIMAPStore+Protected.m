@@ -12,7 +12,7 @@
 #import "Pantomime/NSString+Extensions.h"
 #import "CWThreadSafeArray.h"
 
-#import <pEpIOSToolboxForExtensions/PEPLogger.h>
+#import <PlanckToolboxForExtensions/PEPLogger.h>
 
 @implementation CWIMAPStore (Protected)
 
