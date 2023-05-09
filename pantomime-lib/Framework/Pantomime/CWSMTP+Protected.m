@@ -12,7 +12,7 @@
 #import <PantomimeFramework/CWMessage.h>
 #import "CWThreadSafeArray.h"
 
-#import <pEpIOSToolboxForExtensions/PEPLogger.h>
+#import <PlanckToolboxForExtensions/PEPLogger.h>
 #import "NSData+Extensions.h"
 
 @implementation CWSMTP (Protected)

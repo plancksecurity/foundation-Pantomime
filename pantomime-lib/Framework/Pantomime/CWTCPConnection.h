@@ -10,7 +10,7 @@
 
 #import "CWConnection.h"
 
-#import <pEpIOSToolboxForExtensions/PEPLogger.h>
+#import <PlanckToolboxForExtensions/PEPLogger.h>
 
 @interface CWTCPConnection : NSObject<CWConnection, NSStreamDelegate>
 

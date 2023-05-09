@@ -162,9 +162,9 @@
 		4329CBD022391EA1007D377E /* MailWithDocAttached.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4329CBB522391EA1007D377E /* MailWithDocAttached.txt */; };
 		433710E723F5950F0083BAE9 /* NSStream+Options.h in Headers */ = {isa = PBXBuildFile; fileRef = 433710E523F5950F0083BAE9 /* NSStream+Options.h */; };
 		433710E823F5950F0083BAE9 /* NSStream+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 433710E623F5950F0083BAE9 /* NSStream+Options.m */; };
+		436C00022A03BF7E00C2B3DD /* PlanckToolboxForExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436C00012A03BF7E00C2B3DD /* PlanckToolboxForExtensions.framework */; };
 		43C5D3E223F5530D006487F6 /* NSStream+TLS.h in Headers */ = {isa = PBXBuildFile; fileRef = 43C5D3E023F5530D006487F6 /* NSStream+TLS.h */; };
 		43C5D3E323F5530D006487F6 /* NSStream+TLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C5D3E123F5530D006487F6 /* NSStream+TLS.m */; };
-		43FD718A26411ED900D823B6 /* pEpIOSToolboxForExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FD718926411ED900D823B6 /* pEpIOSToolboxForExtensions.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -340,6 +340,8 @@
 		4329CBB522391EA1007D377E /* MailWithDocAttached.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MailWithDocAttached.txt; sourceTree = "<group>"; };
 		433710E523F5950F0083BAE9 /* NSStream+Options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+Options.h"; sourceTree = "<group>"; };
 		433710E623F5950F0083BAE9 /* NSStream+Options.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+Options.m"; sourceTree = "<group>"; };
+		436C00012A03BF7E00C2B3DD /* PlanckToolboxForExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlanckToolboxForExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		436CFFFF2A03BF6D00C2B3DD /* PlanckToolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PlanckToolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43C5D3E023F5530D006487F6 /* NSStream+TLS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSStream+TLS.h"; sourceTree = "<group>"; };
 		43C5D3E123F5530D006487F6 /* NSStream+TLS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSStream+TLS.m"; sourceTree = "<group>"; };
 		43F12C6B2527720100B746C7 /* pEpIOSToolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = pEpIOSToolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -351,7 +353,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43FD718A26411ED900D823B6 /* pEpIOSToolboxForExtensions.framework in Frameworks */,
+				436C00022A03BF7E00C2B3DD /* PlanckToolboxForExtensions.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,6 +623,8 @@
 		43A3C6D625028F9100CA29BA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				436C00012A03BF7E00C2B3DD /* PlanckToolboxForExtensions.framework */,
+				436CFFFF2A03BF6D00C2B3DD /* PlanckToolbox.framework */,
 				43FD718926411ED900D823B6 /* pEpIOSToolboxForExtensions.framework */,
 				43F12C6B2527720100B746C7 /* pEpIOSToolbox.framework */,
 			);
