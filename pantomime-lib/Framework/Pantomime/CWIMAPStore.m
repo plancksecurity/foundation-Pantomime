@@ -768,9 +768,9 @@ static inline int has_literal(char *buf, NSUInteger c)
                         [self _parseBAD];
                     }
 
-                    free(tmpBuffer);
-                    free(response);
-                }
+               }
+               free(tmpBuffer);
+               free(response);
             }
         } // while ((aData = split_lines...
         
