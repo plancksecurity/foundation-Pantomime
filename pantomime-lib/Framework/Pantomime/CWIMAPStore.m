@@ -2454,7 +2454,7 @@ static inline int has_literal(char *buf, NSUInteger c)
 
             case IMAP_AUTHENTICATE_CRAM_MD5:
             case IMAP_AUTHENTICATE_LOGIN:
-            case IMAP_AUTHENTICATE_XOAUTH2:  // Only added for completenes. In reality XOAuth2 never responds with NO (only Gmail tested so far)
+            case IMAP_AUTHENTICATE_XOAUTH2:
             case IMAP_LOGIN:
                 AUTHENTICATION_FAILED(_delegate, _mechanism);
                 break;
