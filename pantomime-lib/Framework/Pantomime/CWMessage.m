@@ -1427,6 +1427,9 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
             aData = [CWParser parseSubject: aLine  inMessage: self  quick: NO];
             if (theRecord) theRecord.subject = aData;
         }
+        else if ([aLine hasCaseInsensitiveCPrefix: "Content-Type"] && [[aLine asciiString] containsString:@"multipart/signed"] && [[aLine asciiString] containsString:@"application/pkcs7-signature"]) {
+            if (theRecord) theRecord.isSmime = YES;
+        }
         else
         {
             // We MUST NOT parse the headers that we already parsed in
