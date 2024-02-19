@@ -15,7 +15,6 @@
 @property (nonatomic) NSUInteger position;   // For mbox based cache files
 @property (nonatomic) NSUInteger size;
 @property (nonatomic) NSUInteger imap_uid;   // For IMAP
-@property (nonatomic) Boolean isSmime;
 @property (nonatomic) char *filename;        // For maildir base cache files
 @property (nonatomic, strong) NSString *pop3_uid;      // For POP3
 @property (nonatomic, strong) NSData *from;

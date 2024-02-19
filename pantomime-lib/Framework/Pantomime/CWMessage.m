@@ -1427,7 +1427,7 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
             aData = [CWParser parseSubject: aLine  inMessage: self  quick: NO];
             if (theRecord) theRecord.subject = aData;
         } else if ([self isSmime:aLine]) {
-            if (theRecord) theRecord.isSmime = YES;
+            [self addHeader:@"isSmime" withValue:@"true"];
         }
         else
         {
