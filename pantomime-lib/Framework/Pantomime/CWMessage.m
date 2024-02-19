@@ -1426,8 +1426,6 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
         {
             aData = [CWParser parseSubject: aLine  inMessage: self  quick: NO];
             if (theRecord) theRecord.subject = aData;
-        } else if ([self isSmime:aLine]) {
-            [self addHeader:@"isSmime" withValue:@"true"];
         }
         else
         {
@@ -1452,11 +1450,6 @@ static CWRegEx *prefixSubjFwdHdrAndSuffixSubjFwdTrlRegex = nil;
 - (void) setHeadersFromData: (NSData *) theHeaders
 {
     [self setHeadersFromData: theHeaders  record: NULL];
-}
-
-// Indicates if the given line belongs to a SMime message.
-- (BOOL)isSmime:(NSData*)aLine {
-    return [aLine hasCaseInsensitiveCPrefix:"Content-Type: multipart/signed"] && [[aLine asciiString] containsString:@"protocol=\"application/pkcs7-signature\";"];
 }
 
 //

@@ -302,6 +302,16 @@ NSRange shrinkRange(NSRange range)
     }
 
     //
+    // We decode our protocol (if we need to)
+    //
+    aRange = shrinkRange([theLine rangeOfCString: "protocol="  options: NSCaseInsensitiveSearch]);
+
+    if (aRange.location != NSNotFound)
+    {
+        [thePart setProtocol: [CWParser _parameterValueUsingLine: theLine  range: aRange  decode: NO  charset: nil]];
+    }
+
+    //
     // We decode our boundary (if we need to)
     //
     aRange = shrinkRange([theLine rangeOfCString: "boundary="  options: NSCaseInsensitiveSearch]);
