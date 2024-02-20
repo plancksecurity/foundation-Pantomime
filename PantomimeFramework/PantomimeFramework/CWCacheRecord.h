@@ -25,5 +25,4 @@
 @property (nonatomic, strong) NSData *to;
 @property (nonatomic, strong) NSData *cc;
 
-
 @end
